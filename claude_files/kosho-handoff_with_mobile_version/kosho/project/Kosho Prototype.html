@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"/>
+<title>Kosho — попутки по Кыргызстану</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Manrope:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=5">
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script src="data.js"></script>
+<script type="text/babel" src="components.jsx"></script>
+<script type="text/babel" src="screens1.jsx"></script>
+<script type="text/babel" src="screens2.jsx"></script>
+<script type="text/babel" src="screens3.jsx"></script>
+
+<script type="text/babel" data-presets="react">
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "language": "ru"
+}/*EDITMODE-END*/;
+
+const ROUTES = {
+  home: { label:'Главная', comp: Landing, icon: I.home },
+  search: { label:'Поиск поездок', comp: Search, icon: I.search },
+  booking: { label:'Бронирование', comp: Booking, icon: I.checkCircle },
+  publish: { label:'Опубликовать', comp: Publish, icon: I.plus },
+  myBookings: { label:'Мои поездки', comp: MyBookings, icon: I.route },
+  chat: { label:'Чат', comp: Chat, icon: I.msg },
+  profile: { label:'Профиль', comp: Profile, icon: I.users },
+  driverVerify: { label:'Стать водителем', comp: DriverVerify, icon: I.car },
+  login: { label:'Вход', comp: Login, icon: I.logOut },
+  rating: { label:'Оценка', comp: Rating, icon: I.star },
+  notifications: { label:'Уведомления', comp: Notifications, icon: I.bell },
+  admin: { label:'Админ', comp: Admin, icon: I.shield },
+};
+
+function loadPersisted() {
+  try { const r = localStorage.getItem('kosho_route'); return r && ROUTES[r] ? r : 'home'; } catch(e) { return 'home'; }
+}
+
+function App() {
+  const [route, setRoute] = React.useState(loadPersisted());
+  const [state, setState] = React.useState({ user: null, deferredAction: null, bookingTripId: null, chatBookingId: null, ratingBookingId: null, searchFrom: 'Бишкек', searchTo: 'Ош' });
+  const [tweaksOpen, setTweaksOpen] = React.useState(false);
+  const [menuOpen, setMenuOpen] = React.useState(false);
+
+  React.useEffect(() => { try { localStorage.setItem('kosho_route', route); } catch(e) {} }, [route]);
+
+  React.useEffect(() => {
+    const onMsg = (e) => {
+      if (e.data?.type === '__activate_edit_mode') setTweaksOpen(true);
+      if (e.data?.type === '__deactivate_edit_mode') setTweaksOpen(false);
+    };
+    window.addEventListener('message', onMsg);
+    try { window.parent.postMessage({type:'__edit_mode_available'}, '*'); } catch(e){}
+    return () => window.removeEventListener('message', onMsg);
+  }, []);
+
+  const go = (r) => { setRoute(r); setMenuOpen(false); window.scrollTo(0,0); };
+  const Comp = ROUTES[route].comp;
+
+  const user = state.user;
+  const navItems = user ? [
+    ['home','Главная'],['search','Поиск'],['myBookings','Мои поездки'],['chat','Чаты'],['notifications','Уведомления'],
+  ] : [['home','Главная'],['search','Поиск'],['driverVerify','Стать водителем']];
+
+  return (
+    <ToastProvider>
+      <div className="nav">
+        <div className="nav-inner">
+          <div className="nav-logo" onClick={()=>go('home')}>
+            <div className="nav-logo-mark">K</div>
+            <div className="nav-logo-text">Kosho</div>
+          </div>
+          <div className="row gap-1" style={{marginLeft:16}}>
+            {navItems.map(([r,l]) => (
+              <button key={r} className={`nav-link ${route===r?'active':''}`} onClick={()=>go(r)}>{l}</button>
+            ))}
+          </div>
+          <div className="nav-right" style={{marginLeft:'auto'}}>
+            <button className="btn btn-primary btn-sm" onClick={()=>go('publish')}><I.plus s={14}/> Опубликовать</button>
+            {user ? (
+              <div className="row gap-2" style={{position:'relative'}}>
+                <button className="btn-icon" onClick={()=>go('notifications')} style={{position:'relative'}}>
+                  <I.bell s={16}/>
+                  <span style={{position:'absolute', top:6, right:6, width:8, height:8, borderRadius:'50%', background:'var(--amber-500)'}}></span>
+                </button>
+                <button onClick={()=>setMenuOpen(!menuOpen)} style={{background:'transparent', padding:0, borderRadius:999}}>
+                  <Avatar user={user} size={40}/>
+                </button>
+                {menuOpen && (
+                  <div style={{position:'absolute', top:48, right:0, background:'white', border:'.5px solid var(--g-200)', borderRadius:14, boxShadow:'var(--shadow-lg)', width:220, overflow:'hidden', zIndex:60}}>
+                    <div style={{padding:'12px 16px', borderBottom:'.5px solid var(--g-100)'}}>
+                      <div style={{fontWeight:700, fontSize:14}}>{user.name}</div>
+                      <div className="t-caption mt-1">{user.phone}</div>
+                    </div>
+                    {[['profile','Мой профиль',I.users],['myBookings','Мои поездки',I.route],['driverVerify','Документы водителя',I.car],['admin','Админ-панель',I.shield]].map(([r,l,Ic])=>(
+                      <button key={r} onClick={()=>{ go(r); setMenuOpen(false); }} className="row gap-2" style={{width:'100%', padding:'10px 16px', textAlign:'left', fontSize:13, fontWeight:600}}>
+                        <Ic s={14} style={{color:'var(--g-500)'}}/>{l}
+                      </button>
+                    ))}
+                    <div className="divider" style={{margin:0}}></div>
+                    <button onClick={()=>{ setState(s=>({...s, user:null})); setMenuOpen(false); go('home'); }} className="row gap-2" style={{width:'100%', padding:'10px 16px', textAlign:'left', fontSize:13, fontWeight:600, color:'var(--danger, #dc2626)'}}>
+                      <I.logOut s={14}/> Выйти
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <button className="btn btn-outline btn-sm" onClick={()=>go('login')}>Войти</button>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div key={route}>
+        <Comp go={go} state={state} setState={setState}/>
+      </div>
+
+      {/* Mobile bottom tab bar */}
+      {(() => {
+        const tabs = user ? [
+          { id: 'search', label: 'Поиск', ic: I.search },
+          { id: 'myBookings', label: 'Поездки', ic: I.route },
+          { id: 'publish', label: 'Создать', ic: I.plus, pub: true },
+          { id: 'chat', label: 'Чаты', ic: I.msg, badge: 2 },
+          { id: 'profile', label: 'Профиль', ic: I.users },
+        ] : [
+          { id: 'home', label: 'Главная', ic: I.home },
+          { id: 'search', label: 'Поиск', ic: I.search },
+          { id: 'publish', label: 'Создать', ic: I.plus, pub: true },
+          { id: 'driverVerify', label: 'Водитель', ic: I.car },
+          { id: 'login', label: 'Войти', ic: I.logOut },
+        ];
+        return (
+          <nav className="mnav" role="navigation" aria-label="Главное меню">
+            {tabs.map(t => {
+              const active = route === t.id;
+              const Ic = t.ic;
+              return (
+                <button key={t.id} className={`mnav-item ${active?'active':''} ${t.pub?'pub':''}`} onClick={()=>go(t.id)}>
+                  <span className="mnav-icon-box">
+                    <Ic s={t.pub?18:18}/>
+                    {t.badge ? <span className="mnav-badge">{t.badge}</span> : null}
+                  </span>
+                  <span>{t.label}</span>
+                </button>
+              );
+            })}
+          </nav>
+        );
+      })()}
+
+      {user && <QuickActions user={user} go={go} state={state} setState={setState}/>}
+
+      {tweaksOpen && (
+        <div className="tweaks-panel">
+          <div className="row between mb-3">
+            <h3 style={{margin:0}}>Tweaks</h3>
+            <button className="btn-icon" onClick={()=>setTweaksOpen(false)} style={{width:28, height:28}}><I.x s={12}/></button>
+          </div>
+          <div className="tweak-row">
+            <span>Перейти к экрану</span>
+            <select value={route} onChange={e=>go(e.target.value)}>
+              {Object.entries(ROUTES).map(([k,v])=>(
+                <option key={k} value={k}>{v.label}</option>
+              ))}
+            </select>
+          </div>
+          <div className="tweak-row">
+            <span>Вошёл как</span>
+            <select value={user?.id||''} onChange={e=>{
+              const v = e.target.value;
+              if (!v) setState(s=>({...s, user:null}));
+              else setState(s=>({...s, user: window.Kosho.getUser(v)}));
+            }}>
+              <option value="">— Гость</option>
+              {window.Kosho.USERS.map(u=><option key={u.id} value={u.id}>{u.name}</option>)}
+            </select>
+          </div>
+          <div className="tweak-row">
+            <span>Админ-режим</span>
+            <button className="btn btn-outline btn-sm" onClick={()=>go('admin')}>Открыть</button>
+          </div>
+          <div className="tweak-row">
+            <span>Полный сброс</span>
+            <button className="btn btn-ghost btn-sm" onClick={()=>{ localStorage.clear(); location.reload(); }}>Сброс</button>
+          </div>
+          <div style={{fontSize:11, color:'var(--g-500)', marginTop:8, lineHeight:1.4}}>
+            Десктоп-прототип Kosho. Все сценарии ТЗ: поиск, бронь, публикация, чат, рейтинги, админ.
+          </div>
+        </div>
+      )}
+    </ToastProvider>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

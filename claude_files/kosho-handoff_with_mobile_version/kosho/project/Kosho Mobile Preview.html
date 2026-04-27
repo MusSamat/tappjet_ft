@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"/>
+<title>Kosho — Mobile & Tablet preview</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Manrope:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    font-family: 'Nunito', system-ui, sans-serif;
+    background: radial-gradient(1600px 900px at 10% -10%, #e3faf5 0%, transparent 60%),
+                radial-gradient(1400px 800px at 110% 110%, #fff8e6 0%, transparent 55%),
+                #f4f6f8;
+    color: #111827;
+    min-height: 100vh;
+  }
+  .stage {
+    padding: 48px 24px 120px;
+    max-width: 2400px;
+    margin: 0 auto;
+  }
+  header.top {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 24px; flex-wrap: wrap;
+    margin-bottom: 40px;
+  }
+  header.top .brand {
+    display: flex; align-items: center; gap: 12px;
+  }
+  header.top .mark {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: linear-gradient(135deg, #0D9488, #14B8A6);
+    color: white; font-weight: 900; font-size: 18px;
+    font-family: 'Manrope', system-ui; letter-spacing: -0.02em;
+    display: flex; align-items: center; justify-content: center;
+  }
+  header.top h1 {
+    font-family: 'Manrope', system-ui;
+    font-weight: 900; font-size: 28px; letter-spacing: -0.02em;
+  }
+  header.top .sub { color: #6B7280; font-size: 14px; font-weight: 600; margin-top: 2px; }
+
+  .controls { display: flex; gap: 8px; flex-wrap: wrap; }
+  .control {
+    background: white; border: 1.5px solid #E5E7EB;
+    border-radius: 10px; padding: 10px 14px;
+    font-family: inherit; font-weight: 700; font-size: 13px;
+    color: #374151; cursor: pointer;
+    display: flex; align-items: center; gap: 6px;
+    transition: all .15s;
+  }
+  .control:hover { border-color: #0D9488; color: #0F766E; }
+  .control.primary { background: #0D9488; color: white; border-color: #0D9488; }
+  .control.primary:hover { background: #0F766E; }
+  select.control { padding-right: 28px; appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23374151' stroke-width='2' stroke-linecap='round'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat: no-repeat; background-position: right 8px center; }
+
+  .devices {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    gap: 48px;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  @media (max-width: 1400px) {
+    .devices { grid-template-columns: auto auto; }
+  }
+  @media (max-width: 900px) {
+    .devices { grid-template-columns: auto; gap: 32px; }
+  }
+
+  .device-col { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .device-label {
+    font-family: 'Manrope', system-ui;
+    font-weight: 800; font-size: 14px; color: #374151;
+    letter-spacing: 0.02em;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .device-label .pill {
+    background: white; border: 1px solid #E5E7EB;
+    padding: 3px 10px; border-radius: 9999px;
+    font-size: 11px; font-weight: 700; color: #6B7280;
+  }
+
+  /* iPhone 14 Pro frame */
+  .iphone {
+    width: 390px; height: 844px;
+    border-radius: 54px;
+    background: #111;
+    padding: 14px;
+    box-shadow:
+      0 0 0 2px #2a2a2a,
+      0 50px 100px -10px rgba(17,24,39,.35),
+      0 20px 40px -10px rgba(17,24,39,.15);
+    position: relative;
+  }
+  .iphone::before {
+    /* dynamic island */
+    content: ''; position: absolute;
+    top: 22px; left: 50%; transform: translateX(-50%);
+    width: 120px; height: 34px;
+    background: #000; border-radius: 20px;
+    z-index: 10;
+  }
+  .iphone .screen {
+    width: 100%; height: 100%;
+    border-radius: 40px; overflow: hidden;
+    background: white; position: relative;
+  }
+  .iphone .status-bar {
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 54px; z-index: 5;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 32px 0;
+    font-weight: 700; font-size: 15px; color: #000;
+    pointer-events: none;
+  }
+  .iphone .status-bar .status-icons { display: flex; align-items: center; gap: 5px; }
+  .iphone .status-bar svg { display: block; }
+
+  .iphone iframe {
+    width: 100%; height: 100%; border: 0;
+    margin-top: 54px; height: calc(100% - 54px);
+  }
+
+  /* Pixel 8 frame */
+  .pixel {
+    width: 412px; height: 892px;
+    border-radius: 42px;
+    background: #2a2e34;
+    padding: 10px;
+    box-shadow:
+      0 0 0 3px #0b0b0c,
+      0 50px 100px -10px rgba(17,24,39,.35);
+    position: relative;
+  }
+  .pixel .screen {
+    width: 100%; height: 100%;
+    border-radius: 32px; overflow: hidden;
+    background: white; position: relative;
+  }
+  .pixel::before {
+    /* punch-hole camera */
+    content: ''; position: absolute;
+    top: 26px; left: 50%; transform: translateX(-50%);
+    width: 16px; height: 16px;
+    background: #000; border-radius: 50%;
+    z-index: 10;
+  }
+  .pixel .status-bar {
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 40px; z-index: 5;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 20px 0;
+    font-size: 13px; font-weight: 600; color: #000;
+    pointer-events: none;
+  }
+  .pixel iframe {
+    width: 100%; height: 100%; border: 0;
+    margin-top: 40px; height: calc(100% - 40px);
+  }
+
+  /* iPad Air frame (portrait) */
+  .ipad {
+    width: 540px; height: 760px;
+    border-radius: 32px;
+    background: #1d1d1f;
+    padding: 14px;
+    box-shadow:
+      0 0 0 2px #2a2a2a,
+      0 60px 120px -20px rgba(17,24,39,.4);
+    position: relative;
+  }
+  .ipad .screen {
+    width: 100%; height: 100%;
+    border-radius: 18px; overflow: hidden;
+    background: white; position: relative;
+  }
+  .ipad iframe {
+    width: 100%; height: 100%; border: 0;
+  }
+  .ipad .camera {
+    position: absolute; top: 14px; left: 50%; transform: translateX(-50%);
+    width: 8px; height: 8px; background: #111; border-radius: 50%;
+    z-index: 10;
+  }
+
+  /* Footer info */
+  footer.note {
+    margin-top: 64px; text-align: center;
+    color: #6B7280; font-size: 13px; font-weight: 600;
+    max-width: 700px; margin-left: auto; margin-right: auto;
+    line-height: 1.6;
+  }
+
+  /* Nav routes inside iframes */
+  .route-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 10px;
+    background: #F0FDFA; color: #0F766E;
+    border: 1px solid #CCFBF1;
+    border-radius: 9999px;
+    font-size: 11px; font-weight: 800;
+    font-family: 'Nunito', sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <header class="top">
+    <div class="brand">
+      <div class="mark">K</div>
+      <div>
+        <h1>Kosho — Mobile &amp; Tablet</h1>
+        <div class="sub">Тот же прототип, адаптивно: iPhone · Pixel · iPad</div>
+      </div>
+    </div>
+    <div class="controls">
+      <label style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:#374151;">
+        Экран:
+        <select class="control" id="route">
+          <option value="home">Главная</option>
+          <option value="search" selected>Поиск</option>
+          <option value="booking">Бронирование</option>
+          <option value="myBookings">Мои поездки</option>
+          <option value="chat">Чаты</option>
+          <option value="publish">Опубликовать</option>
+          <option value="profile">Профиль</option>
+          <option value="notifications">Уведомления</option>
+          <option value="driverVerify">Стать водителем</option>
+          <option value="admin">Админ-панель</option>
+        </select>
+      </label>
+      <button class="control" id="reload" title="Перезагрузить все устройства">↻ Reload</button>
+      <button class="control primary" id="sync" title="Синхронизация всех устройств">⇄ Sync</button>
+      <a class="control" href="Kosho Prototype.html" target="_blank" title="Открыть десктоп-версию">↗ Desktop</a>
+    </div>
+  </header>
+
+  <div class="devices">
+    <!-- iPhone -->
+    <div class="device-col">
+      <div class="device-label">
+        iPhone 14 Pro
+        <span class="pill">390 × 844</span>
+        <span class="route-badge">Mobile</span>
+      </div>
+      <div class="iphone">
+        <div class="screen">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="status-icons">
+              <svg width="16" height="10" viewBox="0 0 16 10" fill="none"><path d="M1 5.5h2M4.5 3.5h2M8 1.5h2M11.5 -0.5h2" stroke="black" stroke-width="2.5" stroke-linecap="round"/></svg>
+              <svg width="14" height="10" viewBox="0 0 14 10" fill="black"><path d="M7 2.8C9.3 2.8 11.4 3.7 12.9 5.2L14 4.1C12.2 2.3 9.7 1.1 7 1.1S1.8 2.3 0 4.1l1.1 1.1C2.6 3.7 4.7 2.8 7 2.8zm0 3.6c1.4 0 2.6.5 3.5 1.4L7 9.5 3.5 7.8C4.4 6.9 5.6 6.4 7 6.4z"/></svg>
+              <svg width="24" height="11" viewBox="0 0 24 11"><rect x="0.5" y="0.5" width="21" height="10" rx="2.5" fill="none" stroke="black" stroke-opacity=".4"/><rect x="2" y="2" width="16" height="7" rx="1.5" fill="black"/><rect x="22.5" y="3.5" width="1.5" height="4" rx=".5" fill="black" fill-opacity=".4"/></svg>
+            </div>
+          </div>
+          <iframe id="iframe-iphone" src="Kosho Prototype.html" title="Kosho iPhone"></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pixel -->
+    <div class="device-col">
+      <div class="device-label">
+        Pixel 8
+        <span class="pill">412 × 892</span>
+        <span class="route-badge">Mobile</span>
+      </div>
+      <div class="pixel">
+        <div class="screen">
+          <div class="status-bar">
+            <span>9:30</span>
+            <div style="display:flex; align-items:center; gap:4px;">
+              <svg width="14" height="10" viewBox="0 0 14 10" fill="black"><path d="M7 1.5L13 8H1L7 1.5z"/></svg>
+              <svg width="14" height="10" viewBox="0 0 14 10" fill="black"><path d="M12 1v8H2V1h10zM1 0v10h12V0H1z"/></svg>
+              <svg width="20" height="10" viewBox="0 0 20 10"><rect x="0.5" y="1.5" width="17" height="7" rx="1.5" fill="none" stroke="black" stroke-opacity=".5"/><rect x="2" y="3" width="14" height="4" rx=".5" fill="black"/></svg>
+            </div>
+          </div>
+          <iframe id="iframe-pixel" src="Kosho Prototype.html" title="Kosho Pixel"></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- iPad -->
+    <div class="device-col">
+      <div class="device-label">
+        iPad Air
+        <span class="pill">820 × 1180 · масштаб .66×</span>
+        <span class="route-badge">Tablet</span>
+      </div>
+      <div class="ipad">
+        <div class="camera"></div>
+        <div class="screen">
+          <iframe id="iframe-ipad" src="Kosho Prototype.html" title="Kosho iPad"
+                  style="width: 820px; height: 1122px; transform: scale(.622); transform-origin: top left;"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="note">
+    Единый HTML-прототип, адаптивный для всех экранов.
+    На <strong>мобильных</strong> (&lt; 768&nbsp;px) — нижнее таб-бар меню, bottom sheet для фильтров и деталей,
+    увеличенные touch-targets.
+    На <strong>планшете</strong> (768–1023&nbsp;px) — двухпанельный split-view в чатах и поиске.
+    На <strong>десктопе</strong> (≥ 1024&nbsp;px) — полноэкранное трёхпанельное представление.
+  </footer>
+</div>
+
+<script>
+  const frames = ['iframe-iphone', 'iframe-pixel', 'iframe-ipad'];
+  const ids = { home:'home', search:'search', booking:'booking', myBookings:'myBookings',
+                chat:'chat', publish:'publish', profile:'profile',
+                notifications:'notifications', driverVerify:'driverVerify', admin:'admin' };
+
+  function navigateFrame(id, route) {
+    const iframe = document.getElementById(id);
+    if (!iframe || !iframe.contentWindow) return;
+    try {
+      // Use localStorage strategy: the app reads kosho_route on load
+      const doc = iframe.contentWindow.document;
+      iframe.contentWindow.localStorage.setItem('kosho_route', route);
+      iframe.contentWindow.location.reload();
+    } catch(e) { console.warn(e); }
+  }
+
+  document.getElementById('route').addEventListener('change', (e) => {
+    frames.forEach(f => navigateFrame(f, e.target.value));
+  });
+
+  document.getElementById('reload').addEventListener('click', () => {
+    frames.forEach(f => {
+      const iframe = document.getElementById(f);
+      if (iframe) iframe.contentWindow.location.reload();
+    });
+  });
+
+  document.getElementById('sync').addEventListener('click', () => {
+    const route = document.getElementById('route').value;
+    frames.forEach(f => navigateFrame(f, route));
+  });
+
+  // on initial load, set the route for all frames once they've loaded
+  let loaded = 0;
+  frames.forEach(f => {
+    const iframe = document.getElementById(f);
+    if (!iframe) return;
+    iframe.addEventListener('load', () => {
+      loaded++;
+      try {
+        iframe.contentWindow.localStorage.setItem('kosho_route', document.getElementById('route').value);
+      } catch(e) {}
+    });
+  });
+</script>
+</body>
+</html>
