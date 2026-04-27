@@ -5,7 +5,6 @@ import type { useTranslations } from "next-intl";
 interface Props {
   tl: ReturnType<typeof useTranslations<string>>;
   displayPhone: string;
-  forgotMode: boolean;
   digits: string[];
   otp: string;
   serverError: string | null;
@@ -20,24 +19,21 @@ interface Props {
 }
 
 export function OtpStep({
-  tl, displayPhone, forgotMode, digits, otp, serverError, verifyMutation,
+  tl, displayPhone, digits, otp, serverError, verifyMutation,
   sendMutation, resendSeconds, digitRefs, onDigitChange, onDigitKeyDown,
   onBack, onResend,
 }: Props) {
   return (
     <>
       <div className="mb-2 text-center">
-        <p className="text-[14px] text-gray-600">
-          {forgotMode ? tl("otp_reset_sent") : tl("otp_sent")}
-        </p>
+        <p className="text-[14px] text-gray-600">{tl("otp_reset_sent")}</p>
         <p className="mt-1 text-[13px] font-semibold text-teal-700">{tl("otp_telegram_hint")}</p>
         <p className="mt-1 text-[17px] font-bold text-gray-900">+996 {displayPhone}</p>
       </div>
-      {forgotMode && (
-        <p className="mb-4 text-center text-[12px] font-semibold text-amber-700">
-          {tl("otp_reset_hint")}
-        </p>
-      )}
+
+      <p className="mb-4 text-center text-[12px] font-semibold text-amber-700">
+        {tl("otp_reset_hint")}
+      </p>
 
       <div className="mb-5 flex flex-col gap-1.5">
         <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">
@@ -74,7 +70,7 @@ export function OtpStep({
         type="button"
         disabled={digits.some((d) => !d) || otp.length < 6 || verifyMutation.isPending || resendSeconds > 0}
         onClick={() => verifyMutation.mutate()}
-        className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-amber-500 text-[14px] font-bold text-[#4A2C00] transition-colors hover:bg-amber-600 disabled:opacity-40"
+        className="flex h-12 w-full items-center justify-center rounded-xl bg-amber-500 text-[14px] font-bold text-[#4A2C00] transition-colors hover:bg-amber-600 disabled:opacity-40"
       >
         {verifyMutation.isPending
           ? tl("verifying")

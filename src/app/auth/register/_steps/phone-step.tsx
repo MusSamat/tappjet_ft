@@ -3,14 +3,14 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { sendOtp } from "@/lib/api/auth";
+import { initTelegramLink } from "@/lib/api/auth";
 import { phoneSchema } from "@/lib/validation/auth";
 import { Button, Label, PhoneInput } from "@/components/ui";
 
 interface Props {
   phone: string;
   onPhone: (p: string) => void;
-  onNext: () => void;
+  onNext: (data: { token: string; deepLink: string; expiresInSec: number }) => void;
   onError: (e: unknown) => void;
 }
 
@@ -21,7 +21,7 @@ export function PhoneStep({ phone, onPhone, onNext, onError }: Props) {
   const errMsg = touched && !parsed.success ? parsed.error.issues[0]?.message : undefined;
 
   const sendMutation = useMutation({
-    mutationFn: (p: string) => sendOtp(p),
+    mutationFn: (p: string) => initTelegramLink(p),
     onSuccess: onNext,
     onError,
   });

@@ -10,15 +10,17 @@ import { Button, OtpInput, type OtpInputHandle, Spinner } from "@/components/ui"
 
 interface Props {
   phone: string;
+  initialDebugCode?: string;
   onBack: () => void;
   onVerified: (result: Awaited<ReturnType<typeof verifyOtp>>) => void;
   onError: (e: unknown) => void;
 }
 
-export function OtpStep({ phone, onBack, onVerified, onError }: Props) {
+export function OtpStep({ phone, initialDebugCode, onBack, onVerified, onError }: Props) {
   const t = useTranslations("auth.register");
   const otpRef = useRef<OtpInputHandle>(null);
   const [code, setCode] = useState("");
+  const [debugCode, setDebugCode] = useState<string | undefined>(initialDebugCode);
   const { remaining, reset } = useCountdown(60);
 
   const verifyMutation = useMutation({
@@ -29,7 +31,7 @@ export function OtpStep({ phone, onBack, onVerified, onError }: Props) {
 
   const resendMutation = useMutation({
     mutationFn: () => sendOtp(phone),
-    onSuccess: () => reset(60),
+    onSuccess: (r) => { reset(60); if (r.debug_code) setDebugCode(r.debug_code); },
     onError,
   });
 
@@ -50,6 +52,13 @@ export function OtpStep({ phone, onBack, onVerified, onError }: Props) {
           {t("change")}
         </button>
       </p>
+
+      {debugCode && (
+        <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-center">
+          <span className="text-[11px] font-bold uppercase tracking-widest text-amber-600">DEV — код</span>
+          <p className="mt-0.5 font-mono text-[22px] font-black tracking-[0.2em] text-amber-700">{debugCode}</p>
+        </div>
+      )}
 
       <OtpInput
         ref={otpRef}

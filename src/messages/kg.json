@@ -129,6 +129,11 @@
       "sending": "Жибербиз…",
       "checking": "Текшеребиз…",
       "forgot_password": "Купуя сөздү унуттуңузбу?",
+      "no_password_hint": "Сизде азырынча купуя сөз жок. Аны Telegram аркылуу орнотуңуз.",
+      "set_password_btn": "Telegram аркылуу купуя сөз орнотуу",
+      "enter_phone_first": "Адегенде телефон номерин киргизиңиз.",
+      "no_account": "Аккаунт жокпу?",
+      "register_link": "Катталуу",
       "otp_sent": "Telegram аркылуу код жиберилди",
       "otp_reset_sent": "Купуя сөздү калыбына келтирүү коду Telegram аркылуу жиберилди",
       "otp_telegram_hint": "Telegramdan @tappjet_bot ачып, кодду киргизиңиз.",
@@ -168,7 +173,7 @@
       "step_password": "Купуя сөз",
       "step_routes": "Маршрут",
       "phone_label": "Телефон номери",
-      "phone_hint": "SMS аркылуу 6 орундуу код жиберебиз.",
+      "phone_hint": "Telegram-бот аркылуу код жөнөтөбүз.",
       "get_code": "Код алуу",
       "sending": "Жибербиз…",
       "otp_sent_to": "Код жиберилди",
@@ -197,7 +202,14 @@
       "err_otp_expired": "Код мөөнөтү бүттү. Жаңы суранып алыңыз.",
       "err_otp_attempts": "Аракет өтө көп болду. 15 мүнөт күтүңүз.",
       "err_rate_limited": "Өтө тез. Кийинчерээк аракет кылыңыз.",
-      "err_conflict": "Бул номер катталган. Аккаунтка кириңиз."
+      "err_conflict": "Бул номер катталган. Аккаунтка кириңиз.",
+      "step_telegram": "Telegram",
+      "telegram_title": "Telegram'да Tappjet ботун ачыңыз",
+      "telegram_hint": "Төмөнкү баскычты басыңыз → бот ачылат → Start басыңыз → код алыңыз.",
+      "telegram_open_btn": "Telegram'да ботту ачуу",
+      "telegram_waiting": "Telegram'дан ырастоону күтүүдөбүз…",
+      "telegram_otp_prompt": "Telegram'дан жөнөтүлгөн кодду киргизиңиз",
+      "err_telegram_expired": "Шилтеме эскирди. Кайра баштаңыз."
     }
   },
   "trips": {

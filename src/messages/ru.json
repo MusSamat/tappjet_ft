@@ -129,6 +129,11 @@
       "sending": "Отправляем…",
       "checking": "Проверяем…",
       "forgot_password": "Забыли пароль?",
+      "no_password_hint": "У вас ещё нет пароля. Установите его через Telegram.",
+      "set_password_btn": "Установить пароль через Telegram",
+      "enter_phone_first": "Сначала введите номер телефона.",
+      "no_account": "Нет аккаунта?",
+      "register_link": "Зарегистрироваться",
       "otp_sent": "Код отправлен в Telegram",
       "otp_reset_sent": "Код для сброса пароля отправлен в Telegram",
       "otp_telegram_hint": "Откройте @tappjet_bot в Telegram и введите код.",
@@ -168,7 +173,7 @@
       "step_password": "Пароль",
       "step_routes": "Маршрут",
       "phone_label": "Номер телефона",
-      "phone_hint": "Отправим 6-значный код в SMS.",
+      "phone_hint": "Пришлём код через Telegram-бот.",
       "get_code": "Получить код",
       "sending": "Отправляем…",
       "otp_sent_to": "Код отправлен на",
@@ -197,7 +202,14 @@
       "err_otp_expired": "Код истёк. Запросите новый.",
       "err_otp_attempts": "Слишком много попыток. Подождите 15 минут.",
       "err_rate_limited": "Слишком часто. Попробуйте позже.",
-      "err_conflict": "Этот номер уже зарегистрирован. Войдите в аккаунт."
+      "err_conflict": "Этот номер уже зарегистрирован. Войдите в аккаунт.",
+      "step_telegram": "Telegram",
+      "telegram_title": "Откройте бот Tappjet в Telegram",
+      "telegram_hint": "Нажмите кнопку ниже → откроется бот → нажмите Start → получите код.",
+      "telegram_open_btn": "Открыть бот в Telegram",
+      "telegram_waiting": "Ожидаем подтверждения в Telegram…",
+      "telegram_otp_prompt": "Введите код из Telegram, отправленный на номер",
+      "err_telegram_expired": "Ссылка устарела. Начните заново."
     }
   },
   "trips": {

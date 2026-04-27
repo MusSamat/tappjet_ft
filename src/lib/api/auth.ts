@@ -6,13 +6,33 @@ export async function checkPhone(phone: string): Promise<CheckPhoneResult> {
   return data;
 }
 
-export async function sendOtp(phone: string): Promise<{ expiresInSec: number }> {
-  const { data } = await api.post<{ expiresInSec: number }>("/auth/phone/send-otp", { phone });
+export async function sendOtp(phone: string): Promise<{ expiresInSec: number; debug_code?: string }> {
+  const { data } = await api.post<{ expiresInSec: number; debug_code?: string }>("/auth/phone/send-otp", { phone });
   return data;
 }
 
 export async function sendTelegramOtp(phone: string): Promise<{ expiresInSec: number }> {
   const { data } = await api.post<{ expiresInSec: number }>("/auth/telegram/otp/send", { phone });
+  return data;
+}
+
+export async function initTelegramLink(
+  phone: string,
+): Promise<{ token: string; deepLink: string; expiresInSec: number }> {
+  const { data } = await api.post<{ token: string; deepLink: string; expiresInSec: number }>(
+    "/auth/telegram/link/init",
+    { phone },
+  );
+  return data;
+}
+
+export async function getTelegramLinkStatus(
+  token: string,
+): Promise<{ status: "waiting" | "sent" | "expired" }> {
+  const { data } = await api.get<{ status: "waiting" | "sent" | "expired" }>(
+    "/auth/telegram/link/status",
+    { params: { token } },
+  );
   return data;
 }
 

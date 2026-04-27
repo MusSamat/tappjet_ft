@@ -9,15 +9,15 @@ import { consumeDeferredAction, routeForIntent } from "@/lib/auth/deferred-actio
 import { useAuth } from "@/store/auth";
 import { NotifCard, ProgressBar } from "@/components/ui";
 import { PhoneStep } from "./_steps/phone-step";
-import { OtpStep } from "./_steps/otp-step";
+import { TelegramStep } from "./_steps/telegram-step";
 import { ProfileStep } from "./_steps/profile-step";
 import { PasswordStep } from "./_steps/password-step";
 import { RoutePickerStep } from "./_steps/route-picker-step";
 import type { verifyOtp } from "@/lib/api/auth";
 
-type Step = "phone" | "otp" | "profile" | "password" | "routes";
+type Step = "phone" | "telegram" | "profile" | "password" | "routes";
 
-const STEP_ORDER: Step[] = ["phone", "otp", "profile", "password", "routes"];
+const STEP_ORDER: Step[] = ["phone", "telegram", "profile", "password", "routes"];
 
 export default function RegisterPage() {
   const t = useTranslations("auth.register");
@@ -25,13 +25,15 @@ export default function RegisterPage() {
   const { setSession, updateUser } = useAuth();
   const [step, setStep] = useState<Step>("phone");
   const [phone, setPhone] = useState("");
+  const [linkToken, setLinkToken] = useState("");
+  const [deepLink, setDeepLink] = useState("");
   const [serverError, setServerError] = useState<string | null>(null);
 
   const stepIdx = STEP_ORDER.indexOf(step);
 
   const STEP_TITLES: Record<Step, string> = {
     phone: t("step_phone"),
-    otp: t("step_otp"),
+    telegram: t("step_telegram"),
     profile: t("step_profile"),
     password: t("step_password"),
     routes: t("step_routes"),
@@ -45,6 +47,7 @@ export default function RegisterPage() {
       OTP_TOO_MANY_ATTEMPTS: t("err_otp_attempts"),
       RATE_LIMITED: t("err_rate_limited"),
       CONFLICT: t("err_conflict"),
+      TELEGRAM_LINK_EXPIRED: t("err_telegram_expired"),
     };
     setServerError(known[err.code] ?? err.message);
   };
@@ -89,19 +92,26 @@ export default function RegisterPage() {
             <PhoneStep
               phone={phone}
               onPhone={setPhone}
-              onNext={() => { setServerError(null); setStep("otp"); }}
+              onNext={({ token, deepLink: dl }) => {
+                setLinkToken(token);
+                setDeepLink(dl);
+                setServerError(null);
+                setStep("telegram");
+              }}
               onError={handleError}
             />
           )}
-          {step === "otp" && (
-            <OtpStep
+          {step === "telegram" && (
+            <TelegramStep
               phone={phone}
-              onBack={() => setStep("phone")}
+              token={linkToken}
+              deepLink={deepLink}
               onVerified={(result: Awaited<ReturnType<typeof verifyOtp>>) => {
                 setSession(result);
                 setServerError(null);
                 setStep("profile");
               }}
+              onBack={() => { setServerError(null); setStep("phone"); }}
               onError={handleError}
             />
           )}
