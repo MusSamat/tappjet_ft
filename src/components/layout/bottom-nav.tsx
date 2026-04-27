@@ -1,0 +1,171 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Home, Search, Plus, BookOpen, User, Users } from "lucide-react";
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
+import { listIncomingBookings } from "@/lib/api/bookings";
+import { useUnreadCount } from "@/lib/hooks/use-unread-count";
+import { useRoleColors } from "@/lib/hooks/use-role-colors";
+import { useAuth } from "@/store/auth";
+import { DriverAvatar } from "@/components/ui";
+import { cn } from "@/lib/utils/cn";
+
+export function BottomNav() {
+  const t = useTranslations("nav");
+  const pathname = usePathname();
+  const user = useAuth((s) => s.user);
+  const isAuthenticated = useAuth((s) => s.status === "authenticated");
+  const activeMode = useAuth((s) => s.activeMode);
+  const isDriver = activeMode === "driver";
+  const { data: unread = 0 } = useUnreadCount();
+  const colors = useRoleColors();
+
+  const { data: incomingData } = useQuery({
+    queryKey: ["bookings", "incoming", "bottom-nav"],
+    queryFn: () => listIncomingBookings(undefined, undefined, 50),
+    enabled: isAuthenticated && isDriver,
+    staleTime: 30_000,
+    placeholderData: keepPreviousData,
+    refetchInterval: 60_000,
+  });
+  const pendingCount = isDriver
+    ? (incomingData?.data ?? []).filter((b) => b.status === "pending" || b.status === "viewed").length
+    : 0;
+
+  const active = (href: string, exact = false) =>
+    exact ? pathname === href : pathname === href || pathname.startsWith(`${href}/`);
+
+  return (
+    <nav
+      className="fixed bottom-0 left-0 right-0 z-40 border-t border-gray-100 bg-white md:hidden"
+      style={{ height: "calc(64px + env(safe-area-inset-bottom))", paddingBottom: "env(safe-area-inset-bottom)" }}
+      aria-label={t("main_nav_aria")}
+    >
+      <div className="grid h-full grid-cols-5">
+
+        <NavItem href="/" label={t("home")} icon={Home} active={active("/", true)} activeClass={colors.navActive} />
+        <NavItem href="/trips" label={t("search")} icon={Search} active={active("/trips")} activeClass={colors.navActive} />
+
+        {/* Publish FAB */}
+        <Link
+          href={isDriver ? "/trips/create" : isAuthenticated ? "/requests/create" : "/auth/login"}
+          aria-label={isDriver ? t("publish_trip_aria") : isAuthenticated ? t("create_request_aria") : t("login_aria")}
+          className="flex flex-col items-center justify-center"
+        >
+          <div
+            className={cn(
+              "flex h-11 w-11 items-center justify-center rounded-[14px] shadow-md transition-colors",
+              isDriver
+                ? "bg-gradient-to-br from-sky-400 to-sky-600 text-white"
+                : isAuthenticated
+                  ? "bg-gradient-to-br from-amber-400 to-amber-600 text-white"
+                  : "bg-gray-100 text-gray-400",
+            )}
+            style={{ marginTop: "-10px" }}
+          >
+            {isDriver || !isAuthenticated ? (
+              <Plus className="h-5 w-5" aria-hidden="true" />
+            ) : (
+              <Users className="h-4 w-4" aria-hidden="true" />
+            )}
+          </div>
+          <span className={cn(
+            "mt-0.5 text-[10px] font-bold",
+            isDriver ? "text-sky-600" : isAuthenticated ? "text-amber-600" : "text-gray-400",
+          )}>
+            {isDriver ? t("publish") : isAuthenticated ? t("create_request") : t("login")}
+          </span>
+        </Link>
+
+        {/* Bookings / Requests browse */}
+        {isAuthenticated ? (
+          <Link
+            href="/my/bookings"
+            className={cn(
+              "relative flex min-h-[56px] flex-col items-center justify-center gap-0.5 transition-colors",
+              active("/my/bookings") ? colors.navActive : "text-gray-400 hover:text-gray-600",
+            )}
+          >
+            <BookOpen className="h-6 w-6" aria-hidden="true" />
+            <span className="text-[10px] font-semibold">{t("bookings")}</span>
+            {isDriver && pendingCount > 0 && (
+              <span className="absolute right-3 top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-amber-500 px-0.5 text-[9px] font-extrabold text-white">
+                {pendingCount > 9 ? "9+" : pendingCount}
+              </span>
+            )}
+          </Link>
+        ) : (
+          <Link
+            href="/requests"
+            className={cn(
+              "relative flex min-h-[56px] flex-col items-center justify-center gap-0.5 transition-colors",
+              active("/requests") ? colors.navActive : "text-gray-400 hover:text-gray-600",
+            )}
+          >
+            <Users className="h-6 w-6" aria-hidden="true" />
+            <span className="text-[10px] font-semibold">{t("requests")}</span>
+          </Link>
+        )}
+
+        {/* Profile */}
+        <Link
+          href={isAuthenticated ? "/profile" : "/auth/login"}
+          className={cn(
+            "relative flex min-h-[56px] flex-col items-center justify-center gap-0.5 transition-colors",
+            active("/profile") ? colors.navActive : "text-gray-400 hover:text-gray-600",
+          )}
+        >
+          {isAuthenticated ? (
+            <>
+              <span className={cn(
+                "relative flex h-7 w-7 items-center justify-center overflow-hidden rounded-full ring-2 transition-colors",
+                active("/profile") ? colors.profileRing : "ring-gray-200",
+              )}>
+                <DriverAvatar name={user?.name ?? "?"} src={user?.avatarUrl ?? null} size="sm" />
+                {unread > 0 && (
+                  <span className="absolute -right-0.5 -top-0.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full border border-white bg-amber-500 px-0.5 text-[8px] font-extrabold leading-none text-white">
+                    {unread > 9 ? "9+" : unread}
+                  </span>
+                )}
+              </span>
+              <span className="text-[10px] font-semibold">
+                {activeMode === "driver" ? t("driver_mode") : t("passenger_mode")}
+              </span>
+            </>
+          ) : (
+            <>
+              <User className="h-6 w-6" aria-hidden="true" />
+              <span className="text-[10px] font-semibold">{t("login")}</span>
+            </>
+          )}
+        </Link>
+
+      </div>
+    </nav>
+  );
+}
+
+function NavItem({
+  href, label, icon: Icon, active, activeClass,
+}: {
+  href: string;
+  label: string;
+  icon: React.ElementType;
+  active: boolean;
+  activeClass: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className={cn(
+        "relative flex min-h-[56px] flex-col items-center justify-center gap-0.5 transition-colors",
+        active ? activeClass : "text-gray-400 hover:text-gray-600",
+      )}
+    >
+      <Icon className="h-6 w-6" aria-hidden="true" />
+      <span className="text-[10px] font-semibold">{label}</span>
+    </Link>
+  );
+}

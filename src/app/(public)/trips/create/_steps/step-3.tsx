@@ -1,0 +1,122 @@
+"use client";
+
+import { CheckCircle, Shield } from "lucide-react";
+import { Spinner } from "@/components/ui";
+import { ToggleCard } from "../_components/toggle-card";
+
+interface Step3Props {
+  comment: string;
+  prefSilence: boolean;
+  prefMusic: boolean;
+  prefNoSmoking: boolean;
+  isPending: boolean;
+  createError: string | null;
+  onPatchComment: (v: string) => void;
+  onToggleSilence: () => void;
+  onToggleMusic: () => void;
+  onToggleNoSmoking: () => void;
+  onBack: () => void;
+  onPublish: () => void;
+  t: (key: string) => string;
+}
+
+export function Step3({
+  comment,
+  prefSilence,
+  prefMusic,
+  prefNoSmoking,
+  isPending,
+  createError,
+  onPatchComment,
+  onToggleSilence,
+  onToggleMusic,
+  onToggleNoSmoking,
+  onBack,
+  onPublish,
+  t,
+}: Step3Props) {
+  return (
+    <div className="flex flex-col gap-4">
+      <h2 className="text-[17px] font-bold text-gray-900">{t("step3_title")}</h2>
+
+      <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white p-5">
+        <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-gray-400">{t("prefs_label")}</p>
+        <div className="flex flex-col gap-2">
+          <ToggleCard
+            label={t("pref_silence_label")}
+            hint={t("pref_silence_hint")}
+            on={prefSilence}
+            onToggle={onToggleSilence}
+          />
+          <ToggleCard
+            label={t("pref_music_label")}
+            hint={t("pref_music_hint")}
+            on={prefMusic}
+            onToggle={onToggleMusic}
+          />
+          <ToggleCard
+            label={t("pref_no_smoke_label")}
+            on={prefNoSmoking}
+            onToggle={onToggleNoSmoking}
+          />
+        </div>
+      </div>
+
+      <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white p-5">
+        <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-gray-400">
+          {t("comment_label")}
+        </p>
+        <textarea
+          rows={3}
+          maxLength={400}
+          value={comment}
+          onChange={(e) => onPatchComment(e.target.value)}
+          placeholder={t("comment_placeholder")}
+          className="w-full resize-none rounded-xl border-[1.5px] border-gray-200 bg-gray-50 px-4 py-3 text-[13px] font-semibold text-gray-900 outline-none focus:border-teal-500 placeholder:text-gray-400"
+        />
+        <div className="mt-1 text-right text-[11px] text-gray-400">
+          {comment.length}/400
+        </div>
+      </div>
+
+      <div className="flex gap-3 rounded-2xl border border-teal-100 bg-teal-50 p-4">
+        <Shield className="mt-0.5 h-5 w-5 flex-shrink-0 text-teal-600" aria-hidden="true" />
+        <div>
+          <p className="text-[13px] font-bold text-teal-800">{t("ready_title")}</p>
+          <p className="mt-0.5 text-[12px] text-teal-700">{t("ready_desc")}</p>
+        </div>
+      </div>
+
+      {createError && (
+        <div className="rounded-2xl bg-red-50 px-4 py-3 text-[13px] font-semibold text-red-700">
+          {createError}
+        </div>
+      )}
+
+      <div className="flex gap-3">
+        <button
+          type="button"
+          onClick={onBack}
+          className="flex h-12 flex-1 items-center justify-center rounded-xl border-[1.5px] border-gray-200 text-[14px] font-bold text-gray-700 hover:bg-gray-50"
+        >
+          {t("back")}
+        </button>
+        <button
+          type="button"
+          disabled={isPending}
+          onClick={onPublish}
+          className="flex h-12 flex-[2] items-center justify-center gap-2 rounded-xl bg-amber-500 text-[14px] font-bold text-[#4A2C00] transition-colors hover:bg-amber-600 disabled:opacity-40"
+        >
+          {isPending ? (
+            <Spinner size={18} />
+          ) : (
+            <>
+              <CheckCircle className="h-4 w-4" aria-hidden="true" />
+              {t("publish")}
+            </>
+          )}
+        </button>
+      </div>
+    </div>
+  );
+}

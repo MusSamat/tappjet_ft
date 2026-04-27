@@ -1,0 +1,250 @@
+"use client";
+
+import { useEffect, useRef, useState, useId, useCallback } from "react";
+import { MapPin } from "lucide-react";
+import { searchCities, type City } from "@/lib/api/cities";
+import { cn } from "@/lib/utils/cn";
+
+interface Props {
+  value: string;
+  onChange: (value: string) => void;
+  /** Fires on every keystroke with the raw typed text (before dropdown selection) */
+  onInputChange?: (raw: string) => void;
+  placeholder?: string;
+  label?: string;
+  className?: string;
+  disabled?: boolean;
+  id?: string;
+  /** Smaller padding + font for sidebar/filter contexts */
+  compact?: boolean;
+  /** Remove border + ring — use when the input is inside a card that provides its own border */
+  borderless?: boolean;
+}
+
+function useDebounce<T>(value: T, ms: number): T {
+  const [debounced, setDebounced] = useState(value);
+  useEffect(() => {
+    const t = setTimeout(() => setDebounced(value), ms);
+    return () => clearTimeout(t);
+  }, [value, ms]);
+  return debounced;
+}
+
+/** Returns "Регион" or "Район" label for the dropdown subtitle. */
+function getSubtitle(city: City): string {
+  // If district name exists and is different from region name, prefer district.
+  const district = city.districtNameRu;
+  const region = city.regionNameRu;
+  if (district && district.trim() && district !== region) {
+    return `${district}, ${region}`;
+  }
+  return region;
+}
+
+export function CityAutocomplete({
+  value,
+  onChange,
+  onInputChange,
+  placeholder = "Введите город",
+  label,
+  className,
+  disabled,
+  id: externalId,
+  compact = false,
+  borderless = false,
+}: Props) {
+  const autoId = useId();
+  const inputId = externalId ?? autoId;
+
+  const [query, setQuery] = useState(value);
+  const [results, setResults] = useState<City[]>([]);
+  const [open, setOpen] = useState(false);
+  const [activeIdx, setActiveIdx] = useState(-1);
+  const [loading, setLoading] = useState(false);
+  const [popupStyle, setPopupStyle] = useState<React.CSSProperties>({});
+  const inputRef = useRef<HTMLInputElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
+  const selectedRef = useRef(false);
+  // Only open the dropdown when the user is actively typing — prevents the
+  // dropdown from auto-opening when value is synced from a URL param on mount.
+  const userTypingRef = useRef(false);
+
+  const debouncedQuery = useDebounce(query, 250);
+
+  // Recompute fixed popup position whenever the dropdown opens or viewport changes.
+  const calcPopup = useCallback(() => {
+    if (!inputRef.current) return;
+    const r = inputRef.current.getBoundingClientRect();
+    const minW = Math.max(280, r.width);
+    const left = Math.max(8, Math.min(r.left, window.innerWidth - minW - 8));
+    setPopupStyle({ position: "fixed", top: r.bottom + 4, left, width: minW, zIndex: 9999 });
+  }, []);
+
+  useEffect(() => {
+    if (!open) return;
+    calcPopup();
+    window.addEventListener("scroll", calcPopup, true);
+    window.addEventListener("resize", calcPopup);
+    return () => {
+      window.removeEventListener("scroll", calcPopup, true);
+      window.removeEventListener("resize", calcPopup);
+    };
+  }, [open, calcPopup]);
+
+  // Sync external value → internal query when not actively typing.
+  useEffect(() => {
+    if (value !== query && !open) setQuery(value);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
+
+  useEffect(() => {
+    if (selectedRef.current) {
+      selectedRef.current = false;
+      return;
+    }
+    if (!debouncedQuery.trim()) {
+      setResults([]);
+      setOpen(false);
+      return;
+    }
+    setLoading(true);
+    searchCities(debouncedQuery, 8)
+      .then((rows) => {
+        setResults(rows);
+        // Only show the dropdown when the user has explicitly typed — not on
+        // programmatic value syncs (URL param restore, swap, etc.).
+        setOpen(userTypingRef.current && rows.length > 0);
+        setActiveIdx(-1);
+      })
+      .catch(() => {
+        setResults([]);
+        setOpen(false);
+      })
+      .finally(() => setLoading(false));
+  }, [debouncedQuery]);
+
+  const commit = (city: City) => {
+    selectedRef.current = true;
+    userTypingRef.current = false;
+    setQuery(city.nameRu);
+    onChange(city.nameRu);
+    setOpen(false);
+    setResults([]);
+    setActiveIdx(-1);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!open) return;
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setActiveIdx((i) => Math.min(i + 1, results.length - 1));
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setActiveIdx((i) => Math.max(i - 1, 0));
+    } else if (e.key === "Enter" && activeIdx >= 0) {
+      e.preventDefault();
+      const city = results[activeIdx];
+      if (city) commit(city);
+    } else if (e.key === "Escape") {
+      setOpen(false);
+    }
+  };
+
+  return (
+    <div className={cn("relative", className)}>
+      {label && (
+        <label
+          htmlFor={inputId}
+          className="mb-1 block text-[11px] font-bold uppercase tracking-wide text-gray-500"
+        >
+          {label}
+        </label>
+      )}
+      <div className="relative">
+        {!borderless && (
+          <MapPin
+            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400"
+            aria-hidden="true"
+          />
+        )}
+        <input
+          ref={inputRef}
+          id={inputId}
+          type="text"
+          autoComplete="off"
+          disabled={disabled}
+          value={query}
+          placeholder={placeholder}
+          onChange={(e) => {
+            userTypingRef.current = true;
+            setQuery(e.target.value);
+            onChange("");
+            onInputChange?.(e.target.value);
+          }}
+          onKeyDown={handleKeyDown}
+          onFocus={() => {
+            // Re-show cached results only if the user had been typing in this
+            // field (not on programmatic focus or tab-in from another field).
+            if (userTypingRef.current && results.length > 0) setOpen(true);
+          }}
+          onBlur={() => {
+            userTypingRef.current = false;
+            setTimeout(() => setOpen(false), 150);
+          }}
+          role="combobox"
+          aria-expanded={open}
+          aria-autocomplete="list"
+          aria-controls={`${inputId}-list`}
+          aria-activedescendant={activeIdx >= 0 ? `${inputId}-opt-${activeIdx}` : undefined}
+          className={cn(
+            "w-full bg-transparent font-semibold text-gray-900 outline-none",
+            compact ? "py-1.5 text-[12px]" : "py-2 text-[14px]",
+            borderless ? "pr-3" : "rounded-xl border border-gray-200 bg-white pl-9 pr-3 focus:border-teal-500 focus:ring-2 focus:ring-teal-100",
+            "placeholder:text-gray-400",
+            "disabled:cursor-not-allowed disabled:opacity-50",
+          )}
+        />
+        {loading && (
+          <span
+            className="absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 animate-spin rounded-full border-2 border-gray-200 border-t-teal-500"
+            aria-hidden="true"
+          />
+        )}
+      </div>
+
+      {open && results.length > 0 && (
+        <ul
+          ref={listRef}
+          id={`${inputId}-list`}
+          role="listbox"
+          style={popupStyle}
+          className="overflow-hidden rounded-xl border border-gray-100 bg-white shadow-lg"
+        >
+          {results.map((city, idx) => (
+            <li
+              key={city.id}
+              id={`${inputId}-opt-${idx}`}
+              role="option"
+              aria-selected={idx === activeIdx}
+              onMouseDown={(e) => {
+                e.preventDefault();
+                commit(city);
+              }}
+              className={cn(
+                "flex cursor-pointer items-center gap-2 transition-colors",
+                compact ? "px-3 py-1.5" : "px-4 py-2.5",
+                idx === activeIdx ? "bg-teal-50" : "hover:bg-gray-50",
+              )}
+            >
+              <MapPin className="h-3 w-3 flex-shrink-0 text-gray-400" aria-hidden="true" />
+              <div className="min-w-0">
+                <p className={cn("font-bold text-gray-900", compact ? "text-[12px]" : "text-[13px]")}>{city.nameRu}</p>
+                <p className="text-[10px] font-semibold text-gray-400">{getSubtitle(city)}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}

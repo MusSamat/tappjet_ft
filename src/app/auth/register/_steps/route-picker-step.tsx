@@ -1,0 +1,55 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+
+const POPULAR_ROUTES = [
+  { from: "Бишкек", to: "Ош" },
+  { from: "Бишкек", to: "Каракол" },
+  { from: "Бишкек", to: "Нарын" },
+  { from: "Бишкек", to: "Баткен" },
+];
+
+export function RoutePickerStep() {
+  const t = useTranslations("auth.register");
+  const router = useRouter();
+
+  return (
+    <div className="flex flex-col gap-5">
+      <div className="text-center">
+        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-teal-50 text-[28px]">
+          🗺️
+        </div>
+        <h2 className="text-[20px] font-extrabold text-gray-900">{t("routes_title")}</h2>
+        <p className="mt-1.5 text-[14px] text-gray-500">{t("routes_subtitle")}</p>
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        {POPULAR_ROUTES.map(({ from, to }) => (
+          <button
+            key={`${from}-${to}`}
+            type="button"
+            onClick={() => {
+              localStorage.setItem("tappjet_onboarding_done", "1");
+              router.replace(`/trips?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`);
+            }}
+            className="flex flex-col items-start rounded-[16px] border-[1.5px] border-gray-200 bg-white p-4 text-left transition-all hover:border-teal-400 hover:shadow-sm active:scale-[0.97]"
+          >
+            <span className="text-[15px] font-extrabold text-gray-900">{from}</span>
+            <span className="mt-0.5 text-[11px] font-bold uppercase tracking-widest text-gray-400">↓</span>
+            <span className="text-[15px] font-extrabold text-teal-700">{to}</span>
+          </button>
+        ))}
+      </div>
+      <button
+        type="button"
+        onClick={() => {
+          localStorage.setItem("tappjet_onboarding_done", "1");
+          router.replace("/trips");
+        }}
+        className="text-center text-[13px] font-bold text-gray-400 hover:text-teal-700"
+      >
+        {t("other_route")}
+      </button>
+    </div>
+  );
+}

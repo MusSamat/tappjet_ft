@@ -1,0 +1,112 @@
+"use client";
+
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { ArrowLeftRight } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { CityAutocomplete } from "@/components/ui/city-autocomplete";
+import { DatePicker } from "@/components/ui/date-picker";
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <p className="mb-1.5 text-[10px] font-bold uppercase tracking-[0.08em] text-gray-500">{label}</p>
+      {children}
+    </div>
+  );
+}
+
+const selectCls =
+  "h-10 w-full rounded-xl border-[1.5px] border-gray-200 bg-gray-50 px-3 text-[13px] font-semibold text-gray-900 outline-none focus:border-sky-400 focus:bg-white transition-colors";
+
+export function RequestFilters() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const params = useSearchParams();
+  const t = useTranslations("request_filters");
+
+  const from = params.get("from") ?? "";
+  const to = params.get("to") ?? "";
+  const date = params.get("date") ?? "";
+  const seats = params.get("seats") ?? "";
+
+  const update = (patch: Record<string, string | null>) => {
+    const next = new URLSearchParams(params);
+    for (const [k, v] of Object.entries(patch)) {
+      if (v === null || v === "") next.delete(k);
+      else next.set(k, v);
+    }
+    next.delete("cursor");
+    router.replace(`${pathname}?${next.toString()}`, { scroll: false });
+  };
+
+  const clear = () => router.replace(pathname, { scroll: false });
+  const hasFilters = from || to || date || seats;
+
+  return (
+    <div className="flex flex-col gap-4">
+      <p className="text-[16px] font-extrabold text-gray-900">{t("title")}</p>
+
+      {/* From/To with swap */}
+      <Field label={t("route_label")}>
+        <div className="flex flex-col gap-1">
+          <CityAutocomplete
+            compact
+            value={from}
+            onChange={(v) => update({ from: v || null })}
+            placeholder={t("from_placeholder")}
+          />
+          <div className="flex items-center gap-2">
+            <div className="h-px flex-1 bg-gray-100" />
+            <button
+              type="button"
+              onClick={() => update({ from: to || null, to: from || null })}
+              disabled={!from && !to}
+              aria-label={t("swap_aria")}
+              className="flex h-6 w-6 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-400 hover:border-sky-300 hover:text-sky-600 disabled:opacity-30 transition-colors"
+            >
+              <ArrowLeftRight className="h-2.5 w-2.5" aria-hidden />
+            </button>
+            <div className="h-px flex-1 bg-gray-100" />
+          </div>
+          <CityAutocomplete
+            compact
+            value={to}
+            onChange={(v) => update({ to: v || null })}
+            placeholder={t("to_placeholder")}
+          />
+        </div>
+      </Field>
+
+      <Field label={t("date_label")}>
+        <DatePicker
+          compact
+          value={date}
+          onChange={(v) => update({ date: v || null })}
+        />
+      </Field>
+
+      <Field label={t("seats_label")}>
+        <select
+          value={seats}
+          onChange={(e) => update({ seats: e.target.value || null })}
+          className={selectCls}
+        >
+          <option value="">{t("any_seats")}</option>
+          {[1, 2, 3, 4].map((n) => (
+            <option key={n} value={n}>{n}+</option>
+          ))}
+        </select>
+      </Field>
+
+      {hasFilters && (
+        <button
+          type="button"
+          onClick={clear}
+          className="mt-1 text-[12px] font-bold text-gray-400 hover:text-sky-600 transition-colors text-left"
+        >
+          {t("reset")}
+        </button>
+      )}
+    </div>
+  );
+}

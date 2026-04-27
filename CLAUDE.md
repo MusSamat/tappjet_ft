@@ -1,4 +1,4 @@
-# CLAUDE.md — Kosho v2.2
+# CLAUDE.md — Tappjet v2.2
 # Коротко. Только то что нужно знать перед каждой задачей.
 
 ---
@@ -65,7 +65,7 @@ SMS:           только при регистрации / смене номе�
 ```
 
 Token Reuse Detection: повторный refresh → revoke все токены → уведомить.
-Deferred Action: kosho_deferred_action в sessionStorage, TTL 15 мин.
+Deferred Action: tappjet_deferred_action в sessionStorage, TTL 15 мин.
 Телефон скрыт до booking.status = accepted.
 
 ---

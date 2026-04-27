@@ -1,0 +1,201 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { Star, Shield, Users, Calendar, Zap, MessageCircle, CheckCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
+import type { PassengerRequest } from "@/lib/api/passenger-requests";
+import { DriverAvatar } from "@/components/ui/driver-avatar";
+import { useAuth } from "@/store/auth";
+import { RespondModal } from "./_components/respond-modal";
+
+interface Props {
+  request: PassengerRequest;
+}
+
+function fmtDate(iso: string) {
+  return new Date(iso).toLocaleDateString("ru-RU", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+  });
+}
+
+export function RequestDetailPane({ request }: Props) {
+  const { passenger } = request;
+  const t = useTranslations("requests");
+  const tFilters = useTranslations("request_filters");
+  const authStatus = useAuth((s) => s.status);
+  const activeMode = useAuth((s) => s.activeMode);
+  const [showModal, setShowModal] = useState(false);
+  const showRating = passenger.rating !== null && passenger.ratingCount >= 3;
+  const isDriver = authStatus === "authenticated" && activeMode === "driver";
+  const isGuest = authStatus === "anonymous" || authStatus === "idle";
+  const isOpen = request.status === "open";
+
+  return (
+    <>
+      <div className="flex flex-col gap-5">
+        {/* Passenger header */}
+        <Link
+          href={`/drivers/${passenger.id}`}
+          className="flex items-center gap-3 rounded-2xl border-[0.5px] border-sky-100 bg-sky-50 p-4 transition-colors hover:border-sky-200 hover:bg-sky-100"
+        >
+          <DriverAvatar
+            name={passenger.name}
+            src={passenger.avatarUrl}
+            size="lg"
+            className="ring-2 ring-sky-200"
+          />
+          <div className="flex min-w-0 flex-1 flex-col">
+            <p className="text-[18px] font-extrabold text-gray-900">{passenger.name}</p>
+            {showRating ? (
+              <div className="mt-0.5 flex items-center gap-1.5">
+                <div className="flex items-center gap-0.5">
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <Star
+                      key={i}
+                      className={`h-3 w-3 ${i <= Math.round(passenger.rating!) ? "fill-amber-400 text-amber-400" : "text-gray-300"}`}
+                      aria-hidden
+                    />
+                  ))}
+                </div>
+                <span className="text-[13px] font-bold text-gray-900">
+                  {passenger.rating!.toFixed(1)}
+                </span>
+                <span className="text-[12px] text-gray-500">
+                  · {passenger.ratingCount} оценок
+                </span>
+              </div>
+            ) : (
+              <span className="mt-0.5 text-[12px] font-semibold text-gray-500">
+                {t("new_passenger")}
+              </span>
+            )}
+          </div>
+          <Shield className="h-4 w-4 flex-shrink-0 text-sky-400" aria-hidden />
+        </Link>
+
+        {/* Route */}
+        <div>
+          <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.08em] text-gray-500">
+            {tFilters("route_label")}
+          </p>
+          <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white p-4">
+            <div className="flex items-start gap-3">
+              <div className="flex flex-col items-center pt-1">
+                <span
+                  className="h-2.5 w-2.5 flex-shrink-0 rounded-full bg-sky-500"
+                  style={{ boxShadow: "0 0 0 3px #E0F2FE" }}
+                  aria-hidden
+                />
+                <div className="my-1.5 h-10 w-0.5 bg-gray-200" aria-hidden />
+                <span
+                  className="h-2.5 w-2.5 flex-shrink-0 rounded-full bg-sky-400"
+                  style={{ boxShadow: "0 0 0 3px #E0F2FE" }}
+                  aria-hidden
+                />
+              </div>
+              <div className="flex flex-1 flex-col gap-4">
+                <div>
+                  <p className="text-[16px] font-extrabold text-gray-900">
+                    {request.originCity}
+                  </p>
+                  <p className="mt-0.5 text-[12px] font-semibold text-gray-500">
+                    {t("origin_point")}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-[16px] font-extrabold text-gray-900">
+                    {request.destinationCity}
+                  </p>
+                  <p className="mt-0.5 text-[12px] font-semibold text-gray-500">
+                    {t("dest_point")}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Details */}
+        <div className="grid grid-cols-2 gap-3">
+          <div className="flex flex-col gap-1 rounded-2xl border-[0.5px] border-gray-200 bg-white p-3">
+            <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-gray-400">
+              <Calendar className="h-3 w-3" aria-hidden />
+              {t("date_detail")}
+            </div>
+            <p className="text-[13px] font-bold text-gray-900">{fmtDate(request.departureDate)}</p>
+            {request.flexible && (
+              <span className="mt-0.5 inline-flex w-fit items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-bold text-amber-700">
+                <Zap className="h-2.5 w-2.5" aria-hidden />
+                {t("flexible")}
+              </span>
+            )}
+          </div>
+
+          <div className="flex flex-col gap-1 rounded-2xl border-[0.5px] border-gray-200 bg-white p-3">
+            <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-gray-400">
+              <Users className="h-3 w-3" aria-hidden />
+              {t("seats_needed")}
+            </div>
+            <p className="text-[28px] font-extrabold text-sky-600">{request.seatsNeeded}</p>
+            <p className="text-[11px] text-gray-500">
+              {request.seatsNeeded === 1
+                ? "место"
+                : request.seatsNeeded < 5
+                  ? "места"
+                  : "мест"}
+            </p>
+          </div>
+        </div>
+
+        {/* Comment */}
+        {request.comment && (
+          <div>
+            <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.08em] text-gray-500">
+              {t("passenger_comment")}
+            </p>
+            <div className="rounded-2xl bg-sky-50 px-4 py-3 text-[13px] leading-relaxed text-gray-700">
+              «{request.comment}»
+            </div>
+          </div>
+        )}
+
+        {/* CTA */}
+        <div className="mt-1">
+          {isGuest ? (
+            <Link
+              href="/auth/login"
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-sky-600 text-[14px] font-bold text-white hover:bg-sky-700"
+            >
+              {t("login_to_respond")}
+            </Link>
+          ) : isDriver && isOpen ? (
+            <button
+              type="button"
+              onClick={() => setShowModal(true)}
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-sky-500 text-[14px] font-bold text-white transition-colors hover:bg-sky-600"
+            >
+              <CheckCircle className="h-4 w-4" aria-hidden />
+              {t("respond_btn")}
+            </button>
+          ) : isDriver && !isOpen ? (
+            <div className="flex items-center justify-center rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3">
+              <p className="text-[12px] font-semibold text-gray-500">{t("closed")}</p>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3">
+              <MessageCircle className="h-4 w-4 flex-shrink-0 text-gray-400" aria-hidden />
+              <p className="text-[12px] text-gray-500">{t("switch_to_driver")}</p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {showModal && (
+        <RespondModal request={request} onClose={() => setShowModal(false)} />
+      )}
+    </>
+  );
+}
