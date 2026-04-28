@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Star, ArrowRight, X } from "lucide-react";
-import { cn } from "@/lib/utils/cn";
 import { DriverAvatar } from "@/components/ui";
 import { StatusBadge } from "./status-badge";
 import type { Booking } from "@/lib/api/bookings";

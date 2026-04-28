@@ -57,7 +57,7 @@ function savePrefs(userId: string, prefs: Record<string, boolean>): void {
 export default function NotificationsPage() {
   const t = useTranslations("notifications");
   const queryClient = useQueryClient();
-  const sentinelRef = useRef<HTMLDivElement>(null);
+  const _sentinelRef = useRef<HTMLDivElement>(null);
   const userId = useAuth((s) => s.user?.id);
 
   const NOTIF_SETTINGS: NotifSetting[] = NOTIF_SETTING_KEYS.map((s) => ({
