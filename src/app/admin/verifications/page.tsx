@@ -25,7 +25,8 @@ const STATUS_CFG: Record<string, { label: string; bg: string; text: string; dot:
 };
 
 function StatusBadge({ status }: { status: string }) {
-  const cfg = STATUS_CFG[status] ?? STATUS_CFG.pending;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const cfg = STATUS_CFG[status] ?? STATUS_CFG["pending"]!;
   return (
     <span className={cn("flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold", cfg.bg, cfg.text)}>
       <span className={cn("h-1.5 w-1.5 rounded-full", cfg.dot)} />

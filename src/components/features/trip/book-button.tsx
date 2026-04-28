@@ -31,7 +31,7 @@ export function BookButton({ tripId, seatsAvailable, driverId, disabled }: Props
   const [phoneStep, setPhoneStep] = useState<PhoneStep>("phone");
   const [phoneInput, setPhoneInput] = useState("");
   const [otpInput, setOtpInput] = useState("");
-  const [otpTimer, setOtpTimer] = useState(0);
+  const [_otpTimer, setOtpTimer] = useState(0);
   const [phoneLoading, setPhoneLoading] = useState(false);
   const [phoneError, setPhoneError] = useState<string | null>(null);
 

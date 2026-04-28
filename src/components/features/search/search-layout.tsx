@@ -5,7 +5,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { searchTrips, type SearchTripsParams, type TripSearchResult, type TripListItem } from "@/lib/api/trips";
 import Link from "next/link";
 import { TripCard } from "@/components/ui/trip-card";
-import { CityAutocomplete } from "@/components/ui/city-autocomplete";
+
 import { SearchFilters } from "./search-filters";
 import { TripDetailPane } from "./trip-detail-pane";
 import { PopularRoutes } from "./popular-routes";

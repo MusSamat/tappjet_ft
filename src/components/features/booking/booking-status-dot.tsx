@@ -3,6 +3,7 @@ import type { BookingStatus } from "@/lib/api/bookings";
 
 const MAP: Record<BookingStatus, { status: "accepted" | "pending" | "rejected" | "cancelled" | "completed"; label: string }> = {
   pending: { status: "pending", label: "Ожидание" },
+  viewed: { status: "pending", label: "Просмотрено" },
   accepted: { status: "accepted", label: "Принято" },
   rejected: { status: "rejected", label: "Отклонено" },
   cancelled_by_passenger: { status: "cancelled", label: "Отменено пассажиром" },

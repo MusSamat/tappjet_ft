@@ -97,7 +97,7 @@ const CODE: Record<string, string> = {
 
 export function friendlyError(err: ErrorShape): string {
   const reason = err.details?.reason as string | undefined;
-  if (reason && REASON[reason]) return REASON[reason];
-  if (CODE[err.code]) return CODE[err.code];
+  if (reason && REASON[reason]) return REASON[reason] ?? err.message;
+  if (CODE[err.code]) return CODE[err.code] ?? err.message;
   return err.message;
 }

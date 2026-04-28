@@ -1,16 +1,15 @@
 import Link from "next/link";
-import { ArrowRight, Shield, Star, MessageCircle, Send } from "lucide-react";
+import { ArrowRight, Shield, Star, MessageCircle, Send, type LucideIcon } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { HeroSearchForm } from "@/components/features/search/hero-search-form";
 import { OnboardingGate } from "@/components/features/onboarding/onboarding-gate";
 import { getPopularRoutes } from "@/lib/api/cities";
-import React from "react";
 
 export default async function HomePage() {
   const t = await getTranslations("landing");
-  let popularRoutes = await getPopularRoutes().catch(() => []);
+  const popularRoutes = await getPopularRoutes().catch(() => []);
 
-  const TRUST_BADGES: { icon: React.ComponentType<{ className?: string; "aria-hidden"?: boolean }>; text: string }[] = [
+  const TRUST_BADGES: { icon: LucideIcon; text: string }[] = [
     { icon: Shield, text: t("trust_verified") },
     { icon: Star, text: t("trust_ratings") },
     { icon: MessageCircle, text: t("trust_chat") },

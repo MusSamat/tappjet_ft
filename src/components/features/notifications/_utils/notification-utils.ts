@@ -1,4 +1,4 @@
-import { Bell, Star, Car, CheckCircle, AlertCircle, MessageCircle, Users, Clock } from "lucide-react";
+import { Star, Car, CheckCircle, AlertCircle, MessageCircle, Users, Clock } from "lucide-react";
 import type { AppNotification } from "@/lib/api/notifications";
 
 export const TYPE_CONFIG: Record<string, { icon: React.ElementType; label: string; color: string }> = {

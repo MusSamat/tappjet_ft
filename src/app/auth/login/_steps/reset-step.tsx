@@ -21,7 +21,7 @@ interface Props {
 
 export function ResetStep({
   tl, newPassword, setNewPassword, confirmPassword, setConfirmPassword,
-  serverError, setServerError, showNewPassword, setShowNewPassword,
+  serverError: _serverError, setServerError, showNewPassword, setShowNewPassword,
   newPasswordRef, canReset, resetMutation, onSkip,
 }: Props) {
   return (

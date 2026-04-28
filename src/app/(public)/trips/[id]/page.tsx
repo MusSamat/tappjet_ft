@@ -45,7 +45,7 @@ export default async function TripDetailsPage({ params }: Props) {
   if (!trip) notFound();
 
   const tTrips = await getTranslations("trips");
-  const tSearch = await getTranslations("search");
+  const _tSearch = await getTranslations("search");
 
   const driver = trip.driver ?? {};
   const rating = driver.rating ?? null;

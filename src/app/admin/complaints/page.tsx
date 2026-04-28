@@ -32,7 +32,8 @@ const PRIORITY_CFG: Record<string, string> = {
 };
 
 function StatusBadge({ status }: { status: string }) {
-  const cfg = STATUS_CFG[status] ?? STATUS_CFG.new;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const cfg = STATUS_CFG[status] ?? STATUS_CFG["new"]!;
   return (
     <span className={cn("flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold", cfg.bg, cfg.text)}>
       <span className={cn("h-1.5 w-1.5 rounded-full", cfg.dot)} />

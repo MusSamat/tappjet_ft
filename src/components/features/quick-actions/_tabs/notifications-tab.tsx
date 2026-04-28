@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import {
-  Bell, CheckCircle, XCircle,
+  Bell, CheckCircle,
   Car, Star, AlertCircle, Shield,
 } from "lucide-react";
 import { type UseMutationResult } from "@tanstack/react-query";

@@ -1,10 +1,9 @@
 import { api } from "./client";
 import type { components } from "./schema.gen";
 
-export type Booking = components["schemas"]["Booking"];
-
 export type BookingStatus =
   | "pending"
+  | "viewed"
   | "accepted"
   | "rejected"
   | "cancelled_by_passenger"
@@ -13,6 +12,9 @@ export type BookingStatus =
   | "no_show"
   | "completed"
   | "expired";
+
+type _BookingBase = components["schemas"]["Booking"];
+export type Booking = Omit<_BookingBase, "status"> & { status?: BookingStatus };
 
 export interface CreateBookingInput {
   tripId: string;
