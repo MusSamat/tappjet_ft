@@ -11,12 +11,6 @@ declare global {
         };
       };
     };
-    AppleID?: {
-      auth: {
-        init: (cfg: AppleIdConfig) => void;
-        signIn: () => Promise<AppleSignInResponse>;
-      };
-    };
     Telegram?: {
       Login: {
         auth: (
@@ -43,13 +37,3 @@ export interface GisButtonConfig {
   width?: number;
 }
 
-export interface AppleIdConfig {
-  clientId: string;
-  scope: string;
-  redirectURI: string;
-  usePopup: boolean;
-}
-
-export interface AppleSignInResponse {
-  authorization: { code: string; id_token: string };
-}

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { loginWithApple, loginWithGoogle, loginWithTelegram } from "@/lib/api/auth";
+import { loginWithGoogle, loginWithTelegram } from "@/lib/api/auth";
 import { isFullAuthResult } from "@/lib/api/types";
 import { extractError } from "@/lib/api/client";
 import { consumeDeferredAction, routeForIntent } from "@/lib/auth/deferred-action";
@@ -13,9 +13,7 @@ import { cn } from "@/lib/utils/cn";
 import "./social-buttons-types";
 
 const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-const APPLE_CLIENT_ID = process.env.NEXT_PUBLIC_APPLE_CLIENT_ID;
 const TELEGRAM_BOT_ID = process.env.NEXT_PUBLIC_TELEGRAM_BOT_ID;
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "";
 
 const baseBtn =
   "flex h-11 w-full items-center justify-center gap-3 rounded-xl border-[1.5px] border-gray-300 bg-white text-body text-gray-900 transition-colors hover:bg-gray-50 focus-visible:border-teal-500 focus-visible:outline-none disabled:opacity-50";
@@ -27,7 +25,7 @@ interface Props {
 export function SocialButtons({ onDone }: Props) {
   const router = useRouter();
   const { setSession } = useAuth();
-  const [loading, setLoading] = useState<"google" | "apple" | "telegram" | null>(null);
+  const [loading, setLoading] = useState<"google" | "telegram" | null>(null);
   const [error, setError] = useState<string | null>(null);
   const googleOverlayRef = useRef<HTMLDivElement>(null);
 
@@ -97,26 +95,6 @@ export function SocialButtons({ onDone }: Props) {
     };
   }, [handleResult]);
 
-  // ── Apple Sign In JS ────────────────────────────────────────────────────
-  useEffect(() => {
-    if (!APPLE_CLIENT_ID || document.getElementById("apple-id-js")) return;
-
-    const s = document.createElement("script");
-    s.id = "apple-id-js";
-    s.src =
-      "https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js";
-    s.async = true;
-    s.onload = () => {
-      window.AppleID?.auth.init({
-        clientId: APPLE_CLIENT_ID,
-        scope: "name email",
-        redirectURI: `${SITE_URL}/auth/apple/callback`,
-        usePopup: true,
-      });
-    };
-    document.head.appendChild(s);
-  }, []);
-
   // ── Telegram Login Widget ───────────────────────────────────────────────
   useEffect(() => {
     if (!TELEGRAM_BOT_ID || document.getElementById("tg-widget-js")) return;
@@ -129,35 +107,6 @@ export function SocialButtons({ onDone }: Props) {
   }, []);
 
   // ── Handlers ────────────────────────────────────────────────────────────
-  const handleApple = async () => {
-    if (!APPLE_CLIENT_ID) {
-      setError("Apple Sign-In не настроен: укажите NEXT_PUBLIC_APPLE_CLIENT_ID.");
-      return;
-    }
-    if (!window.AppleID) {
-      setError("Apple SDK ещё загружается. Попробуйте через секунду.");
-      return;
-    }
-    setLoading("apple");
-    setError(null);
-    try {
-      const { authorization } = await window.AppleID.auth.signIn();
-      handleResult(await loginWithApple(authorization.id_token));
-    } catch (e: unknown) {
-      if (
-        e &&
-        typeof e === "object" &&
-        "error" in e &&
-        (e as { error: string }).error === "popup_closed_by_user"
-      ) {
-        return;
-      }
-      setError(extractError(e).message);
-    } finally {
-      setLoading(null);
-    }
-  };
-
   const handleTelegram = () => {
     if (!TELEGRAM_BOT_ID) {
       setError("Telegram не настроен: укажите NEXT_PUBLIC_TELEGRAM_BOT_ID.");
@@ -251,21 +200,6 @@ export function SocialButtons({ onDone }: Props) {
         </button>
       )}
 
-      {/* Apple */}
-      <button
-        type="button"
-        className={cn(baseBtn, "bg-gray-900 text-white hover:bg-gray-900/90 border-gray-900")}
-        onClick={handleApple}
-        disabled={loading !== null}
-        aria-label="Войти через Apple"
-      >
-        {loading === "apple" ? (
-          <Spinner size={18} />
-        ) : (
-          <span aria-hidden="true" className="text-xl leading-none"></span>
-        )}
-        <span>Войти через Apple</span>
-      </button>
     </div>
   );
 }
