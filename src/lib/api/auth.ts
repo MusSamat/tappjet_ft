@@ -75,6 +75,28 @@ export async function loginWithTelegram(payload: TelegramAuthData): Promise<AnyA
   return data;
 }
 
+export async function initTelegramBotLogin(): Promise<{ token: string; deepLink: string; expiresInSec: number }> {
+  const { data } = await api.post<{ token: string; deepLink: string; expiresInSec: number }>(
+    "/auth/telegram/bot-login/init",
+  );
+  return data;
+}
+
+export async function getTelegramBotLoginStatus(
+  token: string,
+): Promise<{ status: "waiting" | "done" | "expired" | "not_found" }> {
+  const { data } = await api.get<{ status: "waiting" | "done" | "expired" }>(
+    "/auth/telegram/bot-login/status",
+    { params: { token } },
+  );
+  return data;
+}
+
+export async function claimTelegramBotLogin(token: string): Promise<AuthResult> {
+  const { data } = await api.post<AuthResult>("/auth/telegram/bot-login/claim", { token });
+  return data;
+}
+
 // Mini App auto-login — sends the raw initData string (HMAC-verified by backend).
 export async function loginWithTelegramMiniApp(initData: string): Promise<AnyAuthResult> {
   const { data } = await api.post<AnyAuthResult>("/auth/telegram", { initData });
