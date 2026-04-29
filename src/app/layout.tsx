@@ -1,9 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import { Nunito } from "next/font/google";
+import Script from "next/script";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { Providers } from "@/components/providers";
 import { AuthBootstrap } from "@/components/auth-bootstrap";
+import { TmaInit } from "@/components/tma-init";
 import { TopNav } from "@/components/layout/top-nav";
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { Footer } from "@/components/layout/footer";
@@ -44,9 +46,16 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang={locale} className={nunito.variable}>
+      <head>
+        <Script
+          src="https://telegram.org/js/telegram-web-app.js"
+          strategy="beforeInteractive"
+        />
+      </head>
       <body className="min-h-screen font-sans">
         <NextIntlClientProvider locale={locale} messages={messages}>
           <Providers>
+            <TmaInit />
             <AuthBootstrap />
             <TopNav />
             <main className="main-mobile-pad">{children}</main>

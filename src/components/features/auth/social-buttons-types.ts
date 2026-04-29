@@ -24,10 +24,7 @@ declare global {
           cb: (data: TelegramAuthData | false) => void,
         ) => void;
       };
-      WebApp?: {
-        initData: string;
-        ready(): void;
-      };
+      WebApp: TelegramWebApp;
     };
   }
 }
