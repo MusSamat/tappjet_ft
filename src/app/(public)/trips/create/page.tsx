@@ -11,6 +11,7 @@ import { friendlyError } from "@/lib/utils/api-error";
 import { Spinner } from "@/components/ui";
 import { useAuth } from "@/store/auth";
 import { saveDeferredAction } from "@/lib/auth/deferred-action";
+import { AddPhoneModal } from "@/components/features/auth/add-phone-modal";
 import { Step1 } from "./_steps/step-1";
 import { Step2 } from "./_steps/step-2";
 import { Step3 } from "./_steps/step-3";
@@ -78,8 +79,10 @@ export default function CreateTripPage() {
   const router = useRouter();
   const t = useTranslations("trips.create");
   const status = useAuth((s) => s.status);
+  const user = useAuth((s) => s.user);
   const [step, setStep] = useState(1);
   const [draft, setDraft] = useState<DraftData>(EMPTY);
+  const [showAddPhone, setShowAddPhone] = useState(false);
 
   useEffect(() => {
     if (status === "anonymous") {
@@ -87,8 +90,11 @@ export default function CreateTripPage() {
       router.replace("/auth/login");
       return;
     }
+    if (status === "authenticated" && !user?.phoneVerified) {
+      setShowAddPhone(true);
+    }
     setDraft(loadDraft());
-  }, [status, router]);
+  }, [status, user, router]);
 
   const patch = (update: Partial<DraftData>) => {
     setDraft((prev) => {
@@ -149,6 +155,11 @@ export default function CreateTripPage() {
   }
 
   return (
+    <>
+    <AddPhoneModal
+      open={showAddPhone}
+      onClose={() => setShowAddPhone(false)}
+    />
     <div className="mx-auto max-w-[720px] px-4 py-8">
       <button
         type="button"
@@ -223,5 +234,6 @@ export default function CreateTripPage() {
         />
       )}
     </div>
+    </>
   );
 }

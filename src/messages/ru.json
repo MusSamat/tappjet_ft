@@ -1,12 +1,13 @@
 {
   "nav": {
     "home": "Главная",
-    "search": "Поиск",
+    "search": "Поездки",
     "publish": "Создать",
     "create_request": "Заявка",
-    "bookings": "Брони",
-    "requests": "Заявки",
+    "bookings": "Мои",
+    "requests": "Найти",
     "login": "Войти",
+    "profile": "Профиль",
     "driver_mode": "Водитель",
     "passenger_mode": "Пассажир",
     "publish_trip_aria": "Опубликовать поездку",

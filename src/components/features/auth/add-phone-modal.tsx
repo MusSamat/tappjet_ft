@@ -1,0 +1,226 @@
+"use client";
+
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Phone, Shield } from "lucide-react";
+import {
+  initTelegramLink,
+  getTelegramLinkStatus,
+  sendOtp,
+  confirmPhoneAdd,
+} from "@/lib/api/auth";
+import { useAuth } from "@/store/auth";
+import { extractError } from "@/lib/api/client";
+import { friendlyError } from "@/lib/utils/api-error";
+import { Button, PhoneInput, Spinner } from "@/components/ui";
+import { Modal, ModalContent, ModalHeader, ModalTitle } from "@/components/ui/modal";
+
+type Step = "phone" | "tg-waiting" | "otp";
+
+interface Props {
+  open: boolean;
+  onClose: () => void;
+  onDone?: () => void;
+}
+
+export function AddPhoneModal({ open, onClose, onDone }: Props) {
+  const user = useAuth((s) => s.user);
+  const setSession = useAuth((s) => s.setSession);
+
+  const [step, setStep] = useState<Step>("phone");
+  const [phone, setPhone] = useState("");
+  const [deepLink, setDeepLink] = useState<string | null>(null);
+  const [otp, setOtp] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const stopPoll = useCallback(() => {
+    if (pollRef.current) {
+      clearInterval(pollRef.current);
+      pollRef.current = null;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!open) stopPoll();
+    return stopPoll;
+  }, [open, stopPoll]);
+
+  // Reset on open
+  useEffect(() => {
+    if (open) {
+      setStep("phone");
+      setPhone("");
+      setDeepLink(null);
+      setOtp("");
+      setError(null);
+      setLoading(false);
+    }
+  }, [open]);
+
+  const handlePhoneSubmit = async () => {
+    if (phone.length < 12) return;
+    setLoading(true);
+    setError(null);
+    try {
+      if (user?.telegramLinked) {
+        const { token, deepLink: link } = await initTelegramLink(phone);
+        setDeepLink(link);
+        window.open(link, "_blank");
+        setStep("tg-waiting");
+        pollRef.current = setInterval(async () => {
+          try {
+            const { status } = await getTelegramLinkStatus(token);
+            if (status === "sent") {
+              stopPoll();
+              setStep("otp");
+            } else if (status === "expired") {
+              stopPoll();
+              setError("Время вышло. Попробуйте снова.");
+              setStep("phone");
+            }
+          } catch {
+            stopPoll();
+            setError("Ошибка соединения. Попробуйте снова.");
+            setStep("phone");
+          }
+        }, 2000);
+      } else {
+        await sendOtp(phone);
+        setStep("otp");
+      }
+    } catch (e) {
+      setError(friendlyError(extractError(e)));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleOtpSubmit = async () => {
+    if (otp.length < 6) return;
+    setLoading(true);
+    setError(null);
+    try {
+      const result = await confirmPhoneAdd(phone, otp);
+      setSession(result);
+      onDone?.();
+      onClose();
+    } catch (e) {
+      setError(friendlyError(extractError(e)));
+      setOtp("");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const title =
+    step === "phone" ? "Добавьте номер телефона" :
+    step === "tg-waiting" ? "Откройте Telegram" :
+    "Введите код подтверждения";
+
+  return (
+    <Modal open={open} onOpenChange={(o) => { if (!o) onClose(); }}>
+      <ModalContent>
+        <ModalHeader>
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-teal-50">
+              {step === "otp" ? (
+                <Shield className="h-5 w-5 text-teal-700" aria-hidden />
+              ) : (
+                <Phone className="h-5 w-5 text-teal-700" aria-hidden />
+              )}
+            </div>
+            <ModalTitle>{title}</ModalTitle>
+          </div>
+        </ModalHeader>
+
+        {error && (
+          <div className="mb-4 rounded-xl bg-red-50 px-3 py-2 text-[13px] font-semibold text-red-700">
+            {error}
+          </div>
+        )}
+
+        {step === "phone" && (
+          <div className="space-y-4">
+            <p className="text-[13px] font-semibold text-gray-500">
+              {user?.telegramLinked
+                ? "Код подтверждения придёт через Telegram-бот"
+                : "Код подтверждения придёт по SMS"}
+            </p>
+            <PhoneInput value={phone} onValueChange={setPhone} autoFocus />
+            <Button
+              variant="submit"
+              size="lg"
+              className="w-full"
+              disabled={phone.length < 12 || loading}
+              onClick={handlePhoneSubmit}
+            >
+              {loading ? <Spinner size={16} /> : "Получить код"}
+            </Button>
+          </div>
+        )}
+
+        {step === "tg-waiting" && deepLink && (
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center gap-3 rounded-xl bg-[#0088cc]/10 px-4 py-3">
+              <Spinner size={16} className="shrink-0 text-[#0088cc]" />
+              <p className="text-[13px] font-semibold text-gray-800">
+                Ожидаем подтверждения в Telegram...
+              </p>
+            </div>
+            <a
+              href={deepLink}
+              target="_blank"
+              rel="noreferrer"
+              className="flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#0088cc] text-[15px] font-bold text-white hover:bg-[#0088cc]/90"
+            >
+              Открыть Telegram
+            </a>
+            <button
+              type="button"
+              onClick={() => { stopPoll(); setStep("phone"); }}
+              className="text-center text-[13px] font-semibold text-gray-500 hover:text-gray-700"
+            >
+              ← Изменить номер
+            </button>
+          </div>
+        )}
+
+        {step === "otp" && (
+          <div className="space-y-4">
+            <p className="text-[13px] font-semibold text-gray-500">
+              Код отправлен на{" "}
+              <span className="font-bold text-gray-900">{phone}</span>
+            </p>
+            <input
+              type="text"
+              inputMode="numeric"
+              value={otp}
+              autoFocus
+              onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+              onKeyDown={(e) => e.key === "Enter" && handleOtpSubmit()}
+              placeholder="— — — — — —"
+              className="w-full rounded-xl border-[1.5px] border-gray-200 bg-gray-50 px-4 py-3 text-center text-[22px] font-extrabold tracking-[0.3em] text-gray-900 outline-none focus:border-teal-500"
+            />
+            <Button
+              variant="submit"
+              size="lg"
+              className="w-full"
+              disabled={otp.length < 6 || loading}
+              onClick={handleOtpSubmit}
+            >
+              {loading ? <Spinner size={16} /> : "Подтвердить"}
+            </Button>
+            <button
+              type="button"
+              onClick={() => { setStep("phone"); setOtp(""); setError(null); }}
+              className="w-full text-center text-[13px] font-semibold text-gray-500 hover:text-gray-700"
+            >
+              ← Изменить номер
+            </button>
+          </div>
+        )}
+      </ModalContent>
+    </Modal>
+  );
+}

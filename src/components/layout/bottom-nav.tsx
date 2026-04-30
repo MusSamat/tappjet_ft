@@ -45,7 +45,10 @@ export function BottomNav() {
     >
       <div className="grid h-full grid-cols-5">
 
+        {/* Home */}
         <NavItem href="/" label={t("home")} icon={Home} active={active("/", true)} activeClass={colors.navActive} />
+
+        {/* Browse trips */}
         <NavItem href="/trips" label={t("search")} icon={Search} active={active("/trips")} activeClass={colors.navActive} />
 
         {/* Publish FAB */}
@@ -79,7 +82,7 @@ export function BottomNav() {
           </span>
         </Link>
 
-        {/* Bookings / Requests browse */}
+        {/* My bookings / Browse requests */}
         {isAuthenticated ? (
           <Link
             href="/my/bookings"
@@ -98,18 +101,18 @@ export function BottomNav() {
           </Link>
         ) : (
           <Link
-            href="/requests"
+            href="/trips"
             className={cn(
               "relative flex min-h-[56px] flex-col items-center justify-center gap-0.5 transition-colors",
-              active("/requests") ? colors.navActive : "text-gray-400 hover:text-gray-600",
+              active("/trips") ? colors.navActive : "text-gray-400 hover:text-gray-600",
             )}
           >
-            <Users className="h-6 w-6" aria-hidden="true" />
+            <Search className="h-6 w-6" aria-hidden="true" />
             <span className="text-[10px] font-semibold">{t("requests")}</span>
           </Link>
         )}
 
-        {/* Profile */}
+        {/* Profile — always labelled "Профиль"; mode shown as dot on avatar */}
         <Link
           href={isAuthenticated ? "/profile" : "/auth/login"}
           className={cn(
@@ -124,15 +127,18 @@ export function BottomNav() {
                 active("/profile") ? colors.profileRing : "ring-gray-200",
               )}>
                 <DriverAvatar name={user?.name ?? "?"} src={user?.avatarUrl ?? null} size="sm" />
+                {/* Mode indicator dot */}
+                <span className={cn(
+                  "absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-[1.5px] border-white",
+                  isDriver ? "bg-sky-500" : "bg-amber-500",
+                )} />
                 {unread > 0 && (
                   <span className="absolute -right-0.5 -top-0.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full border border-white bg-amber-500 px-0.5 text-[8px] font-extrabold leading-none text-white">
                     {unread > 9 ? "9+" : unread}
                   </span>
                 )}
               </span>
-              <span className="text-[10px] font-semibold">
-                {activeMode === "driver" ? t("driver_mode") : t("passenger_mode")}
-              </span>
+              <span className="text-[10px] font-semibold">{t("profile")}</span>
             </>
           ) : (
             <>

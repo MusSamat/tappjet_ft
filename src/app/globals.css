@@ -12,6 +12,21 @@
   :focus-visible {
     @apply outline-none ring-2 ring-teal-500 ring-offset-2;
   }
+  /* Prevent iOS Safari from auto-zooming when an input is focused.
+     The browser zooms if font-size < 16px. This rule ensures all
+     text inputs hit that threshold on mobile without changing desktop. */
+  @supports (-webkit-touch-callout: none) {
+    input[type="text"],
+    input[type="tel"],
+    input[type="number"],
+    input[type="email"],
+    input[type="search"],
+    input[type="password"],
+    textarea,
+    select {
+      font-size: 16px;
+    }
+  }
 }
 
 @layer utilities {

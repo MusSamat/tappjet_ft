@@ -20,6 +20,7 @@ import { StatBlock } from "./_components/stat-block";
 import { ReviewCard, ReviewCardSkeleton } from "./_components/review-card";
 import { ProfileCompletion } from "./_components/profile-completion";
 import { SettingsTab } from "./_components/settings-tab";
+import { AddPhoneModal } from "@/components/features/auth/add-phone-modal";
 
 type Tab = "about" | "reviews" | "history" | "settings";
 
@@ -29,6 +30,7 @@ export default function ProfilePage() {
   const clearSession = useAuth((s) => s.clearSession);
   const router = useRouter();
   const [tab, setTab] = useState<Tab>("about");
+  const [showAddPhone, setShowAddPhone] = useState(false);
 
   const tierLabel = (tier: string) =>
     tier === "novice" ? t("tier_novice") :
@@ -78,6 +80,27 @@ export default function ProfilePage() {
 
   return (
     <Container className="py-8">
+      {!user?.phoneVerified && (
+        <div className="mb-4 flex items-center justify-between rounded-2xl border-[0.5px] border-amber-200 bg-amber-50 px-5 py-4">
+          <div>
+            <p className="text-[14px] font-bold text-amber-900">Добавьте номер телефона</p>
+            <p className="text-[12px] font-semibold text-amber-700">Нужен для бронирования и связи с водителями</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setShowAddPhone(true)}
+            className="ml-4 shrink-0 rounded-xl bg-amber-500 px-4 py-2 text-[13px] font-bold text-white hover:bg-amber-600"
+          >
+            Добавить
+          </button>
+        </div>
+      )}
+
+      <AddPhoneModal
+        open={showAddPhone}
+        onClose={() => setShowAddPhone(false)}
+      />
+
       <div className="mb-4 rounded-2xl border-[0.5px] border-gray-200 bg-white p-6">
         <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-start sm:gap-6">
           <AvatarUploader />

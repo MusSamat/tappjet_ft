@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useId, useCallback } from "react";
 import { MapPin } from "lucide-react";
-import { searchCities, type City } from "@/lib/api/cities";
+import { searchCities, getCities, type City } from "@/lib/api/cities";
 import { cn } from "@/lib/utils/cn";
 
 interface Props {
@@ -32,13 +32,25 @@ function useDebounce<T>(value: T, ms: number): T {
 
 /** Returns "Регион" or "Район" label for the dropdown subtitle. */
 function getSubtitle(city: City): string {
-  // If district name exists and is different from region name, prefer district.
   const district = city.districtNameRu;
   const region = city.regionNameRu;
   if (district && district.trim() && district !== region) {
     return `${district}, ${region}`;
   }
   return region;
+}
+
+// Module-level cache — fetched once for the session, shared across all instances.
+let popularCache: City[] | null = null;
+async function loadPopularCities(): Promise<City[]> {
+  if (popularCache) return popularCache;
+  try {
+    const all = await getCities();
+    popularCache = all.slice(0, 7);
+  } catch {
+    popularCache = [];
+  }
+  return popularCache;
 }
 
 export function CityAutocomplete({
@@ -61,17 +73,15 @@ export function CityAutocomplete({
   const [open, setOpen] = useState(false);
   const [activeIdx, setActiveIdx] = useState(-1);
   const [loading, setLoading] = useState(false);
+  const [showingPopular, setShowingPopular] = useState(false);
   const [popupStyle, setPopupStyle] = useState<React.CSSProperties>({});
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const selectedRef = useRef(false);
-  // Only open the dropdown when the user is actively typing — prevents the
-  // dropdown from auto-opening when value is synced from a URL param on mount.
   const userTypingRef = useRef(false);
 
   const debouncedQuery = useDebounce(query, 250);
 
-  // Recompute fixed popup position whenever the dropdown opens or viewport changes.
   const calcPopup = useCallback(() => {
     if (!inputRef.current) return;
     const r = inputRef.current.getBoundingClientRect();
@@ -104,15 +114,14 @@ export function CityAutocomplete({
     }
     if (!debouncedQuery.trim()) {
       setResults([]);
-      setOpen(false);
+      if (!showingPopular) setOpen(false);
       return;
     }
+    setShowingPopular(false);
     setLoading(true);
     searchCities(debouncedQuery, 8)
       .then((rows) => {
         setResults(rows);
-        // Only show the dropdown when the user has explicitly typed — not on
-        // programmatic value syncs (URL param restore, swap, etc.).
         setOpen(userTypingRef.current && rows.length > 0);
         setActiveIdx(-1);
       })
@@ -121,16 +130,35 @@ export function CityAutocomplete({
         setOpen(false);
       })
       .finally(() => setLoading(false));
-  }, [debouncedQuery]);
+  }, [debouncedQuery, showingPopular]);
 
   const commit = (city: City) => {
     selectedRef.current = true;
     userTypingRef.current = false;
+    setShowingPopular(false);
     setQuery(city.nameRu);
     onChange(city.nameRu);
     setOpen(false);
     setResults([]);
     setActiveIdx(-1);
+  };
+
+  const handleFocus = async () => {
+    if (userTypingRef.current && results.length > 0) {
+      setOpen(true);
+      return;
+    }
+    // Show popular cities when focusing on an empty input
+    if (!query.trim()) {
+      const popular = await loadPopularCities();
+      if (popular.length > 0) {
+        setResults(popular);
+        setShowingPopular(true);
+        setOpen(true);
+        setActiveIdx(-1);
+        calcPopup();
+      }
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -147,6 +175,7 @@ export function CityAutocomplete({
       if (city) commit(city);
     } else if (e.key === "Escape") {
       setOpen(false);
+      setShowingPopular(false);
     }
   };
 
@@ -177,19 +206,19 @@ export function CityAutocomplete({
           placeholder={placeholder}
           onChange={(e) => {
             userTypingRef.current = true;
+            setShowingPopular(false);
             setQuery(e.target.value);
             onChange("");
             onInputChange?.(e.target.value);
           }}
           onKeyDown={handleKeyDown}
-          onFocus={() => {
-            // Re-show cached results only if the user had been typing in this
-            // field (not on programmatic focus or tab-in from another field).
-            if (userTypingRef.current && results.length > 0) setOpen(true);
-          }}
+          onFocus={handleFocus}
           onBlur={() => {
             userTypingRef.current = false;
-            setTimeout(() => setOpen(false), 150);
+            setTimeout(() => {
+              setOpen(false);
+              setShowingPopular(false);
+            }, 150);
           }}
           role="combobox"
           aria-expanded={open}
@@ -220,6 +249,13 @@ export function CityAutocomplete({
           style={popupStyle}
           className="overflow-hidden rounded-xl border border-gray-100 bg-white shadow-lg"
         >
+          {showingPopular && (
+            <li className="border-b border-gray-100 px-4 py-2">
+              <span className="text-[10px] font-bold uppercase tracking-wide text-gray-400">
+                Популярные города
+              </span>
+            </li>
+          )}
           {results.map((city, idx) => (
             <li
               key={city.id}

@@ -1,12 +1,13 @@
 {
   "nav": {
-    "home": "Башкы бет",
-    "search": "Издөө",
+    "home": "Башкы",
+    "search": "Сапарлар",
     "publish": "Түзүү",
     "create_request": "Арыз",
-    "bookings": "Брондор",
-    "requests": "Арыздар",
+    "bookings": "Менин",
+    "requests": "Табуу",
     "login": "Кирүү",
+    "profile": "Профиль",
     "driver_mode": "Айдоочу",
     "passenger_mode": "Жолоочу",
     "publish_trip_aria": "Сапар жарыялоо",
