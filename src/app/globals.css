@@ -9,8 +9,16 @@
   body {
     @apply bg-gray-50 text-gray-900 antialiased;
   }
-  :focus-visible {
-    @apply outline-none ring-2 ring-teal-500 ring-offset-2;
+  /* Non-input interactive elements (buttons, links) get a subtle focus ring */
+  :focus-visible:not(input):not(textarea):not(select) {
+    @apply outline-none ring-1 ring-teal-400/70 ring-offset-1;
+  }
+  /* Inputs declare their own focus style (border-teal-500); suppress browser ring */
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: none;
+    box-shadow: none;
   }
   /* Prevent iOS Safari from auto-zooming when an input is focused.
      The browser zooms if font-size < 16px. This rule ensures all

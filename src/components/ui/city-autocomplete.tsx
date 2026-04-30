@@ -228,7 +228,7 @@ export function CityAutocomplete({
           className={cn(
             "w-full bg-transparent font-semibold text-gray-900 outline-none",
             compact ? "py-1.5 text-[12px]" : "py-2 text-[14px]",
-            borderless ? "pr-3" : "rounded-xl border border-gray-200 bg-white pl-9 pr-3 focus:border-teal-500 focus:ring-2 focus:ring-teal-100",
+            borderless ? "pr-3" : "rounded-xl border border-gray-200 bg-white pl-9 pr-3 focus:border-teal-500",
             "placeholder:text-gray-400",
             "disabled:cursor-not-allowed disabled:opacity-50",
           )}

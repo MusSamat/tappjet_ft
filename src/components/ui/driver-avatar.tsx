@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils/cn";
+import { normalizeMediaUrl } from "@/lib/utils/media-url";
 
 interface DriverAvatarProps {
   name: string;
@@ -36,11 +37,13 @@ export function DriverAvatar({ name, src, size = "sm", className }: DriverAvatar
     className,
   );
 
-  if (src && !failed) {
+  const normalizedSrc = normalizeMediaUrl(src);
+
+  if (normalizedSrc && !failed) {
     return (
       <span className={cn(base, "overflow-hidden")}>
         <Image
-          src={src}
+          src={normalizedSrc}
           alt={name}
           width={sizePx[size]}
           height={sizePx[size]}

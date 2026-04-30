@@ -5,6 +5,7 @@ import { Camera } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { uploadAvatar } from "@/lib/api/profile";
 import { useAuth } from "@/store/auth";
+import { normalizeMediaUrl } from "@/lib/utils/media-url";
 import { Spinner } from "@/components/ui";
 import { cn } from "@/lib/utils/cn";
 
@@ -61,8 +62,9 @@ export function AvatarUploader() {
       return uploadAvatar(compressed);
     },
     onSuccess: (updated) => {
-      updateUser({ avatarUrl: updated.avatarUrl });
-      setImgSrc(updated.avatarUrl);
+      const url = normalizeMediaUrl(updated.avatarUrl);
+      updateUser({ avatarUrl: url ?? undefined });
+      setImgSrc(url);
       setImgError(false);
       void queryClient.invalidateQueries({ queryKey: ["me"] });
     },
@@ -82,7 +84,7 @@ export function AvatarUploader() {
   };
 
   // Resolve display src: explicit imgSrc overrides store value
-  const displaySrc = imgSrc ?? (imgError ? null : (user?.avatarUrl ?? null));
+  const displaySrc = imgSrc ?? (imgError ? null : normalizeMediaUrl(user?.avatarUrl));
 
   return (
     <div className="flex flex-col items-center gap-3">
