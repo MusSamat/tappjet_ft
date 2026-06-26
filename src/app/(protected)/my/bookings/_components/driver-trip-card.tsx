@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { CheckCircle, ArrowRight, X } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { RouteStops } from "@/components/ui";
 import type { TripListItem } from "@/lib/api/trips";
 
 function fmtDate(iso?: string): string {
@@ -43,6 +44,7 @@ export function DriverTripCard({ trip, onComplete, completing, onCancel }: {
             <p className="mt-0.5 text-[12px] text-gray-500">
               {fmtDate(trip.departureAt)} · {trip.pricePerSeat} {t("som")}
             </p>
+            <RouteStops pickup={trip.pickupCities} dropoff={trip.dropoffCities} className="mt-1.5" />
           </div>
           <div className="flex items-center gap-2">
             <span className={cn("rounded-full px-2.5 py-1 text-[11px] font-bold", statusClass)}>

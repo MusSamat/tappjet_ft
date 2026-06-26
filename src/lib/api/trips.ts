@@ -14,8 +14,14 @@ export type TripListItem = Omit<GeneratedTripListItem, "driver"> & {
     }) | null;
     tripsCount?: number;
   }) | null;
+  // Not yet in the generated spec — pickup (origin side) / dropoff (dest side) points.
+  pickupCities?: string[];
+  dropoffCities?: string[];
 };
-export type TripDetail = components["schemas"]["TripDetail"];
+export type TripDetail = components["schemas"]["TripDetail"] & {
+  pickupCities?: string[];
+  dropoffCities?: string[];
+};
 
 export interface SearchTripsParams {
   from_city?: string;

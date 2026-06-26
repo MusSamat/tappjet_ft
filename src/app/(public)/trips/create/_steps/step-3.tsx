@@ -1,7 +1,6 @@
 "use client";
 
-import { CheckCircle, Shield } from "lucide-react";
-import { Spinner } from "@/components/ui";
+import { ArrowRight, Shield } from "lucide-react";
 import { ToggleCard } from "../_components/toggle-card";
 
 interface Step3Props {
@@ -9,14 +8,12 @@ interface Step3Props {
   prefSilence: boolean;
   prefMusic: boolean;
   prefNoSmoking: boolean;
-  isPending: boolean;
-  createError: string | null;
   onPatchComment: (v: string) => void;
   onToggleSilence: () => void;
   onToggleMusic: () => void;
   onToggleNoSmoking: () => void;
   onBack: () => void;
-  onPublish: () => void;
+  onNext: () => void;
   t: (key: string) => string;
 }
 
@@ -25,14 +22,12 @@ export function Step3({
   prefSilence,
   prefMusic,
   prefNoSmoking,
-  isPending,
-  createError,
   onPatchComment,
   onToggleSilence,
   onToggleMusic,
   onToggleNoSmoking,
   onBack,
-  onPublish,
+  onNext,
   t,
 }: Step3Props) {
   return (
@@ -40,7 +35,9 @@ export function Step3({
       <h2 className="text-[17px] font-bold text-gray-900">{t("step3_title")}</h2>
 
       <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white p-5">
-        <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-gray-400">{t("prefs_label")}</p>
+        <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-gray-400">
+          {t("prefs_label")}
+        </p>
         <div className="flex flex-col gap-2">
           <ToggleCard
             label={t("pref_silence_label")}
@@ -72,11 +69,9 @@ export function Step3({
           value={comment}
           onChange={(e) => onPatchComment(e.target.value)}
           placeholder={t("comment_placeholder")}
-          className="w-full resize-none rounded-xl border-[1.5px] border-gray-200 bg-gray-50 px-4 py-3 text-[13px] font-semibold text-gray-900 outline-none focus:border-teal-500 placeholder:text-gray-400"
+          className="w-full resize-none rounded-xl border-[1.5px] border-gray-200 bg-gray-50 px-4 py-3 text-[13px] font-semibold text-gray-900 outline-none placeholder:text-gray-400 focus:border-teal-500"
         />
-        <div className="mt-1 text-right text-[11px] text-gray-400">
-          {comment.length}/400
-        </div>
+        <div className="mt-1 text-right text-[11px] text-gray-400">{comment.length}/400</div>
       </div>
 
       <div className="flex gap-3 rounded-2xl border border-teal-100 bg-teal-50 p-4">
@@ -86,12 +81,6 @@ export function Step3({
           <p className="mt-0.5 text-[12px] text-teal-700">{t("ready_desc")}</p>
         </div>
       </div>
-
-      {createError && (
-        <div className="rounded-2xl bg-red-50 px-4 py-3 text-[13px] font-semibold text-red-700">
-          {createError}
-        </div>
-      )}
 
       <div className="flex gap-3">
         <button
@@ -103,18 +92,10 @@ export function Step3({
         </button>
         <button
           type="button"
-          disabled={isPending}
-          onClick={onPublish}
+          onClick={onNext}
           className="flex h-12 flex-[2] items-center justify-center gap-2 rounded-xl bg-amber-500 text-[14px] font-bold text-[#4A2C00] transition-colors hover:bg-amber-600 disabled:opacity-40"
         >
-          {isPending ? (
-            <Spinner size={18} />
-          ) : (
-            <>
-              <CheckCircle className="h-4 w-4" aria-hidden="true" />
-              {t("publish")}
-            </>
-          )}
+          {t("next")} <ArrowRight className="h-4 w-4" aria-hidden="true" />
         </button>
       </div>
     </div>

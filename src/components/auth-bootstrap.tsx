@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { getRefreshToken, refreshAccessToken, onTokenRefreshed } from "@/lib/api/client";
+import { hasSessionHint, refreshAccessToken, onTokenRefreshed } from "@/lib/api/client";
 import { getMe, loginWithTelegramMiniApp } from "@/lib/api/auth";
 import { useAuth } from "@/store/auth";
 import { refreshSocketAuth } from "@/lib/socket/client";
@@ -18,10 +18,10 @@ export function AuthBootstrap() {
     if (done.current) return;
     done.current = true;
 
-    const rt = getRefreshToken();
+    const sessionLikely = hasSessionHint();
 
-    if (!rt) {
-      // No session cookie — attempt Telegram Mini App silent login if running inside Telegram.
+    if (!sessionLikely) {
+      // No prior session — attempt Telegram Mini App silent login if running inside Telegram.
       if (detectRuntime() === "telegram") {
         const initData = getTelegramInitData();
         if (initData) {

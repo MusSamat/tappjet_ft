@@ -1,9 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { BookButton } from "@/components/features/trip/book-button";
 import { useAuth } from "@/store/auth";
 import { saveDeferredAction } from "@/lib/auth/deferred-action";
-import { sendOtp, confirmPhoneAdd } from "@/lib/api/auth";
 import { useRouter } from "next/navigation";
 
 const mockPush = vi.fn();
@@ -20,17 +19,11 @@ vi.mock("@/lib/auth/deferred-action", () => ({
   saveDeferredAction: vi.fn(),
 }));
 
-vi.mock("@/lib/api/auth", () => ({
-  sendOtp: vi.fn(),
-  confirmPhoneAdd: vi.fn(),
-}));
-
-vi.mock("@/lib/api/client", () => ({
-  extractError: vi.fn((e: unknown) => e),
-}));
-
-vi.mock("@/lib/utils/api-error", () => ({
-  friendlyError: vi.fn((e: unknown) => String((e as any)?.message ?? e)),
+// BookButton only decides whether to OPEN the add-phone modal — the modal's
+// own OTP flow is covered in add-phone-modal.test.tsx. Stub it to a marker.
+vi.mock("@/components/features/auth/add-phone-modal", () => ({
+  AddPhoneModal: ({ open }: { open: boolean }) =>
+    open ? <div data-testid="add-phone-modal" /> : null,
 }));
 
 type StoreState = {
@@ -53,8 +46,6 @@ function mockAuthWith(partial: Partial<StoreState> = {}) {
 beforeEach(() => {
   vi.clearAllMocks();
   vi.mocked(useRouter).mockReturnValue({ push: mockPush } as any);
-  vi.mocked(sendOtp).mockResolvedValue({ expiresInSec: 120 });
-  vi.mocked(confirmPhoneAdd).mockResolvedValue({ accessToken: "tok", user: { id: "user-1" } } as any);
 });
 
 describe("BookButton — auth states", () => {
@@ -158,102 +149,20 @@ describe("BookButton — unauthenticated click", () => {
   });
 });
 
-describe("BookButton — phone verification modal", () => {
-  it("shows phone modal when user has no verified phone", () => {
+describe("BookButton — phone verification gate", () => {
+  it("opens the add-phone modal when the user has no verified phone", () => {
+    mockAuthWith({ user: { id: "user-1", phoneVerified: false } });
+    render(<BookButton tripId="t1" seatsAvailable={3} />);
+    expect(screen.queryByTestId("add-phone-modal")).not.toBeInTheDocument();
+    fireEvent.click(screen.getByText("Забронировать"));
+    expect(screen.getByTestId("add-phone-modal")).toBeInTheDocument();
+  });
+
+  it("does not navigate to booking while phone is unverified", () => {
     mockAuthWith({ user: { id: "user-1", phoneVerified: false } });
     render(<BookButton tripId="t1" seatsAvailable={3} />);
     fireEvent.click(screen.getByText("Забронировать"));
-    expect(screen.getByText("Укажите номер телефона")).toBeInTheDocument();
-  });
-
-  it("advances to OTP step after entering phone and clicking Получить код", async () => {
-    mockAuthWith({ user: { id: "user-1", phoneVerified: false } });
-    render(<BookButton tripId="t1" seatsAvailable={3} />);
-    fireEvent.click(screen.getByText("Забронировать"));
-    fireEvent.change(screen.getByPlaceholderText("+996 700 000 000"), {
-      target: { value: "+996700000000" },
-    });
-    fireEvent.click(screen.getByText("Получить код"));
-    await waitFor(() => {
-      expect(screen.getByText("Введите код из SMS")).toBeInTheDocument();
-    });
-    expect(vi.mocked(sendOtp)).toHaveBeenCalledWith("+996700000000");
-  });
-
-  it("confirm button is disabled when OTP has fewer than 6 digits", async () => {
-    mockAuthWith({ user: { id: "user-1", phoneVerified: false } });
-    render(<BookButton tripId="t1" seatsAvailable={3} />);
-    fireEvent.click(screen.getByText("Забронировать"));
-    fireEvent.change(screen.getByPlaceholderText("+996 700 000 000"), {
-      target: { value: "+996700000000" },
-    });
-    fireEvent.click(screen.getByText("Получить код"));
-    await waitFor(() => screen.getByText("Введите код из SMS"));
-    // 4 digits — still disabled (was the bug: it was enabled at 4)
-    fireEvent.change(screen.getByPlaceholderText("_ _ _ _ _ _"), {
-      target: { value: "1234" },
-    });
-    expect(screen.getByText("Подтвердить").closest("button")).toBeDisabled();
-  });
-
-  it("confirm button becomes enabled at exactly 6 digits", async () => {
-    mockAuthWith({ user: { id: "user-1", phoneVerified: false } });
-    render(<BookButton tripId="t1" seatsAvailable={3} />);
-    fireEvent.click(screen.getByText("Забронировать"));
-    fireEvent.change(screen.getByPlaceholderText("+996 700 000 000"), {
-      target: { value: "+996700000000" },
-    });
-    fireEvent.click(screen.getByText("Получить код"));
-    await waitFor(() => screen.getByText("Введите код из SMS"));
-    fireEvent.change(screen.getByPlaceholderText("_ _ _ _ _ _"), {
-      target: { value: "123456" },
-    });
-    expect(screen.getByText("Подтвердить").closest("button")).not.toBeDisabled();
-  });
-
-  it("successful OTP verify closes modal and navigates to booking", async () => {
-    const store = mockAuthWith({ user: { id: "user-1", phoneVerified: false } });
-    render(<BookButton tripId="t1" seatsAvailable={3} />);
-    fireEvent.click(screen.getByText("Забронировать"));
-    fireEvent.change(screen.getByPlaceholderText("+996 700 000 000"), {
-      target: { value: "+996700000000" },
-    });
-    fireEvent.click(screen.getByText("Получить код"));
-    await waitFor(() => screen.getByText("Введите код из SMS"));
-    fireEvent.change(screen.getByPlaceholderText("_ _ _ _ _ _"), {
-      target: { value: "123456" },
-    });
-    fireEvent.click(screen.getByText("Подтвердить"));
-    await waitFor(() => {
-      expect(vi.mocked(confirmPhoneAdd)).toHaveBeenCalledWith("+996700000000", "123456");
-      expect(store.setSession).toHaveBeenCalled();
-      expect(mockPush).toHaveBeenCalledWith("/trips/t1/book?seats=1");
-    });
-  });
-
-  it("shows error message when sendOtp fails", async () => {
-    vi.mocked(sendOtp).mockRejectedValueOnce({ message: "Слишком много запросов" });
-    mockAuthWith({ user: { id: "user-1", phoneVerified: false } });
-    render(<BookButton tripId="t1" seatsAvailable={3} />);
-    fireEvent.click(screen.getByText("Забронировать"));
-    fireEvent.change(screen.getByPlaceholderText("+996 700 000 000"), {
-      target: { value: "+996700000000" },
-    });
-    fireEvent.click(screen.getByText("Получить код"));
-    await waitFor(() => {
-      expect(screen.getByText("Слишком много запросов")).toBeInTheDocument();
-    });
-  });
-
-  it("clicking backdrop closes the modal", () => {
-    mockAuthWith({ user: { id: "user-1", phoneVerified: false } });
-    render(<BookButton tripId="t1" seatsAvailable={3} />);
-    fireEvent.click(screen.getByText("Забронировать"));
-    expect(screen.getByText("Укажите номер телефона")).toBeInTheDocument();
-    // The fixed inset-0 overlay div is the backdrop — click it
-    const backdrop = screen.getByText("Укажите номер телефона").closest("[class*='fixed']")!;
-    fireEvent.click(backdrop);
-    expect(screen.queryByText("Укажите номер телефона")).not.toBeInTheDocument();
+    expect(mockPush).not.toHaveBeenCalled();
   });
 });
 

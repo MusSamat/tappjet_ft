@@ -1,6 +1,7 @@
 import { create } from "zustand";
 
-const ADMIN_RT_KEY = "tappjet_admin_refresh";
+// Refresh token now lives in an HttpOnly cookie (TZ §5/§26.1) — we persist only
+// the non-sensitive admin profile so the session can be restored on reload.
 const ADMIN_INFO_KEY = "tappjet_admin_info";
 
 export interface AdminUser {
@@ -11,14 +12,14 @@ export interface AdminUser {
 }
 
 interface AdminAuthState {
-  token: string | null;       // access token — memory only
+  token: string | null; // access token — memory only
   admin: AdminUser | null;
-  expiresAt: number | null;   // ms when access token expires
+  expiresAt: number | null; // ms when access token expires
   setSession: (params: {
     accessToken: string;
     admin: AdminUser;
     accessTokenExpiresIn: number;
-    refreshToken: string;
+    refreshToken?: string;
   }) => void;
   hydrateAdmin: (accessToken: string, admin: AdminUser, expiresAt: number) => void;
   setAccessToken: (token: string, expiresIn: number) => void;
@@ -30,24 +31,21 @@ export const useAdminAuth = create<AdminAuthState>((set) => ({
   admin: null,
   expiresAt: null,
 
-  setSession: ({ accessToken, admin, accessTokenExpiresIn, refreshToken }) => {
+  setSession: ({ accessToken, admin, accessTokenExpiresIn }) => {
     try {
-      sessionStorage.setItem(ADMIN_RT_KEY, refreshToken);
       localStorage.setItem(ADMIN_INFO_KEY, JSON.stringify(admin));
     } catch {}
     set({ token: accessToken, admin, expiresAt: Date.now() + accessTokenExpiresIn * 1000 });
   },
 
   // Restores memory state without touching storage — used by AdminAuthBootstrap on page load.
-  hydrateAdmin: (accessToken, admin, expiresAt) =>
-    set({ token: accessToken, admin, expiresAt }),
+  hydrateAdmin: (accessToken, admin, expiresAt) => set({ token: accessToken, admin, expiresAt }),
 
   setAccessToken: (token, expiresIn) =>
     set((s) => ({ token, expiresAt: Date.now() + expiresIn * 1000, admin: s.admin })),
 
   clearSession: () => {
     try {
-      sessionStorage.removeItem(ADMIN_RT_KEY);
       localStorage.removeItem(ADMIN_INFO_KEY);
     } catch {}
     set({ token: null, admin: null, expiresAt: null });
@@ -55,14 +53,6 @@ export const useAdminAuth = create<AdminAuthState>((set) => ({
 }));
 
 export const getAdminToken = (): string | null => useAdminAuth.getState().token;
-
-export function getAdminRefreshToken(): string | null {
-  try {
-    return typeof window !== "undefined" ? sessionStorage.getItem(ADMIN_RT_KEY) : null;
-  } catch {
-    return null;
-  }
-}
 
 export function getStoredAdminInfo(): AdminUser | null {
   try {

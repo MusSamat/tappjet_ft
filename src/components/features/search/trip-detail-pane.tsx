@@ -7,6 +7,7 @@ import type { TripListItem } from "@/lib/api/trips";
 import { formatDepartureLabel, formatDurationMin } from "@/lib/utils/date";
 import { DriverAvatar } from "@/components/ui/driver-avatar";
 import { Button } from "@/components/ui/button";
+import { RouteStops } from "@/components/ui/route-stops";
 import { useAuth } from "@/store/auth";
 
 interface Props {
@@ -107,12 +108,14 @@ export function TripDetailPane({ trip }: Props) {
             <div className="flex flex-1 flex-col gap-4">
               <div>
                 <p className="text-[16px] font-extrabold text-gray-900">{trip.originCity}</p>
+                <RouteStops pickup={trip.pickupCities} className="mt-1" />
                 <p className="mt-0.5 text-[12px] font-semibold text-gray-500">
                   {trip.departureAt ? formatDepartureLabel(trip.departureAt) : ""}
                 </p>
               </div>
               <div>
                 <p className="text-[16px] font-extrabold text-gray-900">{trip.destinationCity}</p>
+                <RouteStops dropoff={trip.dropoffCities} className="mt-1" />
                 <p className="mt-0.5 text-[12px] font-semibold text-gray-500">
                   {arrivalTime
                     ? t("arrival", { time: arrivalTime.toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" }) })

@@ -1,15 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { listAdminUsers, type AdminUserItem } from "@/lib/api/admin";
 import { cn } from "@/lib/utils/cn";
-import { Search, ChevronRight, Star, ShieldOff, Car } from "lucide-react";
+import { Search, ChevronRight, ChevronLeft, Star, ShieldOff, Car } from "lucide-react";
 import { useDebounce } from "@/lib/hooks/use-debounce";
 
 function fmt(iso: string): string {
-  return new Date(iso).toLocaleDateString("ru-RU", { day: "numeric", month: "short", year: "numeric" });
+  return new Date(iso).toLocaleDateString("ru-RU", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
 }
 
 export default function AdminUsersPage() {
@@ -18,19 +22,29 @@ export default function AdminUsersPage() {
   const [blockedFilter, setBlockedFilter] = useState<"" | "true" | "false">("");
   const debouncedQ = useDebounce(q, 300);
 
+  // Cursor stack for prev/next paging; reset whenever a filter changes.
+  const [cursors, setCursors] = useState<string[]>([]);
+  const cursor = cursors[cursors.length - 1];
+  useEffect(() => {
+    setCursors([]);
+  }, [debouncedQ, roleFilter, blockedFilter]);
+
   const { data, isLoading } = useQuery({
-    queryKey: ["admin", "users", debouncedQ, roleFilter, blockedFilter],
+    queryKey: ["admin", "users", debouncedQ, roleFilter, blockedFilter, cursor],
     queryFn: () =>
       listAdminUsers({
         q: debouncedQ || undefined,
         role: roleFilter || undefined,
         blocked: (blockedFilter || undefined) as "true" | "false" | undefined,
-        limit: 50,
+        cursor,
+        limit: 20,
       }),
     staleTime: 30_000,
   });
 
   const items: AdminUserItem[] = data?.data ?? [];
+  const hasNext = !!data?.nextCursor;
+  const hasPrev = cursors.length > 0;
 
   return (
     <div className="p-6">
@@ -41,7 +55,7 @@ export default function AdminUsersPage() {
 
       {/* Filters */}
       <div className="mb-4 flex flex-wrap gap-3">
-        <div className="relative flex-1 min-w-[200px]">
+        <div className="relative min-w-[200px] flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
           <input
             value={q}
@@ -85,12 +99,24 @@ export default function AdminUsersPage() {
           <table className="w-full">
             <thead>
               <tr className="border-b border-slate-100">
-                <th className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-widest text-slate-400">Пользователь</th>
-                <th className="hidden px-4 py-3 text-left text-[11px] font-bold uppercase tracking-widest text-slate-400 sm:table-cell">Роли</th>
-                <th className="hidden px-4 py-3 text-left text-[11px] font-bold uppercase tracking-widest text-slate-400 md:table-cell">Рейтинг</th>
-                <th className="hidden px-4 py-3 text-left text-[11px] font-bold uppercase tracking-widest text-slate-400 lg:table-cell">Поездки</th>
-                <th className="hidden px-4 py-3 text-left text-[11px] font-bold uppercase tracking-widest text-slate-400 lg:table-cell">Зарег.</th>
-                <th className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-widest text-slate-400">Статус</th>
+                <th className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-widest text-slate-400">
+                  Пользователь
+                </th>
+                <th className="hidden px-4 py-3 text-left text-[11px] font-bold uppercase tracking-widest text-slate-400 sm:table-cell">
+                  Роли
+                </th>
+                <th className="hidden px-4 py-3 text-left text-[11px] font-bold uppercase tracking-widest text-slate-400 md:table-cell">
+                  Рейтинг
+                </th>
+                <th className="hidden px-4 py-3 text-left text-[11px] font-bold uppercase tracking-widest text-slate-400 lg:table-cell">
+                  Поездки
+                </th>
+                <th className="hidden px-4 py-3 text-left text-[11px] font-bold uppercase tracking-widest text-slate-400 lg:table-cell">
+                  Зарег.
+                </th>
+                <th className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-widest text-slate-400">
+                  Статус
+                </th>
                 <th className="w-8" />
               </tr>
             </thead>
@@ -111,10 +137,15 @@ export default function AdminUsersPage() {
                   <td className="hidden px-4 py-3 sm:table-cell">
                     <div className="flex flex-wrap gap-1">
                       {u.roles.map((r) => (
-                        <span key={r} className={cn(
-                          "rounded px-1.5 py-0.5 text-[10px] font-bold",
-                          r === "driver" ? "bg-sky-100 text-sky-700" : "bg-teal-100 text-teal-700",
-                        )}>
+                        <span
+                          key={r}
+                          className={cn(
+                            "rounded px-1.5 py-0.5 text-[10px] font-bold",
+                            r === "driver"
+                              ? "bg-sky-100 text-sky-700"
+                              : "bg-teal-100 text-teal-700",
+                          )}
+                        >
                           {r}
                         </span>
                       ))}
@@ -168,6 +199,29 @@ export default function AdminUsersPage() {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {(hasPrev || hasNext) && (
+        <div className="mt-4 flex items-center justify-between">
+          <button
+            type="button"
+            disabled={!hasPrev}
+            onClick={() => setCursors((p) => p.slice(0, -1))}
+            className="flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-4 py-2 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-40"
+          >
+            <ChevronLeft className="h-4 w-4" /> Назад
+          </button>
+          <button
+            type="button"
+            disabled={!hasNext}
+            onClick={() => {
+              if (data?.nextCursor) setCursors((p) => [...p, data.nextCursor!]);
+            }}
+            className="flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-4 py-2 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-40"
+          >
+            Вперёд <ChevronRight className="h-4 w-4" />
+          </button>
         </div>
       )}
     </div>

@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useAdminAuth, getAdminRefreshToken, getStoredAdminInfo } from "@/store/admin-auth";
+import { useAdminAuth, getStoredAdminInfo } from "@/store/admin-auth";
 import { doAdminRefresh } from "@/lib/api/admin";
 
 /**
  * Mounted once in admin layout. On every page load, restores the admin access
- * token from the refresh token in sessionStorage so the session survives refreshes.
+ * token via the HttpOnly refresh cookie so the session survives reloads. The
+ * stored admin profile acts as a non-sensitive "was logged in" hint.
  */
 export function AdminAuthBootstrap() {
   const { hydrateAdmin, clearSession } = useAdminAuth();
@@ -16,8 +17,7 @@ export function AdminAuthBootstrap() {
     if (done.current) return;
     done.current = true;
 
-    const rt = getAdminRefreshToken();
-    if (!rt) {
+    if (!getStoredAdminInfo()) {
       clearSession();
       return;
     }

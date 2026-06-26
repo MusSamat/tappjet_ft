@@ -8,6 +8,7 @@ import { extractError } from "@/lib/api/client";
 import { formatDepartureLabel } from "@/lib/utils/date";
 import { BookForm } from "@/components/features/booking/book-form";
 import { DriverAvatar } from "@/components/ui/driver-avatar";
+import { RouteStops } from "@/components/ui/route-stops";
 
 export const metadata: Metadata = {
   title: "Бронирование",
@@ -75,6 +76,7 @@ export default async function BookTripPage({ params, searchParams }: Props) {
                 <ArrowRight className="h-3.5 w-3.5 text-gray-400" aria-hidden="true" />
                 <span className="text-[15px] font-bold text-gray-900">{trip.destinationCity}</span>
               </div>
+              <RouteStops pickup={trip.pickupCities} dropoff={trip.dropoffCities} className="mt-1.5" />
             </div>
             <div>
               <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">{t("departure_section")}</p>

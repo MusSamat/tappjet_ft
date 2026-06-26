@@ -7,6 +7,7 @@ import type { TripListItem } from "@/lib/api/trips";
 import { formatDepartureLabel, formatDurationMin } from "@/lib/utils/date";
 import { cn } from "@/lib/utils/cn";
 import { DriverAvatar } from "./driver-avatar";
+import { RouteStops } from "./route-stops";
 
 interface TripCardProps {
   trip: TripListItem;
@@ -82,6 +83,7 @@ export function TripCard({ trip, href, className, active, onClick, showBookButto
             <span className="font-semibold text-amber-700">Торг</span>
           )}
         </div>
+        <RouteStops pickup={trip.pickupCities} dropoff={trip.dropoffCities} className="mt-1" />
       </div>
 
       {/* Driver + price */}

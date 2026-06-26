@@ -6,7 +6,7 @@ import { getTranslations } from "next-intl/server";
 import { getTrip, type TripDetail } from "@/lib/api/trips";
 import { extractError } from "@/lib/api/client";
 import { formatDepartureLabel, formatDurationMin, formatPrice } from "@/lib/utils/date";
-import { Container, DriverAvatar, RatingStars, SeatsBadge, VerifiedBadge } from "@/components/ui";
+import { Container, DriverAvatar, RatingStars, RouteStops, SeatsBadge, VerifiedBadge } from "@/components/ui";
 import { TripMap } from "@/components/features/trip/trip-map";
 import { TripActionsPanel } from "@/components/features/trip/trip-actions-panel";
 import { findCity } from "@/lib/kg-cities";
@@ -94,6 +94,7 @@ export default async function TripDetailsPage({ params }: Props) {
               <ArrowRight className="h-7 w-7 text-gray-500" aria-hidden="true" />
               <span className="truncate">{trip.destinationCity}</span>
             </h1>
+            <RouteStops pickup={trip.pickupCities} dropoff={trip.dropoffCities} />
             <p className="text-body-lg text-gray-700">{trip.originAddress}</p>
 
             <div className="flex flex-wrap items-center gap-3">

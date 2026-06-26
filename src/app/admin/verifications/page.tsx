@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { listVerifications, type VerificationQueueItem } from "@/lib/api/admin";
 import { cn } from "@/lib/utils/cn";
-import { ChevronRight, Clock, AlertTriangle } from "lucide-react";
+import { ChevronRight, ChevronLeft, Clock, AlertTriangle } from "lucide-react";
 
 type StatusFilter = "all" | "pending" | "verified" | "rejected" | "docs_requested";
 
@@ -18,17 +18,28 @@ const STATUS_TABS: { id: StatusFilter; label: string }[] = [
 ];
 
 const STATUS_CFG: Record<string, { label: string; bg: string; text: string; dot: string }> = {
-  pending:        { label: "На проверке",  bg: "bg-amber-50",  text: "text-amber-800", dot: "bg-amber-500" },
-  verified:       { label: "Одобрен",      bg: "bg-teal-50",   text: "text-teal-800",  dot: "bg-teal-500" },
-  rejected:       { label: "Отклонён",     bg: "bg-red-50",    text: "text-red-700",   dot: "bg-red-500" },
-  docs_requested: { label: "Нужны доки",   bg: "bg-blue-50",   text: "text-blue-700",  dot: "bg-blue-500" },
+  pending: { label: "На проверке", bg: "bg-amber-50", text: "text-amber-800", dot: "bg-amber-500" },
+  verified: { label: "Одобрен", bg: "bg-teal-50", text: "text-teal-800", dot: "bg-teal-500" },
+  rejected: { label: "Отклонён", bg: "bg-red-50", text: "text-red-700", dot: "bg-red-500" },
+  docs_requested: {
+    label: "Нужны доки",
+    bg: "bg-blue-50",
+    text: "text-blue-700",
+    dot: "bg-blue-500",
+  },
 };
 
 function StatusBadge({ status }: { status: string }) {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const cfg = STATUS_CFG[status] ?? STATUS_CFG["pending"]!;
   return (
-    <span className={cn("flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold", cfg.bg, cfg.text)}>
+    <span
+      className={cn(
+        "flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold",
+        cfg.bg,
+        cfg.text,
+      )}
+    >
       <span className={cn("h-1.5 w-1.5 rounded-full", cfg.dot)} />
       {cfg.label}
     </span>
@@ -37,21 +48,33 @@ function StatusBadge({ status }: { status: string }) {
 
 function fmt(iso: string): string {
   return new Date(iso).toLocaleDateString("ru-RU", {
-    day: "numeric", month: "short", year: "numeric",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
   });
 }
 
 export default function AdminVerificationsPage() {
   const [status, setStatus] = useState<StatusFilter>("pending");
+  // Cursor stack — each "Вперёд" pushes the next cursor, "Назад" pops it.
+  const [cursors, setCursors] = useState<string[]>([]);
+  const cursor = cursors[cursors.length - 1];
+
+  const selectStatus = (next: StatusFilter) => {
+    setStatus(next);
+    setCursors([]); // reset pagination when the filter changes
+  };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["admin", "verifications", status],
+    queryKey: ["admin", "verifications", status, cursor],
     queryFn: () =>
-      listVerifications({ status: status === "all" ? undefined : status, limit: 50 }),
+      listVerifications({ status: status === "all" ? undefined : status, cursor, limit: 20 }),
     staleTime: 30_000,
   });
 
   const items: VerificationQueueItem[] = data?.data ?? [];
+  const hasNext = !!data?.nextCursor;
+  const hasPrev = cursors.length > 0;
 
   return (
     <div className="p-6">
@@ -65,7 +88,7 @@ export default function AdminVerificationsPage() {
           <button
             key={t.id}
             type="button"
-            onClick={() => setStatus(t.id)}
+            onClick={() => selectStatus(t.id)}
             className={cn(
               "rounded-full px-4 py-1.5 text-[12px] font-bold transition-colors",
               status === t.id
@@ -123,6 +146,29 @@ export default function AdminVerificationsPage() {
               </div>
             </Link>
           ))}
+        </div>
+      )}
+
+      {(hasPrev || hasNext) && (
+        <div className="mt-4 flex items-center justify-between">
+          <button
+            type="button"
+            disabled={!hasPrev}
+            onClick={() => setCursors((p) => p.slice(0, -1))}
+            className="flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-4 py-2 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-40"
+          >
+            <ChevronLeft className="h-4 w-4" /> Назад
+          </button>
+          <button
+            type="button"
+            disabled={!hasNext}
+            onClick={() => {
+              if (data?.nextCursor) setCursors((p) => [...p, data.nextCursor!]);
+            }}
+            className="flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-4 py-2 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-40"
+          >
+            Вперёд <ChevronRight className="h-4 w-4" />
+          </button>
         </div>
       )}
     </div>

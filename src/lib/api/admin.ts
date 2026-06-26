@@ -1,5 +1,5 @@
 import axios, { type AxiosError, type AxiosRequestConfig } from "axios";
-import { getAdminToken, getAdminRefreshToken, useAdminAuth } from "@/store/admin-auth";
+import { getAdminToken, useAdminAuth } from "@/store/admin-auth";
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL ?? "";
 
@@ -7,6 +7,8 @@ export const adminApi = axios.create({
   baseURL,
   timeout: 15000,
   headers: { "Content-Type": "application/json" },
+  // Send/receive the admin HttpOnly refresh cookie.
+  withCredentials: true,
 });
 
 adminApi.interceptors.request.use((config) => {
@@ -19,12 +21,15 @@ type RetriableConfig = AxiosRequestConfig & { _retry?: boolean };
 
 let adminRefreshPromise: Promise<string> | null = null;
 
-export async function doAdminRefresh(): Promise<{ accessToken: string; accessTokenExpiresIn: number }> {
-  const rt = getAdminRefreshToken();
-  if (!rt) throw new Error("NO_ADMIN_REFRESH_TOKEN");
+export async function doAdminRefresh(): Promise<{
+  accessToken: string;
+  accessTokenExpiresIn: number;
+}> {
+  // The admin refresh token lives in an HttpOnly cookie.
   const { data } = await axios.post<{ accessToken: string; accessTokenExpiresIn: number }>(
     `${baseURL}/auth/admin/refresh`,
-    { refreshToken: rt },
+    { channel: "web" },
+    { withCredentials: true },
   );
   return data;
 }
@@ -37,7 +42,13 @@ adminApi.interceptors.response.use(
     const code = (error.response?.data as { error?: { code?: string } })?.error?.code;
     const isRefreshCall = original?.url?.includes("/auth/admin/refresh");
 
-    if (status === 401 && code === "TOKEN_EXPIRED" && original && !original._retry && !isRefreshCall) {
+    if (
+      status === 401 &&
+      code === "TOKEN_EXPIRED" &&
+      original &&
+      !original._retry &&
+      !isRefreshCall
+    ) {
       original._retry = true;
       try {
         if (!adminRefreshPromise) {
@@ -46,7 +57,9 @@ adminApi.interceptors.response.use(
               useAdminAuth.getState().setAccessToken(r.accessToken, r.accessTokenExpiresIn);
               return r.accessToken;
             })
-            .finally(() => { adminRefreshPromise = null; });
+            .finally(() => {
+              adminRefreshPromise = null;
+            });
         }
         const token = await adminRefreshPromise;
         original.headers = { ...original.headers, Authorization: `Bearer ${token}` };
@@ -209,6 +222,7 @@ export async function adminLogin(
     email,
     password,
     totp,
+    channel: "web",
   });
   return data;
 }
@@ -238,10 +252,9 @@ export async function listVerifications(params?: {
   cursor?: string;
   limit?: number;
 }): Promise<CursorPage<VerificationQueueItem>> {
-  const { data } = await adminApi.get<CursorPage<VerificationQueueItem>>(
-    "/admin/verifications",
-    { params },
-  );
+  const { data } = await adminApi.get<CursorPage<VerificationQueueItem>>("/admin/verifications", {
+    params,
+  });
   return data;
 }
 
@@ -251,20 +264,14 @@ export async function getVerification(id: string): Promise<VerificationDetail> {
 }
 
 export async function approveVerification(id: string): Promise<VerificationDetail> {
-  const { data } = await adminApi.patch<VerificationDetail>(
-    `/admin/verifications/${id}/approve`,
-  );
+  const { data } = await adminApi.patch<VerificationDetail>(`/admin/verifications/${id}/approve`);
   return data;
 }
 
-export async function rejectVerification(
-  id: string,
-  reason: string,
-): Promise<VerificationDetail> {
-  const { data } = await adminApi.patch<VerificationDetail>(
-    `/admin/verifications/${id}/reject`,
-    { reason },
-  );
+export async function rejectVerification(id: string, reason: string): Promise<VerificationDetail> {
+  const { data } = await adminApi.patch<VerificationDetail>(`/admin/verifications/${id}/reject`, {
+    reason,
+  });
   return data;
 }
 
@@ -301,10 +308,7 @@ export async function getAdminUser(id: string): Promise<AdminUserDetail> {
   return data;
 }
 
-export async function blockUser(
-  id: string,
-  reason: string,
-): Promise<AdminUserDetail> {
+export async function blockUser(id: string, reason: string): Promise<AdminUserDetail> {
   const { data } = await adminApi.patch<AdminUserDetail>(`/admin/users/${id}/block`, {
     reason,
   });

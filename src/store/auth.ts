@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { setAccessToken, setRefreshToken } from "@/lib/api/client";
+import { setAccessToken, markSessionHint, clearSessionHint } from "@/lib/api/client";
 import type { AuthResult, SelfUser } from "@/lib/api/types";
 
 type Status = "idle" | "loading" | "authenticated" | "anonymous";
@@ -56,7 +56,8 @@ export const useAuth = create<AuthState>((set) => ({
   },
   setSession: (result) => {
     setAccessToken(result.accessToken ?? null);
-    setRefreshToken(result.refreshToken ?? null);
+    if (result.accessToken) markSessionHint();
+    else clearSessionHint();
     const user = result.user as unknown as SelfUser;
     const stored = readStoredMode();
     const activeMode = resolveMode(user, stored);
@@ -64,9 +65,8 @@ export const useAuth = create<AuthState>((set) => ({
   },
   clearSession: () => {
     setAccessToken(null);
-    setRefreshToken(null);
+    clearSessionHint();
     set({ user: null, status: "anonymous", activeMode: "passenger" });
   },
-  updateUser: (patch) =>
-    set((s) => (s.user ? { user: { ...s.user, ...patch } } : s)),
+  updateUser: (patch) => set((s) => (s.user ? { user: { ...s.user, ...patch } } : s)),
 }));
