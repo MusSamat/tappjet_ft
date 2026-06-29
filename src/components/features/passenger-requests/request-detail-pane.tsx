@@ -9,6 +9,7 @@ import { DriverAvatar } from "@/components/ui/driver-avatar";
 import { LikeButton } from "@/components/ui/like-button";
 import { ListingMetrics } from "@/components/ui/listing-metrics";
 import { useAuth } from "@/store/auth";
+import { useRecordView } from "@/lib/hooks/use-record-view";
 import { RespondModal } from "./_components/respond-modal";
 
 interface Props {
@@ -25,6 +26,7 @@ function fmtDate(iso: string) {
 
 export function RequestDetailPane({ request }: Props) {
   const { passenger } = request;
+  useRecordView("passenger_request", request.id);
   const t = useTranslations("requests");
   const tFilters = useTranslations("request_filters");
   const authStatus = useAuth((s) => s.status);

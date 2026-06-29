@@ -1,6 +1,7 @@
 import { api } from "./client";
 import type { components } from "./schema.gen";
 import type { EngagementFields } from "./types";
+import { getAnonId } from "@/lib/utils/anon-id";
 
 // Extend schema-gen types with runtime fields not yet in the generated spec
 type GeneratedTripListItem = components["schemas"]["TripListItem"];
@@ -69,6 +70,11 @@ export async function likeTrip(id: string): Promise<{ liked: true }> {
 export async function unlikeTrip(id: string): Promise<{ liked: false }> {
   const { data } = await api.delete<{ liked: false }>(`/trips/${id}/like`);
   return data;
+}
+
+/** Record a unique view (deduped server-side by user / anon id). */
+export async function recordTripView(id: string): Promise<void> {
+  await api.post(`/trips/${id}/view`, { anonId: getAnonId() });
 }
 
 export async function completeTrip(id: string): Promise<{ status: 'completed' }> {

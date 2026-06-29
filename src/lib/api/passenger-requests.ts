@@ -1,5 +1,6 @@
 import { api } from "./client";
 import type { EngagementFields } from "./types";
+import { getAnonId } from "@/lib/utils/anon-id";
 
 export interface PassengerRequest extends EngagementFields {
   id: string;
@@ -70,6 +71,11 @@ export async function cancelPassengerRequest(id: string): Promise<void> {
 export async function likePassengerRequest(id: string): Promise<{ liked: true }> {
   const { data } = await api.post<{ liked: true }>(`/passenger-requests/${id}/like`);
   return data;
+}
+
+/** Record a unique view (deduped server-side by user / anon id). */
+export async function recordRequestView(id: string): Promise<void> {
+  await api.post(`/passenger-requests/${id}/view`, { anonId: getAnonId() });
 }
 
 export async function unlikePassengerRequest(id: string): Promise<{ liked: false }> {
