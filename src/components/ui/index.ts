@@ -23,6 +23,8 @@ export { OtpInput, type OtpInputHandle } from "./otp-input";
 export { PhoneInput, type PhoneInputProps } from "./phone-input";
 export { PasswordInput } from "./password-input";
 export { TripCard } from "./trip-card";
+export { LikeButton } from "./like-button";
+export { ListingMetrics } from "./listing-metrics";
 export { Confetti } from "./confetti";
 export {
   Modal,

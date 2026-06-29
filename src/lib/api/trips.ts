@@ -1,5 +1,6 @@
 import { api } from "./client";
 import type { components } from "./schema.gen";
+import type { EngagementFields } from "./types";
 
 // Extend schema-gen types with runtime fields not yet in the generated spec
 type GeneratedTripListItem = components["schemas"]["TripListItem"];
@@ -17,11 +18,11 @@ export type TripListItem = Omit<GeneratedTripListItem, "driver"> & {
   // Not yet in the generated spec — pickup (origin side) / dropoff (dest side) points.
   pickupCities?: string[];
   dropoffCities?: string[];
-};
+} & EngagementFields;
 export type TripDetail = components["schemas"]["TripDetail"] & {
   pickupCities?: string[];
   dropoffCities?: string[];
-};
+} & EngagementFields;
 
 export interface SearchTripsParams {
   from_city?: string;
@@ -58,6 +59,16 @@ export async function getTrip(id: string): Promise<TripDetail> {
 
 export async function cancelTrip(id: string, reason?: string): Promise<void> {
   await api.delete(`/trips/${id}`, reason ? { data: { reason } } : undefined);
+}
+
+export async function likeTrip(id: string): Promise<{ liked: true }> {
+  const { data } = await api.post<{ liked: true }>(`/trips/${id}/like`);
+  return data;
+}
+
+export async function unlikeTrip(id: string): Promise<{ liked: false }> {
+  const { data } = await api.delete<{ liked: false }>(`/trips/${id}/like`);
+  return data;
 }
 
 export async function completeTrip(id: string): Promise<{ status: 'completed' }> {

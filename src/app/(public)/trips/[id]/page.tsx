@@ -6,7 +6,7 @@ import { getTranslations } from "next-intl/server";
 import { getTrip, type TripDetail } from "@/lib/api/trips";
 import { extractError } from "@/lib/api/client";
 import { formatDepartureLabel, formatDurationMin, formatPrice } from "@/lib/utils/date";
-import { Container, DriverAvatar, RatingStars, RouteStops, SeatsBadge, VerifiedBadge } from "@/components/ui";
+import { Container, DriverAvatar, LikeButton, ListingMetrics, RatingStars, RouteStops, SeatsBadge, VerifiedBadge } from "@/components/ui";
 import { TripMap } from "@/components/features/trip/trip-map";
 import { TripActionsPanel } from "@/components/features/trip/trip-actions-panel";
 import { findCity } from "@/lib/kg-cities";
@@ -88,6 +88,10 @@ export default async function TripDetailsPage({ params }: Props) {
               {typeof trip.estimatedDurationMin === "number" && (
                 <span className="text-gray-500"> · ~{formatDurationMin(trip.estimatedDurationMin)}</span>
               )}
+              <div className="ml-auto flex items-center gap-3">
+                <ListingMetrics metrics={trip.metrics} />
+                {trip.id && <LikeButton targetType="trip" id={trip.id} liked={!!trip.liked} size="sm" />}
+              </div>
             </div>
             <h1 className="flex items-center gap-2 text-display text-gray-900">
               <span className="truncate">{trip.originCity}</span>

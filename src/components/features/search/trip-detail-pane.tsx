@@ -8,6 +8,8 @@ import { formatDepartureLabel, formatDurationMin } from "@/lib/utils/date";
 import { DriverAvatar } from "@/components/ui/driver-avatar";
 import { Button } from "@/components/ui/button";
 import { RouteStops } from "@/components/ui/route-stops";
+import { LikeButton } from "@/components/ui/like-button";
+import { ListingMetrics } from "@/components/ui/listing-metrics";
 import { useAuth } from "@/store/auth";
 
 interface Props {
@@ -43,6 +45,14 @@ export function TripDetailPane({ trip }: Props) {
 
   return (
     <div className="flex flex-col gap-4">
+      {/* Engagement: metrics (creator only) + like */}
+      <div className="flex items-center justify-between">
+        <ListingMetrics metrics={trip.metrics} />
+        {trip.id && (
+          <LikeButton targetType="trip" id={trip.id} liked={!!trip.liked} className="ml-auto" />
+        )}
+      </div>
+
       {/* Driver */}
       <Link href={`/drivers/${trip.driverId}`} className="flex items-center gap-3 hover:opacity-80">
         <DriverAvatar name={driver.name ?? "?"} src={driver.avatarUrl ?? null} size="lg" />
