@@ -215,6 +215,17 @@ export function CityAutocomplete({
           onFocus={handleFocus}
           onBlur={() => {
             userTypingRef.current = false;
+            // Auto-commit an exact (case-insensitive) match so typing a full city
+            // name counts even without an explicit click — otherwise the value
+            // stays empty and dependent submit buttons stay disabled.
+            const q = query.trim().toLowerCase();
+            if (q && !value) {
+              const exact = results.find((c) => c.nameRu.toLowerCase() === q);
+              if (exact) {
+                commit(exact);
+                return;
+              }
+            }
             setTimeout(() => {
               setOpen(false);
               setShowingPopular(false);
