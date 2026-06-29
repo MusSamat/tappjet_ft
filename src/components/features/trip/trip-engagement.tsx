@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getTrip } from "@/lib/api/trips";
 import { useAuth } from "@/store/auth";
+import { useRecordView } from "@/lib/hooks/use-record-view";
 import { LikeButton, ListingMetrics } from "@/components/ui";
 
 /**
@@ -19,6 +20,8 @@ export function TripEngagement({
   initialLiked?: boolean;
 }) {
   const status = useAuth((s) => s.status);
+
+  useRecordView("trip", tripId);
 
   const { data } = useQuery({
     queryKey: ["trip", tripId],
