@@ -11,6 +11,7 @@ import { friendlyError } from "@/lib/utils/api-error";
 import { CityAutocomplete, DatePicker, Spinner } from "@/components/ui";
 import { cn } from "@/lib/utils/cn";
 import { useAuth } from "@/store/auth";
+import { AddPhoneModal } from "@/components/features/auth/add-phone-modal";
 
 const DRAFT_KEY = "tappjet_req_draft";
 
@@ -74,16 +75,22 @@ export default function CreateRequestPage() {
   const qc = useQueryClient();
   const t = useTranslations("requests.create");
   const status = useAuth((s) => s.status);
+  const user = useAuth((s) => s.user);
   const [draft, setDraft] = useState<DraftData>(EMPTY);
   const [error, setError] = useState<string | null>(null);
+  const [showAddPhone, setShowAddPhone] = useState(false);
 
   useEffect(() => {
     if (status === "anonymous") {
       router.replace("/auth/login");
       return;
     }
+    // Same phone gate as trip-create: a verified phone is required to publish.
+    if (status === "authenticated" && !user?.phoneVerified) {
+      setShowAddPhone(true);
+    }
     setDraft(loadDraft());
-  }, [status, router]);
+  }, [status, user, router]);
 
   const patch = (update: Partial<DraftData>) => {
     setDraft((prev) => {
@@ -283,6 +290,8 @@ export default function CreateRequestPage() {
           )}
         </button>
       </div>
+
+      <AddPhoneModal open={showAddPhone} onClose={() => setShowAddPhone(false)} />
     </div>
   );
 }
