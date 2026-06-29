@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { CheckCircle, ArrowRight, X } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
-import { RouteStops } from "@/components/ui";
+import { RouteStops, ListingMetrics } from "@/components/ui";
 import type { TripListItem } from "@/lib/api/trips";
 
 function fmtDate(iso?: string): string {
@@ -53,9 +53,12 @@ export function DriverTripCard({ trip, onComplete, completing, onCancel }: {
             <ArrowRight className="h-4 w-4 text-gray-400" />
           </div>
         </div>
-        <div className="mt-3">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">{t("seats_free_label")}</p>
-          <p className="text-[14px] font-bold text-gray-900">{trip.seatsAvailable}/{trip.seatsTotal}</p>
+        <div className="mt-3 flex items-end justify-between">
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">{t("seats_free_label")}</p>
+            <p className="text-[14px] font-bold text-gray-900">{trip.seatsAvailable}/{trip.seatsTotal}</p>
+          </div>
+          {trip.metrics && <ListingMetrics metrics={trip.metrics} />}
         </div>
       </Link>
       {(inTransit || (!inTransit && trip.status === "active")) && (

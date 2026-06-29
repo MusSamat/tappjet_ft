@@ -6,6 +6,8 @@ import { Star, Shield, Users, Calendar, Zap, MessageCircle, CheckCircle } from "
 import { useTranslations } from "next-intl";
 import type { PassengerRequest } from "@/lib/api/passenger-requests";
 import { DriverAvatar } from "@/components/ui/driver-avatar";
+import { LikeButton } from "@/components/ui/like-button";
+import { ListingMetrics } from "@/components/ui/listing-metrics";
 import { useAuth } from "@/store/auth";
 import { RespondModal } from "./_components/respond-modal";
 
@@ -36,6 +38,17 @@ export function RequestDetailPane({ request }: Props) {
   return (
     <>
       <div className="flex flex-col gap-5">
+        {/* Engagement: metrics (creator only) + like */}
+        <div className="flex items-center justify-between">
+          <ListingMetrics metrics={request.metrics} />
+          <LikeButton
+            targetType="passenger_request"
+            id={request.id}
+            liked={!!request.liked}
+            className="ml-auto"
+          />
+        </div>
+
         {/* Passenger header */}
         <Link
           href={`/drivers/${passenger.id}`}

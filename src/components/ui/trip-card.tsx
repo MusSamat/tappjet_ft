@@ -8,6 +8,8 @@ import { formatDepartureLabel, formatDurationMin } from "@/lib/utils/date";
 import { cn } from "@/lib/utils/cn";
 import { DriverAvatar } from "./driver-avatar";
 import { RouteStops } from "./route-stops";
+import { LikeButton } from "./like-button";
+import { ListingMetrics } from "./listing-metrics";
 
 interface TripCardProps {
   trip: TripListItem;
@@ -84,10 +86,14 @@ export function TripCard({ trip, href, className, active, onClick, showBookButto
           )}
         </div>
         <RouteStops pickup={trip.pickupCities} dropoff={trip.dropoffCities} className="mt-1" />
+        {trip.metrics && <ListingMetrics metrics={trip.metrics} className="mt-1" />}
       </div>
 
       {/* Driver + price */}
       <div className="flex flex-shrink-0 flex-col items-end gap-1">
+        {trip.id && (
+          <LikeButton targetType="trip" id={trip.id} liked={!!trip.liked} size="sm" className="-mr-1.5 -mt-1" />
+        )}
         <span className="text-[16px] font-extrabold text-teal-700">{price} сом</span>
         <div className="flex items-center gap-1.5">
           <DriverAvatar name={driverName} src={driver.avatarUrl ?? null} size="sm" />

@@ -82,3 +82,11 @@ export interface Paginated<T> {
   data: T[];
   next_cursor: string | null;
 }
+
+/** Engagement fields returned on trip & passenger-request DTOs. */
+export interface EngagementFields {
+  /** Whether the current viewer liked this listing. */
+  liked: boolean;
+  /** Non-null only when the viewer is the listing's creator. */
+  metrics: { views: number; likes: number } | null;
+}

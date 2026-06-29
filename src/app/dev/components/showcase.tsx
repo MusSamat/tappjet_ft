@@ -49,6 +49,8 @@ const DEMO_TRIP: TripListItem = {
   pricePerSeat: 900,
   priceNegotiable: true,
   luggage: "yes",
+  liked: false,
+  metrics: null,
   driver: {
     id: "d1",
     name: "Асан Кадыров",

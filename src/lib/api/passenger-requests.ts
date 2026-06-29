@@ -1,6 +1,7 @@
 import { api } from "./client";
+import type { EngagementFields } from "./types";
 
-export interface PassengerRequest {
+export interface PassengerRequest extends EngagementFields {
   id: string;
   passengerId: string;
   originCity: string;
@@ -64,6 +65,16 @@ export async function createPassengerRequest(
 
 export async function cancelPassengerRequest(id: string): Promise<void> {
   await api.delete(`/passenger-requests/${id}`);
+}
+
+export async function likePassengerRequest(id: string): Promise<{ liked: true }> {
+  const { data } = await api.post<{ liked: true }>(`/passenger-requests/${id}/like`);
+  return data;
+}
+
+export async function unlikePassengerRequest(id: string): Promise<{ liked: false }> {
+  const { data } = await api.delete<{ liked: false }>(`/passenger-requests/${id}/like`);
+  return data;
 }
 
 export interface RequestResponse {

@@ -4,6 +4,8 @@ import Link from "next/link";
 import { ArrowRight, Star, Zap, Users } from "lucide-react";
 import type { PassengerRequest } from "@/lib/api/passenger-requests";
 import { DriverAvatar } from "@/components/ui/driver-avatar";
+import { LikeButton } from "@/components/ui/like-button";
+import { ListingMetrics } from "@/components/ui/listing-metrics";
 import { cn } from "@/lib/utils/cn";
 
 interface RequestCardProps {
@@ -67,6 +69,13 @@ export function RequestCard({
           <span className="ml-auto flex-shrink-0 text-[11px] font-semibold text-gray-400">
             {fmtDate(request.departureDate)}
           </span>
+          <LikeButton
+            targetType="passenger_request"
+            id={request.id}
+            liked={!!request.liked}
+            size="sm"
+            className="-my-1 flex-shrink-0"
+          />
         </div>
 
         {/* Row 2: route */}
@@ -99,6 +108,8 @@ export function RequestCard({
             </span>
           )}
         </div>
+
+        {request.metrics && <ListingMetrics metrics={request.metrics} className="mt-1.5" />}
       </div>
 
       {/* Cancel button (own list only) */}
