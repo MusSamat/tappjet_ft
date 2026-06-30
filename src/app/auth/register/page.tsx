@@ -54,8 +54,11 @@ export default function RegisterPage() {
 
   if (step === "routes") {
     return (
-      <div className="container flex justify-center py-10">
-        <div className="w-full max-w-md">
+      <div
+        className="flex min-h-[calc(100vh-64px)] items-center justify-center px-5 py-10"
+        style={{ background: "linear-gradient(180deg, #ECFDF8 0%, #ffffff 60%)" }}
+      >
+        <div className="w-full max-w-[440px] rounded-3xl border border-ink-100 bg-white p-7 shadow-soft">
           <RoutePickerStep />
         </div>
       </div>
@@ -63,17 +66,25 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="container flex justify-center py-10">
-      <div className="w-full max-w-md">
-        <h1 className="text-display text-gray-900">{t("title")}</h1>
-        <p className="mt-2 text-body-lg text-gray-700">
-          {t("have_account")}{" "}
-          <Link href="/auth/login" className="font-bold text-teal-700 hover:text-teal-800">
-            {t("sign_in")}
-          </Link>
-        </p>
+    <div
+      className="flex min-h-[calc(100vh-64px)] items-center justify-center px-5 py-10"
+      style={{ background: "linear-gradient(180deg, #ECFDF8 0%, #ffffff 60%)" }}
+    >
+      <div className="w-full max-w-[440px] rounded-3xl border border-ink-100 bg-white p-7 shadow-soft">
+        <div className="mb-5 text-center">
+          <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-600 to-brand-500 text-[20px] font-black text-white shadow-brandcta">
+            Tj
+          </div>
+          <h1 className="text-[22px] font-extrabold text-ink-900">{t("title")}</h1>
+          <p className="mt-1 text-[13px] font-semibold text-ink-400">
+            {t("have_account")}{" "}
+            <Link href="/auth/login" className="font-extrabold text-brand-700 hover:text-brand-800">
+              {t("sign_in")}
+            </Link>
+          </p>
+        </div>
 
-        <div className="mt-6">
+        <div className="mt-2">
           <ProgressBar
             value={stepIdx + 1}
             max={STEP_ORDER.length - 1}
@@ -82,7 +93,7 @@ export default function RegisterPage() {
         </div>
 
         {serverError && (
-          <div className="mt-6">
+          <div className="mt-5">
             <NotifCard variant="error" title={t("error_title")}>{serverError}</NotifCard>
           </div>
         )}
