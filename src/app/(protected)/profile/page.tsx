@@ -81,7 +81,7 @@ export default function ProfilePage() {
   return (
     <Container className="py-8">
       {!user?.phoneVerified && (
-        <div className="mb-4 flex items-center justify-between rounded-2xl border-[0.5px] border-amber-200 bg-amber-50 px-5 py-4">
+        <div className="mb-4 flex items-center justify-between rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4">
           <div>
             <p className="text-[14px] font-bold text-amber-900">Добавьте номер телефона</p>
             <p className="text-[12px] font-semibold text-amber-700">Нужен для бронирования и связи с водителями</p>
@@ -217,7 +217,7 @@ export default function ProfilePage() {
           </div>
 
           {isDriver && driverStats && (
-            <div className="rounded-2xl border-[0.5px] border-sky-200 bg-sky-50 p-5">
+            <div className="rounded-2xl border border-sky-200 bg-sky-50 p-5">
               <h2 className="mb-4 text-[15px] font-extrabold text-gray-900">{t("driver_stats_title")}</h2>
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
                 <StatBlock value={String(driverStats.totalTrips)} label={t("driver_stat_trips")} />

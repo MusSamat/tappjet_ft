@@ -54,7 +54,7 @@ export function MessageComposer({ onSend, onTyping, disabled, className }: Props
         placeholder={t("placeholder")}
         rows={1}
         disabled={disabled}
-        className="flex max-h-28 min-h-[44px] flex-1 resize-none rounded-2xl border-[1.5px] border-gray-300 bg-white px-4 py-2.5 text-body font-semibold text-gray-900 outline-none focus:border-teal-500 disabled:opacity-50"
+        className="flex max-h-28 min-h-[44px] flex-1 resize-none rounded-2xl border-2 border-ink-300 bg-white px-4 py-2.5 text-body font-semibold text-gray-900 outline-none focus:border-teal-500 disabled:opacity-50"
       />
       <button
         type="submit"

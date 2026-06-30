@@ -30,7 +30,7 @@ export function SubmittedScreen() {
             <div
               key={s.label}
               className={cn(
-                "flex items-center gap-3 rounded-[12px] px-3 py-2.5",
+                "flex items-center gap-3 rounded-2xl px-3 py-2.5",
                 s.active && "bg-teal-50",
               )}
             >

@@ -186,7 +186,7 @@ export function TripDetailPane({ trip }: Props) {
             {preferences.map((p) => (
               <span
                 key={p}
-                className="inline-flex items-center gap-1.5 rounded-full border-[1.5px] border-teal-600 bg-teal-50 px-3 py-1 text-[12px] font-bold text-teal-700"
+                className="inline-flex items-center gap-1.5 rounded-full border-2 border-teal-600 bg-teal-50 px-3 py-1 text-[12px] font-bold text-teal-700"
               >
                 <CheckCircle className="h-3 w-3" aria-hidden="true" />
                 {PREF_LABELS[p] ?? p}
@@ -232,7 +232,7 @@ export function TripDetailPane({ trip }: Props) {
       {(authStatus === "idle" || authStatus === "loading") ? (
         <div className="h-12 animate-pulse rounded-xl bg-gray-100" />
       ) : isOwnTrip ? (
-        <div className="rounded-xl border-[0.5px] border-teal-200 bg-teal-50 p-4 text-center">
+        <div className="rounded-xl border border-teal-200 bg-teal-50 p-4 text-center">
           <p className="text-[14px] font-bold text-teal-700">{t("own_trip")}</p>
           <p className="mt-0.5 text-[12px] font-semibold text-teal-600">{t("own_trip_hint")}</p>
         </div>

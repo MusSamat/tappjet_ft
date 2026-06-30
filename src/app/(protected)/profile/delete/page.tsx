@@ -27,7 +27,7 @@ export default function ProfileDeletePage() {
 
   return (
     <div className="container max-w-lg py-10">
-      <div className="rounded-2xl border-[0.5px] border-coral-200 bg-white p-6">
+      <div className="rounded-2xl border border-coral-200 bg-white p-6">
         <div className="flex items-start gap-3">
           <AlertTriangle className="mt-0.5 h-6 w-6 flex-shrink-0 text-error" aria-hidden="true" />
           <div>

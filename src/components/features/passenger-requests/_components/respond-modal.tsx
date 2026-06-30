@@ -80,7 +80,7 @@ export function RespondModal({ request, onClose }: Props) {
               value={price}
               onChange={(e) => setPrice(e.target.value)}
               placeholder={t("price_placeholder")}
-              className="h-12 w-full rounded-2xl border-[1.5px] border-gray-200 bg-gray-50 px-4 text-[16px] font-bold text-gray-900 outline-none focus:border-sky-400 focus:bg-white"
+              className="h-12 w-full rounded-2xl border-2 border-ink-200 bg-gray-50 px-4 text-[16px] font-bold text-gray-900 outline-none focus:border-sky-400 focus:bg-white"
             />
           </div>
 
@@ -94,7 +94,7 @@ export function RespondModal({ request, onClose }: Props) {
                 min={request.departureDate.split("T")[0]}
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="h-12 w-full rounded-2xl border-[1.5px] border-gray-200 bg-gray-50 px-3 text-[13px] font-semibold text-gray-900 outline-none focus:border-sky-400 focus:bg-white"
+                className="h-12 w-full rounded-2xl border-2 border-ink-200 bg-gray-50 px-3 text-[13px] font-semibold text-gray-900 outline-none focus:border-sky-400 focus:bg-white"
               />
             </div>
             <div>
@@ -105,7 +105,7 @@ export function RespondModal({ request, onClose }: Props) {
                 type="time"
                 value={time}
                 onChange={(e) => setTime(e.target.value)}
-                className="h-12 w-full rounded-2xl border-[1.5px] border-gray-200 bg-gray-50 px-3 text-[13px] font-semibold text-gray-900 outline-none focus:border-sky-400 focus:bg-white"
+                className="h-12 w-full rounded-2xl border-2 border-ink-200 bg-gray-50 px-3 text-[13px] font-semibold text-gray-900 outline-none focus:border-sky-400 focus:bg-white"
               />
             </div>
           </div>
@@ -120,7 +120,7 @@ export function RespondModal({ request, onClose }: Props) {
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder={t("message_placeholder")}
-              className="w-full resize-none rounded-2xl border-[1.5px] border-gray-200 bg-gray-50 px-4 py-3 text-[13px] text-gray-900 outline-none focus:border-sky-400 focus:bg-white placeholder:text-gray-400"
+              className="w-full resize-none rounded-2xl border-2 border-ink-200 bg-gray-50 px-4 py-3 text-[13px] text-gray-900 outline-none focus:border-sky-400 focus:bg-white placeholder:text-gray-400"
             />
           </div>
 

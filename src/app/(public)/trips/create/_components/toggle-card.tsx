@@ -18,7 +18,7 @@ export function ToggleCard({
       type="button"
       onClick={onToggle}
       className={cn(
-        "flex w-full items-center justify-between rounded-xl border-[1.5px] p-3 text-left transition-colors",
+        "flex w-full items-center justify-between rounded-xl border-2 p-3 text-left transition-colors",
         on ? "border-teal-200 bg-teal-50" : "border-gray-200 bg-white hover:border-gray-300",
       )}
     >

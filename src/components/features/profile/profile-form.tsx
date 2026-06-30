@@ -44,7 +44,7 @@ export function ProfileForm() {
         <select
           id="language"
           {...register("language")}
-          className="mt-1 h-11 w-full rounded-xl border-[1.5px] border-gray-300 bg-white px-4 text-body text-gray-900 outline-none focus:border-teal-500"
+          className="mt-1 h-11 w-full rounded-xl border-2 border-ink-300 bg-white px-4 text-body text-gray-900 outline-none focus:border-teal-500"
         >
           <option value="ru">Русский</option>
           <option value="kg">Кыргызча</option>

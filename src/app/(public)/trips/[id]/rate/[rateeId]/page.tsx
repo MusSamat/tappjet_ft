@@ -191,7 +191,7 @@ export default function RatePage({ params }: Props) {
                     type="button"
                     onClick={() => toggleTag(value)}
                     className={cn(
-                      "rounded-full border-[1.5px] px-3 py-1 text-[12px] font-bold transition-colors",
+                      "rounded-full border-2 px-3 py-1 text-[12px] font-bold transition-colors",
                       tags.includes(value)
                         ? "border-teal-600 bg-teal-50 text-teal-700"
                         : "border-gray-300 text-gray-700 hover:border-teal-400",

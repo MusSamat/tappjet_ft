@@ -205,7 +205,7 @@ export default function ComplaintPage({ searchParams }: PageProps) {
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="flex h-20 w-20 flex-shrink-0 flex-col items-center justify-center gap-1 rounded-xl border-[1.5px] border-dashed border-gray-300 text-gray-400 hover:border-teal-400 hover:text-teal-500 transition-colors"
+                className="flex h-20 w-20 flex-shrink-0 flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-gray-300 text-gray-400 hover:border-teal-400 hover:text-teal-500 transition-colors"
                 aria-label={t("add_photo_aria")}
               >
                 <Camera className="h-5 w-5" aria-hidden="true" />

@@ -56,7 +56,7 @@ function OfferCard({
   const isDeclined = response.status === "declined";
 
   return (
-    <div className={`rounded-2xl border-[0.5px] bg-white p-4 ${isDeclined ? "opacity-50" : isAccepted ? "border-teal-300" : "border-gray-200"}`}>
+    <div className={`rounded-2xl border bg-white p-4 ${isDeclined ? "opacity-50" : isAccepted ? "border-teal-300" : "border-gray-200"}`}>
       <div className="flex items-start gap-3">
         <DriverAvatar name={response.driver.name} src={response.driver.avatarUrl} size="md" />
         <div className="min-w-0 flex-1">

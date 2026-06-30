@@ -110,7 +110,7 @@ export function DriverBookingRow({
                 type="button"
                 onClick={() => onSelectRejectReason(r)}
                 className={cn(
-                  "rounded-full border-[1.5px] px-2.5 py-1 text-[11px] font-bold",
+                  "rounded-full border-2 px-2.5 py-1 text-[11px] font-bold",
                   rejectReason === r
                     ? "border-coral-400 bg-coral-50 text-coral-700"
                     : "border-gray-200 text-gray-600",

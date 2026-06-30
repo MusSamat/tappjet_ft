@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils/cn";
 import "./social-buttons-types";
 
 const baseBtn =
-  "flex h-11 w-full items-center justify-center gap-3 rounded-xl border-[1.5px] border-gray-300 bg-white text-body text-gray-900 transition-colors hover:bg-gray-50 focus-visible:border-teal-500 focus-visible:outline-none disabled:opacity-50";
+  "flex h-11 w-full items-center justify-center gap-3 rounded-xl border-2 border-ink-300 bg-white text-body text-gray-900 transition-colors hover:bg-gray-50 focus-visible:border-teal-500 focus-visible:outline-none disabled:opacity-50";
 
 interface Props {
   onDone?: () => void;

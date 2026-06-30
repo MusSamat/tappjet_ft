@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export function TripCardSkeleton() {
   return (
-    <div className="flex items-center gap-3 rounded-2xl border-[0.5px] border-gray-100 bg-white px-4 py-3">
+    <div className="flex items-center gap-3 rounded-2xl border border-ink-100 bg-white px-4 py-3">
       <div className="min-w-0 flex-1 space-y-2">
         <Skeleton className="h-[18px] w-3/5" />
         <Skeleton className="h-3 w-2/5" />

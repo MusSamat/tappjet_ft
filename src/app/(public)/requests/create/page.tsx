@@ -59,7 +59,7 @@ function Chip({ active, onClick, children }: { active: boolean; onClick: () => v
       type="button"
       onClick={onClick}
       className={cn(
-        "rounded-full border-[1.5px] px-3.5 py-1.5 text-[12px] font-bold transition-colors",
+        "rounded-full border-2 px-3.5 py-1.5 text-[12px] font-bold transition-colors",
         active
           ? "border-sky-600 bg-sky-50 text-sky-700"
           : "border-gray-200 text-gray-700 hover:border-sky-400",
@@ -162,7 +162,7 @@ export default function CreateRequestPage() {
         {/* Route */}
         <div>
           <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-sky-600">{t("route_label")}</p>
-          <div className="flex flex-col gap-3 rounded-2xl border-[0.5px] border-sky-200 bg-white p-5">
+          <div className="flex flex-col gap-3 rounded-2xl border border-sky-200 bg-white p-5">
             <CityAutocomplete
               label={t("from_label")}
               value={draft.originCity}
@@ -198,7 +198,7 @@ export default function CreateRequestPage() {
         </div>
 
         {/* Seats */}
-        <div className="rounded-2xl border-[0.5px] border-sky-200 bg-white p-5">
+        <div className="rounded-2xl border border-sky-200 bg-white p-5">
           <div className="flex items-center justify-between">
             <div>
               <div className="text-[15px] font-bold text-gray-900">{t("seats_label")}</div>
@@ -208,7 +208,7 @@ export default function CreateRequestPage() {
               <button
                 type="button"
                 onClick={() => patch({ seatsNeeded: Math.max(1, draft.seatsNeeded - 1) })}
-                className="flex h-9 w-9 items-center justify-center rounded-full border-[1.5px] border-gray-200 text-[18px] font-bold text-gray-700 hover:bg-gray-50"
+                className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-ink-200 text-[18px] font-bold text-gray-700 hover:bg-gray-50"
                 aria-label={t("seats_less_aria")}
               >
                 −
@@ -219,7 +219,7 @@ export default function CreateRequestPage() {
               <button
                 type="button"
                 onClick={() => patch({ seatsNeeded: Math.min(8, draft.seatsNeeded + 1) })}
-                className="flex h-9 w-9 items-center justify-center rounded-full border-[1.5px] border-gray-200 text-[18px] font-bold text-gray-700 hover:bg-gray-50"
+                className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-ink-200 text-[18px] font-bold text-gray-700 hover:bg-gray-50"
                 aria-label={t("seats_more_aria")}
               >
                 +
@@ -233,7 +233,7 @@ export default function CreateRequestPage() {
           type="button"
           onClick={() => patch({ flexible: !draft.flexible })}
           className={cn(
-            "flex w-full items-center justify-between rounded-2xl border-[1.5px] p-4 text-left transition-colors",
+            "flex w-full items-center justify-between rounded-2xl border-2 p-4 text-left transition-colors",
             draft.flexible ? "border-sky-200 bg-sky-50" : "border-gray-200 bg-white hover:border-sky-200",
           )}
         >
@@ -263,7 +263,7 @@ export default function CreateRequestPage() {
             value={draft.comment}
             onChange={(e) => patch({ comment: e.target.value })}
             placeholder={t("comment_placeholder")}
-            className="w-full resize-none rounded-xl border-[1.5px] border-gray-200 bg-gray-50 px-4 py-3 text-[13px] font-semibold text-gray-900 outline-none focus:border-sky-500 placeholder:text-gray-400"
+            className="w-full resize-none rounded-xl border-2 border-ink-200 bg-gray-50 px-4 py-3 text-[13px] font-semibold text-gray-900 outline-none focus:border-sky-500 placeholder:text-gray-400"
           />
           <div className="mt-1 text-right text-[11px] text-gray-400">{draft.comment.length}/500</div>
         </div>

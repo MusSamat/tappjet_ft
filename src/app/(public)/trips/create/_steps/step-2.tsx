@@ -47,7 +47,7 @@ export function Step2({
             <button
               type="button"
               onClick={() => onPatchSeats(Math.max(1, seatsTotal - 1))}
-              className="flex h-9 w-9 items-center justify-center rounded-full border-[1.5px] border-gray-200 text-[18px] font-bold text-gray-700 hover:bg-gray-50"
+              className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-ink-200 text-[18px] font-bold text-gray-700 hover:bg-gray-50"
               aria-label={t("seats_less_aria")}
             >
               −
@@ -58,7 +58,7 @@ export function Step2({
             <button
               type="button"
               onClick={() => onPatchSeats(Math.min(6, seatsTotal + 1))}
-              className="flex h-9 w-9 items-center justify-center rounded-full border-[1.5px] border-gray-200 text-[18px] font-bold text-gray-700 hover:bg-gray-50"
+              className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-ink-200 text-[18px] font-bold text-gray-700 hover:bg-gray-50"
               aria-label={t("seats_more_aria")}
             >
               +
@@ -77,7 +77,7 @@ export function Step2({
               max={10000}
               value={pricePerSeat}
               onChange={(e) => onPatchPrice(Math.max(50, Math.min(10000, Number(e.target.value))))}
-              className="h-12 w-32 rounded-xl border-[1.5px] border-gray-200 bg-gray-50 px-4 text-center text-[22px] font-extrabold text-gray-900 outline-none focus:border-teal-500"
+              className="h-12 w-32 rounded-xl border-2 border-ink-200 bg-gray-50 px-4 text-center text-[22px] font-extrabold text-gray-900 outline-none focus:border-teal-500"
             />
             <span className="text-[17px] font-bold text-gray-500">{t("price_som")}</span>
           </div>
@@ -112,7 +112,7 @@ export function Step2({
         <button
           type="button"
           onClick={onBack}
-          className="flex h-12 flex-1 items-center justify-center rounded-xl border-[1.5px] border-gray-200 text-[14px] font-bold text-gray-700 hover:bg-gray-50"
+          className="flex h-12 flex-1 items-center justify-center rounded-xl border-2 border-ink-200 text-[14px] font-bold text-gray-700 hover:bg-gray-50"
         >
           {t("back")}
         </button>

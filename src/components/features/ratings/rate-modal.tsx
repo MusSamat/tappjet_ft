@@ -58,7 +58,7 @@ export function RateModal({ rating, onClose }: Props) {
       />
 
       {/* Sheet (mobile bottom) / Dialog (desktop centered) */}
-      <div className="relative w-full overflow-y-auto rounded-t-[24px] bg-white shadow-2xl sm:max-w-[480px] sm:rounded-[24px]"
+      <div className="relative w-full overflow-y-auto rounded-t-[24px] bg-white shadow-2xl sm:max-w-[480px] sm:rounded-3xl"
         style={{ maxHeight: "92dvh" }}
       >
         {/* Drag handle — mobile only */}
@@ -158,7 +158,7 @@ export function RateModal({ rating, onClose }: Props) {
                           type="button"
                           onClick={() => toggleTag(value)}
                           className={cn(
-                            "rounded-full border-[1.5px] px-3 py-1 text-[12px] font-bold transition-colors",
+                            "rounded-full border-2 px-3 py-1 text-[12px] font-bold transition-colors",
                             tags.includes(value)
                               ? "border-teal-600 bg-teal-50 text-teal-700"
                               : "border-gray-300 text-gray-700 hover:border-teal-400",

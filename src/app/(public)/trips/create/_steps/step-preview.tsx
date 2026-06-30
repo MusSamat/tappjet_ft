@@ -124,7 +124,7 @@ export function StepPreview({
         <button
           type="button"
           onClick={onBack}
-          className="flex h-12 flex-1 items-center justify-center rounded-xl border-[1.5px] border-gray-200 text-[14px] font-bold text-gray-700 hover:bg-gray-50"
+          className="flex h-12 flex-1 items-center justify-center rounded-xl border-2 border-ink-200 text-[14px] font-bold text-gray-700 hover:bg-gray-50"
         >
           {t("back")}
         </button>

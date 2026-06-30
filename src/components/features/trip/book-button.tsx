@@ -50,7 +50,7 @@ export function BookButton({ tripId, seatsAvailable, driverId, disabled }: Props
 
   if (isOwnTrip) {
     return (
-      <div className="rounded-2xl border-[0.5px] border-teal-200 bg-teal-50 p-4 text-center">
+      <div className="rounded-2xl border border-teal-200 bg-teal-50 p-4 text-center">
         <p className="text-body font-bold text-teal-700">Это ваша поездка</p>
         <p className="mt-1 text-caption text-teal-600">Вы водитель этого маршрута</p>
       </div>

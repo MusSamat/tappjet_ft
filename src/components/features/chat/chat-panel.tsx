@@ -224,7 +224,7 @@ export function ChatPanel({ bookingId }: Props) {
 
         {/* Pre-booking banner */}
         {isPreBooking && (
-          <div className="mx-5 mt-3 rounded-[12px] border border-amber-100 bg-amber-50 px-3 py-2.5">
+          <div className="mx-5 mt-3 rounded-2xl border border-amber-100 bg-amber-50 px-3 py-2.5">
             <p className="text-[12px] font-extrabold text-amber-800">
               🔒 {t("pre_book_note")}
             </p>

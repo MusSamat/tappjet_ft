@@ -54,7 +54,7 @@ export function RequestDetailPane({ request }: Props) {
         {/* Passenger header */}
         <Link
           href={`/drivers/${passenger.id}`}
-          className="flex items-center gap-3 rounded-2xl border-[0.5px] border-grape-100 bg-grape-50 p-4 transition-colors hover:border-grape-200 hover:bg-grape-100"
+          className="flex items-center gap-3 rounded-2xl border border-grape-100 bg-grape-50 p-4 transition-colors hover:border-grape-200 hover:bg-grape-100"
         >
           <DriverAvatar
             name={passenger.name}

@@ -159,7 +159,7 @@ export default function DriverVerifyPage() {
                     value={carMake}
                     onChange={(e) => setCarMake(e.target.value)}
                     placeholder={t("make_placeholder")}
-                    className="mt-1 w-full rounded-xl border-[1.5px] border-gray-200 bg-gray-50 px-3 py-2.5 text-[14px] font-semibold text-gray-900 outline-none focus:border-teal-500"
+                    className="mt-1 w-full rounded-xl border-2 border-ink-200 bg-gray-50 px-3 py-2.5 text-[14px] font-semibold text-gray-900 outline-none focus:border-teal-500"
                   />
                 </div>
                 <div className="flex-1">
@@ -170,7 +170,7 @@ export default function DriverVerifyPage() {
                     value={carModel}
                     onChange={(e) => setCarModel(e.target.value)}
                     placeholder={t("model_placeholder")}
-                    className="mt-1 w-full rounded-xl border-[1.5px] border-gray-200 bg-gray-50 px-3 py-2.5 text-[14px] font-semibold text-gray-900 outline-none focus:border-teal-500"
+                    className="mt-1 w-full rounded-xl border-2 border-ink-200 bg-gray-50 px-3 py-2.5 text-[14px] font-semibold text-gray-900 outline-none focus:border-teal-500"
                   />
                 </div>
               </div>
@@ -185,7 +185,7 @@ export default function DriverVerifyPage() {
                     placeholder={t("year_placeholder")}
                     min={1980}
                     max={new Date().getFullYear() + 1}
-                    className="mt-1 w-full rounded-xl border-[1.5px] border-gray-200 bg-gray-50 px-3 py-2.5 text-[14px] font-semibold text-gray-900 outline-none focus:border-teal-500"
+                    className="mt-1 w-full rounded-xl border-2 border-ink-200 bg-gray-50 px-3 py-2.5 text-[14px] font-semibold text-gray-900 outline-none focus:border-teal-500"
                   />
                 </div>
                 <div className="flex-1">
@@ -196,7 +196,7 @@ export default function DriverVerifyPage() {
                     value={color}
                     onChange={(e) => setColor(e.target.value)}
                     placeholder={t("color_placeholder")}
-                    className="mt-1 w-full rounded-xl border-[1.5px] border-gray-200 bg-gray-50 px-3 py-2.5 text-[14px] font-semibold text-gray-900 outline-none focus:border-teal-500"
+                    className="mt-1 w-full rounded-xl border-2 border-ink-200 bg-gray-50 px-3 py-2.5 text-[14px] font-semibold text-gray-900 outline-none focus:border-teal-500"
                   />
                 </div>
               </div>
@@ -209,7 +209,7 @@ export default function DriverVerifyPage() {
                     value={plate}
                     onChange={(e) => setPlate(e.target.value.toUpperCase())}
                     placeholder={t("plate_placeholder")}
-                    className="mt-1 w-full rounded-xl border-[1.5px] border-gray-200 bg-gray-50 px-3 py-2.5 text-[14px] font-semibold text-gray-900 outline-none focus:border-teal-500"
+                    className="mt-1 w-full rounded-xl border-2 border-ink-200 bg-gray-50 px-3 py-2.5 text-[14px] font-semibold text-gray-900 outline-none focus:border-teal-500"
                   />
                 </div>
                 <div className="w-[120px]">
@@ -224,7 +224,7 @@ export default function DriverVerifyPage() {
                     placeholder="4"
                     min={1}
                     max={7}
-                    className="mt-1 w-full rounded-xl border-[1.5px] border-gray-200 bg-gray-50 px-3 py-2.5 text-[14px] font-semibold text-gray-900 outline-none focus:border-teal-500"
+                    className="mt-1 w-full rounded-xl border-2 border-ink-200 bg-gray-50 px-3 py-2.5 text-[14px] font-semibold text-gray-900 outline-none focus:border-teal-500"
                   />
                 </div>
               </div>

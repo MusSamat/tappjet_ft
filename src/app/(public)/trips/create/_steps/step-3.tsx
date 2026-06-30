@@ -69,7 +69,7 @@ export function Step3({
           value={comment}
           onChange={(e) => onPatchComment(e.target.value)}
           placeholder={t("comment_placeholder")}
-          className="w-full resize-none rounded-xl border-[1.5px] border-gray-200 bg-gray-50 px-4 py-3 text-[13px] font-semibold text-gray-900 outline-none placeholder:text-gray-400 focus:border-teal-500"
+          className="w-full resize-none rounded-xl border-2 border-ink-200 bg-gray-50 px-4 py-3 text-[13px] font-semibold text-gray-900 outline-none placeholder:text-gray-400 focus:border-teal-500"
         />
         <div className="mt-1 text-right text-[11px] text-gray-400">{comment.length}/400</div>
       </div>
@@ -86,7 +86,7 @@ export function Step3({
         <button
           type="button"
           onClick={onBack}
-          className="flex h-12 flex-1 items-center justify-center rounded-xl border-[1.5px] border-gray-200 text-[14px] font-bold text-gray-700 hover:bg-gray-50"
+          className="flex h-12 flex-1 items-center justify-center rounded-xl border-2 border-ink-200 text-[14px] font-bold text-gray-700 hover:bg-gray-50"
         >
           {t("back")}
         </button>

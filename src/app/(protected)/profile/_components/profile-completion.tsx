@@ -23,7 +23,7 @@ export function ProfileCompletion({ user, isDriver }: { user: UserShape; isDrive
   if (pct === 100) return null;
 
   return (
-    <div className="rounded-2xl border-[0.5px] border-amber-200 bg-amber-50 p-5">
+    <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5">
       <div className="mb-3 flex items-center justify-between">
         <p className="text-[14px] font-extrabold text-gray-900">{t("completion_title", { pct })}</p>
         <span className="text-[13px] font-bold text-amber-700">{pct}%</span>

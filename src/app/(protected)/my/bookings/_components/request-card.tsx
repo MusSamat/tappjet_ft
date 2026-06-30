@@ -127,7 +127,7 @@ export function RequestCard({
                 type="button"
                 onClick={() => setReason(r)}
                 className={cn(
-                  "rounded-full border-[1.5px] px-3 py-1.5 text-[12px] font-bold transition-colors",
+                  "rounded-full border-2 px-3 py-1.5 text-[12px] font-bold transition-colors",
                   reason === r
                     ? "border-coral-400 bg-coral-50 text-coral-700"
                     : "border-gray-200 text-gray-700 hover:border-gray-300",

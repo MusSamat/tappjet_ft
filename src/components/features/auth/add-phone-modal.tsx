@@ -220,7 +220,7 @@ export function AddPhoneModal({ open, onClose, onDone }: Props) {
               onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
               onKeyDown={(e) => e.key === "Enter" && handleOtpSubmit()}
               placeholder="— — — — — —"
-              className="w-full rounded-xl border-[1.5px] border-gray-200 bg-gray-50 px-4 py-3 text-center text-[22px] font-extrabold tracking-[0.3em] text-gray-900 outline-none focus:border-teal-500"
+              className="w-full rounded-xl border-2 border-ink-200 bg-gray-50 px-4 py-3 text-center text-[22px] font-extrabold tracking-[0.3em] text-gray-900 outline-none focus:border-teal-500"
             />
             <Button
               variant="submit"

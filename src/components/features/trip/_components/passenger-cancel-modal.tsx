@@ -40,7 +40,7 @@ export function PassengerCancelModal({
             type="button"
             onClick={() => onToggle(r)}
             className={cn(
-              "rounded-full border-[1.5px] px-3 py-1.5 text-[12px] font-bold transition-colors",
+              "rounded-full border-2 px-3 py-1.5 text-[12px] font-bold transition-colors",
               reasons.includes(r)
                 ? "border-teal-600 bg-teal-50 text-teal-700"
                 : "border-gray-200 text-gray-700 hover:border-gray-300",

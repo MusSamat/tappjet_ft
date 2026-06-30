@@ -32,7 +32,7 @@ export function CancelTripModal({ trip, isPending, onConfirm, onClose }: {
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-4">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative w-full overflow-hidden rounded-t-[24px] bg-white shadow-2xl sm:max-w-[440px] sm:rounded-[24px]">
+      <div className="relative w-full overflow-hidden rounded-t-[24px] bg-white shadow-2xl sm:max-w-[440px] sm:rounded-3xl">
         <div className="flex justify-center pb-1 pt-3 sm:hidden">
           <div className="h-1 w-10 rounded-full bg-gray-200" />
         </div>
@@ -58,7 +58,7 @@ export function CancelTripModal({ trip, isPending, onConfirm, onClose }: {
                   type="button"
                   onClick={() => setReason(r)}
                   className={cn(
-                    "rounded-full border-[1.5px] px-3 py-1.5 text-[12px] font-bold transition-colors",
+                    "rounded-full border-2 px-3 py-1.5 text-[12px] font-bold transition-colors",
                     reason === r
                       ? "border-coral-400 bg-coral-50 text-coral-700"
                       : "border-gray-200 text-gray-700 hover:border-gray-300",

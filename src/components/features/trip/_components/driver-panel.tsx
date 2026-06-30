@@ -152,7 +152,7 @@ export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string
         <Link
           key={pr.counterpartId}
           href={`/trips/${tripId}/rate/${pr.counterpartId}`}
-          className="flex items-center gap-3 rounded-2xl border-[0.5px] border-amber-200 bg-amber-50 px-4 py-3 hover:bg-amber-100"
+          className="flex items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 hover:bg-amber-100"
         >
           <Star className="h-5 w-5 flex-shrink-0 fill-amber-400 text-amber-400" />
           <div className="flex-1">
