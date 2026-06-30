@@ -11,6 +11,7 @@ import {
   resetPassword,
   initTelegramLink,
   getTelegramLinkStatus,
+  sendTelegramOtp,
   verifyOtp,
 } from "@/lib/api/auth";
 import { extractError } from "@/lib/api/client";
@@ -116,13 +117,26 @@ export default function LoginPage() {
     onError: (e) => setServerError(friendlyError(extractError(e))),
   });
 
+  // Auto-send: DM the code straight to the user's Telegram (no "open bot").
+  // Falls back to the deep-link flow if the bot can't DM (not linked / not started).
+  const tgAutoMutation = useMutation({
+    mutationFn: () => sendTelegramOtp(phone),
+    onSuccess: () => {
+      setServerError(null);
+      setResendSeconds(60);
+      setStep("otp");
+      setTimeout(() => digitRefs[0]?.current?.focus(), 100);
+    },
+    onError: () => { forgotMutation.mutate(); },
+  });
+
   const handleForgot = () => {
     if (!FULL_PHONE_RE.test(phone)) {
       setServerError(tl("enter_phone_first"));
       return;
     }
     setServerError(null);
-    forgotMutation.mutate();
+    tgAutoMutation.mutate();
   };
 
   // ── Verify OTP ─────────────────────────────────────────────────────────
@@ -286,12 +300,12 @@ export default function LoginPage() {
             <div className="mt-5 flex flex-col items-center gap-3">
               <button
                 type="button"
-                disabled={forgotMutation.isPending}
+                disabled={tgAutoMutation.isPending || forgotMutation.isPending}
                 onClick={handleForgot}
                 className="flex items-center gap-1.5 text-[13px] font-semibold text-gray-500 hover:text-teal-600 disabled:opacity-50"
               >
-                {forgotMutation.isPending && <Spinner size={13} />}
-                {forgotMutation.isPending ? "Отправляем ссылку..." : tl("forgot_password")}
+                {(tgAutoMutation.isPending || forgotMutation.isPending) && <Spinner size={13} />}
+                {tgAutoMutation.isPending || forgotMutation.isPending ? "Отправляем код…" : tl("forgot_password")}
               </button>
               <p className="text-[12px] text-gray-400">
                 {tl("no_account")}{" "}
@@ -373,7 +387,7 @@ export default function LoginPage() {
               if (resendSeconds > 0) return;
               setDigits(["", "", "", "", "", ""]);
               setServerError(null);
-              forgotMutation.mutate();
+              tgAutoMutation.mutate();
             }}
           />
         )}
