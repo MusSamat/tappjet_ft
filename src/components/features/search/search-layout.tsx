@@ -4,14 +4,16 @@ import { useState, useEffect, useRef } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { searchTrips, type SearchTripsParams, type TripSearchResult, type TripListItem } from "@/lib/api/trips";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { TripCard } from "@/components/ui/trip-card";
+import { Segmented } from "@/components/ui/segmented";
 
 import { SearchFilters } from "./search-filters";
 import { TripDetailPane } from "./trip-detail-pane";
 import { PopularRoutes } from "./popular-routes";
 import { TripCardSkeletonList } from "./trip-card-skeleton";
 import { MobileRouteBar } from "./_components/mobile-route-bar";
-import { SlidersHorizontal, X, Bell, SearchX } from "lucide-react";
+import { SlidersHorizontal, X, Bell, SearchX, CarFront, Hand } from "lucide-react";
 
 interface Props {
   params: SearchTripsParams;
@@ -19,6 +21,7 @@ interface Props {
 }
 
 export function SearchLayout({ params, initial }: Props) {
+  const router = useRouter();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [mobileDetailOpen, setMobileDetailOpen] = useState(false);
@@ -66,7 +69,7 @@ export function SearchLayout({ params, initial }: Props) {
 
   const emptyState = (
     <div className="flex flex-col gap-5">
-      <div className="rounded-[20px] border-[0.5px] border-gray-300 bg-white p-8 text-center">
+      <div className="rounded-3xl bg-white p-8 shadow-card ring-1 ring-ink-100 text-center">
         <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gray-100">
           <SearchX className="h-7 w-7 text-gray-400" aria-hidden="true" />
         </div>
@@ -154,6 +157,18 @@ export function SearchLayout({ params, initial }: Props) {
       {/* ===== MOBILE/TABLET (<1024px): stacked ===== */}
       <div className="lg:hidden">
         <div className="sticky top-0 z-20 bg-white md:top-16">
+          <div className="border-b border-gray-100 px-4 pt-3">
+            <div className="mx-auto max-w-[1100px]">
+              <Segmented
+                value="trips"
+                onChange={(v) => { if (v === "requests") router.push("/requests"); }}
+                options={[
+                  { value: "trips", label: "Поездки", icon: <CarFront className="h-4 w-4" /> },
+                  { value: "requests", label: "Заявки", icon: <Hand className="h-4 w-4" /> },
+                ]}
+              />
+            </div>
+          </div>
           <div className="border-b border-gray-100">
             <div className="mx-auto max-w-[1100px] px-4">
               <MobileRouteBar />
@@ -194,7 +209,7 @@ export function SearchLayout({ params, initial }: Props) {
         )}
 
         <div
-          className={`search-sheet fixed bottom-0 left-0 right-0 z-40 max-h-[85vh] overflow-y-auto rounded-t-[20px] bg-white${mobileFiltersOpen ? " open" : ""}`}
+          className={`search-sheet fixed bottom-0 left-0 right-0 z-40 max-h-[85vh] overflow-y-auto rounded-t-4xl bg-white${mobileFiltersOpen ? " open" : ""}`}
           style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
         >
           <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
@@ -222,7 +237,7 @@ export function SearchLayout({ params, initial }: Props) {
         </div>
 
         <div
-          className={`search-sheet fixed bottom-0 left-0 right-0 z-40 max-h-[90vh] overflow-y-auto rounded-t-[20px] bg-white${mobileDetailOpen ? " open" : ""}`}
+          className={`search-sheet fixed bottom-0 left-0 right-0 z-40 max-h-[90vh] overflow-y-auto rounded-t-4xl bg-white${mobileDetailOpen ? " open" : ""}`}
           style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
         >
           <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">

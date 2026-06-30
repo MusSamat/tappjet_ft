@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Shield, Star, Car, Users, Luggage, Lock, MessageCircle, CheckCircle } from "lucide-react";
+import { Shield, Star, Car, Luggage, Lock, MessageCircle, CheckCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { TripListItem } from "@/lib/api/trips";
 import { formatDepartureLabel, formatDurationMin } from "@/lib/utils/date";
@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button";
 import { RouteStops } from "@/components/ui/route-stops";
 import { LikeButton } from "@/components/ui/like-button";
 import { ListingMetrics } from "@/components/ui/listing-metrics";
+import { ListingTypeBadge } from "@/components/ui/listing-type-badge";
+import { SeatStack } from "@/components/ui/seat-stack";
 import { useAuth } from "@/store/auth";
 
 interface Props {
@@ -45,12 +47,13 @@ export function TripDetailPane({ trip }: Props) {
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Engagement: metrics (creator only) + like */}
-      <div className="flex items-center justify-between">
-        <ListingMetrics metrics={trip.metrics} />
-        {trip.id && (
-          <LikeButton targetType="trip" id={trip.id} liked={!!trip.liked} className="ml-auto" />
-        )}
+      {/* Type + engagement: metrics (creator only) + like */}
+      <div className="flex items-center justify-between gap-2">
+        <ListingTypeBadge type="trip" />
+        <div className="flex items-center gap-2">
+          <ListingMetrics metrics={trip.metrics} />
+          {trip.id && <LikeButton targetType="trip" id={trip.id} liked={!!trip.liked} />}
+        </div>
       </div>
 
       {/* Driver */}
@@ -98,19 +101,19 @@ export function TripDetailPane({ trip }: Props) {
       {/* Route */}
       <div>
         <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.08em] text-gray-500">{t("route_label")}</p>
-        <div className="rounded-[16px] border-[0.5px] border-gray-300 bg-white p-4">
+        <div className="rounded-2xl border border-ink-200 bg-white p-4">
           <div className="flex items-start gap-3">
             {/* Dots */}
             <div className="flex flex-col items-center pt-1">
               <span
                 className="h-2.5 w-2.5 rounded-full bg-teal-500 flex-shrink-0"
-                style={{ boxShadow: "0 0 0 3px #CCFBF1" }}
+                style={{ boxShadow: "0 0 0 3px #D0FBEF" }}
                 aria-hidden="true"
               />
               <div className="my-1 h-10 w-0.5 bg-gray-300" aria-hidden="true" />
               <span
                 className="h-2.5 w-2.5 rounded-full bg-amber-500 flex-shrink-0"
-                style={{ boxShadow: "0 0 0 3px #FEF3C7" }}
+                style={{ boxShadow: "0 0 0 3px #FEEFC7" }}
                 aria-hidden="true"
               />
             </div>
@@ -140,12 +143,22 @@ export function TripDetailPane({ trip }: Props) {
         </div>
       </div>
 
+      {/* Seats — stacked people (free vs taken) */}
+      {seatsTotal > 0 && (
+        <div className="flex items-center gap-3 rounded-2xl bg-ink-50 px-4 py-3">
+          <SeatStack
+            taken={Math.max(0, seatsTotal - seatsAvailable)}
+            free={Math.max(0, seatsAvailable)}
+            size={26}
+          />
+          <span className="text-[13px] font-extrabold text-brand-700">
+            {t("seats_free", { free: seatsAvailable, total: seatsTotal })}
+          </span>
+        </div>
+      )}
+
       {/* Badges */}
       <div className="flex flex-wrap gap-2">
-        <span className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2.5 py-1 text-[11px] font-bold text-gray-700">
-          <Users className="h-3 w-3" aria-hidden="true" />
-          {t("seats_free", { free: seatsAvailable, total: seatsTotal })}
-        </span>
         {luggage === "yes" && (
           <span className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2.5 py-1 text-[11px] font-bold text-gray-700">
             <Luggage className="h-3 w-3" aria-hidden="true" />
@@ -187,7 +200,7 @@ export function TripDetailPane({ trip }: Props) {
       {(trip as { comment?: string | null }).comment && (
         <div>
           <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.08em] text-gray-500">{t("driver_comment")}</p>
-          <div className="rounded-[16px] bg-teal-50 px-3 py-2.5 text-[13px] leading-relaxed text-gray-700">
+          <div className="rounded-2xl bg-teal-50 px-3 py-2.5 text-[13px] leading-relaxed text-gray-700">
             «{(trip as { comment?: string | null }).comment}»
           </div>
         </div>
@@ -195,7 +208,7 @@ export function TripDetailPane({ trip }: Props) {
 
       {/* Phone hidden — only for non-drivers */}
       {!isOwnTrip && (
-        <div className="rounded-[16px] border border-amber-100 bg-amber-50 px-3 py-2.5">
+        <div className="rounded-2xl border border-amber-100 bg-amber-50 px-3 py-2.5">
           <div className="flex items-center gap-2">
             <Lock className="h-3.5 w-3.5 text-amber-600 flex-shrink-0" aria-hidden="true" />
             <span className="text-[13px] font-bold text-gray-900">{t("phone_hidden")}</span>

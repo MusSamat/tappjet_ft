@@ -82,7 +82,7 @@ export default async function TripDetailsPage({ params }: Props) {
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_360px]">
         <div className="flex flex-col gap-6">
-          <header className="flex flex-col gap-3 rounded-2xl border-[0.5px] border-gray-300 bg-white p-5">
+          <header className="flex flex-col gap-3 rounded-3xl border border-ink-100 bg-white shadow-card p-5">
             <div className="flex items-center gap-2 text-caption font-semibold text-gray-700">
               <Clock className="h-4 w-4 text-gray-500" aria-hidden="true" />
               {trip.departureAt && formatDepartureLabel(trip.departureAt)}
@@ -125,11 +125,11 @@ export default async function TripDetailsPage({ params }: Props) {
                   ? { lat: destCity.lat, lng: destCity.lng, label: destCity.nameRu }
                   : null
               }
-              className="h-72 w-full overflow-hidden rounded-2xl border-[0.5px] border-gray-300"
+              className="h-72 w-full overflow-hidden rounded-3xl border border-ink-100"
             />
           )}
 
-          <section className="rounded-2xl border-[0.5px] border-gray-300 bg-white p-5">
+          <section className="rounded-3xl border border-ink-100 bg-white shadow-card p-5">
             <h2 className="mb-4 text-h2 text-gray-900">{tTrips("driver_section")}</h2>
             <Link
               href={driver.id ? `/drivers/${driver.id}` : "#"}
@@ -159,7 +159,7 @@ export default async function TripDetailsPage({ params }: Props) {
           </section>
 
           {(trip.comment || preferences.length > 0) && (
-            <section className="rounded-2xl border-[0.5px] border-gray-300 bg-white p-5">
+            <section className="rounded-3xl border border-ink-100 bg-white shadow-card p-5">
               <h2 className="mb-3 text-h2 text-gray-900">{tTrips("details_section")}</h2>
               {trip.comment && <p className="text-body-lg text-gray-700">{trip.comment}</p>}
               {preferences.length > 0 && (
