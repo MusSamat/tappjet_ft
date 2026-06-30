@@ -4,7 +4,8 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useState, useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { SlidersHorizontal, X, Users, ArrowLeftRight } from "lucide-react";
+import { SlidersHorizontal, X, Users, ArrowLeftRight, CarFront, Hand } from "lucide-react";
+import { Segmented } from "@/components/ui/segmented";
 import { listPassengerRequests, type PassengerRequest } from "@/lib/api/passenger-requests";
 import { RequestCard } from "@/components/features/passenger-requests/request-card";
 import { RequestDetailPane } from "@/components/features/passenger-requests/request-detail-pane";
@@ -62,6 +63,7 @@ function MobileRouteBar() {
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 export default function RequestsPage() {
+  const router = useRouter();
   const params = useSearchParams();
   const t = useTranslations("requests");
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -204,6 +206,19 @@ export default function RequestsPage() {
       <div className="lg:hidden">
         {/* Sticky header */}
         <div className="sticky top-0 z-20 bg-white md:top-16">
+          <div className="border-b border-gray-100 px-4 pt-3">
+            <div className="mx-auto max-w-[1100px]">
+              <Segmented
+                value="requests"
+                tone="grape"
+                onChange={(v) => { if (v === "trips") router.push("/trips"); }}
+                options={[
+                  { value: "trips", label: "Поездки", icon: <CarFront className="h-4 w-4" /> },
+                  { value: "requests", label: "Заявки", icon: <Hand className="h-4 w-4" /> },
+                ]}
+              />
+            </div>
+          </div>
           <div className="border-b border-gray-100">
             <div className="mx-auto max-w-[1100px] px-4">
               <MobileRouteBar />

@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Star, Zap, Users } from "lucide-react";
+import { ArrowRight, Star, Zap } from "lucide-react";
 import type { PassengerRequest } from "@/lib/api/passenger-requests";
 import { DriverAvatar } from "@/components/ui/driver-avatar";
 import { LikeButton } from "@/components/ui/like-button";
 import { ListingMetrics } from "@/components/ui/listing-metrics";
+import { ListingTypeBadge } from "@/components/ui/listing-type-badge";
+import { SeatStack } from "@/components/ui/seat-stack";
 import { cn } from "@/lib/utils/cn";
 
 interface RequestCardProps {
@@ -36,8 +38,8 @@ export function RequestCard({
   const content = (
     <div
       className={cn(
-        "group flex items-start gap-3 rounded-2xl border-[0.5px] border-gray-200 bg-white px-4 py-3 transition-all",
-        "hover:border-sky-300 hover:shadow-sm",
+        "group flex items-start gap-3 rounded-3xl border-l-[5px] border-grape-500 bg-white px-4 py-3 shadow-card ring-1 ring-ink-100 transition-all",
+        "hover:ring-grape-300",
         onClick && "cursor-pointer",
         !isOpen && "opacity-60",
         className,
@@ -52,13 +54,14 @@ export function RequestCard({
         name={passenger.name}
         src={passenger.avatarUrl}
         size="sm"
-        className="mt-0.5 flex-shrink-0 ring-2 ring-sky-100"
+        className="mt-0.5 flex-shrink-0 ring-2 ring-grape-100"
       />
 
       {/* Body */}
       <div className="min-w-0 flex-1">
         {/* Row 1: name + route + price slot */}
         <div className="flex items-center gap-2">
+          <ListingTypeBadge type="request" className="flex-shrink-0" />
           <span className="text-[13px] font-bold text-gray-900">{passenger.name.split(" ")[0]}</span>
           {showRating && (
             <span className="flex items-center gap-0.5 text-[11px] text-gray-500">
@@ -87,12 +90,12 @@ export function RequestCard({
 
         {/* Row 3: badges */}
         <div className="mt-1 flex flex-wrap items-center gap-1.5">
-          <span className="inline-flex items-center gap-1 rounded-full bg-sky-50 px-2 py-0.5 text-[11px] font-bold text-sky-700">
-            <Users className="h-3 w-3" aria-hidden />
-            {request.seatsNeeded} {request.seatsNeeded === 1 ? "место" : request.seatsNeeded < 5 ? "места" : "мест"}
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-grape-100 px-2 py-0.5 text-[11px] font-extrabold text-grape-600">
+            <SeatStack needed={Math.min(request.seatsNeeded, 4)} size={16} />
+            нужно {request.seatsNeeded}
           </span>
           {request.flexible && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-bold text-amber-700">
+            <span className="inline-flex items-center gap-1 rounded-full bg-accent-100 px-2 py-0.5 text-[11px] font-extrabold text-accent-700">
               <Zap className="h-3 w-3" aria-hidden />
               Гибко
             </span>
