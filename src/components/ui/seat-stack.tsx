@@ -5,7 +5,7 @@ type SeatTone = "free" | "taken" | "needed";
 
 const TONE: Record<SeatTone, string> = {
   free: "text-brand-600",
-  taken: "text-ink-300",
+  taken: "text-ink-400",
   needed: "text-grape-500",
 };
 
