@@ -185,13 +185,13 @@ export default function LoginPage() {
   return (
     <div
       className="flex min-h-[calc(100vh-64px)] items-center justify-center px-5 py-10"
-      style={{ background: "linear-gradient(180deg, #F0FDFA 0%, #ffffff 60%)" }}
+      style={{ background: "linear-gradient(180deg, #ECFDF8 0%, #ffffff 60%)" }}
     >
-      <div className="w-full max-w-[420px] rounded-[24px] border-[0.5px] border-gray-100 bg-white p-8 shadow-xl shadow-gray-100/60">
+      <div className="w-full max-w-[420px] rounded-3xl border border-ink-100 bg-white p-8 shadow-soft">
 
         {/* Logo */}
         <div className="mb-7 text-center">
-          <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-[18px] bg-gradient-to-br from-teal-600 to-teal-500 shadow-md shadow-teal-200">
+          <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-600 to-teal-500 shadow-brandcta">
             <span className="text-[22px] font-black tracking-tight text-white">Tj</span>
           </div>
           <h1 className="text-[22px] font-extrabold text-gray-900">Вход в Tappjet</h1>
@@ -225,7 +225,7 @@ export default function LoginPage() {
                 {tl("phone_label")}
               </label>
               <div className="flex gap-2">
-                <div className="flex h-11 w-[52px] shrink-0 items-center justify-center rounded-[12px] border-[1.5px] border-gray-200 text-[20px]">
+                <div className="flex h-12 w-[52px] shrink-0 items-center justify-center rounded-2xl border-2 border-ink-200 text-[20px]">
                   🇰🇬
                 </div>
                 <PhoneInput
@@ -255,7 +255,7 @@ export default function LoginPage() {
                   onKeyDown={(e) => { if (e.key === "Enter" && canSubmitLogin) loginMutation.mutate(); }}
                   placeholder={tl("password_placeholder")}
                   className={cn(
-                    "h-11 w-full rounded-[12px] border-[1.5px] bg-gray-50 px-3 pr-10 text-[14px] font-semibold outline-none transition-colors",
+                    "h-12 w-full rounded-2xl border-[1.5px] bg-ink-50 px-3 pr-10 text-[14px] font-semibold outline-none transition-colors",
                     serverError
                       ? "border-coral-300 text-coral-700"
                       : "border-gray-200 text-gray-900 focus:border-teal-500",

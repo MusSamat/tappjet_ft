@@ -45,7 +45,7 @@ export function ResetStep({
             value={newPassword}
             onChange={(e) => { setNewPassword(e.target.value); setServerError(null); }}
             placeholder={tl("new_password_placeholder")}
-            className="h-11 w-full rounded-xl border-[1.5px] border-gray-200 bg-gray-50 px-3 pr-10 text-[14px] font-semibold text-gray-900 outline-none focus:border-teal-500"
+            className="h-11 w-full rounded-xl border-2 border-ink-200 bg-gray-50 px-3 pr-10 text-[14px] font-semibold text-gray-900 outline-none focus:border-teal-500"
           />
           <button
             type="button"

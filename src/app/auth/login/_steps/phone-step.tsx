@@ -30,7 +30,7 @@ export function PhoneStep({ tl, phone, setPhone, setServerError, isPending, onCo
           {tl("phone_label")}
         </span>
         <div className="flex gap-2">
-          <div className="flex h-11 w-[52px] flex-shrink-0 items-center justify-center rounded-xl border-[1.5px] border-gray-200 text-[20px]">
+          <div className="flex h-11 w-[52px] flex-shrink-0 items-center justify-center rounded-xl border-2 border-ink-200 text-[20px]">
             🇰🇬
           </div>
           <PhoneInput
