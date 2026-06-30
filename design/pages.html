@@ -68,7 +68,6 @@
       <a href="#rate" class="rounded-full bg-ink-100 px-3 py-1 hover:bg-brand-50 hover:text-brand-700">Оценка</a>
       <a href="#settings" class="rounded-full bg-ink-100 px-3 py-1 hover:bg-brand-50 hover:text-brand-700">Настройки</a>
       <a href="#roles" class="rounded-full bg-brand-600 px-3 py-1 text-white">Роли (гость/пассажир/водитель)</a>
-      <a href="#states" class="rounded-full bg-brand-600 px-3 py-1 text-white">Состояния и кейсы</a>
     </nav>
   </header>
 
@@ -115,6 +114,64 @@
             </div>
           </div>
         </div>
+
+        <!-- state: error -->
+        <div class="phone flex items-center overflow-hidden bg-gradient-to-b from-brand-50 to-white p-4 ring-1 ring-ink-200">
+          <div class="w-full rounded-3xl border border-ink-100 bg-white p-6 shadow-soft">
+            <div class="mb-4 text-center"><p class="text-[18px] font-900 text-ink-900">Вход в Tappjet</p><p class="text-[12px] font-700 text-ink-400">кейс: ошибка</p></div>
+            <div class="mb-4 flex items-start gap-2.5 rounded-2xl bg-coral-50 px-4 py-3"><i data-lucide="alert-triangle" class="mt-0.5 h-4 w-4 shrink-0 text-coral-500"></i><p class="text-[13px] font-800 text-coral-600">Неверный номер или пароль</p></div>
+            <div class="space-y-3">
+              <div class="flex items-center gap-2 rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 py-3"><span class="text-[15px] font-800 text-ink-500">+996</span><input value="700 12 34 56" class="w-full bg-transparent text-[15px] font-800 text-ink-900 outline-none"/></div>
+              <input type="password" value="secret" class="w-full rounded-2xl border-2 border-coral-400 bg-coral-100/30 px-4 py-3 text-[15px] font-800 text-coral-600 outline-none"/>
+              <button class="flex h-12 w-full items-center justify-center rounded-2xl bg-accent-500 text-[15px] font-900 text-[#4A2C00] shadow-cta">Войти</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- state: telegram waiting (forgot) -->
+        <div class="phone flex items-center overflow-hidden bg-gradient-to-b from-brand-50 to-white p-4 ring-1 ring-ink-200">
+          <div class="w-full rounded-3xl border border-ink-100 bg-white p-6 text-center shadow-soft">
+            <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-sky-100"><span class="text-[32px] leading-none">✈️</span></div>
+            <p class="text-[17px] font-900 text-ink-900">Подтвердите в Telegram</p>
+            <p class="mt-1.5 text-[13px] font-700 text-ink-500">Откройте бот → нажмите Start → получите код</p>
+            <div class="my-4 h-1.5 w-full overflow-hidden rounded-full bg-ink-100"><div class="h-full w-3/5 animate-pulse rounded-full bg-[#0088cc]"></div></div>
+            <button class="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#0088cc] text-[15px] font-900 text-white"><i data-lucide="send" class="h-5 w-5"></i>Открыть бот в Telegram</button>
+            <div class="mt-3 flex items-center justify-center gap-2 text-[12px] font-700 text-ink-400"><span class="h-3.5 w-3.5 animate-spin rounded-full border-2 border-ink-200 border-t-brand-500"></span>Ожидаем подтверждения…</div>
+            <button class="mt-3 text-[13px] font-800 text-ink-400">← Назад</button>
+          </div>
+        </div>
+
+        <!-- state: OTP -->
+        <div class="phone flex items-center overflow-hidden bg-gradient-to-b from-brand-50 to-white p-4 ring-1 ring-ink-200">
+          <div class="w-full rounded-3xl border border-ink-100 bg-white p-6 text-center shadow-soft">
+            <p class="text-[17px] font-900 text-ink-900">Введите код</p>
+            <p class="mt-1 text-[13px] font-700 text-brand-700">Код придёт через Telegram-бот</p>
+            <p class="mt-1 text-[15px] font-900 text-ink-900">+996 700 12 34 56</p>
+            <div class="my-5 flex justify-center gap-2">
+              <input value="4" class="h-14 w-11 rounded-2xl border-2 border-brand-500 bg-ink-50 text-center text-[22px] font-900 outline-none"/>
+              <input value="2" class="h-14 w-11 rounded-2xl border-2 border-ink-200 bg-ink-50 text-center text-[22px] font-900 outline-none"/>
+              <input value="7" class="h-14 w-11 rounded-2xl border-2 border-ink-200 bg-ink-50 text-center text-[22px] font-900 outline-none"/>
+              <input class="h-14 w-11 rounded-2xl border-2 border-ink-200 bg-ink-50 text-center text-[22px] font-900 outline-none"/>
+              <input class="h-14 w-11 rounded-2xl border-2 border-ink-200 bg-ink-50 text-center text-[22px] font-900 outline-none"/>
+              <input class="h-14 w-11 rounded-2xl border-2 border-ink-200 bg-ink-50 text-center text-[22px] font-900 outline-none"/>
+            </div>
+            <button class="flex h-12 w-full items-center justify-center rounded-2xl bg-accent-500 text-[15px] font-900 text-[#4A2C00] shadow-cta">Подтвердить</button>
+            <p class="mt-3 text-[12px] font-700 text-ink-400">Отправить заново через <span class="font-900 text-ink-600">0:42</span></p>
+          </div>
+        </div>
+
+        <!-- state: reset password -->
+        <div class="phone flex items-center overflow-hidden bg-gradient-to-b from-brand-50 to-white p-4 ring-1 ring-ink-200">
+          <div class="w-full rounded-3xl border border-ink-100 bg-white p-6 shadow-soft">
+            <div class="mb-5 text-center"><div class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-brand-50 text-brand-600"><i data-lucide="check-circle" class="h-6 w-6"></i></div><p class="text-[16px] font-900 text-ink-900">Новый пароль</p><p class="text-[12px] font-700 text-ink-400">Минимум 6 символов</p></div>
+            <div class="space-y-3">
+              <input type="password" value="newpass" class="w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 py-3 text-[15px] font-800 outline-none"/>
+              <input type="password" value="newpass" class="w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 py-3 text-[15px] font-800 outline-none"/>
+              <button class="flex h-12 w-full items-center justify-center rounded-2xl bg-accent-500 text-[15px] font-900 text-[#4A2C00] shadow-cta">Сохранить пароль</button>
+              <button class="w-full text-center text-[13px] font-800 text-ink-400">Пропустить</button>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -148,6 +205,35 @@
           <div class="text-center"><div class="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-grape-100 text-grape-600"><i data-lucide="user" class="h-7 w-7"></i></div><p class="text-[20px] font-900 text-ink-900">Как вас зовут?</p><p class="text-[13px] font-700 text-ink-400">Имя увидят попутчики</p></div>
           <input value="Азамат" class="w-full rounded-2xl border-2 border-brand-500 bg-white px-4 py-3 text-[15px] font-800 outline-none"/>
           <button class="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-brand-600 text-[15px] font-900 text-white shadow-brandcta">Продолжить <i data-lucide="arrow-right" class="h-5 w-5"></i></button>
+        </div>
+
+        <!-- step telegram waiting -->
+        <div class="phone flex flex-col justify-center gap-4 overflow-hidden bg-white px-6 text-center ring-1 ring-ink-200">
+          <p class="text-[11px] font-900 text-ink-400">Шаг 2 из 4 · Telegram</p>
+          <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-sky-100"><span class="text-[40px] leading-none">✈️</span></div>
+          <div><p class="text-[17px] font-900 text-ink-900">Откройте бот Tappjet в Telegram</p><p class="mt-1.5 text-[13px] font-700 text-ink-500">Нажмите кнопку → откроется бот → Start → код</p></div>
+          <div class="h-1.5 w-full overflow-hidden rounded-full bg-ink-100"><div class="h-full w-3/5 animate-pulse rounded-full bg-[#0088cc]"></div></div>
+          <button class="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#0088cc] text-[15px] font-900 text-white"><i data-lucide="send" class="h-5 w-5"></i>Открыть бот в Telegram</button>
+          <div class="flex items-center justify-center gap-2 text-[12px] font-700 text-ink-400"><span class="h-3.5 w-3.5 animate-spin rounded-full border-2 border-ink-200 border-t-brand-500"></span>Ожидаем подтверждения…</div>
+          <button class="text-[13px] font-800 text-ink-400">Изменить</button>
+        </div>
+
+        <!-- step profile -->
+        <div class="phone flex flex-col justify-center gap-4 overflow-hidden bg-white px-6 ring-1 ring-ink-200">
+          <p class="text-center text-[11px] font-900 text-ink-400">Шаг 3 из 4 · Профиль</p>
+          <div class="space-y-1.5"><label class="text-[11px] font-900 uppercase tracking-wider text-ink-400">Имя</label><input value="Азамат" class="w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 py-3 text-[15px] font-800 outline-none"/></div>
+          <div class="space-y-1.5"><label class="text-[11px] font-900 uppercase tracking-wider text-ink-400">Язык</label><div class="flex gap-1 rounded-2xl bg-ink-100 p-1"><button class="flex-1 rounded-xl bg-white py-2 text-[13px] font-900 text-brand-700 shadow-sm">Русский</button><button class="flex-1 rounded-xl py-2 text-[13px] font-800 text-ink-500">Кыргызча</button></div></div>
+          <label class="flex items-start gap-2 text-[12px] font-700 text-ink-600"><span class="mt-0.5 flex h-5 w-5 items-center justify-center rounded-md bg-brand-600 text-white"><i data-lucide="check" class="h-3.5 w-3.5"></i></span><span>Принимаю <span class="font-900 text-brand-700">условия</span> и <span class="font-900 text-brand-700">политику</span></span></label>
+          <button class="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 text-[15px] font-900 text-[#4A2C00] shadow-cta">Продолжить <i data-lucide="arrow-right" class="h-5 w-5"></i></button>
+        </div>
+
+        <!-- step password -->
+        <div class="phone flex flex-col justify-center gap-4 overflow-hidden bg-white px-6 ring-1 ring-ink-200">
+          <p class="text-center text-[11px] font-900 text-ink-400">Шаг 4 из 4 · Пароль</p>
+          <div class="flex items-start gap-3 rounded-2xl bg-sky-100 p-3 text-sky-600"><i data-lucide="info" class="h-5 w-5 shrink-0"></i><p class="text-[12px] font-800">Пароль — для быстрого входа без кода</p></div>
+          <div class="space-y-1.5"><label class="text-[11px] font-900 uppercase tracking-wider text-ink-400">Пароль</label><div class="relative"><input type="password" value="secret" class="w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 py-3 pr-10 text-[15px] font-800 outline-none"/><i data-lucide="eye" class="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-400"></i></div></div>
+          <button class="flex h-12 w-full items-center justify-center rounded-2xl bg-accent-500 text-[15px] font-900 text-[#4A2C00] shadow-cta">Готово</button>
+          <button class="w-full text-center text-[13px] font-800 text-ink-400">Пропустить</button>
         </div>
       </div>
     </section>
@@ -543,77 +629,6 @@
         </div>
       </div>
     </section>
-
-    <!-- ══════════ STATES & CASES ══════════ -->
-    <section id="states">
-      <h2 class="mb-1 text-[20px] font-900 text-ink-900">Состояния и кейсы</h2>
-      <p class="mb-5 text-[13px] font-700 text-ink-400">Все нестандартные состояния каждой страницы: ошибки, загрузка, пусто, тосты, и кейсы деталей (мест нет / своя поездка / гость).</p>
-
-      <!-- form errors -->
-      <h3 class="mb-3 text-[15px] font-900 text-ink-800">Ошибки формы</h3>
-      <div class="mb-8 grid gap-5 md:grid-cols-3">
-        <div class="rounded-3xl bg-white p-5 shadow-card">
-          <p class="mb-3 text-[11px] font-900 uppercase tracking-wider text-ink-400">Баннер ошибки</p>
-          <div class="flex items-start gap-2.5 rounded-2xl bg-coral-50 px-4 py-3"><i data-lucide="alert-triangle" class="mt-0.5 h-4 w-4 shrink-0 text-coral-500"></i><p class="text-[13px] font-800 text-coral-600">Неверный номер или пароль</p></div>
-        </div>
-        <div class="rounded-3xl bg-white p-5 shadow-card">
-          <p class="mb-3 text-[11px] font-900 uppercase tracking-wider text-ink-400">Поле с ошибкой</p>
-          <input value="неверно" class="w-full rounded-2xl border-2 border-coral-400 bg-coral-100/30 px-4 py-3 text-[15px] font-800 text-ink-900 outline-none"/>
-          <p class="mt-1 text-[12px] font-800 text-coral-600">Проверьте значение</p>
-        </div>
-        <div class="rounded-3xl bg-white p-5 shadow-card">
-          <p class="mb-3 text-[11px] font-900 uppercase tracking-wider text-ink-400">OTP — ошибка</p>
-          <div class="flex gap-2"><input value="4" class="h-12 w-10 rounded-2xl border-2 border-coral-400 bg-coral-100/30 text-center text-[20px] font-900 text-coral-600 outline-none"/><input value="2" class="h-12 w-10 rounded-2xl border-2 border-coral-400 bg-coral-100/30 text-center text-[20px] font-900 text-coral-600 outline-none"/><input value="7" class="h-12 w-10 rounded-2xl border-2 border-coral-400 bg-coral-100/30 text-center text-[20px] font-900 text-coral-600 outline-none"/></div>
-          <p class="mt-1 text-[12px] font-800 text-coral-600">Неверный код · попыток осталось: 2</p>
-        </div>
-      </div>
-
-      <!-- loading -->
-      <h3 class="mb-3 text-[15px] font-900 text-ink-800">Загрузка (skeleton)</h3>
-      <div class="mb-8 grid gap-3 md:grid-cols-2">
-        <div class="animate-pulse rounded-3xl border-l-[5px] border-ink-200 bg-white p-4 shadow-card"><div class="mb-3 flex justify-between"><div class="h-4 w-20 rounded-full bg-ink-200"></div><div class="h-4 w-16 rounded-full bg-ink-200"></div></div><div class="mb-2 h-5 w-32 rounded-full bg-ink-200"></div><div class="h-3 w-24 rounded-full bg-ink-200"></div></div>
-        <div class="animate-pulse rounded-3xl border-l-[5px] border-ink-200 bg-white p-4 shadow-card"><div class="mb-3 flex justify-between"><div class="h-4 w-20 rounded-full bg-ink-200"></div><div class="h-4 w-16 rounded-full bg-ink-200"></div></div><div class="mb-2 h-5 w-28 rounded-full bg-ink-200"></div><div class="h-3 w-20 rounded-full bg-ink-200"></div></div>
-      </div>
-
-      <!-- empty states -->
-      <h3 class="mb-3 text-[15px] font-900 text-ink-800">Пустые экраны</h3>
-      <div class="mb-8 grid gap-5 md:grid-cols-3">
-        <div class="flex flex-col items-center gap-3 rounded-3xl bg-white px-4 py-8 text-center shadow-card"><div class="flex h-16 w-16 items-center justify-center rounded-full bg-brand-100 text-brand-600"><i data-lucide="route" class="h-8 w-8"></i></div><p class="text-[15px] font-900 text-ink-900">Поездок не найдено</p><p class="text-[12px] font-700 text-ink-400">Измените маршрут или оставьте заявку</p><button class="mt-1 flex items-center gap-1.5 rounded-2xl bg-grape-500 px-5 py-2.5 text-[13px] font-900 text-white"><i data-lucide="hand" class="h-4 w-4"></i>Оставить заявку</button></div>
-        <div class="flex flex-col items-center gap-3 rounded-3xl bg-white px-4 py-8 text-center shadow-card"><div class="flex h-16 w-16 items-center justify-center rounded-full bg-ink-100 text-ink-400"><i data-lucide="bell" class="h-8 w-8"></i></div><p class="text-[15px] font-900 text-ink-900">Нет уведомлений</p><p class="text-[12px] font-700 text-ink-400">Здесь появятся брони и сообщения</p></div>
-        <div class="flex flex-col items-center gap-3 rounded-3xl bg-white px-4 py-8 text-center shadow-card"><div class="flex h-16 w-16 items-center justify-center rounded-full bg-ink-100 text-ink-400"><i data-lucide="ticket" class="h-8 w-8"></i></div><p class="text-[15px] font-900 text-ink-900">Пока нет броней</p><p class="text-[12px] font-700 text-ink-400">Найдите поездку и забронируйте место</p><button class="mt-1 flex items-center gap-1.5 rounded-2xl bg-brand-600 px-5 py-2.5 text-[13px] font-900 text-white shadow-brandcta"><i data-lucide="search" class="h-4 w-4"></i>Найти поездку</button></div>
-      </div>
-
-      <!-- toasts -->
-      <h3 class="mb-3 text-[15px] font-900 text-ink-800">Тосты</h3>
-      <div class="mb-8 grid gap-3 md:grid-cols-3">
-        <div class="flex items-center gap-3 rounded-2xl bg-brand-600 px-4 py-3 text-white shadow-brandcta"><i data-lucide="check-circle" class="h-5 w-5"></i><span class="text-[13px] font-800">Бронь отправлена</span></div>
-        <div class="flex items-center gap-3 rounded-2xl bg-coral-500 px-4 py-3 text-white"><i data-lucide="alert-circle" class="h-5 w-5"></i><span class="text-[13px] font-800">Мест больше нет</span></div>
-        <div class="flex items-center gap-3 rounded-2xl bg-ink-800 px-4 py-3 text-white"><i data-lucide="info" class="h-5 w-5"></i><span class="text-[13px] font-800">Код отправлен в Telegram</span></div>
-      </div>
-
-      <!-- detail cases -->
-      <h3 class="mb-3 text-[15px] font-900 text-ink-800">Кейсы детали поездки</h3>
-      <div class="grid gap-5 md:grid-cols-3">
-        <!-- no seats -->
-        <div class="rounded-3xl border border-ink-100 bg-white p-5 shadow-card">
-          <p class="mb-3 text-[11px] font-900 uppercase tracking-wider text-ink-400">Мест нет</p>
-          <div class="mb-3 flex"><span class="relative" style="z-index:30"><i data-lucide="user" class="seat h-7 w-7 text-ink-400"></i></span><span class="relative -ml-3" style="z-index:20"><i data-lucide="user" class="seat h-7 w-7 text-ink-400"></i></span><span class="relative -ml-3" style="z-index:10"><i data-lucide="user" class="seat h-7 w-7 text-ink-400"></i></span></div>
-          <button class="h-11 w-full rounded-2xl bg-ink-100 text-[14px] font-900 text-ink-500" disabled>Мест нет · оставить заявку</button>
-        </div>
-        <!-- own trip -->
-        <div class="rounded-3xl border border-ink-100 bg-white p-5 shadow-card">
-          <p class="mb-3 text-[11px] font-900 uppercase tracking-wider text-ink-400">Своя поездка</p>
-          <div class="rounded-2xl border border-brand-200 bg-brand-50 p-4 text-center"><p class="text-[14px] font-900 text-brand-700">Это ваша поездка</p><p class="mt-0.5 text-[12px] font-700 text-brand-600">Управляйте бронями в «Мои»</p></div>
-        </div>
-        <!-- guest -->
-        <div class="rounded-3xl border border-ink-100 bg-white p-5 shadow-card">
-          <p class="mb-3 text-[11px] font-900 uppercase tracking-wider text-ink-400">Гость</p>
-          <div class="mb-3 flex items-center gap-2 rounded-2xl bg-accent-50 px-3 py-2.5 ring-1 ring-accent-200"><i data-lucide="lock" class="h-4 w-4 text-accent-600"></i><p class="text-[12px] font-800 text-accent-700">Войдите, чтобы забронировать</p></div>
-          <button class="flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 text-[14px] font-900 text-[#4A2C00] shadow-cta"><i data-lucide="log-in" class="h-4 w-4"></i>Войти</button>
-        </div>
-      </div>
-    </section>
-
     <!-- placeholder; pages appended below -->
   </main>
 
