@@ -156,6 +156,15 @@ export async function resetPassword(newPassword: string): Promise<void> {
   await api.post("/auth/phone/reset-password", { newPassword, channel: "web" });
 }
 
+// Adds a phone to the signed-in account by DMing the OTP straight to the
+// user's linked Telegram chat (no deep-link / no "Start"). Throws CONFLICT with
+// details.reason = "telegram_dm_unavailable" | "no_telegram_linked" when the bot
+// cannot deliver — the caller falls back to the deep-link flow.
+export async function sendPhoneOtpTelegram(phone: string): Promise<{ expiresInSec: number }> {
+  const { data } = await api.post<{ expiresInSec: number }>("/users/me/phone/send-otp", { phone });
+  return data;
+}
+
 export async function confirmPhoneAdd(newPhone: string, code: string): Promise<AuthResult> {
   const { data } = await api.patch<AuthResult>("/users/me/phone/confirm", {
     newPhone,

@@ -2,13 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useMutation } from "@tanstack/react-query";
-import { ArrowLeft } from "lucide-react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { ArrowLeft, ShieldCheck, Clock } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { createTrip, type CreateTripInput, type LuggageOption } from "@/lib/api/trips-create";
+import { getDriverStatus } from "@/lib/api/profile";
 import { extractError } from "@/lib/api/client";
 import { friendlyError } from "@/lib/utils/api-error";
 import { Spinner } from "@/components/ui";
+import { cn } from "@/lib/utils/cn";
 import { useAuth } from "@/store/auth";
 import { saveDeferredAction } from "@/lib/auth/deferred-action";
 import { AddPhoneModal } from "@/components/features/auth/add-phone-modal";
@@ -139,6 +141,16 @@ export default function CreateTripPage() {
     setPendingDraft(null);
   };
 
+  // Driver-verification gate — mirrors the backend rule (trips.service.ts:
+  // verificationStatus !== 'verified' → 403). Only publishing a trip requires it,
+  // so we fetch once the user is authenticated with a verified phone.
+  const { data: driverStatus, isLoading: driverLoading } = useQuery({
+    queryKey: ["driver-status"],
+    queryFn: getDriverStatus,
+    enabled: status === "authenticated" && Boolean(user?.phoneVerified),
+    staleTime: 60_000,
+  });
+
   const patch = (update: Partial<DraftData>) => {
     setDraft((prev) => {
       const next = { ...prev, ...update };
@@ -221,6 +233,53 @@ export default function CreateTripPage() {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
         <Spinner size={28} />
+      </div>
+    );
+  }
+
+  // Block the whole flow until the driver is verified (backend enforces too).
+  // The phone modal handles the unverified-phone case; this covers the driver gate.
+  if (user?.phoneVerified && (driverLoading || (driverStatus && driverStatus.status !== "verified"))) {
+    const pending = driverStatus?.status === "pending" || driverStatus?.status === "docs_requested";
+    return (
+      <div className="mx-auto max-w-[560px] px-4 py-8">
+        <button
+          type="button"
+          onClick={() => router.back()}
+          className="mb-6 flex items-center gap-1.5 rounded-xl px-2 py-1.5 text-[13px] font-semibold text-gray-600 hover:bg-gray-100"
+        >
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+          {t("back")}
+        </button>
+        {driverLoading ? (
+          <div className="flex min-h-[40vh] items-center justify-center">
+            <Spinner size={28} />
+          </div>
+        ) : (
+          <div className="flex flex-col items-center gap-4 rounded-3xl border-[0.5px] border-gray-200 bg-white px-6 py-10 text-center">
+            <div
+              className={cn(
+                "flex h-14 w-14 items-center justify-center rounded-2xl",
+                pending ? "bg-amber-50 text-amber-600" : "bg-teal-50 text-teal-600",
+              )}
+            >
+              {pending ? <Clock className="h-7 w-7" /> : <ShieldCheck className="h-7 w-7" />}
+            </div>
+            <h1 className="text-[20px] font-extrabold text-gray-900">
+              {pending ? t("gate_pending_title") : t("gate_unverified_title")}
+            </h1>
+            <p className="max-w-[380px] text-[13px] font-semibold text-gray-500">
+              {pending ? t("gate_pending_text") : t("gate_unverified_text")}
+            </p>
+            <button
+              type="button"
+              onClick={() => router.push("/profile/driver")}
+              className="mt-2 flex h-12 w-full max-w-[320px] items-center justify-center rounded-xl bg-teal-600 text-[14px] font-bold text-white transition-colors hover:bg-teal-700"
+            >
+              {pending ? t("gate_pending_cta") : t("gate_cta")}
+            </button>
+          </div>
+        )}
       </div>
     );
   }
