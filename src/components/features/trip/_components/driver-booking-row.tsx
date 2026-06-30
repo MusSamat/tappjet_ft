@@ -26,6 +26,7 @@ export function DriverBookingRow({
   showRejectFor,
   rejectReason,
   acceptPending,
+  rejectPending,
   onAccept,
   onStartReject,
   onCancelReject,
@@ -44,6 +45,7 @@ export function DriverBookingRow({
   showRejectFor: string | null;
   rejectReason: string;
   acceptPending: boolean;
+  rejectPending: boolean;
   onAccept: () => void;
   onStartReject: () => void;
   onCancelReject: () => void;
@@ -122,15 +124,18 @@ export function DriverBookingRow({
             <button
               type="button"
               onClick={onCancelReject}
-              className="flex-1 rounded-xl border border-gray-200 py-2 text-[12px] font-bold text-gray-600"
+              disabled={rejectPending}
+              className="flex-1 rounded-xl border border-gray-200 py-2 text-[12px] font-bold text-gray-600 disabled:opacity-50"
             >
               {t("cancel_btn")}
             </button>
             <button
               type="button"
               onClick={onConfirmReject}
-              className="flex-1 rounded-xl bg-red-600 py-2 text-[12px] font-bold text-white"
+              disabled={rejectPending}
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-red-600 py-2 text-[12px] font-bold text-white disabled:opacity-50"
             >
+              {rejectPending && <Spinner size={12} />}
               {t("reject_btn")}
             </button>
           </div>

@@ -6,6 +6,7 @@ import {
   initTelegramLink,
   getTelegramLinkStatus,
   sendOtp,
+  sendPhoneOtpTelegram,
   confirmPhoneAdd,
 } from "@/lib/api/auth";
 import { useAuth } from "@/store/auth";
@@ -58,33 +59,52 @@ export function AddPhoneModal({ open, onClose, onDone }: Props) {
     }
   }, [open]);
 
+  // Opens the bot deep-link and polls until the code is delivered. Used only as
+  // a fallback when the bot cannot DM the user directly.
+  const startDeepLinkFlow = async () => {
+    const { token, deepLink: link } = await initTelegramLink(phone);
+    setDeepLink(link);
+    window.open(link, "_blank");
+    setStep("tg-waiting");
+    pollRef.current = setInterval(async () => {
+      try {
+        const { status } = await getTelegramLinkStatus(token);
+        if (status === "sent") {
+          stopPoll();
+          setStep("otp");
+        } else if (status === "expired") {
+          stopPoll();
+          setError("Время вышло. Попробуйте снова.");
+          setStep("phone");
+        }
+      } catch {
+        stopPoll();
+        setError("Ошибка соединения. Попробуйте снова.");
+        setStep("phone");
+      }
+    }, 2000);
+  };
+
   const handlePhoneSubmit = async () => {
     if (phone.length < 12) return;
     setLoading(true);
     setError(null);
     try {
       if (user?.telegramLinked) {
-        const { token, deepLink: link } = await initTelegramLink(phone);
-        setDeepLink(link);
-        window.open(link, "_blank");
-        setStep("tg-waiting");
-        pollRef.current = setInterval(async () => {
-          try {
-            const { status } = await getTelegramLinkStatus(token);
-            if (status === "sent") {
-              stopPoll();
-              setStep("otp");
-            } else if (status === "expired") {
-              stopPoll();
-              setError("Время вышло. Попробуйте снова.");
-              setStep("phone");
-            }
-          } catch {
-            stopPoll();
-            setError("Ошибка соединения. Попробуйте снова.");
-            setStep("phone");
+        // Preferred path: DM the code straight to the user's Telegram chat so
+        // they never leave the Mini App. Fall back to the deep-link only when
+        // the bot genuinely cannot reach them.
+        try {
+          await sendPhoneOtpTelegram(phone);
+          setStep("otp");
+        } catch (e) {
+          const reason = extractError(e).details?.reason;
+          if (reason === "telegram_dm_unavailable" || reason === "no_telegram_linked") {
+            await startDeepLinkFlow();
+          } else {
+            throw e;
           }
-        }, 2000);
+        }
       } else {
         await sendOtp(phone);
         setStep("otp");

@@ -68,7 +68,11 @@ export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string
   });
   const rejectMut = useMutation({
     mutationFn: (id: string) => rejectBooking(id),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["bookings", "incoming", tripId] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["bookings", "incoming", tripId] });
+      setShowRejectFor(null);
+      setRejectReason("");
+    },
   });
   const cancelTripMut = useMutation({
     mutationFn: () => cancelTrip(tripId),
@@ -186,10 +190,11 @@ export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string
               showRejectFor={showRejectFor}
               rejectReason={rejectReason}
               acceptPending={acceptMut.isPending}
+              rejectPending={rejectMut.isPending}
               onAccept={() => acceptMut.mutate(b.id!)}
               onStartReject={() => { setShowRejectFor(b.id!); setRejectReason(""); }}
               onCancelReject={() => { setShowRejectFor(null); setRejectReason(""); }}
-              onConfirmReject={() => { rejectMut.mutate(b.id!); setShowRejectFor(null); }}
+              onConfirmReject={() => rejectMut.mutate(b.id!)}
               onSelectRejectReason={setRejectReason}
               onCancelBooking={() => setCancelBookingTarget(b.id!)}
             />
