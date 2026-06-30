@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
+import { Send } from "lucide-react";
 import { getTelegramLinkStatus, verifyOtp } from "@/lib/api/auth";
 import { otpSchema } from "@/lib/validation/auth";
 import { Button, OtpInput, Spinner, type OtpInputHandle } from "@/components/ui";
@@ -48,20 +49,32 @@ export function TelegramStep({ phone, token, deepLink, onVerified, onBack, onErr
 
   if (phase === "waiting") {
     return (
-      <div className="flex flex-col gap-6">
-        <div className="rounded-2xl border border-sky-100 bg-sky-50 p-5 text-center">
-          <p className="text-[28px]">✈️</p>
-          <p className="mt-2 text-[15px] font-bold text-gray-900">{t("telegram_title")}</p>
-          <p className="mt-1 text-[13px] text-gray-500">{t("telegram_hint")}</p>
+      <div className="flex flex-col gap-5 text-center">
+        <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-sky-100">
+          <span className="text-[40px] leading-none">✈️</span>
+        </div>
+
+        <div>
+          <p className="text-[17px] font-extrabold text-ink-900">{t("telegram_title")}</p>
+          <p className="mt-1.5 text-[13px] font-semibold leading-relaxed text-ink-500">{t("telegram_hint")}</p>
+        </div>
+
+        {/* progress pulse */}
+        <div className="h-1.5 w-full overflow-hidden rounded-full bg-ink-100">
+          <div className="h-full w-3/5 animate-pulse rounded-full bg-[#0088cc]" />
         </div>
 
         <a href={deepLink} target="_blank" rel="noopener noreferrer">
-          <Button type="button" variant="submit" size="lg" className="w-full">
+          <button
+            type="button"
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#0088cc] text-[15px] font-extrabold text-white transition-opacity hover:opacity-90"
+          >
+            <Send className="h-5 w-5" aria-hidden="true" />
             {t("telegram_open_btn")}
-          </Button>
+          </button>
         </a>
 
-        <div className="flex items-center justify-center gap-2 text-[13px] text-gray-400">
+        <div className="flex items-center justify-center gap-2 text-[13px] font-semibold text-ink-400">
           <Spinner size={14} />
           <span>{t("telegram_waiting")}</span>
         </div>
@@ -69,7 +82,7 @@ export function TelegramStep({ phone, token, deepLink, onVerified, onBack, onErr
         <button
           type="button"
           onClick={onBack}
-          className="text-center text-[13px] font-semibold text-gray-400 hover:text-gray-600"
+          className="text-center text-[13px] font-bold text-ink-400 hover:text-ink-600"
         >
           {t("change")}
         </button>
@@ -88,10 +101,10 @@ export function TelegramStep({ phone, token, deepLink, onVerified, onBack, onErr
       className="flex flex-col gap-5"
       noValidate
     >
-      <p className="text-body-lg text-gray-700">
+      <p className="text-[14px] font-semibold leading-relaxed text-ink-600">
         {t("telegram_otp_prompt")}{" "}
-        <span className="font-bold text-gray-900">{phone}</span>.{" "}
-        <button type="button" onClick={onBack} className="font-bold text-teal-700 hover:text-teal-800">
+        <span className="font-extrabold text-ink-900">{phone}</span>.{" "}
+        <button type="button" onClick={onBack} className="font-extrabold text-brand-700 hover:text-brand-800">
           {t("change")}
         </button>
       </p>
