@@ -62,7 +62,7 @@ export function ProfileStep({ onSaved, onError }: Props) {
           id="language"
           value={language}
           onChange={(e) => setLanguage(languageSchema.parse(e.target.value))}
-          className="flex h-11 w-full rounded-xl border-[1.5px] border-gray-300 bg-white px-4 text-body font-semibold text-gray-900 outline-none focus:border-teal-500"
+          className="flex h-11 w-full rounded-xl border-2 border-ink-300 bg-white px-4 text-body font-semibold text-gray-900 outline-none focus:border-teal-500"
         >
           <option value="ru">{tLocale("ru")}</option>
           <option value="kg">{tLocale("kg")}</option>

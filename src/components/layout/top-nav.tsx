@@ -46,7 +46,7 @@ function UserDropdown({ onClose }: { onClose: () => void }) {
   ];
 
   return (
-    <div className="absolute right-0 top-[calc(100%+8px)] z-50 w-56 overflow-hidden rounded-2xl border-[0.5px] border-gray-200 bg-white shadow-xl">
+    <div className="absolute right-0 top-[calc(100%+8px)] z-50 w-56 overflow-hidden rounded-2xl border border-ink-100 bg-white shadow-xl">
       <div className="border-b border-gray-100 px-4 py-3">
         <p className="truncate text-[14px] font-bold text-gray-900">{user?.name}</p>
         <p className="truncate text-[11px] text-gray-400">{user?.phone}</p>
@@ -142,7 +142,7 @@ export function TopNav() {
       <div className="mx-auto flex h-full max-w-[1600px] items-center gap-6 px-6">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-gradient-to-br from-teal-600 to-teal-500">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-teal-600 to-teal-500">
             <span className="text-[14px] font-black text-white">Tj</span>
           </div>
           <span className="text-[18px] font-black tracking-tight text-gray-900">Tappjet</span>
@@ -157,7 +157,7 @@ export function TopNav() {
                 key={href}
                 href={href}
                 className={cn(
-                  "rounded-[10px] px-3.5 py-2 text-[14px] font-bold transition-colors",
+                  "rounded-xl px-3.5 py-2 text-[14px] font-bold transition-colors",
                   active ? colors.navActivePill : "text-gray-700 hover:bg-gray-100",
                 )}
               >

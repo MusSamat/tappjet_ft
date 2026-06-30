@@ -69,7 +69,7 @@ export function ResetStep({
           onKeyDown={(e) => { if (e.key === "Enter" && canReset) resetMutation.mutate(); }}
           placeholder={tl("confirm_password_placeholder")}
           className={cn(
-            "h-11 w-full rounded-xl border-[1.5px] bg-gray-50 px-3 text-[14px] font-semibold outline-none",
+            "h-11 w-full rounded-xl border-2 bg-gray-50 px-3 text-[14px] font-semibold outline-none",
             confirmPassword && confirmPassword !== newPassword
               ? "border-coral-300 text-coral-700"
               : "border-gray-200 text-gray-900 focus:border-teal-500",

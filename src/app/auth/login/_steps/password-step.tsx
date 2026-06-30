@@ -49,7 +49,7 @@ export function PasswordStep({
                 onKeyDown={(e) => { if (e.key === "Enter" && password) passwordMutation.mutate(); }}
                 placeholder={tl("password_placeholder")}
                 className={cn(
-                  "h-11 w-full rounded-xl border-[1.5px] bg-gray-50 px-3 pr-10 text-[14px] font-semibold outline-none transition-colors",
+                  "h-11 w-full rounded-xl border-2 bg-gray-50 px-3 pr-10 text-[14px] font-semibold outline-none transition-colors",
                   serverError
                     ? "border-coral-400 text-coral-700"
                     : "border-gray-200 text-gray-900 focus:border-teal-500",

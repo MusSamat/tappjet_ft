@@ -12,7 +12,7 @@ export const PasswordInput = forwardRef<
   return (
     <div
       className={cn(
-        "flex h-11 items-center rounded-xl border-[1.5px] bg-white pl-4 pr-1 transition-colors focus-within:border-teal-500",
+        "flex h-11 items-center rounded-xl border-2 bg-white pl-4 pr-1 transition-colors focus-within:border-teal-500",
         invalid ? "border-error" : "border-gray-300",
         className,
       )}

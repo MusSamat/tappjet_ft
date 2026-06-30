@@ -255,7 +255,7 @@ export default function LoginPage() {
                   onKeyDown={(e) => { if (e.key === "Enter" && canSubmitLogin) loginMutation.mutate(); }}
                   placeholder={tl("password_placeholder")}
                   className={cn(
-                    "h-12 w-full rounded-2xl border-[1.5px] bg-ink-50 px-3 pr-10 text-[14px] font-semibold outline-none transition-colors",
+                    "h-12 w-full rounded-2xl border-2 bg-ink-50 px-3 pr-10 text-[14px] font-semibold outline-none transition-colors",
                     serverError
                       ? "border-coral-300 text-coral-700"
                       : "border-gray-200 text-gray-900 focus:border-teal-500",

@@ -53,7 +53,7 @@ export function OtpStep({
               onKeyDown={(e) => onDigitKeyDown(idx, e)}
               onFocus={(e) => e.target.select()}
               className={cn(
-                "h-14 w-12 rounded-xl border-[1.5px] bg-gray-50 text-center text-[24px] font-extrabold outline-none transition-colors",
+                "h-14 w-12 rounded-xl border-2 bg-gray-50 text-center text-[24px] font-extrabold outline-none transition-colors",
                 serverError
                   ? "border-coral-400 text-coral-700"
                   : d

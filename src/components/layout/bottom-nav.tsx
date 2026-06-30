@@ -65,7 +65,7 @@ export function BottomNav() {
         >
           <div
             className={cn(
-              "flex h-11 w-11 items-center justify-center rounded-[14px] shadow-md transition-colors",
+              "flex h-11 w-11 items-center justify-center rounded-2xl shadow-md transition-colors",
               isDriver
                 ? "bg-gradient-to-br from-brand-500 to-brand-600 text-white"
                 : isAuthenticated
@@ -135,7 +135,7 @@ export function BottomNav() {
                 <DriverAvatar name={user?.name ?? "?"} src={user?.avatarUrl ?? null} size="sm" />
                 {/* Mode indicator dot */}
                 <span className={cn(
-                  "absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-[1.5px] border-white",
+                  "absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-white",
                   isDriver ? "bg-brand-500" : "bg-grape-500",
                 )} />
                 {unread > 0 && (

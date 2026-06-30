@@ -139,7 +139,7 @@ export function DesignSystemShowcase() {
             <Label htmlFor="name">Имя</Label>
             <Input id="name" placeholder="Асан Кадыров" />
           </div>
-          <div className="overflow-hidden rounded-2xl border-[1.5px] border-gray-300 bg-white">
+          <div className="overflow-hidden rounded-2xl border-2 border-ink-300 bg-white">
             <CardField
               icon={<MapPin className="h-4 w-4 text-teal-700" />}
               label="ОТКУДА"

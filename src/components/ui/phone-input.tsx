@@ -42,7 +42,7 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
       <div className="flex flex-col gap-1.5">
         <div
           className={cn(
-            "flex h-11 items-center rounded-xl border-[1.5px] bg-white px-4 transition-colors focus-within:border-teal-500",
+            "flex h-11 items-center rounded-xl border-2 bg-white px-4 transition-colors focus-within:border-teal-500",
             invalid ? "border-error" : "border-gray-300",
             disabled && "opacity-50",
             className,
