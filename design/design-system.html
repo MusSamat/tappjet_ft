@@ -1,0 +1,1640 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tappjet — Design System</title>
+
+  <!-- Tailwind (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
+
+  <script>
+    // These tokens map 1:1 to tailwind.config.ts later — classes copy straight into the app.
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Nunito', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
+          colors: {
+            // PRIMARY — energetic teal (brand)
+            brand: {
+              50:'#ECFDF8',100:'#D0FBEF',200:'#A4F4DF',300:'#6FE7CC',
+              400:'#38D3B6',500:'#14B8A6',600:'#0D9488',700:'#0F766E',
+              800:'#115E56',900:'#134E48',
+            },
+            // CTA — warm amber
+            accent: {
+              50:'#FFF8EB',100:'#FEEFC7',200:'#FDDF8A',300:'#FCCB4D',
+              400:'#FBB924',500:'#F59E0B',600:'#D97706',700:'#B45309',
+            },
+            // playful pops
+            coral:  { 100:'#FFE4E6', 400:'#FB7185', 500:'#F43F5E', 600:'#E11D48' },
+            sky:    { 100:'#E0F2FE', 400:'#38BDF8', 500:'#0EA5E9', 600:'#0284C7' },
+            grape:  { 100:'#EDE9FE', 400:'#A78BFA', 500:'#8B5CF6', 600:'#7C3AED' },
+            // warm neutrals
+            ink: {
+              50:'#F8FAF9',100:'#F1F5F4',200:'#E4EAE8',300:'#CBD5D2',
+              400:'#94A3A0',500:'#64748B',600:'#475569',700:'#334155',
+              800:'#1E293B',900:'#0F172A',
+            },
+          },
+          borderRadius: { '2xl':'1rem','3xl':'1.5rem','4xl':'2rem' },
+          boxShadow: {
+            soft:'0 2px 12px -2px rgba(13,148,136,0.10), 0 4px 24px -8px rgba(15,23,42,0.08)',
+            card:'0 1px 3px rgba(15,23,42,0.06), 0 8px 24px -12px rgba(15,23,42,0.10)',
+            cta:'0 8px 20px -6px rgba(245,158,11,0.45)',
+            brandcta:'0 8px 20px -6px rgba(13,148,136,0.45)',
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    body{font-family:'Nunito',sans-serif;}
+    .phone{width:390px;border-radius:2.25rem;}
+    ::-webkit-scrollbar{width:8px;height:8px}
+    ::-webkit-scrollbar-thumb{background:#CBD5D2;border-radius:8px}
+    .grid-paper{background-image:radial-gradient(#E4EAE8 1px,transparent 1px);background-size:22px 22px;}
+    /* white halo so overlapping outline-icons read cleanly (front covers back) */
+    .seat{filter:drop-shadow(1.5px 0 0 #fff) drop-shadow(-1.5px 0 0 #fff) drop-shadow(0 1.5px 0 #fff) drop-shadow(0 -1.5px 0 #fff);}
+  </style>
+</head>
+
+<body class="bg-ink-50 text-ink-800 grid-paper">
+
+  <!-- ───────────── Top bar ───────────── -->
+  <header class="sticky top-0 z-20 border-b border-ink-200 bg-white/85 backdrop-blur">
+    <div class="mx-auto flex max-w-[1200px] items-center justify-between px-6 py-4">
+      <div class="flex items-center gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-600 text-white shadow-brandcta">
+          <i data-lucide="car-front" class="h-5 w-5"></i>
+        </div>
+        <div>
+          <p class="text-[17px] font-900 leading-none text-ink-900">Tappjet</p>
+          <p class="text-[11px] font-700 text-ink-400">Design System · яркий и дружелюбный</p>
+        </div>
+      </div>
+      <span class="rounded-full bg-brand-50 px-3 py-1.5 text-[12px] font-800 text-brand-700">v1 mockup</span>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-[1200px] px-6 py-10 space-y-14">
+
+    <!-- ───────────── 1. COLORS ───────────── -->
+    <section>
+      <h2 class="mb-1 text-[22px] font-900 text-ink-900">1 · Цвета</h2>
+      <p class="mb-5 text-[13px] font-700 text-ink-400">Токены палитры. brand = основной, accent = главные кнопки, coral/sky/grape = акценты.</p>
+      <div class="space-y-4">
+        <div>
+          <p class="mb-2 text-[12px] font-800 uppercase tracking-wider text-ink-400">brand (teal)</p>
+          <div class="flex overflow-hidden rounded-2xl shadow-card">
+            <div class="flex-1 h-16 bg-brand-50"></div><div class="flex-1 h-16 bg-brand-100"></div><div class="flex-1 h-16 bg-brand-200"></div><div class="flex-1 h-16 bg-brand-300"></div><div class="flex-1 h-16 bg-brand-400"></div><div class="flex-1 h-16 bg-brand-500"></div><div class="flex-1 h-16 bg-brand-600"></div><div class="flex-1 h-16 bg-brand-700"></div><div class="flex-1 h-16 bg-brand-800"></div><div class="flex-1 h-16 bg-brand-900"></div>
+          </div>
+        </div>
+        <div>
+          <p class="mb-2 text-[12px] font-800 uppercase tracking-wider text-ink-400">accent (amber)</p>
+          <div class="flex overflow-hidden rounded-2xl shadow-card">
+            <div class="flex-1 h-16 bg-accent-50"></div><div class="flex-1 h-16 bg-accent-100"></div><div class="flex-1 h-16 bg-accent-200"></div><div class="flex-1 h-16 bg-accent-300"></div><div class="flex-1 h-16 bg-accent-400"></div><div class="flex-1 h-16 bg-accent-500"></div><div class="flex-1 h-16 bg-accent-600"></div><div class="flex-1 h-16 bg-accent-700"></div>
+          </div>
+        </div>
+        <div class="grid grid-cols-3 gap-4">
+          <div class="rounded-2xl bg-coral-500 p-4 text-white shadow-card"><p class="font-900">coral</p><p class="text-[12px] font-700 opacity-90">лайки, ошибки</p></div>
+          <div class="rounded-2xl bg-sky-500 p-4 text-white shadow-card"><p class="font-900">sky</p><p class="text-[12px] font-700 opacity-90">инфо, ссылки</p></div>
+          <div class="rounded-2xl bg-grape-500 p-4 text-white shadow-card"><p class="font-900">grape</p><p class="text-[12px] font-700 opacity-90">бонусы, промо</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── 2. TYPOGRAPHY ───────────── -->
+    <section>
+      <h2 class="mb-1 text-[22px] font-900 text-ink-900">2 · Типографика</h2>
+      <p class="mb-5 text-[13px] font-700 text-ink-400">Nunito. Заголовки — 800/900, текст — 600/700.</p>
+      <div class="space-y-2 rounded-3xl bg-white p-6 shadow-card">
+        <p class="text-[34px] font-900 leading-tight text-ink-900">Найди попутчика</p>
+        <p class="text-[24px] font-800 text-ink-900">Заголовок раздела</p>
+        <p class="text-[17px] font-800 text-ink-800">Подзаголовок карточки</p>
+        <p class="text-[15px] font-700 text-ink-700">Основной текст — Nunito 700 удобно читается.</p>
+        <p class="text-[13px] font-600 text-ink-500">Вторичный текст и подписи.</p>
+        <p class="text-[11px] font-800 uppercase tracking-widest text-brand-600">МЕТКА / LABEL</p>
+      </div>
+    </section>
+
+    <!-- ───────────── 3. BUTTONS ───────────── -->
+    <section>
+      <h2 class="mb-1 text-[22px] font-900 text-ink-900">3 · Кнопки</h2>
+      <p class="mb-5 text-[13px] font-700 text-ink-400">accent — главное действие (опубликовать/забронировать). brand — навигация. Остальные — вторичные.</p>
+      <div class="flex flex-wrap items-center gap-4 rounded-3xl bg-white p-6 shadow-card">
+        <button class="flex h-12 items-center gap-2 rounded-2xl bg-accent-500 px-6 text-[15px] font-900 text-[#4A2C00] shadow-cta transition hover:bg-accent-400">
+          <i data-lucide="check-circle" class="h-4 w-4"></i> Забронировать
+        </button>
+        <button class="flex h-12 items-center gap-2 rounded-2xl bg-brand-600 px-6 text-[15px] font-900 text-white shadow-brandcta transition hover:bg-brand-700">
+          <i data-lucide="plus" class="h-4 w-4"></i> Создать поездку
+        </button>
+        <button class="h-12 rounded-2xl border-2 border-ink-200 bg-white px-6 text-[15px] font-800 text-ink-700 transition hover:border-brand-400 hover:text-brand-700">Вторичная</button>
+        <button class="h-12 rounded-2xl px-5 text-[15px] font-800 text-brand-700 transition hover:bg-brand-50">Ghost</button>
+        <button class="flex h-12 items-center gap-2 rounded-2xl bg-accent-500 px-6 text-[15px] font-900 text-[#4A2C00]/60 shadow-none opacity-50" disabled>
+          <span class="h-4 w-4 animate-spin rounded-full border-2 border-[#4A2C00]/30 border-t-[#4A2C00]/70"></span> Загрузка…
+        </button>
+        <button class="flex h-10 w-10 items-center justify-center rounded-full bg-coral-100 text-coral-500 transition hover:bg-coral-400 hover:text-white"><i data-lucide="heart" class="h-5 w-5"></i></button>
+      </div>
+    </section>
+
+    <!-- ───────────── 4. INPUTS ───────────── -->
+    <section>
+      <h2 class="mb-1 text-[22px] font-900 text-ink-900">4 · Поля ввода</h2>
+      <div class="grid gap-6 rounded-3xl bg-white p-6 shadow-card md:grid-cols-2">
+        <div class="space-y-1.5">
+          <label class="text-[13px] font-800 text-ink-700">Имя</label>
+          <input value="Азамат" class="w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 py-3 text-[15px] font-700 text-ink-900 outline-none transition focus:border-brand-500 focus:bg-white" />
+          <p class="text-[12px] font-700 text-ink-400">Как вас увидят попутчики</p>
+        </div>
+        <div class="space-y-1.5">
+          <label class="text-[13px] font-800 text-ink-700">Телефон</label>
+          <div class="flex items-center gap-2 rounded-2xl border-2 border-brand-500 bg-white px-4 py-3">
+            <span class="text-[15px] font-800 text-ink-500">+996</span>
+            <input value="700 12 34 56" class="w-full bg-transparent text-[15px] font-800 text-ink-900 outline-none" />
+            <i data-lucide="check" class="h-5 w-5 text-brand-600"></i>
+          </div>
+        </div>
+        <div class="space-y-1.5">
+          <label class="text-[13px] font-800 text-ink-700">Поле с ошибкой</label>
+          <input value="неверно" class="w-full rounded-2xl border-2 border-coral-400 bg-coral-100/40 px-4 py-3 text-[15px] font-700 text-ink-900 outline-none" />
+          <p class="text-[12px] font-800 text-coral-600">Проверьте значение</p>
+        </div>
+        <div class="space-y-1.5">
+          <label class="text-[13px] font-800 text-ink-700">Код из Telegram</label>
+          <div class="flex gap-2">
+            <input value="4" class="h-14 w-12 rounded-2xl border-2 border-brand-500 bg-white text-center text-[22px] font-900 text-ink-900 outline-none" />
+            <input value="2" class="h-14 w-12 rounded-2xl border-2 border-ink-200 bg-ink-50 text-center text-[22px] font-900 text-ink-900 outline-none" />
+            <input value="7" class="h-14 w-12 rounded-2xl border-2 border-ink-200 bg-ink-50 text-center text-[22px] font-900 text-ink-900 outline-none" />
+            <input class="h-14 w-12 rounded-2xl border-2 border-ink-200 bg-ink-50 text-center text-[22px] font-900 outline-none" />
+            <input class="h-14 w-12 rounded-2xl border-2 border-ink-200 bg-ink-50 text-center text-[22px] font-900 outline-none" />
+            <input class="h-14 w-12 rounded-2xl border-2 border-ink-200 bg-ink-50 text-center text-[22px] font-900 outline-none" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── 5. CHIPS / TOGGLES / BADGES ───────────── -->
+    <section>
+      <h2 class="mb-1 text-[22px] font-900 text-ink-900">5 · Чипы, переключатели, бейджи</h2>
+      <div class="space-y-5 rounded-3xl bg-white p-6 shadow-card">
+        <div class="flex flex-wrap gap-2">
+          <span class="rounded-full bg-brand-600 px-4 py-2 text-[13px] font-800 text-white">Сегодня</span>
+          <span class="rounded-full border-2 border-ink-200 px-4 py-2 text-[13px] font-800 text-ink-600">Завтра</span>
+          <span class="rounded-full border-2 border-ink-200 px-4 py-2 text-[13px] font-800 text-ink-600">Послезавтра</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-3">
+          <span class="inline-flex items-center gap-1 rounded-full bg-brand-50 px-3 py-1.5 text-[12px] font-800 text-brand-700"><i data-lucide="shield-check" class="h-3.5 w-3.5"></i> Проверенный</span>
+          <span class="inline-flex items-center gap-1 rounded-full bg-accent-100 px-3 py-1.5 text-[12px] font-800 text-accent-700"><i data-lucide="clock" class="h-3.5 w-3.5"></i> На проверке</span>
+          <span class="inline-flex items-center gap-1 rounded-full bg-coral-100 px-3 py-1.5 text-[12px] font-800 text-coral-600"><i data-lucide="x" class="h-3.5 w-3.5"></i> Отклонено</span>
+          <span class="inline-flex items-center gap-1 rounded-full bg-sky-100 px-3 py-1.5 text-[12px] font-800 text-sky-600"><i data-lucide="zap" class="h-3.5 w-3.5"></i> Гибкое время</span>
+        </div>
+        <div class="flex items-center gap-4">
+          <div class="relative h-7 w-12 rounded-full bg-brand-600"><span class="absolute right-0.5 top-0.5 h-6 w-6 rounded-full bg-white shadow"></span></div>
+          <div class="relative h-7 w-12 rounded-full bg-ink-200"><span class="absolute left-0.5 top-0.5 h-6 w-6 rounded-full bg-white shadow"></span></div>
+          <div class="flex items-center gap-2">
+            <span class="text-[24px] font-900 text-brand-700">3</span>
+            <div class="flex gap-1.5">
+              <button class="flex h-9 w-9 items-center justify-center rounded-full border-2 border-ink-200 text-[18px] font-900 text-ink-600">−</button>
+              <button class="flex h-9 w-9 items-center justify-center rounded-full border-2 border-ink-200 text-[18px] font-900 text-ink-600">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── 6. CORE CARD: TRIP ───────────── -->
+    <section>
+      <h2 class="mb-1 text-[22px] font-900 text-ink-900">6 · Карточка поездки (ключевой компонент)</h2>
+      <div class="max-w-[440px]">
+        <article class="overflow-hidden rounded-3xl bg-white shadow-card">
+          <div class="flex items-center justify-between bg-gradient-to-r from-brand-600 to-brand-500 px-5 py-3 text-white">
+            <div class="flex items-center gap-2">
+              <i data-lucide="calendar" class="h-4 w-4"></i>
+              <span class="text-[13px] font-800">Завтра, 09:00</span>
+            </div>
+            <span class="rounded-full bg-white/20 px-3 py-1 text-[12px] font-900">3 места</span>
+          </div>
+          <div class="p-5">
+            <div class="mb-4 flex items-start gap-3">
+              <div class="mt-1 flex flex-col items-center">
+                <span class="h-3 w-3 rounded-full border-2 border-brand-600 bg-white"></span>
+                <span class="my-1 h-7 w-0.5 bg-ink-200"></span>
+                <span class="h-3 w-3 rounded-full bg-accent-500"></span>
+              </div>
+              <div class="flex-1">
+                <p class="text-[17px] font-900 text-ink-900">Бишкек</p>
+                <p class="mt-3 text-[17px] font-900 text-ink-900">Ош</p>
+              </div>
+              <div class="text-right">
+                <p class="text-[22px] font-900 text-brand-700">1 200 <span class="text-[14px]">с</span></p>
+                <p class="text-[12px] font-700 text-ink-400">за место</p>
+              </div>
+            </div>
+            <div class="flex items-center justify-between border-t border-ink-100 pt-4">
+              <div class="flex items-center gap-2.5">
+                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-grape-100 text-[15px] font-900 text-grape-600">А</div>
+                <div>
+                  <p class="text-[14px] font-800 text-ink-900">Азамат</p>
+                  <p class="flex items-center gap-1 text-[12px] font-700 text-ink-400"><i data-lucide="star" class="h-3 w-3 fill-accent-400 text-accent-400"></i> 4.9 · 32 отзыва</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 text-ink-400">
+                <span class="flex items-center gap-1 text-[12px] font-800"><i data-lucide="heart" class="h-4 w-4 fill-coral-400 text-coral-400"></i> 12</span>
+                <span class="flex items-center gap-1 text-[12px] font-800"><i data-lucide="eye" class="h-4 w-4"></i> 86</span>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ───────────── 7. TRIP vs REQUEST ───────────── -->
+    <section>
+      <h2 class="mb-1 text-[22px] font-900 text-ink-900">7 · Поездка vs Заявка — как различать</h2>
+      <p class="mb-5 text-[13px] font-700 text-ink-400">Три сигнала сразу: <b class="text-brand-700">цвет</b> (teal = водитель предлагает, фиолетовый = пассажир ищет), <b>иконка + ярлык</b>, и <b>правый блок</b> (цена/места vs бюджет/«нужно»). У заявки своя CTA «Откликнуться».</p>
+
+      <!-- explanatory icons: who offers what -->
+      <div class="mb-5 grid gap-4 sm:grid-cols-2">
+        <div class="flex items-center gap-4 rounded-3xl bg-brand-50 p-5">
+          <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-brand-600 text-white shadow-brandcta"><i data-lucide="car-front" class="h-7 w-7"></i></div>
+          <div class="min-w-0">
+            <p class="text-[15px] font-900 text-brand-800">Поездка</p>
+            <p class="text-[12px] font-700 text-ink-500">У водителя есть машина — он <b class="text-brand-700">предлагает</b> места</p>
+            <div class="mt-2 flex items-center gap-1.5 text-brand-700">
+              <span class="inline-flex items-center gap-1 rounded-full bg-white px-2 py-1 text-[11px] font-900"><i data-lucide="car-front" class="h-3.5 w-3.5"></i> Водитель</span>
+              <i data-lucide="arrow-right" class="h-3.5 w-3.5"></i>
+              <span class="inline-flex items-center gap-1 rounded-full bg-white px-2 py-1 text-[11px] font-900"><i data-lucide="users" class="h-3.5 w-3.5"></i> Места</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center gap-4 rounded-3xl bg-grape-100 p-5">
+          <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-grape-500 text-white"><i data-lucide="hand" class="h-7 w-7"></i></div>
+          <div class="min-w-0">
+            <p class="text-[15px] font-900 text-grape-600">Заявка</p>
+            <p class="text-[12px] font-700 text-ink-500">У пассажира нет машины — он <b class="text-grape-600">ищет</b> попутку</p>
+            <div class="mt-2 flex items-center gap-1.5 text-grape-600">
+              <span class="inline-flex items-center gap-1 rounded-full bg-white px-2 py-1 text-[11px] font-900"><i data-lucide="hand" class="h-3.5 w-3.5"></i> Пассажир</span>
+              <i data-lucide="arrow-right" class="h-3.5 w-3.5"></i>
+              <span class="inline-flex items-center gap-1 rounded-full bg-white px-2 py-1 text-[11px] font-900"><i data-lucide="car-front" class="h-3.5 w-3.5"></i> Поездка</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid gap-5 md:grid-cols-2">
+
+        <!-- TRIP (driver offers) -->
+        <article class="overflow-hidden rounded-3xl border-l-[5px] border-brand-500 bg-white shadow-card">
+          <div class="flex items-center justify-between px-4 pt-3">
+            <span class="inline-flex items-center gap-1 rounded-full bg-brand-50 px-2.5 py-1 text-[11px] font-900 text-brand-700"><i data-lucide="car-front" class="h-3.5 w-3.5"></i> Поездка</span>
+            <span class="text-[12px] font-800 text-ink-500">Сегодня, 14:00</span>
+          </div>
+          <div class="px-4 pb-3 pt-2">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-[16px] font-900 text-ink-900">Бишкек → Ош</p>
+                <p class="mt-1 flex items-center gap-1.5 text-[12px] font-700 text-ink-400"><span class="flex h-5 w-5 items-center justify-center rounded-full bg-grape-100 text-[10px] font-900 text-grape-600">А</span> Азамат · <i data-lucide="star" class="h-3 w-3 fill-accent-400 text-accent-400"></i> 4.9</p>
+              </div>
+              <div class="text-right">
+                <p class="text-[20px] font-900 text-brand-700">1 200<span class="text-[12px]">с</span></p>
+                <p class="text-[11px] font-900 text-brand-600">2 места свободно</p>
+              </div>
+            </div>
+          </div>
+          <div class="border-t border-ink-100 px-4 py-2.5 text-center text-[12px] font-800 text-ink-400">Водитель предлагает место</div>
+        </article>
+
+        <!-- REQUEST (passenger seeks) -->
+        <article class="overflow-hidden rounded-3xl border-l-[5px] border-grape-500 bg-white shadow-card">
+          <div class="flex items-center justify-between px-4 pt-3">
+            <span class="inline-flex items-center gap-1 rounded-full bg-grape-100 px-2.5 py-1 text-[11px] font-900 text-grape-600"><i data-lucide="hand" class="h-3.5 w-3.5"></i> Заявка</span>
+            <span class="text-[12px] font-800 text-ink-500">Завтра · гибко</span>
+          </div>
+          <div class="px-4 pb-3 pt-2">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-[16px] font-900 text-ink-900">Бишкек → Ош</p>
+                <p class="mt-1 flex items-center gap-1.5 text-[12px] font-700 text-ink-400"><span class="flex h-5 w-5 items-center justify-center rounded-full bg-sky-100 text-[10px] font-900 text-sky-600">Н</span> Нурлан · ищет попутку</p>
+              </div>
+              <div class="text-right">
+                <p class="text-[16px] font-900 text-grape-600">до 1 500 с</p>
+                <p class="text-[11px] font-900 text-grape-500">нужно 2 места</p>
+              </div>
+            </div>
+          </div>
+          <div class="border-t border-ink-100 px-4 py-2.5">
+            <button class="w-full rounded-xl bg-grape-500 py-2 text-[13px] font-900 text-white">Откликнуться</button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ───────────── 8. SCREENS ───────────── -->
+    <section>
+      <h2 class="mb-1 text-[22px] font-900 text-ink-900">8 · Экраны</h2>
+      <p class="mb-6 text-[13px] font-700 text-ink-400">Мобильные макеты (Telegram Mini App / web). Лента · Деталь поездки · Создание · Профиль.</p>
+
+      <div class="flex flex-wrap gap-8">
+
+        <!-- A. MAIN / HOME -->
+        <div class="phone flex flex-col overflow-hidden bg-ink-50 shadow-soft ring-1 ring-ink-200">
+          <!-- header: search only, minimal text -->
+          <div class="bg-gradient-to-b from-brand-600 to-brand-500 px-4 pb-5 pt-5">
+            <div class="flex items-center gap-2 rounded-2xl bg-white p-2 shadow-soft">
+              <div class="flex flex-1 items-center gap-2 px-2">
+                <i data-lucide="map-pin" class="h-4 w-4 text-brand-600"></i>
+                <input value="Бишкек" class="w-full text-[14px] font-800 text-ink-900 outline-none" />
+              </div>
+              <div class="flex h-8 w-8 items-center justify-center rounded-xl bg-brand-50 text-brand-600"><i data-lucide="arrow-down-up" class="h-4 w-4"></i></div>
+              <div class="flex flex-1 items-center gap-2 px-2">
+                <i data-lucide="flag" class="h-4 w-4 text-accent-500"></i>
+                <input value="Ош" class="w-full text-[14px] font-800 text-ink-900 outline-none" />
+              </div>
+            </div>
+          </div>
+
+          <!-- segmented: Поездки vs Заявки -->
+          <div class="px-4 pt-4">
+            <div class="flex gap-1 rounded-2xl bg-ink-100 p-1">
+              <button class="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-white py-2 text-[13px] font-900 text-brand-700 shadow-sm">
+                <i data-lucide="car-front" class="h-4 w-4"></i> Поездки
+              </button>
+              <button class="flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2 text-[13px] font-800 text-ink-500">
+                <i data-lucide="hand" class="h-4 w-4"></i> Заявки
+              </button>
+            </div>
+          </div>
+
+          <div class="flex-1 space-y-3 px-4 py-4">
+            <div class="flex gap-2">
+              <span class="rounded-full bg-brand-600 px-3.5 py-1.5 text-[12px] font-800 text-white">Сегодня</span>
+              <span class="rounded-full border-2 border-ink-200 bg-white px-3.5 py-1.5 text-[12px] font-800 text-ink-600">Завтра</span>
+              <span class="rounded-full border-2 border-ink-200 bg-white px-3.5 py-1.5 text-[12px] font-800 text-ink-600">Дешевле</span>
+            </div>
+
+            <!-- trip card (teal) -->
+            <article class="overflow-hidden rounded-3xl border-l-[5px] border-brand-500 bg-white shadow-card">
+              <div class="flex items-center justify-between px-4 pt-3">
+                <span class="inline-flex items-center gap-1 rounded-full bg-brand-50 px-2.5 py-1 text-[11px] font-900 text-brand-700"><i data-lucide="car-front" class="h-3.5 w-3.5"></i> Поездка</span>
+                <span class="text-[12px] font-800 text-ink-500">Сегодня, 14:00</span>
+              </div>
+              <div class="px-4 pb-4 pt-2">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <p class="text-[15px] font-900 text-ink-900">Бишкек → Ош</p>
+                    <p class="mt-1 flex items-center gap-1.5 text-[12px] font-700 text-ink-400"><span class="flex h-5 w-5 items-center justify-center rounded-full bg-grape-100 text-[10px] font-900 text-grape-600">А</span> Азамат · <i data-lucide="star" class="h-3 w-3 fill-accent-400 text-accent-400"></i> 4.9</p>
+                  </div>
+                  <div class="text-right">
+                    <p class="text-[20px] font-900 text-brand-700">1 200<span class="text-[12px]">с</span></p>
+                    <p class="text-[11px] font-900 text-brand-600">2 места</p>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <!-- request card (grape) — shown to demonstrate the difference -->
+            <article class="overflow-hidden rounded-3xl border-l-[5px] border-grape-500 bg-white shadow-card">
+              <div class="flex items-center justify-between px-4 pt-3">
+                <span class="inline-flex items-center gap-1 rounded-full bg-grape-100 px-2.5 py-1 text-[11px] font-900 text-grape-600"><i data-lucide="hand" class="h-3.5 w-3.5"></i> Заявка</span>
+                <span class="text-[12px] font-800 text-ink-500">Завтра · гибко</span>
+              </div>
+              <div class="px-4 pb-4 pt-2">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <p class="text-[15px] font-900 text-ink-900">Бишкек → Ош</p>
+                    <p class="mt-1 flex items-center gap-1.5 text-[12px] font-700 text-ink-400"><span class="flex h-5 w-5 items-center justify-center rounded-full bg-sky-100 text-[10px] font-900 text-sky-600">Н</span> Нурлан · ищет</p>
+                  </div>
+                  <div class="text-right">
+                    <p class="text-[15px] font-900 text-grape-600">до 1 500 с</p>
+                    <p class="text-[11px] font-900 text-grape-500">нужно 2</p>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <!-- bottom nav: active = pill (icon+label), inactive = muted icon+label -->
+          <div class="flex items-center justify-between border-t border-ink-200 bg-white px-3 py-2">
+            <div class="flex items-center gap-1.5 rounded-full bg-brand-50 px-3.5 py-2 text-brand-700"><i data-lucide="search" class="h-5 w-5"></i><span class="text-[12px] font-900">Поиск</span></div>
+            <div class="flex flex-col items-center gap-0.5 px-2 text-ink-400"><i data-lucide="ticket" class="h-5 w-5"></i><span class="text-[10px] font-800">Мои</span></div>
+            <div class="-mt-8 flex h-14 w-14 items-center justify-center rounded-full bg-accent-500 text-[#4A2C00] shadow-cta ring-4 ring-white"><i data-lucide="plus" class="h-7 w-7"></i></div>
+            <div class="relative flex flex-col items-center gap-0.5 px-2 text-ink-400"><i data-lucide="bell" class="h-5 w-5"></i><span class="absolute right-1.5 top-0 h-2 w-2 rounded-full bg-coral-500 ring-2 ring-white"></span><span class="text-[10px] font-800">Уведомл.</span></div>
+            <div class="flex flex-col items-center gap-0.5 px-2 text-ink-400"><i data-lucide="user" class="h-5 w-5"></i><span class="text-[10px] font-800">Профиль</span></div>
+          </div>
+        </div>
+
+        <!-- B. TRIP DETAIL -->
+        <div class="phone overflow-hidden bg-white shadow-soft ring-1 ring-ink-200">
+          <div class="relative bg-gradient-to-b from-brand-600 to-brand-500 px-5 pb-8 pt-5 text-white">
+            <div class="mb-5 flex items-center gap-3">
+              <div class="flex h-9 w-9 items-center justify-center rounded-full bg-white/20"><i data-lucide="arrow-left" class="h-4 w-4"></i></div>
+              <p class="text-[16px] font-900">Детали поездки</p>
+            </div>
+            <div class="flex items-start gap-3">
+              <div class="mt-1 flex flex-col items-center">
+                <span class="h-3 w-3 rounded-full border-2 border-white bg-brand-600"></span>
+                <span class="my-1 h-8 w-0.5 bg-white/40"></span>
+                <span class="h-3 w-3 rounded-full bg-accent-400"></span>
+              </div>
+              <div class="flex-1">
+                <p class="text-[20px] font-900">Бишкек</p>
+                <p class="text-[12px] font-700 text-white/70">Западный автовокзал</p>
+                <p class="mt-3 text-[20px] font-900">Ош</p>
+                <p class="text-[12px] font-700 text-white/70">Центр</p>
+              </div>
+            </div>
+          </div>
+          <div class="space-y-4 px-5 py-5">
+            <div class="grid grid-cols-3 gap-3">
+              <div class="rounded-2xl bg-ink-50 p-3 text-center"><i data-lucide="calendar" class="mx-auto mb-1 h-4 w-4 text-brand-600"></i><p class="text-[12px] font-900 text-ink-900">Завтра</p><p class="text-[11px] font-700 text-ink-400">09:00</p></div>
+              <div class="rounded-2xl bg-ink-50 p-3 text-center"><i data-lucide="users" class="mx-auto mb-1 h-4 w-4 text-brand-600"></i><p class="text-[12px] font-900 text-ink-900">3 места</p><p class="text-[11px] font-700 text-ink-400">свободно</p></div>
+              <div class="rounded-2xl bg-ink-50 p-3 text-center"><i data-lucide="briefcase" class="mx-auto mb-1 h-4 w-4 text-brand-600"></i><p class="text-[12px] font-900 text-ink-900">Багаж</p><p class="text-[11px] font-700 text-ink-400">средний</p></div>
+            </div>
+            <div class="flex items-center justify-between rounded-2xl border-2 border-ink-100 p-4">
+              <div class="flex items-center gap-3">
+                <div class="flex h-12 w-12 items-center justify-center rounded-full bg-grape-100 text-[17px] font-900 text-grape-600">А</div>
+                <div>
+                  <p class="flex items-center gap-1 text-[15px] font-900 text-ink-900">Азамат <i data-lucide="shield-check" class="h-4 w-4 text-brand-600"></i></p>
+                  <p class="flex items-center gap-1 text-[12px] font-700 text-ink-400"><i data-lucide="star" class="h-3 w-3 fill-accent-400 text-accent-400"></i> 4.9 · 32 отзыва</p>
+                </div>
+              </div>
+              <div class="flex h-10 w-10 items-center justify-center rounded-full bg-brand-50 text-brand-600"><i data-lucide="message-circle" class="h-5 w-5"></i></div>
+            </div>
+            <div class="rounded-2xl bg-accent-50 p-4 text-[13px] font-700 text-ink-700">«Еду с кондиционером, остановка на обед в Токтогуле 🍜»</div>
+          </div>
+          <div class="sticky bottom-0 flex items-center justify-between gap-4 border-t border-ink-200 bg-white px-5 py-4">
+            <div><p class="text-[22px] font-900 text-brand-700">1 200 с</p><p class="text-[11px] font-700 text-ink-400">за место</p></div>
+            <button class="flex h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-accent-500 text-[15px] font-900 text-[#4A2C00] shadow-cta"><i data-lucide="check-circle" class="h-5 w-5"></i> Забронировать</button>
+          </div>
+        </div>
+
+        <!-- C. CREATE WIZARD -->
+        <div class="phone overflow-hidden bg-white shadow-soft ring-1 ring-ink-200">
+          <div class="px-5 pb-3 pt-5">
+            <div class="mb-4 flex items-center gap-3">
+              <div class="flex h-9 w-9 items-center justify-center rounded-full bg-ink-100 text-ink-600"><i data-lucide="arrow-left" class="h-4 w-4"></i></div>
+              <p class="text-[16px] font-900 text-ink-900">Новая поездка</p>
+            </div>
+            <p class="mb-2 text-[12px] font-800 text-ink-400">Шаг 1 из 5 · Маршрут</p>
+            <div class="h-2 overflow-hidden rounded-full bg-ink-100"><div class="h-full w-1/5 rounded-full bg-brand-600"></div></div>
+          </div>
+          <div class="space-y-5 px-5 py-5">
+            <div class="space-y-3 rounded-3xl border-2 border-brand-100 bg-white p-5 shadow-soft">
+              <div class="space-y-1.5">
+                <label class="text-[11px] font-800 uppercase tracking-wider text-brand-600">Откуда</label>
+                <div class="flex items-center gap-2 rounded-2xl bg-ink-50 px-4 py-3"><i data-lucide="map-pin" class="h-4 w-4 text-brand-600"></i><input value="Бишкек" class="w-full bg-transparent text-[15px] font-800 text-ink-900 outline-none"/></div>
+              </div>
+              <div class="space-y-1.5">
+                <label class="text-[11px] font-800 uppercase tracking-wider text-accent-600">Куда</label>
+                <div class="flex items-center gap-2 rounded-2xl bg-ink-50 px-4 py-3"><i data-lucide="flag" class="h-4 w-4 text-accent-500"></i><input value="Ош" class="w-full bg-transparent text-[15px] font-800 text-ink-900 outline-none"/></div>
+              </div>
+            </div>
+            <button class="w-full rounded-2xl border-2 border-dashed border-ink-200 py-3 text-[13px] font-800 text-ink-500">+ Посадка / высадка по пути</button>
+          </div>
+          <div class="px-5 py-4">
+            <button class="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-brand-600 text-[15px] font-900 text-white shadow-brandcta">Далее <i data-lucide="arrow-right" class="h-4 w-4"></i></button>
+          </div>
+        </div>
+
+        <!-- D. PROFILE -->
+        <div class="phone overflow-hidden bg-ink-50 shadow-soft ring-1 ring-ink-200">
+          <div class="bg-gradient-to-b from-grape-500 to-grape-400 px-5 pb-10 pt-7 text-center text-white">
+            <div class="mx-auto mb-3 flex h-20 w-20 items-center justify-center rounded-full bg-white/20 text-[28px] font-900 ring-4 ring-white/30">А</div>
+            <p class="flex items-center justify-center gap-1.5 text-[20px] font-900">Азамат <i data-lucide="shield-check" class="h-5 w-5"></i></p>
+            <p class="flex items-center justify-center gap-1 text-[13px] font-700 text-white/80"><i data-lucide="star" class="h-3.5 w-3.5 fill-accent-400 text-accent-400"></i> 4.9 · 32 отзыва</p>
+          </div>
+          <div class="-mt-6 space-y-3 px-4">
+            <div class="grid grid-cols-3 gap-3">
+              <div class="rounded-2xl bg-white p-3 text-center shadow-card"><p class="text-[20px] font-900 text-brand-700">48</p><p class="text-[11px] font-700 text-ink-400">поездок</p></div>
+              <div class="rounded-2xl bg-white p-3 text-center shadow-card"><p class="text-[20px] font-900 text-accent-600">320</p><p class="text-[11px] font-700 text-ink-400">баллов</p></div>
+              <div class="rounded-2xl bg-white p-3 text-center shadow-card"><p class="text-[20px] font-900 text-coral-500">12</p><p class="text-[11px] font-700 text-ink-400">лайков</p></div>
+            </div>
+            <div class="divide-y divide-ink-100 rounded-3xl bg-white shadow-card">
+              <a class="flex items-center gap-3 px-5 py-4"><div class="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-50 text-brand-600"><i data-lucide="car-front" class="h-4 w-4"></i></div><span class="flex-1 text-[14px] font-800 text-ink-800">Профиль водителя</span><i data-lucide="chevron-right" class="h-4 w-4 text-ink-300"></i></a>
+              <a class="flex items-center gap-3 px-5 py-4"><div class="flex h-9 w-9 items-center justify-center rounded-xl bg-accent-100 text-accent-600"><i data-lucide="gift" class="h-4 w-4"></i></div><span class="flex-1 text-[14px] font-800 text-ink-800">Бонусы и уровни</span><i data-lucide="chevron-right" class="h-4 w-4 text-ink-300"></i></a>
+              <a class="flex items-center gap-3 px-5 py-4"><div class="flex h-9 w-9 items-center justify-center rounded-xl bg-sky-100 text-sky-600"><i data-lucide="settings" class="h-4 w-4"></i></div><span class="flex-1 text-[14px] font-800 text-ink-800">Настройки</span><i data-lucide="chevron-right" class="h-4 w-4 text-ink-300"></i></a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ───────────── 8. MODAL ───────────── -->
+    <section>
+      <h2 class="mb-1 text-[22px] font-900 text-ink-900">9 · Модалка / Bottom sheet</h2>
+      <div class="relative max-w-[440px] overflow-hidden rounded-3xl bg-ink-800/40 p-6">
+        <div class="rounded-3xl bg-white p-6 shadow-soft">
+          <div class="mx-auto mb-4 h-1.5 w-12 rounded-full bg-ink-200"></div>
+          <div class="mb-3 flex items-center gap-3">
+            <div class="flex h-11 w-11 items-center justify-center rounded-full bg-brand-50 text-brand-600"><i data-lucide="phone" class="h-5 w-5"></i></div>
+            <p class="text-[17px] font-900 text-ink-900">Добавьте номер</p>
+          </div>
+          <p class="mb-4 text-[13px] font-700 text-ink-500">Код подтверждения придёт прямо в Telegram.</p>
+          <button class="flex h-12 w-full items-center justify-center rounded-2xl bg-accent-500 text-[15px] font-900 text-[#4A2C00] shadow-cta">Получить код</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── 10. ICON SYSTEM ───────────── -->
+    <section>
+      <h2 class="mb-1 text-[22px] font-900 text-ink-900">10 · Иконки — единый словарь</h2>
+      <p class="mb-5 text-[13px] font-700 text-ink-400">Одна иконка = один смысл во всём приложении. Так интерфейс читается без чтения текста. Набор — lucide (тонкие, дружелюбные, одной толщины).</p>
+
+      <div class="space-y-6 rounded-3xl bg-white p-6 shadow-card">
+        <div>
+          <p class="mb-3 text-[12px] font-900 uppercase tracking-wider text-ink-400">Навигация</p>
+          <div class="grid grid-cols-3 gap-3 sm:grid-cols-5">
+            <div class="flex flex-col items-center gap-1.5 rounded-2xl bg-ink-50 py-3"><div class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 text-brand-600"><i data-lucide="search" class="h-5 w-5"></i></div><span class="text-[11px] font-800 text-ink-600">Поиск</span></div>
+            <div class="flex flex-col items-center gap-1.5 rounded-2xl bg-ink-50 py-3"><div class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 text-brand-600"><i data-lucide="ticket" class="h-5 w-5"></i></div><span class="text-[11px] font-800 text-ink-600">Мои</span></div>
+            <div class="flex flex-col items-center gap-1.5 rounded-2xl bg-ink-50 py-3"><div class="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-100 text-accent-600"><i data-lucide="plus" class="h-5 w-5"></i></div><span class="text-[11px] font-800 text-ink-600">Создать</span></div>
+            <div class="flex flex-col items-center gap-1.5 rounded-2xl bg-ink-50 py-3"><div class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 text-brand-600"><i data-lucide="bell" class="h-5 w-5"></i></div><span class="text-[11px] font-800 text-ink-600">Уведомл.</span></div>
+            <div class="flex flex-col items-center gap-1.5 rounded-2xl bg-ink-50 py-3"><div class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 text-brand-600"><i data-lucide="user" class="h-5 w-5"></i></div><span class="text-[11px] font-800 text-ink-600">Профиль</span></div>
+          </div>
+        </div>
+
+        <div>
+          <p class="mb-3 text-[12px] font-900 uppercase tracking-wider text-ink-400">Тип объявления</p>
+          <div class="grid grid-cols-3 gap-3 sm:grid-cols-5">
+            <div class="flex flex-col items-center gap-1.5 rounded-2xl bg-ink-50 py-3"><div class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 text-brand-600"><i data-lucide="car-front" class="h-5 w-5"></i></div><span class="text-[11px] font-800 text-ink-600">Поездка</span></div>
+            <div class="flex flex-col items-center gap-1.5 rounded-2xl bg-ink-50 py-3"><div class="flex h-10 w-10 items-center justify-center rounded-xl bg-grape-100 text-grape-600"><i data-lucide="hand" class="h-5 w-5"></i></div><span class="text-[11px] font-800 text-ink-600">Заявка</span></div>
+            <div class="flex flex-col items-center gap-1.5 rounded-2xl bg-ink-50 py-3"><div class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 text-brand-600"><i data-lucide="map-pin" class="h-5 w-5"></i></div><span class="text-[11px] font-800 text-ink-600">Откуда</span></div>
+            <div class="flex flex-col items-center gap-1.5 rounded-2xl bg-ink-50 py-3"><div class="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-100 text-accent-600"><i data-lucide="flag" class="h-5 w-5"></i></div><span class="text-[11px] font-800 text-ink-600">Куда</span></div>
+            <div class="flex flex-col items-center gap-1.5 rounded-2xl bg-ink-50 py-3"><div class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 text-brand-600"><i data-lucide="arrow-down-up" class="h-5 w-5"></i></div><span class="text-[11px] font-800 text-ink-600">Поменять</span></div>
+          </div>
+        </div>
+
+        <div>
+          <p class="mb-3 text-[12px] font-900 uppercase tracking-wider text-ink-400">Детали поездки</p>
+          <div class="grid grid-cols-3 gap-3 sm:grid-cols-5">
+            <div class="flex flex-col items-center gap-1.5 rounded-2xl bg-ink-50 py-3"><div class="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-100 text-sky-600"><i data-lucide="calendar" class="h-5 w-5"></i></div><span class="text-[11px] font-800 text-ink-600">Дата</span></div>
+            <div class="flex flex-col items-center gap-1.5 rounded-2xl bg-ink-50 py-3"><div class="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-100 text-sky-600"><i data-lucide="clock" class="h-5 w-5"></i></div><span class="text-[11px] font-800 text-ink-600">Время</span></div>
+            <div class="flex flex-col items-center gap-1.5 rounded-2xl bg-ink-50 py-3"><div class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 text-brand-600"><i data-lucide="users" class="h-5 w-5"></i></div><span class="text-[11px] font-800 text-ink-600">Места</span></div>
+            <div class="flex flex-col items-center gap-1.5 rounded-2xl bg-ink-50 py-3"><div class="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-100 text-accent-600"><i data-lucide="wallet" class="h-5 w-5"></i></div><span class="text-[11px] font-800 text-ink-600">Цена</span></div>
+            <div class="flex flex-col items-center gap-1.5 rounded-2xl bg-ink-50 py-3"><div class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 text-brand-600"><i data-lucide="briefcase" class="h-5 w-5"></i></div><span class="text-[11px] font-800 text-ink-600">Багаж</span></div>
+          </div>
+        </div>
+
+        <div>
+          <p class="mb-3 text-[12px] font-900 uppercase tracking-wider text-ink-400">Доверие и действия</p>
+          <div class="grid grid-cols-3 gap-3 sm:grid-cols-5">
+            <div class="flex flex-col items-center gap-1.5 rounded-2xl bg-ink-50 py-3"><div class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 text-brand-600"><i data-lucide="shield-check" class="h-5 w-5"></i></div><span class="text-[11px] font-800 text-ink-600">Проверен</span></div>
+            <div class="flex flex-col items-center gap-1.5 rounded-2xl bg-ink-50 py-3"><div class="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-100 text-accent-600"><i data-lucide="star" class="h-5 w-5"></i></div><span class="text-[11px] font-800 text-ink-600">Рейтинг</span></div>
+            <div class="flex flex-col items-center gap-1.5 rounded-2xl bg-ink-50 py-3"><div class="flex h-10 w-10 items-center justify-center rounded-xl bg-coral-100 text-coral-500"><i data-lucide="heart" class="h-5 w-5"></i></div><span class="text-[11px] font-800 text-ink-600">Лайк</span></div>
+            <div class="flex flex-col items-center gap-1.5 rounded-2xl bg-ink-50 py-3"><div class="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-100 text-sky-600"><i data-lucide="message-circle" class="h-5 w-5"></i></div><span class="text-[11px] font-800 text-ink-600">Чат</span></div>
+            <div class="flex flex-col items-center gap-1.5 rounded-2xl bg-ink-50 py-3"><div class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 text-brand-600"><i data-lucide="check-circle" class="h-5 w-5"></i></div><span class="text-[11px] font-800 text-ink-600">Готово</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── 11. STATES ───────────── -->
+    <section>
+      <h2 class="mb-1 text-[22px] font-900 text-ink-900">11 · Состояния</h2>
+      <p class="mb-5 text-[13px] font-700 text-ink-400">Загрузка (skeleton), пустой экран и тосты — признак зрелого продукта. Никаких «голых» спиннеров и белых экранов.</p>
+      <div class="grid gap-5 md:grid-cols-3">
+
+        <!-- skeleton -->
+        <div class="rounded-3xl bg-white p-5 shadow-card">
+          <p class="mb-3 text-[12px] font-900 uppercase tracking-wider text-ink-400">Загрузка</p>
+          <div class="space-y-3">
+            <div class="animate-pulse rounded-2xl border-l-[5px] border-ink-200 bg-ink-50 p-4">
+              <div class="mb-3 flex justify-between"><div class="h-4 w-20 rounded-full bg-ink-200"></div><div class="h-4 w-16 rounded-full bg-ink-200"></div></div>
+              <div class="mb-2 h-5 w-32 rounded-full bg-ink-200"></div>
+              <div class="h-3 w-24 rounded-full bg-ink-200"></div>
+            </div>
+            <div class="animate-pulse rounded-2xl border-l-[5px] border-ink-200 bg-ink-50 p-4">
+              <div class="mb-3 flex justify-between"><div class="h-4 w-20 rounded-full bg-ink-200"></div><div class="h-4 w-16 rounded-full bg-ink-200"></div></div>
+              <div class="mb-2 h-5 w-28 rounded-full bg-ink-200"></div>
+              <div class="h-3 w-20 rounded-full bg-ink-200"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- empty -->
+        <div class="rounded-3xl bg-white p-5 shadow-card">
+          <p class="mb-3 text-[12px] font-900 uppercase tracking-wider text-ink-400">Пусто</p>
+          <div class="flex flex-col items-center gap-3 rounded-2xl bg-ink-50 px-4 py-8 text-center">
+            <div class="flex h-16 w-16 items-center justify-center rounded-full bg-brand-100 text-brand-600"><i data-lucide="route" class="h-8 w-8"></i></div>
+            <p class="text-[15px] font-900 text-ink-900">Поездок пока нет</p>
+            <p class="text-[12px] font-700 text-ink-400">Создайте поездку или измените маршрут</p>
+            <button class="mt-1 flex items-center gap-1.5 rounded-2xl bg-brand-600 px-5 py-2.5 text-[13px] font-900 text-white shadow-brandcta"><i data-lucide="plus" class="h-4 w-4"></i> Создать</button>
+          </div>
+        </div>
+
+        <!-- toasts -->
+        <div class="rounded-3xl bg-white p-5 shadow-card">
+          <p class="mb-3 text-[12px] font-900 uppercase tracking-wider text-ink-400">Тосты</p>
+          <div class="space-y-3">
+            <div class="flex items-center gap-3 rounded-2xl bg-brand-600 px-4 py-3 text-white shadow-brandcta"><i data-lucide="check-circle" class="h-5 w-5"></i><span class="text-[13px] font-800">Бронь отправлена</span></div>
+            <div class="flex items-center gap-3 rounded-2xl bg-coral-500 px-4 py-3 text-white"><i data-lucide="alert-circle" class="h-5 w-5"></i><span class="text-[13px] font-800">Мест больше нет</span></div>
+            <div class="flex items-center gap-3 rounded-2xl bg-ink-800 px-4 py-3 text-white"><i data-lucide="info" class="h-5 w-5"></i><span class="text-[13px] font-800">Код отправлен в Telegram</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── 12. WELCOME / STICKER ───────────── -->
+    <section>
+      <h2 class="mb-1 text-[22px] font-900 text-ink-900">12 · Приветствие (стикер)</h2>
+      <p class="mb-5 text-[13px] font-700 text-ink-400">Первый экран в Telegram Mini App — дружелюбный стикер, минимум текста, одна ясная кнопка. Тёплое первое впечатление.</p>
+
+      <div class="flex flex-wrap gap-8">
+        <!-- welcome screen -->
+        <div class="phone relative flex flex-col items-center justify-between overflow-hidden bg-gradient-to-b from-brand-500 to-brand-600 px-6 py-10 text-center text-white">
+          <!-- decorative blobs -->
+          <div class="pointer-events-none absolute -left-10 top-10 h-32 w-32 rounded-full bg-white/10"></div>
+          <div class="pointer-events-none absolute -right-8 bottom-24 h-24 w-24 rounded-full bg-accent-400/20"></div>
+
+          <div class="flex flex-1 flex-col items-center justify-center">
+            <!-- sticker -->
+            <div class="relative mb-6">
+              <div class="flex h-36 w-36 items-center justify-center rounded-full bg-white/15 shadow-soft ring-4 ring-white/20">
+                <span class="text-[80px] leading-none">🚗</span>
+              </div>
+              <span class="absolute -right-2 -top-1 text-[34px]">👋</span>
+              <span class="absolute -bottom-1 -left-2 text-[26px]">✨</span>
+            </div>
+            <p class="text-[28px] font-900">Салам! 👋</p>
+            <p class="mt-2 max-w-[260px] text-[14px] font-700 text-white/85">Найди попутчика по Кыргызстану за минуту</p>
+
+            <div class="mt-6 flex flex-wrap items-center justify-center gap-2">
+              <span class="inline-flex items-center gap-1 rounded-full bg-white/15 px-3 py-1.5 text-[12px] font-800"><i data-lucide="shield-check" class="h-3.5 w-3.5"></i> Проверенные</span>
+              <span class="inline-flex items-center gap-1 rounded-full bg-white/15 px-3 py-1.5 text-[12px] font-800"><i data-lucide="wallet" class="h-3.5 w-3.5"></i> Выгодно</span>
+              <span class="inline-flex items-center gap-1 rounded-full bg-white/15 px-3 py-1.5 text-[12px] font-800"><i data-lucide="zap" class="h-3.5 w-3.5"></i> Быстро</span>
+            </div>
+          </div>
+
+          <div class="w-full">
+            <button class="flex h-13 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 py-3.5 text-[16px] font-900 text-[#4A2C00] shadow-cta">Поехали <i data-lucide="arrow-right" class="h-5 w-5"></i></button>
+            <p class="mt-3 text-[12px] font-700 text-white/70">Уже есть аккаунт? <span class="font-900 text-white underline">Войти</span></p>
+          </div>
+        </div>
+
+        <!-- success / onboarding-done sticker card -->
+        <div class="phone flex flex-col items-center justify-center gap-4 overflow-hidden bg-white px-6 py-10 text-center ring-1 ring-ink-200">
+          <div class="relative">
+            <div class="flex h-32 w-32 items-center justify-center rounded-full bg-brand-50 ring-4 ring-brand-100">
+              <span class="text-[64px] leading-none">🎉</span>
+            </div>
+            <span class="absolute -right-1 -top-1 text-[28px]">✨</span>
+          </div>
+          <p class="text-[22px] font-900 text-ink-900">Готово!</p>
+          <p class="max-w-[240px] text-[13px] font-700 text-ink-400">Аккаунт создан. Можно искать поездки и публиковать свои.</p>
+          <button class="mt-2 flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-brand-600 text-[15px] font-900 text-white shadow-brandcta"><i data-lucide="search" class="h-5 w-5"></i> Найти поездку</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── 13. DRIVER VERIFICATION ───────────── -->
+    <section>
+      <h2 class="mb-1 text-[22px] font-900 text-ink-900">13 · Верификация водителя</h2>
+      <p class="mb-5 text-[13px] font-700 text-ink-400">Статусы: <b>не водитель → на проверке → проверен</b> (и «отклонено»). Понятные баннеры + экран загрузки документов.</p>
+
+      <!-- status banners -->
+      <div class="mb-6 grid gap-3 md:grid-cols-2">
+        <div class="flex items-center gap-3 rounded-2xl border-2 border-ink-200 bg-white p-4">
+          <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-ink-100 text-ink-500"><i data-lucide="car-front" class="h-5 w-5"></i></div>
+          <div class="flex-1"><p class="text-[14px] font-900 text-ink-900">Вы ещё не водитель</p><p class="text-[12px] font-700 text-ink-400">Пройдите верификацию, чтобы публиковать поездки</p></div>
+          <i data-lucide="chevron-right" class="h-5 w-5 text-ink-300"></i>
+        </div>
+        <div class="flex items-center gap-3 rounded-2xl border-2 border-accent-200 bg-accent-50 p-4">
+          <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-100 text-accent-600"><i data-lucide="clock" class="h-5 w-5"></i></div>
+          <div class="flex-1"><p class="text-[14px] font-900 text-accent-700">Заявка на проверке</p><p class="text-[12px] font-700 text-ink-500">Обычно занимает до 24 часов</p></div>
+        </div>
+        <div class="flex items-center gap-3 rounded-2xl border-2 border-brand-200 bg-brand-50 p-4">
+          <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-600 text-white"><i data-lucide="badge-check" class="h-5 w-5"></i></div>
+          <div class="flex-1"><p class="text-[14px] font-900 text-brand-700">Вы проверенный водитель</p><p class="text-[12px] font-700 text-ink-500">Можно публиковать поездки</p></div>
+          <span class="rounded-full bg-brand-600 px-2.5 py-1 text-[11px] font-900 text-white">✓</span>
+        </div>
+        <div class="flex items-center gap-3 rounded-2xl border-2 border-coral-400 bg-coral-100/40 p-4">
+          <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-coral-100 text-coral-500"><i data-lucide="alert-circle" class="h-5 w-5"></i></div>
+          <div class="flex-1"><p class="text-[14px] font-900 text-coral-600">Заявка отклонена</p><p class="text-[12px] font-700 text-ink-500">Фото техпаспорта нечитаемо — загрузите заново</p></div>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-8">
+      <!-- verification screen -->
+      <div class="phone flex flex-col overflow-hidden bg-ink-50 shadow-soft ring-1 ring-ink-200">
+        <div class="flex items-center gap-3 bg-white px-5 py-4">
+          <div class="flex h-9 w-9 items-center justify-center rounded-full bg-ink-100 text-ink-600"><i data-lucide="arrow-left" class="h-4 w-4"></i></div>
+          <p class="text-[16px] font-900 text-ink-900">Стать водителем</p>
+        </div>
+
+        <div class="flex-1 space-y-4 px-4 py-4">
+          <div class="flex items-center gap-3 rounded-2xl bg-sky-100 p-3 text-sky-700">
+            <i data-lucide="shield-check" class="h-5 w-5 shrink-0"></i>
+            <p class="text-[12px] font-800">Документы видят только модераторы. Это нужно для безопасности.</p>
+          </div>
+
+          <p class="text-[11px] font-900 uppercase tracking-wider text-ink-400">Документы</p>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="flex flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-ink-300 bg-white py-6">
+              <div class="flex h-11 w-11 items-center justify-center rounded-full bg-brand-50 text-brand-600"><i data-lucide="id-card" class="h-5 w-5"></i></div>
+              <span class="text-[12px] font-800 text-ink-600">Вод. удостоверение</span>
+            </div>
+            <div class="flex flex-col items-center justify-center gap-2 rounded-2xl border-2 border-brand-500 bg-white py-6">
+              <div class="flex h-11 w-11 items-center justify-center rounded-full bg-brand-600 text-white"><i data-lucide="check" class="h-5 w-5"></i></div>
+              <span class="text-[12px] font-800 text-brand-700">Техпаспорт ✓</span>
+            </div>
+          </div>
+
+          <div class="flex flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-ink-300 bg-white py-6">
+            <div class="flex h-11 w-11 items-center justify-center rounded-full bg-accent-100 text-accent-600"><i data-lucide="camera" class="h-5 w-5"></i></div>
+            <span class="text-[12px] font-800 text-ink-600">Фото автомобиля</span>
+          </div>
+
+          <p class="text-[11px] font-900 uppercase tracking-wider text-ink-400">Автомобиль</p>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="flex items-center gap-2 rounded-2xl bg-white px-3 py-3 ring-1 ring-ink-200"><i data-lucide="car-front" class="h-4 w-4 text-ink-400"></i><input value="Honda Fit" class="w-full bg-transparent text-[14px] font-800 text-ink-900 outline-none"/></div>
+            <div class="flex items-center gap-2 rounded-2xl bg-white px-3 py-3 ring-1 ring-ink-200"><span class="text-[13px] font-900 text-ink-400">№</span><input value="01KG777AAA" class="w-full bg-transparent text-[14px] font-800 text-ink-900 outline-none"/></div>
+          </div>
+        </div>
+
+        <div class="bg-white px-4 py-4">
+          <button class="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-brand-600 text-[15px] font-900 text-white shadow-brandcta"><i data-lucide="shield-check" class="h-5 w-5"></i> Отправить на проверку</button>
+        </div>
+      </div>
+
+      <!-- car form -->
+      <div class="phone flex flex-col overflow-hidden bg-ink-50 shadow-soft ring-1 ring-ink-200">
+        <div class="flex items-center gap-3 bg-white px-5 py-4">
+          <div class="flex h-9 w-9 items-center justify-center rounded-full bg-ink-100 text-ink-600"><i data-lucide="arrow-left" class="h-4 w-4"></i></div>
+          <p class="text-[16px] font-900 text-ink-900">Автомобиль</p>
+        </div>
+
+        <div class="flex-1 space-y-4 px-4 py-4">
+          <!-- photo (uploaded preview state) -->
+          <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-sky-100 to-brand-50 ring-1 ring-ink-200">
+            <div class="flex h-40 items-center justify-center"><span class="text-[72px]">🚙</span></div>
+            <button class="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-2 text-[12px] font-900 text-ink-700 shadow-soft backdrop-blur"><i data-lucide="camera" class="h-4 w-4"></i> Изменить фото</button>
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="text-[11px] font-900 uppercase tracking-wider text-ink-400">Марка и модель</label>
+            <div class="flex items-center gap-2 rounded-2xl bg-white px-4 py-3 ring-1 ring-ink-200"><i data-lucide="car-front" class="h-4 w-4 text-ink-400"></i><input value="Honda Fit" class="w-full bg-transparent text-[15px] font-800 text-ink-900 outline-none"/></div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div class="space-y-1.5">
+              <label class="text-[11px] font-900 uppercase tracking-wider text-ink-400">Год</label>
+              <div class="flex items-center gap-2 rounded-2xl bg-white px-4 py-3 ring-1 ring-ink-200"><i data-lucide="calendar" class="h-4 w-4 text-ink-400"></i><input value="2018" class="w-full bg-transparent text-[15px] font-800 text-ink-900 outline-none"/></div>
+            </div>
+            <div class="space-y-1.5">
+              <label class="text-[11px] font-900 uppercase tracking-wider text-ink-400">Мест</label>
+              <div class="flex items-center justify-between rounded-2xl bg-white px-3 py-2 ring-1 ring-ink-200">
+                <button class="flex h-8 w-8 items-center justify-center rounded-full border-2 border-ink-200 text-[16px] font-900 text-ink-600">−</button>
+                <span class="text-[18px] font-900 text-ink-900">4</span>
+                <button class="flex h-8 w-8 items-center justify-center rounded-full border-2 border-ink-200 text-[16px] font-900 text-ink-600">+</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <label class="text-[11px] font-900 uppercase tracking-wider text-ink-400">Цвет</label>
+            <div class="flex flex-wrap gap-2.5">
+              <button class="h-9 w-9 rounded-full bg-white ring-2 ring-brand-500 ring-offset-2"></button>
+              <button class="h-9 w-9 rounded-full bg-ink-800"></button>
+              <button class="h-9 w-9 rounded-full bg-ink-300"></button>
+              <button class="h-9 w-9 rounded-full bg-coral-500"></button>
+              <button class="h-9 w-9 rounded-full bg-sky-500"></button>
+              <button class="h-9 w-9 rounded-full bg-accent-500"></button>
+              <button class="h-9 w-9 rounded-full bg-brand-600"></button>
+            </div>
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="text-[11px] font-900 uppercase tracking-wider text-ink-400">Госномер</label>
+            <input value="01KG 777 AAA" class="w-full rounded-2xl bg-white px-4 py-3 text-[16px] font-900 tracking-widest text-ink-900 outline-none ring-1 ring-ink-200"/>
+          </div>
+
+          <div class="flex items-center gap-2 rounded-2xl bg-brand-50 px-4 py-3 text-brand-700">
+            <i data-lucide="eye" class="h-4 w-4 shrink-0"></i>
+            <p class="text-[12px] font-800">Пассажиры увидят: <b>Honda Fit · белый · 4 места</b></p>
+          </div>
+        </div>
+
+        <div class="bg-white px-4 py-4">
+          <button class="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 text-[15px] font-900 text-[#4A2C00] shadow-cta"><i data-lucide="check-circle" class="h-5 w-5"></i> Сохранить</button>
+        </div>
+      </div>
+      </div>
+    </section>
+
+    <!-- ───────────── 14. SEATS: booked / free ───────────── -->
+    <section>
+      <h2 class="mb-1 text-[22px] font-900 text-ink-900">14 · Места — занято / свободно</h2>
+      <p class="mb-5 text-[13px] font-700 text-ink-400">Человечки <b>наложены стопкой</b> (без кружков): первый виден целиком, остальные выглядывают из-за него — тонкий белый ореол их разделяет. <b class="text-brand-700">Свободные — teal</b>, <b class="text-ink-400">занятые — серые</b>.</p>
+
+      <div class="space-y-5 rounded-3xl bg-white p-6 shadow-card">
+        <!-- legend (single, no overlap) -->
+        <div class="flex flex-wrap items-center gap-5">
+          <span class="inline-flex items-center gap-2 text-[13px] font-800 text-ink-600"><i data-lucide="user" class="seat h-6 w-6 text-brand-600"></i> Свободно</span>
+          <span class="inline-flex items-center gap-2 text-[13px] font-800 text-ink-600"><i data-lucide="user" class="seat h-6 w-6 text-ink-300"></i> Занято</span>
+          <span class="inline-flex items-center gap-2 text-[13px] font-800 text-ink-600"><i data-lucide="user" class="seat h-6 w-6 text-grape-500"></i> Нужно (заявка)</span>
+        </div>
+
+        <!-- sizes: stacked, first fully visible, rest peek behind -->
+        <div class="space-y-4 border-t border-ink-100 pt-4">
+          <p class="text-[11px] font-900 uppercase tracking-wider text-ink-400">Стопка · 2 занято + 2 свободно</p>
+
+          <div class="flex items-center gap-3">
+            <div class="flex">
+              <span class="relative" style="z-index:40"><i data-lucide="user" class="seat h-7 w-7 text-ink-300"></i></span>
+              <span class="relative -ml-3" style="z-index:30"><i data-lucide="user" class="seat h-7 w-7 text-ink-300"></i></span>
+              <span class="relative -ml-3" style="z-index:20"><i data-lucide="user" class="seat h-7 w-7 text-brand-600"></i></span>
+              <span class="relative -ml-3" style="z-index:10"><i data-lucide="user" class="seat h-7 w-7 text-brand-600"></i></span>
+            </div>
+            <span class="text-[12px] font-800 text-ink-500">маленький (карточка)</span>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <div class="flex">
+              <span class="relative" style="z-index:40"><i data-lucide="user" class="seat h-9 w-9 text-ink-300"></i></span>
+              <span class="relative -ml-4" style="z-index:30"><i data-lucide="user" class="seat h-9 w-9 text-ink-300"></i></span>
+              <span class="relative -ml-4" style="z-index:20"><i data-lucide="user" class="seat h-9 w-9 text-brand-600"></i></span>
+              <span class="relative -ml-4" style="z-index:10"><i data-lucide="user" class="seat h-9 w-9 text-brand-600"></i></span>
+            </div>
+            <span class="text-[12px] font-800 text-ink-500">средний (деталь)</span>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <div class="flex">
+              <span class="relative" style="z-index:40"><i data-lucide="user" class="seat h-12 w-12 text-ink-300"></i></span>
+              <span class="relative -ml-5" style="z-index:30"><i data-lucide="user" class="seat h-12 w-12 text-ink-300"></i></span>
+              <span class="relative -ml-5" style="z-index:20"><i data-lucide="user" class="seat h-12 w-12 text-brand-600"></i></span>
+              <span class="relative -ml-5" style="z-index:10"><i data-lucide="user" class="seat h-12 w-12 text-brand-600"></i></span>
+            </div>
+            <span class="text-[12px] font-800 text-ink-500">крупный</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- in context -->
+      <div class="mt-5 grid gap-5 md:grid-cols-2">
+        <!-- trip card with stacked seats -->
+        <article class="overflow-hidden rounded-3xl border-l-[5px] border-brand-500 bg-white shadow-card">
+          <div class="flex items-center justify-between px-4 pt-3">
+            <span class="inline-flex items-center gap-1 rounded-full bg-brand-50 px-2.5 py-1 text-[11px] font-900 text-brand-700"><i data-lucide="car-front" class="h-3.5 w-3.5"></i> Поездка</span>
+            <span class="text-[12px] font-800 text-ink-500">Завтра, 09:00</span>
+          </div>
+          <div class="px-4 pb-3 pt-2">
+            <div class="flex items-center justify-between">
+              <p class="text-[15px] font-900 text-ink-900">Бишкек → Ош</p>
+              <p class="text-[20px] font-900 text-brand-700">1 200<span class="text-[12px]">с</span></p>
+            </div>
+            <div class="mt-2 flex items-center gap-2.5">
+              <div class="flex">
+                <span class="relative" style="z-index:40"><i data-lucide="user" class="seat h-7 w-7 text-ink-300"></i></span>
+                <span class="relative -ml-3" style="z-index:30"><i data-lucide="user" class="seat h-7 w-7 text-ink-300"></i></span>
+                <span class="relative -ml-3" style="z-index:20"><i data-lucide="user" class="seat h-7 w-7 text-brand-600"></i></span>
+                <span class="relative -ml-3" style="z-index:10"><i data-lucide="user" class="seat h-7 w-7 text-brand-600"></i></span>
+              </div>
+              <span class="text-[12px] font-900 text-brand-700">2 из 4 свободно</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- detail block: occupancy stacked -->
+        <div class="rounded-3xl bg-white p-5 shadow-card">
+          <p class="mb-3 text-[11px] font-900 uppercase tracking-wider text-ink-400">Места в поездке</p>
+          <div class="mb-3 flex">
+            <span class="relative" style="z-index:40"><i data-lucide="user" class="seat h-11 w-11 text-ink-300"></i></span>
+            <span class="relative -ml-5" style="z-index:30"><i data-lucide="user" class="seat h-11 w-11 text-ink-300"></i></span>
+            <span class="relative -ml-5" style="z-index:20"><i data-lucide="user" class="seat h-11 w-11 text-brand-600"></i></span>
+            <span class="relative -ml-5" style="z-index:10"><i data-lucide="user" class="seat h-11 w-11 text-brand-600"></i></span>
+          </div>
+          <div class="flex items-center gap-4 text-[13px] font-800">
+            <span class="inline-flex items-center gap-1.5 text-ink-500"><span class="h-2.5 w-2.5 rounded-full bg-ink-300"></span> Занято 2</span>
+            <span class="inline-flex items-center gap-1.5 text-brand-700"><span class="h-2.5 w-2.5 rounded-full bg-brand-600"></span> Свободно 2</span>
+          </div>
+        </div>
+
+        <!-- passenger request: needs N seats (stacked grape) -->
+        <article class="overflow-hidden rounded-3xl border-l-[5px] border-grape-500 bg-white shadow-card">
+          <div class="flex items-center justify-between px-4 pt-3">
+            <span class="inline-flex items-center gap-1 rounded-full bg-grape-100 px-2.5 py-1 text-[11px] font-900 text-grape-600"><i data-lucide="hand" class="h-3.5 w-3.5"></i> Заявка</span>
+            <span class="text-[12px] font-800 text-ink-500">Завтра · гибко</span>
+          </div>
+          <div class="px-4 pb-3 pt-2">
+            <div class="flex items-center justify-between">
+              <p class="text-[15px] font-900 text-ink-900">Бишкек → Ош</p>
+              <p class="text-[15px] font-900 text-grape-600">до 1 500 с</p>
+            </div>
+            <div class="mt-2 flex items-center gap-2.5">
+              <div class="flex">
+                <span class="relative" style="z-index:20"><i data-lucide="user" class="seat h-7 w-7 text-grape-500"></i></span>
+                <span class="relative -ml-3" style="z-index:10"><i data-lucide="user" class="seat h-7 w-7 text-grape-500"></i></span>
+              </div>
+              <span class="text-[12px] font-900 text-grape-600">нужно 2 места</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- full trip example (all taken) -->
+        <div class="flex items-center justify-between rounded-3xl bg-white p-5 shadow-card">
+          <div>
+            <p class="text-[14px] font-900 text-ink-900">Все места заняты</p>
+            <div class="mt-2 flex">
+              <span class="relative" style="z-index:30"><i data-lucide="user" class="seat h-7 w-7 text-ink-300"></i></span>
+              <span class="relative -ml-3" style="z-index:20"><i data-lucide="user" class="seat h-7 w-7 text-ink-300"></i></span>
+              <span class="relative -ml-3" style="z-index:10"><i data-lucide="user" class="seat h-7 w-7 text-ink-300"></i></span>
+            </div>
+          </div>
+          <span class="rounded-full bg-ink-100 px-3 py-1.5 text-[12px] font-900 text-ink-500">Мест нет</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── 15. WHOLE CABIN (салон) ───────────── -->
+    <section>
+      <h2 class="mb-1 text-[22px] font-900 text-ink-900">15 · Весь салон</h2>
+      <p class="mb-5 text-[13px] font-700 text-ink-400">Опция «весь салон» — частная поездка без подсадки. Водитель может <b>предлагать</b> весь салон, пассажир — <b>заказать</b> его. Отдельный цвет/иконка (sky), чтобы не путать с обычными местами.</p>
+
+      <div class="grid gap-5 md:grid-cols-3">
+
+        <!-- A. feature chip on a listing -->
+        <div class="rounded-3xl bg-white p-5 shadow-card">
+          <p class="mb-3 text-[11px] font-900 uppercase tracking-wider text-ink-400">Ярлык на объявлении</p>
+          <article class="overflow-hidden rounded-2xl border-l-[5px] border-brand-500 bg-white ring-1 ring-ink-100">
+            <div class="flex items-center justify-between px-4 pt-3">
+              <span class="inline-flex items-center gap-1 rounded-full bg-sky-100 px-2.5 py-1 text-[11px] font-900 text-sky-600"><i data-lucide="sofa" class="h-3.5 w-3.5"></i> Можно весь салон</span>
+              <span class="text-[12px] font-800 text-ink-500">Завтра, 09:00</span>
+            </div>
+            <div class="px-4 pb-3 pt-2">
+              <div class="flex items-center justify-between">
+                <p class="text-[15px] font-900 text-ink-900">Бишкек → Ош</p>
+                <p class="text-[20px] font-900 text-brand-700">1 200<span class="text-[12px]">с</span></p>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- B. driver toggle (create trip) -->
+        <div class="rounded-3xl bg-white p-5 shadow-card">
+          <p class="mb-3 text-[11px] font-900 uppercase tracking-wider text-ink-400">Водитель: предлагать</p>
+          <div class="rounded-2xl border-2 border-sky-200 bg-sky-100/40 p-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-500 text-white"><i data-lucide="sofa" class="h-5 w-5"></i></div>
+                <div>
+                  <p class="text-[14px] font-900 text-ink-900">Весь салон</p>
+                  <p class="text-[12px] font-700 text-ink-400">Один заказ на всю машину</p>
+                </div>
+              </div>
+              <div class="relative h-7 w-12 rounded-full bg-sky-500"><span class="absolute right-0.5 top-0.5 h-6 w-6 rounded-full bg-white shadow"></span></div>
+            </div>
+            <div class="mt-3 flex items-center gap-2 rounded-xl bg-white px-3 py-2.5 ring-1 ring-sky-200">
+              <i data-lucide="wallet" class="h-4 w-4 text-sky-500"></i>
+              <input value="4 000" class="w-full bg-transparent text-[15px] font-900 text-ink-900 outline-none" />
+              <span class="text-[12px] font-800 text-ink-400">с / за весь салон</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- C. passenger choice (booking) -->
+        <div class="rounded-3xl bg-white p-5 shadow-card">
+          <p class="mb-3 text-[11px] font-900 uppercase tracking-wider text-ink-400">Пассажир: выбрать</p>
+          <div class="space-y-3">
+            <!-- by seat (selected) -->
+            <div class="flex items-center gap-3 rounded-2xl border-2 border-brand-500 bg-brand-50 p-3">
+              <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-600 text-white"><i data-lucide="user" class="h-5 w-5"></i></div>
+              <div class="flex-1"><p class="text-[14px] font-900 text-ink-900">По местам</p><p class="text-[12px] font-700 text-ink-400">1 200 с / место · с попутчиками</p></div>
+              <i data-lucide="check-circle" class="h-5 w-5 text-brand-600"></i>
+            </div>
+            <!-- whole cabin -->
+            <div class="flex items-center gap-3 rounded-2xl border-2 border-ink-200 p-3">
+              <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-100 text-sky-600"><i data-lucide="sofa" class="h-5 w-5"></i></div>
+              <div class="flex-1"><p class="text-[14px] font-900 text-ink-900">Весь салон</p><p class="text-[12px] font-700 text-ink-400">4 000 с · без подсадки</p></div>
+              <span class="h-5 w-5 rounded-full border-2 border-ink-300"></span>
+            </div>
+          </div>
+          <button class="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 text-[14px] font-900 text-[#4A2C00] shadow-cta"><i data-lucide="check-circle" class="h-4 w-4"></i> Забронировать</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── 16. CHAT ───────────── -->
+    <section>
+      <h2 class="mb-1 text-[22px] font-900 text-ink-900">16 · Чат</h2>
+      <p class="mb-5 text-[13px] font-700 text-ink-400">Контекст поездки в шапке, входящие слева (серые), исходящие справа (teal), системные — по центру.</p>
+
+      <div class="phone flex flex-col overflow-hidden bg-ink-50 shadow-soft ring-1 ring-ink-200">
+        <div class="flex items-center gap-3 bg-white px-4 py-3 ring-1 ring-ink-100">
+          <i data-lucide="arrow-left" class="h-5 w-5 text-ink-500"></i>
+          <div class="flex h-10 w-10 items-center justify-center rounded-full bg-grape-100 text-[15px] font-900 text-grape-600">А</div>
+          <div class="flex-1">
+            <p class="flex items-center gap-1 text-[14px] font-900 text-ink-900">Азамат <i data-lucide="shield-check" class="h-3.5 w-3.5 text-brand-600"></i></p>
+            <p class="text-[11px] font-700 text-ink-400">Бишкек → Ош · завтра 09:00</p>
+          </div>
+          <i data-lucide="phone" class="h-5 w-5 text-brand-600"></i>
+        </div>
+
+        <div class="flex flex-1 flex-col gap-2 px-4 py-4">
+          <span class="mx-auto rounded-full bg-ink-100 px-3 py-1 text-[11px] font-800 text-ink-500">Бронь подтверждена ✓</span>
+          <div class="max-w-[78%] self-start rounded-2xl rounded-bl-md bg-white px-3.5 py-2 text-[13px] font-600 text-ink-800 shadow-sm">Салам! Во сколько выезжаете?</div>
+          <span class="self-start pl-1 text-[10px] font-700 text-ink-400">09:41</span>
+          <div class="max-w-[78%] self-end rounded-2xl rounded-br-md bg-brand-600 px-3.5 py-2 text-[13px] font-600 text-white">Ровно в 9, заберу у Ошского рынка 👍</div>
+          <span class="self-end pr-1 text-[10px] font-700 text-ink-400">09:42 ✓✓</span>
+          <div class="max-w-[78%] self-start rounded-2xl rounded-bl-md bg-white px-3.5 py-2 text-[13px] font-600 text-ink-800 shadow-sm">Отлично, буду ждать 🙌</div>
+        </div>
+
+        <div class="flex items-center gap-2 bg-white px-3 py-2.5 ring-1 ring-ink-100">
+          <input placeholder="Сообщение…" class="flex-1 rounded-full bg-ink-100 px-4 py-2.5 text-[14px] font-600 text-ink-900 outline-none placeholder:text-ink-400" />
+          <button class="flex h-10 w-10 items-center justify-center rounded-full bg-brand-600 text-white shadow-brandcta"><i data-lucide="send" class="h-5 w-5"></i></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── 17. PROFILE + MODE SWITCH ───────────── -->
+    <section>
+      <h2 class="mb-1 text-[22px] font-900 text-ink-900">17 · Профиль · режим Пассажир/Водитель</h2>
+      <p class="mb-5 text-[13px] font-700 text-ink-400">Один аккаунт — два режима. Переключатель сверху меняет контекст: <b class="text-grape-600">Пассажир (фиолетовый)</b> / <b class="text-brand-700">Водитель (teal)</b>.</p>
+
+      <div class="flex flex-wrap gap-8">
+
+        <!-- passenger profile -->
+        <div class="phone flex flex-col overflow-hidden bg-ink-50 shadow-soft ring-1 ring-ink-200">
+          <div class="bg-gradient-to-b from-grape-500 to-grape-400 px-5 pb-8 pt-6 text-center text-white">
+            <div class="mx-auto mb-2 flex h-20 w-20 items-center justify-center rounded-full bg-white/20 text-[26px] font-900 ring-4 ring-white/30">Н</div>
+            <p class="text-[19px] font-900">Нурлан</p>
+            <p class="flex items-center justify-center gap-1 text-[12px] font-700 text-white/85"><i data-lucide="star" class="h-3.5 w-3.5 fill-accent-400 text-accent-400"></i> 4.8 · как пассажир</p>
+          </div>
+          <!-- mode switch -->
+          <div class="-mt-5 px-4">
+            <div class="flex gap-1 rounded-2xl bg-white p-1 shadow-soft ring-1 ring-ink-100">
+              <button class="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-grape-500 py-2 text-[13px] font-900 text-white"><i data-lucide="user" class="h-4 w-4"></i> Пассажир</button>
+              <button class="flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2 text-[13px] font-800 text-ink-500"><i data-lucide="car-front" class="h-4 w-4"></i> Водитель</button>
+            </div>
+          </div>
+          <div class="space-y-3 px-4 py-4">
+            <div class="grid grid-cols-2 gap-3">
+              <div class="rounded-2xl bg-white p-3 text-center shadow-card"><p class="text-[20px] font-900 text-grape-600">23</p><p class="text-[11px] font-700 text-ink-400">поездок</p></div>
+              <div class="rounded-2xl bg-white p-3 text-center shadow-card"><p class="text-[20px] font-900 text-coral-500">8</p><p class="text-[11px] font-700 text-ink-400">избранных</p></div>
+            </div>
+            <div class="divide-y divide-ink-100 rounded-3xl bg-white shadow-card">
+              <a class="flex items-center gap-3 px-5 py-3.5"><div class="flex h-9 w-9 items-center justify-center rounded-xl bg-grape-100 text-grape-600"><i data-lucide="ticket" class="h-4 w-4"></i></div><span class="flex-1 text-[14px] font-800 text-ink-800">Мои брони</span><i data-lucide="chevron-right" class="h-4 w-4 text-ink-300"></i></a>
+              <a class="flex items-center gap-3 px-5 py-3.5"><div class="flex h-9 w-9 items-center justify-center rounded-xl bg-coral-100 text-coral-500"><i data-lucide="heart" class="h-4 w-4"></i></div><span class="flex-1 text-[14px] font-800 text-ink-800">Избранное</span><i data-lucide="chevron-right" class="h-4 w-4 text-ink-300"></i></a>
+              <a class="flex items-center gap-3 px-5 py-3.5"><div class="flex h-9 w-9 items-center justify-center rounded-xl bg-ink-100 text-ink-500"><i data-lucide="settings" class="h-4 w-4"></i></div><span class="flex-1 text-[14px] font-800 text-ink-800">Настройки</span><i data-lucide="chevron-right" class="h-4 w-4 text-ink-300"></i></a>
+            </div>
+            <a class="flex items-center gap-3 rounded-3xl bg-brand-600 px-5 py-4 text-white shadow-brandcta"><i data-lucide="car-front" class="h-5 w-5"></i><span class="flex-1 text-[14px] font-900">Стать водителем</span><i data-lucide="chevron-right" class="h-4 w-4"></i></a>
+          </div>
+        </div>
+
+        <!-- driver profile -->
+        <div class="phone flex flex-col overflow-hidden bg-ink-50 shadow-soft ring-1 ring-ink-200">
+          <div class="bg-gradient-to-b from-brand-600 to-brand-500 px-5 pb-8 pt-6 text-center text-white">
+            <div class="mx-auto mb-2 flex h-20 w-20 items-center justify-center rounded-full bg-white/20 text-[26px] font-900 ring-4 ring-white/30">А</div>
+            <p class="flex items-center justify-center gap-1.5 text-[19px] font-900">Азамат <i data-lucide="shield-check" class="h-5 w-5"></i></p>
+            <p class="flex items-center justify-center gap-1 text-[12px] font-700 text-white/85"><i data-lucide="star" class="h-3.5 w-3.5 fill-accent-400 text-accent-400"></i> 4.9 · 32 отзыва</p>
+          </div>
+          <div class="-mt-5 px-4">
+            <div class="flex gap-1 rounded-2xl bg-white p-1 shadow-soft ring-1 ring-ink-100">
+              <button class="flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2 text-[13px] font-800 text-ink-500"><i data-lucide="user" class="h-4 w-4"></i> Пассажир</button>
+              <button class="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-brand-600 py-2 text-[13px] font-900 text-white"><i data-lucide="car-front" class="h-4 w-4"></i> Водитель</button>
+            </div>
+          </div>
+          <div class="space-y-3 px-4 py-4">
+            <div class="flex items-center gap-3 rounded-3xl bg-white p-4 shadow-card">
+              <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-100 text-sky-600"><i data-lucide="sofa" class="h-6 w-6"></i></div>
+              <div class="flex-1"><p class="text-[14px] font-900 text-ink-900">Honda Fit · белый</p><p class="text-[12px] font-700 text-ink-400">01KG 777 AAA · 4 места</p></div>
+              <span class="inline-flex items-center gap-1 rounded-full bg-brand-50 px-2.5 py-1 text-[11px] font-900 text-brand-700"><i data-lucide="shield-check" class="h-3.5 w-3.5"></i> Проверен</span>
+            </div>
+            <div class="grid grid-cols-3 gap-3">
+              <div class="rounded-2xl bg-white p-3 text-center shadow-card"><p class="text-[18px] font-900 text-brand-700">48</p><p class="text-[11px] font-700 text-ink-400">поездок</p></div>
+              <div class="rounded-2xl bg-white p-3 text-center shadow-card"><p class="text-[18px] font-900 text-accent-600">4.9</p><p class="text-[11px] font-700 text-ink-400">рейтинг</p></div>
+              <div class="rounded-2xl bg-white p-3 text-center shadow-card"><p class="text-[18px] font-900 text-coral-500">12</p><p class="text-[11px] font-700 text-ink-400">лайков</p></div>
+            </div>
+            <div class="divide-y divide-ink-100 rounded-3xl bg-white shadow-card">
+              <a class="flex items-center gap-3 px-5 py-3.5"><div class="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-50 text-brand-600"><i data-lucide="route" class="h-4 w-4"></i></div><span class="flex-1 text-[14px] font-800 text-ink-800">Мои поездки</span><i data-lucide="chevron-right" class="h-4 w-4 text-ink-300"></i></a>
+              <a class="flex items-center gap-3 px-5 py-3.5"><div class="flex h-9 w-9 items-center justify-center rounded-xl bg-sky-100 text-sky-600"><i data-lucide="car-front" class="h-4 w-4"></i></div><span class="flex-1 text-[14px] font-800 text-ink-800">Автомобиль</span><i data-lucide="chevron-right" class="h-4 w-4 text-ink-300"></i></a>
+              <a class="flex items-center gap-3 px-5 py-3.5"><div class="flex h-9 w-9 items-center justify-center rounded-xl bg-accent-100 text-accent-600"><i data-lucide="settings" class="h-4 w-4"></i></div><span class="flex-1 text-[14px] font-800 text-ink-800">Настройки</span><i data-lucide="chevron-right" class="h-4 w-4 text-ink-300"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── 18. NOTIFICATIONS ───────────── -->
+    <section>
+      <h2 class="mb-1 text-[22px] font-900 text-ink-900">18 · Уведомления</h2>
+      <p class="mb-5 text-[13px] font-700 text-ink-400">Иконка по типу события + цвет. Непрочитанные подсвечены и помечены точкой. Сгруппированы по времени.</p>
+
+      <div class="phone flex flex-col overflow-hidden bg-ink-50 shadow-soft ring-1 ring-ink-200">
+        <div class="flex items-center justify-between bg-white px-5 py-4 ring-1 ring-ink-100">
+          <p class="text-[18px] font-900 text-ink-900">Уведомления</p>
+          <span class="text-[12px] font-800 text-brand-600">Прочитать всё</span>
+        </div>
+        <div class="flex-1 space-y-3 px-4 py-4">
+          <p class="px-1 text-[11px] font-900 uppercase tracking-wider text-ink-400">Сегодня</p>
+
+          <div class="flex items-start gap-3 rounded-2xl bg-brand-50 p-3.5 ring-1 ring-brand-100">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-600 text-white"><i data-lucide="check-circle" class="h-5 w-5"></i></div>
+            <div class="flex-1"><p class="text-[13px] font-900 text-ink-900">Бронь подтверждена</p><p class="text-[12px] font-700 text-ink-500">Азамат · Бишкек → Ош, завтра 09:00</p></div>
+            <span class="mt-1 h-2.5 w-2.5 shrink-0 rounded-full bg-coral-500"></span>
+          </div>
+
+          <div class="flex items-start gap-3 rounded-2xl bg-white p-3.5 shadow-sm">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-100 text-sky-600"><i data-lucide="message-circle" class="h-5 w-5"></i></div>
+            <div class="flex-1"><p class="text-[13px] font-900 text-ink-900">Новое сообщение</p><p class="text-[12px] font-700 text-ink-500">«Во сколько выезжаете?»</p></div>
+            <span class="text-[11px] font-700 text-ink-400">5м</span>
+          </div>
+
+          <div class="flex items-start gap-3 rounded-2xl bg-grape-100/50 p-3.5 ring-1 ring-grape-100">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-grape-500 text-white"><i data-lucide="hand" class="h-5 w-5"></i></div>
+            <div class="flex-1"><p class="text-[13px] font-900 text-ink-900">Отклик на вашу заявку</p><p class="text-[12px] font-700 text-ink-500">Бакыт готов вас подвезти</p></div>
+            <span class="mt-1 h-2.5 w-2.5 shrink-0 rounded-full bg-coral-500"></span>
+          </div>
+
+          <p class="px-1 pt-2 text-[11px] font-900 uppercase tracking-wider text-ink-400">Ранее</p>
+
+          <div class="flex items-start gap-3 rounded-2xl bg-white p-3.5 shadow-sm">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-100 text-accent-600"><i data-lucide="star" class="h-5 w-5"></i></div>
+            <div class="flex-1"><p class="text-[13px] font-900 text-ink-900">Оцените поездку</p><p class="text-[12px] font-700 text-ink-500">Как прошла поездка с Эльдаром?</p></div>
+            <span class="text-[11px] font-700 text-ink-400">вчера</span>
+          </div>
+
+          <div class="flex items-start gap-3 rounded-2xl bg-white p-3.5 shadow-sm">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-coral-100 text-coral-500"><i data-lucide="x" class="h-5 w-5"></i></div>
+            <div class="flex-1"><p class="text-[13px] font-900 text-ink-900">Бронь отклонена</p><p class="text-[12px] font-700 text-ink-500">Мест больше нет · Каракол</p></div>
+            <span class="text-[11px] font-700 text-ink-400">вчера</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── 19. FAVORITES (likes) ───────────── -->
+    <section>
+      <h2 class="mb-1 text-[22px] font-900 text-ink-900">19 · Избранное (лайки)</h2>
+      <p class="mb-5 text-[13px] font-700 text-ink-400">Лайкнутые поездки и заявки. Сердечко залито coral. Те же карточки, что в ленте — переключаются вкладками.</p>
+
+      <div class="phone flex flex-col overflow-hidden bg-ink-50 shadow-soft ring-1 ring-ink-200">
+        <div class="bg-white px-5 pb-3 pt-4 ring-1 ring-ink-100">
+          <p class="mb-3 text-[18px] font-900 text-ink-900">Избранное</p>
+          <div class="flex gap-1 rounded-2xl bg-ink-100 p-1">
+            <button class="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-white py-2 text-[13px] font-900 text-brand-700 shadow-sm"><i data-lucide="car-front" class="h-4 w-4"></i> Поездки</button>
+            <button class="flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2 text-[13px] font-800 text-ink-500"><i data-lucide="hand" class="h-4 w-4"></i> Заявки</button>
+          </div>
+        </div>
+
+        <div class="flex-1 space-y-3 px-4 py-4">
+          <article class="overflow-hidden rounded-3xl border-l-[5px] border-brand-500 bg-white shadow-card">
+            <div class="flex items-center justify-between px-4 pt-3">
+              <span class="inline-flex items-center gap-1 rounded-full bg-brand-50 px-2.5 py-1 text-[11px] font-900 text-brand-700"><i data-lucide="car-front" class="h-3.5 w-3.5"></i> Поездка</span>
+              <i data-lucide="heart" class="h-5 w-5 fill-coral-400 text-coral-400"></i>
+            </div>
+            <div class="px-4 pb-4 pt-2">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-[15px] font-900 text-ink-900">Бишкек → Ош</p>
+                  <p class="mt-1 text-[12px] font-700 text-ink-400">Завтра, 09:00 · Азамат</p>
+                </div>
+                <p class="text-[20px] font-900 text-brand-700">1 200<span class="text-[12px]">с</span></p>
+              </div>
+            </div>
+          </article>
+
+          <article class="overflow-hidden rounded-3xl border-l-[5px] border-brand-500 bg-white shadow-card">
+            <div class="flex items-center justify-between px-4 pt-3">
+              <span class="inline-flex items-center gap-1 rounded-full bg-brand-50 px-2.5 py-1 text-[11px] font-900 text-brand-700"><i data-lucide="car-front" class="h-3.5 w-3.5"></i> Поездка</span>
+              <i data-lucide="heart" class="h-5 w-5 fill-coral-400 text-coral-400"></i>
+            </div>
+            <div class="px-4 pb-4 pt-2">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-[15px] font-900 text-ink-900">Бишкек → Каракол</p>
+                  <p class="mt-1 text-[12px] font-700 text-ink-400">Сб, 07:00 · Бакыт</p>
+                </div>
+                <p class="text-[20px] font-900 text-brand-700">800<span class="text-[12px]">с</span></p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── 20. PUBLISH: ride or request ───────────── -->
+    <section>
+      <h2 class="mb-1 text-[22px] font-900 text-ink-900">20 · Публикация — поездка или заявка</h2>
+      <p class="mb-5 text-[13px] font-700 text-ink-400">Кнопка «+» открывает выбор: <b class="text-brand-700">Поездка</b> (водитель) или <b class="text-grape-600">Заявка</b> (пассажир). У заявки — своя форма в фиолетовом.</p>
+
+      <div class="flex flex-wrap gap-8">
+
+        <!-- A. create chooser (bottom sheet) -->
+        <div class="phone relative flex items-end overflow-hidden bg-ink-800/40 p-4 ring-1 ring-ink-200">
+          <div class="w-full rounded-3xl bg-white p-5 shadow-soft">
+            <div class="mx-auto mb-4 h-1.5 w-12 rounded-full bg-ink-200"></div>
+            <p class="mb-4 text-center text-[16px] font-900 text-ink-900">Что опубликовать?</p>
+            <div class="space-y-3">
+              <button class="flex w-full items-center gap-3 rounded-2xl border-2 border-brand-200 bg-brand-50 p-4 text-left">
+                <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-600 text-white shadow-brandcta"><i data-lucide="car-front" class="h-6 w-6"></i></div>
+                <div class="flex-1"><p class="text-[15px] font-900 text-brand-800">Поездку</p><p class="text-[12px] font-700 text-ink-500">Я за рулём — предлагаю места</p></div>
+                <i data-lucide="chevron-right" class="h-5 w-5 text-brand-400"></i>
+              </button>
+              <button class="flex w-full items-center gap-3 rounded-2xl border-2 border-grape-200 bg-grape-100/50 p-4 text-left">
+                <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-grape-500 text-white"><i data-lucide="hand" class="h-6 w-6"></i></div>
+                <div class="flex-1"><p class="text-[15px] font-900 text-grape-600">Заявку</p><p class="text-[12px] font-700 text-ink-500">Ищу попутку как пассажир</p></div>
+                <i data-lucide="chevron-right" class="h-5 w-5 text-grape-400"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- B. passenger request form -->
+        <div class="phone flex flex-col overflow-hidden bg-ink-50 shadow-soft ring-1 ring-ink-200">
+          <div class="flex items-center gap-3 bg-gradient-to-b from-grape-500 to-grape-400 px-5 py-4 text-white">
+            <div class="flex h-9 w-9 items-center justify-center rounded-full bg-white/20"><i data-lucide="arrow-left" class="h-4 w-4"></i></div>
+            <div>
+              <p class="text-[16px] font-900">Новая заявка</p>
+              <p class="text-[11px] font-700 text-white/80">Ищу попутку</p>
+            </div>
+          </div>
+
+          <div class="flex-1 space-y-4 px-4 py-4">
+            <div class="space-y-3 rounded-3xl border-2 border-grape-100 bg-white p-4 shadow-soft">
+              <div class="flex items-center gap-2 rounded-2xl bg-ink-50 px-4 py-3"><i data-lucide="map-pin" class="h-4 w-4 text-grape-500"></i><input value="Бишкек" class="w-full bg-transparent text-[15px] font-800 text-ink-900 outline-none"/></div>
+              <div class="flex items-center gap-2 rounded-2xl bg-ink-50 px-4 py-3"><i data-lucide="flag" class="h-4 w-4 text-grape-500"></i><input value="Ош" class="w-full bg-transparent text-[15px] font-800 text-ink-900 outline-none"/></div>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="rounded-full bg-grape-500 px-3.5 py-1.5 text-[12px] font-800 text-white">Завтра</span>
+              <span class="rounded-full border-2 border-ink-200 bg-white px-3.5 py-1.5 text-[12px] font-800 text-ink-600">Послезавтра</span>
+              <span class="inline-flex items-center gap-1 rounded-full bg-grape-100 px-3 py-1.5 text-[12px] font-900 text-grape-600"><i data-lucide="zap" class="h-3.5 w-3.5"></i> Гибко</span>
+            </div>
+
+            <div class="flex items-center justify-between rounded-2xl bg-white p-4 ring-1 ring-ink-100">
+              <div>
+                <p class="text-[14px] font-900 text-ink-900">Сколько мест нужно</p>
+                <div class="mt-1.5 flex">
+                  <span class="relative" style="z-index:20"><i data-lucide="user" class="seat h-6 w-6 text-grape-500"></i></span>
+                  <span class="relative -ml-2.5" style="z-index:10"><i data-lucide="user" class="seat h-6 w-6 text-grape-500"></i></span>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <button class="flex h-9 w-9 items-center justify-center rounded-full border-2 border-ink-200 text-[18px] font-900 text-ink-600">−</button>
+                <span class="text-[20px] font-900 text-grape-600">2</span>
+                <button class="flex h-9 w-9 items-center justify-center rounded-full border-2 border-ink-200 text-[18px] font-900 text-ink-600">+</button>
+              </div>
+            </div>
+
+            <div class="rounded-2xl bg-white p-4 ring-1 ring-ink-100">
+              <div class="mb-2 flex items-center justify-between">
+                <p class="text-[14px] font-900 text-ink-900">Бюджет</p>
+                <span class="inline-flex items-center gap-1.5 text-[12px] font-800 text-ink-500">Договорная <span class="relative h-6 w-10 rounded-full bg-ink-200"><span class="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow"></span></span></span>
+              </div>
+              <div class="flex items-center gap-2 rounded-xl bg-ink-50 px-4 py-2.5"><span class="text-[13px] font-800 text-ink-400">до</span><input value="1 500" class="w-full bg-transparent text-[15px] font-900 text-ink-900 outline-none"/><span class="text-[13px] font-800 text-ink-400">с</span></div>
+            </div>
+
+            <textarea rows="2" placeholder="Комментарий (необязательно)" class="w-full resize-none rounded-2xl bg-white px-4 py-3 text-[13px] font-600 text-ink-900 outline-none ring-1 ring-ink-100 placeholder:text-ink-400"></textarea>
+          </div>
+
+          <div class="bg-white px-4 py-4">
+            <button class="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-grape-500 text-[15px] font-900 text-white shadow-soft"><i data-lucide="hand" class="h-5 w-5"></i> Опубликовать заявку</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── 21. VIEWS / REACH (author) ───────────── -->
+    <section>
+      <h2 class="mb-1 text-[22px] font-900 text-ink-900">21 · Сколько посмотрели (для автора)</h2>
+      <p class="mb-5 text-[13px] font-700 text-ink-400">На своём объявлении автор видит охват: просмотры, лайки, отклики. Видно, что объявление «живое».</p>
+
+      <div class="grid gap-5 md:grid-cols-2">
+
+        <!-- reach card -->
+        <div class="rounded-3xl bg-white p-5 shadow-card">
+          <p class="mb-3 text-[11px] font-900 uppercase tracking-wider text-ink-400">Охват объявления</p>
+          <div class="mb-4 flex items-end gap-2">
+            <i data-lucide="eye" class="h-7 w-7 text-sky-500"></i>
+            <p class="text-[34px] font-900 leading-none text-ink-900">86</p>
+            <p class="mb-1 text-[13px] font-800 text-ink-400">человек посмотрели</p>
+          </div>
+          <!-- stacked viewer avatars -->
+          <div class="mb-4 flex items-center">
+            <span class="relative flex h-8 w-8 items-center justify-center rounded-full bg-grape-100 text-[11px] font-900 text-grape-600 ring-2 ring-white" style="z-index:50">Н</span>
+            <span class="relative -ml-2.5 flex h-8 w-8 items-center justify-center rounded-full bg-sky-100 text-[11px] font-900 text-sky-600 ring-2 ring-white" style="z-index:40">Б</span>
+            <span class="relative -ml-2.5 flex h-8 w-8 items-center justify-center rounded-full bg-accent-100 text-[11px] font-900 text-accent-600 ring-2 ring-white" style="z-index:30">Э</span>
+            <span class="relative -ml-2.5 flex h-8 w-8 items-center justify-center rounded-full bg-coral-100 text-[11px] font-900 text-coral-500 ring-2 ring-white" style="z-index:20">А</span>
+            <span class="relative -ml-2.5 flex h-8 w-8 items-center justify-center rounded-full bg-ink-800 text-[10px] font-900 text-white ring-2 ring-white" style="z-index:10">+82</span>
+          </div>
+          <div class="grid grid-cols-3 gap-2">
+            <div class="rounded-2xl bg-sky-100/60 p-3 text-center"><i data-lucide="eye" class="mx-auto mb-1 h-4 w-4 text-sky-600"></i><p class="text-[16px] font-900 text-ink-900">86</p><p class="text-[10px] font-700 text-ink-400">просмотров</p></div>
+            <div class="rounded-2xl bg-coral-100/60 p-3 text-center"><i data-lucide="heart" class="mx-auto mb-1 h-4 w-4 text-coral-500"></i><p class="text-[16px] font-900 text-ink-900">12</p><p class="text-[10px] font-700 text-ink-400">лайков</p></div>
+            <div class="rounded-2xl bg-brand-50 p-3 text-center"><i data-lucide="ticket" class="mx-auto mb-1 h-4 w-4 text-brand-600"></i><p class="text-[16px] font-900 text-ink-900">3</p><p class="text-[10px] font-700 text-ink-400">брони</p></div>
+          </div>
+          <p class="mt-3 inline-flex items-center gap-1.5 rounded-full bg-brand-50 px-3 py-1.5 text-[12px] font-800 text-brand-700"><i data-lucide="trending-up" class="h-3.5 w-3.5"></i> +14 просмотров сегодня</p>
+        </div>
+
+        <!-- compact metric on owner's own card -->
+        <div class="rounded-3xl bg-white p-5 shadow-card">
+          <p class="mb-3 text-[11px] font-900 uppercase tracking-wider text-ink-400">Метрика на своей карточке</p>
+          <article class="overflow-hidden rounded-2xl border-l-[5px] border-brand-500 bg-white ring-1 ring-ink-100">
+            <div class="flex items-center justify-between px-4 pt-3">
+              <span class="inline-flex items-center gap-1 rounded-full bg-brand-50 px-2.5 py-1 text-[11px] font-900 text-brand-700"><i data-lucide="car-front" class="h-3.5 w-3.5"></i> Поездка</span>
+              <span class="text-[12px] font-800 text-ink-500">Завтра, 09:00</span>
+            </div>
+            <div class="px-4 pb-3 pt-2">
+              <div class="flex items-center justify-between">
+                <p class="text-[15px] font-900 text-ink-900">Бишкек → Ош</p>
+                <p class="text-[18px] font-900 text-brand-700">1 200<span class="text-[12px]">с</span></p>
+              </div>
+              <div class="mt-2 flex items-center gap-3 border-t border-ink-100 pt-2 text-ink-500">
+                <span class="inline-flex items-center gap-1 text-[12px] font-800"><i data-lucide="eye" class="h-4 w-4 text-sky-500"></i> 86</span>
+                <span class="inline-flex items-center gap-1 text-[12px] font-800"><i data-lucide="heart" class="h-4 w-4 text-coral-400"></i> 12</span>
+                <span class="inline-flex items-center gap-1 text-[12px] font-800"><i data-lucide="ticket" class="h-4 w-4 text-brand-600"></i> 3</span>
+              </div>
+            </div>
+          </article>
+          <p class="mt-3 text-[12px] font-700 text-ink-400">Только автор видит эти цифры. Гостям показываем лишь «популярно», без точных чисел.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── 22. BOOKING ───────────── -->
+    <section>
+      <h2 class="mb-1 text-[22px] font-900 text-ink-900">22 · Бронирование</h2>
+      <p class="mb-5 text-[13px] font-700 text-ink-400">Выбор (места / весь салон) → запрос → статус (ожидает / принята / отклонена).</p>
+      <div class="flex flex-wrap gap-8">
+
+        <!-- booking screen -->
+        <div class="phone flex flex-col overflow-hidden bg-ink-50 shadow-soft ring-1 ring-ink-200">
+          <div class="flex items-center gap-3 bg-white px-5 py-4 ring-1 ring-ink-100">
+            <i data-lucide="arrow-left" class="h-5 w-5 text-ink-500"></i><p class="text-[16px] font-900 text-ink-900">Бронирование</p>
+          </div>
+          <div class="flex-1 space-y-4 px-4 py-4">
+            <div class="rounded-2xl bg-white p-4 shadow-card">
+              <div class="flex items-center justify-between"><p class="text-[15px] font-900 text-ink-900">Бишкек → Ош</p><span class="text-[12px] font-800 text-ink-500">завтра 09:00</span></div>
+              <p class="mt-1 text-[12px] font-700 text-ink-400">Азамат · Honda Fit</p>
+            </div>
+            <div class="space-y-3">
+              <div class="flex items-center gap-3 rounded-2xl border-2 border-brand-500 bg-brand-50 p-3">
+                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-600 text-white"><i data-lucide="user" class="h-5 w-5"></i></div>
+                <div class="flex-1"><p class="text-[14px] font-900 text-ink-900">По местам</p><p class="text-[12px] font-700 text-ink-400">1 200 с / место</p></div>
+                <i data-lucide="check-circle" class="h-5 w-5 text-brand-600"></i>
+              </div>
+              <div class="flex items-center gap-3 rounded-2xl border-2 border-ink-200 p-3">
+                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-100 text-sky-600"><i data-lucide="sofa" class="h-5 w-5"></i></div>
+                <div class="flex-1"><p class="text-[14px] font-900 text-ink-900">Весь салон</p><p class="text-[12px] font-700 text-ink-400">4 000 с · без подсадки</p></div>
+                <span class="h-5 w-5 rounded-full border-2 border-ink-300"></span>
+              </div>
+            </div>
+            <div class="flex items-center justify-between rounded-2xl bg-white p-4 ring-1 ring-ink-100">
+              <div><p class="text-[14px] font-900 text-ink-900">Сколько мест</p>
+                <div class="mt-1.5 flex"><span class="relative" style="z-index:10"><i data-lucide="user" class="seat h-6 w-6 text-brand-600"></i></span></div>
+              </div>
+              <div class="flex items-center gap-3"><button class="flex h-9 w-9 items-center justify-center rounded-full border-2 border-ink-200 text-[18px] font-900 text-ink-600">−</button><span class="text-[20px] font-900 text-brand-700">1</span><button class="flex h-9 w-9 items-center justify-center rounded-full border-2 border-ink-200 text-[18px] font-900 text-ink-600">+</button></div>
+            </div>
+            <textarea rows="2" placeholder="Сообщение водителю (необязательно)" class="w-full resize-none rounded-2xl bg-white px-4 py-3 text-[13px] font-600 text-ink-900 outline-none ring-1 ring-ink-100 placeholder:text-ink-400"></textarea>
+          </div>
+          <div class="bg-white px-4 py-4">
+            <div class="mb-3 flex items-center justify-between"><span class="text-[13px] font-700 text-ink-500">1 место × 1 200</span><span class="text-[18px] font-900 text-ink-900">1 200 с</span></div>
+            <button class="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 text-[15px] font-900 text-[#4A2C00] shadow-cta"><i data-lucide="check-circle" class="h-5 w-5"></i> Отправить запрос</button>
+          </div>
+        </div>
+
+        <!-- pending status -->
+        <div class="phone flex flex-col items-center justify-center gap-4 overflow-hidden bg-white px-6 text-center ring-1 ring-ink-200">
+          <div class="flex h-20 w-20 items-center justify-center rounded-full bg-accent-100 text-accent-600"><i data-lucide="clock" class="h-10 w-10"></i></div>
+          <p class="text-[20px] font-900 text-ink-900">Запрос отправлен</p>
+          <p class="max-w-[240px] text-[13px] font-700 text-ink-400">Ждём ответа Азамата. Обычно отвечают за ~10 минут.</p>
+          <div class="w-full rounded-2xl bg-ink-50 p-3 text-left"><p class="text-[13px] font-900 text-ink-900">Бишкек → Ош</p><p class="text-[12px] font-700 text-ink-400">завтра 09:00 · 1 место</p></div>
+          <button class="mt-1 w-full rounded-2xl border-2 border-ink-200 py-3 text-[14px] font-800 text-ink-600">Отменить запрос</button>
+        </div>
+
+        <!-- status badges -->
+        <div class="phone flex flex-col gap-3 overflow-hidden bg-white p-5 ring-1 ring-ink-200">
+          <p class="text-[11px] font-900 uppercase tracking-wider text-ink-400">Статусы брони</p>
+          <div class="flex items-center gap-3 rounded-2xl bg-accent-50 p-4"><div class="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-100 text-accent-600"><i data-lucide="clock" class="h-5 w-5"></i></div><div><p class="text-[14px] font-900 text-accent-700">Ожидает</p><p class="text-[12px] font-700 text-ink-500">Водитель ещё не ответил</p></div></div>
+          <div class="flex items-center gap-3 rounded-2xl bg-brand-50 p-4"><div class="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-600 text-white"><i data-lucide="check-circle" class="h-5 w-5"></i></div><div><p class="text-[14px] font-900 text-brand-700">Принята</p><p class="text-[12px] font-700 text-ink-500">Место за вами · можно писать в чат</p></div></div>
+          <div class="flex items-center gap-3 rounded-2xl bg-coral-100/50 p-4"><div class="flex h-11 w-11 items-center justify-center rounded-xl bg-coral-100 text-coral-500"><i data-lucide="x-circle" class="h-5 w-5"></i></div><div><p class="text-[14px] font-900 text-coral-600">Отклонена</p><p class="text-[12px] font-700 text-ink-500">Мест больше нет</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── 23. RATE AFTER TRIP ───────────── -->
+    <section>
+      <h2 class="mb-1 text-[22px] font-900 text-ink-900">23 · Оценка после поездки</h2>
+      <p class="mb-5 text-[13px] font-700 text-ink-400">Звёзды + быстрые теги + отзыв. Закрывает цикл поездки и строит доверие.</p>
+      <div class="phone flex flex-col overflow-hidden bg-ink-50 shadow-soft ring-1 ring-ink-200">
+        <div class="flex items-center gap-3 bg-white px-5 py-4 ring-1 ring-ink-100"><i data-lucide="arrow-left" class="h-5 w-5 text-ink-500"></i><p class="text-[16px] font-900 text-ink-900">Оценка поездки</p></div>
+        <div class="flex-1 space-y-5 px-5 py-6 text-center">
+          <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-grape-100 text-[26px] font-900 text-grape-600">А</div>
+          <div><p class="text-[18px] font-900 text-ink-900">Как прошла поездка?</p><p class="text-[13px] font-700 text-ink-400">с Азаматом · Бишкек → Ош</p></div>
+          <div class="flex justify-center gap-2">
+            <i data-lucide="star" class="h-10 w-10 fill-accent-400 text-accent-400"></i><i data-lucide="star" class="h-10 w-10 fill-accent-400 text-accent-400"></i><i data-lucide="star" class="h-10 w-10 fill-accent-400 text-accent-400"></i><i data-lucide="star" class="h-10 w-10 fill-accent-400 text-accent-400"></i><i data-lucide="star" class="h-10 w-10 text-ink-300"></i>
+          </div>
+          <div class="flex flex-wrap justify-center gap-2">
+            <span class="rounded-full bg-brand-50 px-3 py-1.5 text-[12px] font-800 text-brand-700">Пунктуальный</span>
+            <span class="rounded-full bg-brand-50 px-3 py-1.5 text-[12px] font-800 text-brand-700">Вежливый</span>
+            <span class="rounded-full border-2 border-ink-200 px-3 py-1.5 text-[12px] font-800 text-ink-500">Чистая машина</span>
+            <span class="rounded-full border-2 border-ink-200 px-3 py-1.5 text-[12px] font-800 text-ink-500">Безопасно</span>
+          </div>
+          <textarea rows="3" placeholder="Поделитесь впечатлением (необязательно)" class="w-full resize-none rounded-2xl bg-white px-4 py-3 text-[13px] font-600 text-ink-900 outline-none ring-1 ring-ink-200 placeholder:text-ink-400"></textarea>
+        </div>
+        <div class="bg-white px-4 py-4"><button class="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 text-[15px] font-900 text-[#4A2C00] shadow-cta"><i data-lucide="star" class="h-5 w-5"></i> Отправить отзыв</button></div>
+      </div>
+    </section>
+
+    <!-- ───────────── 24. MY LISTS + lifecycle ───────────── -->
+    <section>
+      <h2 class="mb-1 text-[22px] font-900 text-ink-900">24 · Мои поездки / брони / заявки</h2>
+      <p class="mb-5 text-[13px] font-700 text-ink-400">Вкладки + статус-бейджи: <b class="text-brand-700">активна</b> / <b class="text-ink-400">завершена</b> / <b class="text-coral-600">отменена</b>. Плашка «оцените» для завершённых.</p>
+      <div class="phone flex flex-col overflow-hidden bg-ink-50 shadow-soft ring-1 ring-ink-200">
+        <div class="bg-white px-5 pb-3 pt-4 ring-1 ring-ink-100">
+          <p class="mb-3 text-[18px] font-900 text-ink-900">Мои</p>
+          <div class="flex gap-1 rounded-2xl bg-ink-100 p-1">
+            <button class="flex-1 rounded-xl bg-white py-2 text-[13px] font-900 text-brand-700 shadow-sm">Поездки</button>
+            <button class="flex-1 rounded-xl py-2 text-[13px] font-800 text-ink-500">Брони</button>
+            <button class="flex-1 rounded-xl py-2 text-[13px] font-800 text-ink-500">Заявки</button>
+          </div>
+        </div>
+        <div class="flex-1 space-y-3 px-4 py-4">
+          <div class="flex items-center gap-3 rounded-2xl bg-accent-50 p-3.5 ring-1 ring-accent-200"><div class="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-500 text-[#4A2C00]"><i data-lucide="star" class="h-5 w-5"></i></div><div class="flex-1"><p class="text-[13px] font-900 text-ink-900">Поездку завершили</p><p class="text-[12px] font-700 text-ink-500">Оцените Эльдара</p></div><button class="rounded-xl bg-accent-500 px-3 py-1.5 text-[12px] font-900 text-[#4A2C00]">Оценить</button></div>
+
+          <div class="rounded-2xl bg-white p-4 shadow-card">
+            <div class="mb-1 flex items-center justify-between"><p class="text-[14px] font-900 text-ink-900">Бишкек → Ош</p><span class="rounded-full bg-brand-50 px-2.5 py-1 text-[11px] font-900 text-brand-700">Активна</span></div>
+            <p class="text-[12px] font-700 text-ink-400">завтра 09:00 · 2 из 4 свободно</p>
+          </div>
+          <div class="rounded-2xl bg-white p-4 shadow-card">
+            <div class="mb-1 flex items-center justify-between"><p class="text-[14px] font-900 text-ink-900">Бишкек → Каракол</p><span class="rounded-full bg-ink-100 px-2.5 py-1 text-[11px] font-900 text-ink-500">Завершена</span></div>
+            <p class="text-[12px] font-700 text-ink-400">12 июня · все места заняты</p>
+          </div>
+          <div class="rounded-2xl bg-white p-4 shadow-card opacity-80">
+            <div class="mb-1 flex items-center justify-between"><p class="text-[14px] font-900 text-ink-900">Ош → Джалал-Абад</p><span class="rounded-full bg-coral-100 px-2.5 py-1 text-[11px] font-900 text-coral-600">Отменена</span></div>
+            <p class="text-[12px] font-700 text-ink-400">10 июня · отменена водителем</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── 25. DRIVER: incoming bookings ───────────── -->
+    <section>
+      <h2 class="mb-1 text-[22px] font-900 text-ink-900">25 · Входящие брони (водитель)</h2>
+      <p class="mb-5 text-[13px] font-700 text-ink-400">Заявки на места по поездке: кто, сколько мест (человечки), принять / отклонить.</p>
+      <div class="phone flex flex-col overflow-hidden bg-ink-50 shadow-soft ring-1 ring-ink-200">
+        <div class="bg-white px-5 py-4 ring-1 ring-ink-100">
+          <div class="flex items-center gap-3"><i data-lucide="arrow-left" class="h-5 w-5 text-ink-500"></i><div><p class="text-[15px] font-900 text-ink-900">Заявки на места</p><p class="text-[12px] font-700 text-ink-400">Бишкек → Ош · завтра</p></div></div>
+          <div class="mt-3 flex items-center gap-2">
+            <div class="flex"><span class="relative" style="z-index:40"><i data-lucide="user" class="seat h-6 w-6 text-ink-300"></i></span><span class="relative -ml-2.5" style="z-index:30"><i data-lucide="user" class="seat h-6 w-6 text-ink-300"></i></span><span class="relative -ml-2.5" style="z-index:20"><i data-lucide="user" class="seat h-6 w-6 text-brand-600"></i></span><span class="relative -ml-2.5" style="z-index:10"><i data-lucide="user" class="seat h-6 w-6 text-brand-600"></i></span></div>
+            <span class="text-[12px] font-900 text-brand-700">2 из 4 свободно</span>
+          </div>
+        </div>
+        <div class="flex-1 space-y-3 px-4 py-4">
+          <div class="rounded-2xl bg-white p-4 shadow-card">
+            <div class="flex items-center gap-3"><div class="flex h-10 w-10 items-center justify-center rounded-full bg-grape-100 text-[14px] font-900 text-grape-600">Н</div><div class="flex-1"><p class="text-[14px] font-900 text-ink-900">Нурлан</p><p class="flex items-center gap-1 text-[12px] font-700 text-ink-400"><i data-lucide="star" class="h-3 w-3 fill-accent-400 text-accent-400"></i> 4.8</p></div>
+              <div class="flex items-center gap-1.5 rounded-full bg-grape-100 px-2.5 py-1 text-[12px] font-900 text-grape-600"><span class="flex"><span class="relative" style="z-index:10"><i data-lucide="user" class="seat h-4 w-4"></i></span><span class="relative -ml-2" style="z-index:0"><i data-lucide="user" class="seat h-4 w-4"></i></span></span> 2</div>
+            </div>
+            <p class="my-3 rounded-xl bg-ink-50 px-3 py-2 text-[12px] font-600 text-ink-600">«Можно с небольшим чемоданом?»</p>
+            <div class="flex gap-2"><button class="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-brand-600 py-2.5 text-[13px] font-900 text-white"><i data-lucide="check" class="h-4 w-4"></i> Принять</button><button class="flex-1 rounded-xl border-2 border-ink-200 py-2.5 text-[13px] font-800 text-ink-600">Отклонить</button></div>
+          </div>
+          <div class="rounded-2xl bg-white p-4 shadow-card">
+            <div class="flex items-center gap-3"><div class="flex h-10 w-10 items-center justify-center rounded-full bg-sky-100 text-[14px] font-900 text-sky-600">Б</div><div class="flex-1"><p class="text-[14px] font-900 text-ink-900">Бакыт</p><p class="text-[12px] font-700 text-ink-400">1 место</p></div><span class="inline-flex items-center gap-1 rounded-full bg-brand-50 px-2.5 py-1 text-[11px] font-900 text-brand-700"><i data-lucide="check-circle" class="h-3.5 w-3.5"></i> Принят</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── 26. AUTH ───────────── -->
+    <section>
+      <h2 class="mb-1 text-[22px] font-900 text-ink-900">26 · Авторизация</h2>
+      <p class="mb-5 text-[13px] font-700 text-ink-400">Вход по телефону или Telegram → код → имя. Минимум шагов.</p>
+      <div class="flex flex-wrap gap-8">
+
+        <!-- login -->
+        <div class="phone flex flex-col justify-center gap-5 overflow-hidden bg-white px-6 ring-1 ring-ink-200">
+          <div class="text-center">
+            <div class="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-600 text-white shadow-brandcta"><i data-lucide="car-front" class="h-7 w-7"></i></div>
+            <p class="text-[22px] font-900 text-ink-900">Вход в Tappjet</p>
+            <p class="text-[13px] font-700 text-ink-400">Введите номер — пришлём код</p>
+          </div>
+          <div class="flex items-center gap-2 rounded-2xl border-2 border-brand-500 bg-white px-4 py-3"><span class="text-[15px] font-800 text-ink-500">+996</span><input value="700 12 34 56" class="w-full bg-transparent text-[15px] font-800 text-ink-900 outline-none"/></div>
+          <button class="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 text-[15px] font-900 text-[#4A2C00] shadow-cta">Получить код <i data-lucide="arrow-right" class="h-5 w-5"></i></button>
+          <div class="flex items-center gap-3"><span class="h-px flex-1 bg-ink-200"></span><span class="text-[12px] font-800 text-ink-400">или</span><span class="h-px flex-1 bg-ink-200"></span></div>
+          <button class="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#0088cc] text-[15px] font-900 text-white"><i data-lucide="send" class="h-5 w-5"></i> Войти через Telegram</button>
+        </div>
+
+        <!-- otp -->
+        <div class="phone flex flex-col justify-center gap-5 overflow-hidden bg-white px-6 text-center ring-1 ring-ink-200">
+          <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-50 text-brand-600"><i data-lucide="shield-check" class="h-7 w-7"></i></div>
+          <div><p class="text-[20px] font-900 text-ink-900">Введите код</p><p class="text-[13px] font-700 text-ink-400">Отправили в Telegram</p></div>
+          <div class="flex justify-center gap-2">
+            <input value="4" class="h-14 w-11 rounded-2xl border-2 border-brand-500 bg-white text-center text-[22px] font-900 text-ink-900 outline-none"/>
+            <input value="2" class="h-14 w-11 rounded-2xl border-2 border-ink-200 bg-ink-50 text-center text-[22px] font-900 text-ink-900 outline-none"/>
+            <input value="7" class="h-14 w-11 rounded-2xl border-2 border-ink-200 bg-ink-50 text-center text-[22px] font-900 text-ink-900 outline-none"/>
+            <input class="h-14 w-11 rounded-2xl border-2 border-ink-200 bg-ink-50 text-center text-[22px] font-900 outline-none"/>
+            <input class="h-14 w-11 rounded-2xl border-2 border-ink-200 bg-ink-50 text-center text-[22px] font-900 outline-none"/>
+            <input class="h-14 w-11 rounded-2xl border-2 border-ink-200 bg-ink-50 text-center text-[22px] font-900 outline-none"/>
+          </div>
+          <button class="flex h-12 w-full items-center justify-center rounded-2xl bg-accent-500 text-[15px] font-900 text-[#4A2C00] shadow-cta">Подтвердить</button>
+          <p class="text-[12px] font-700 text-ink-400">Отправить заново через <span class="font-900 text-ink-600">0:42</span></p>
+        </div>
+
+        <!-- register name -->
+        <div class="phone flex flex-col justify-center gap-5 overflow-hidden bg-white px-6 ring-1 ring-ink-200">
+          <div class="text-center"><div class="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-grape-100 text-grape-600"><i data-lucide="user" class="h-7 w-7"></i></div><p class="text-[20px] font-900 text-ink-900">Как вас зовут?</p><p class="text-[13px] font-700 text-ink-400">Имя увидят попутчики</p></div>
+          <input value="Азамат" class="w-full rounded-2xl border-2 border-brand-500 bg-white px-4 py-3 text-[15px] font-800 text-ink-900 outline-none"/>
+          <button class="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-brand-600 text-[15px] font-900 text-white shadow-brandcta">Продолжить <i data-lucide="arrow-right" class="h-5 w-5"></i></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── 27. FILTERS ───────────── -->
+    <section>
+      <h2 class="mb-1 text-[22px] font-900 text-ink-900">27 · Фильтры и сортировка</h2>
+      <p class="mb-5 text-[13px] font-700 text-ink-400">Шторка снизу: сортировка, дата, цена, мест. Сбросить / Применить.</p>
+      <div class="phone relative flex items-end overflow-hidden bg-ink-800/40 p-4 ring-1 ring-ink-200">
+        <div class="w-full rounded-3xl bg-white p-5 shadow-soft">
+          <div class="mx-auto mb-4 h-1.5 w-12 rounded-full bg-ink-200"></div>
+          <p class="mb-4 text-[16px] font-900 text-ink-900">Фильтры</p>
+          <div class="space-y-4">
+            <div><p class="mb-2 text-[12px] font-900 text-ink-500">Сортировка</p><div class="flex flex-wrap gap-2"><span class="rounded-full bg-brand-600 px-3.5 py-1.5 text-[12px] font-800 text-white">По времени</span><span class="rounded-full border-2 border-ink-200 px-3.5 py-1.5 text-[12px] font-800 text-ink-600">Дешевле</span><span class="rounded-full border-2 border-ink-200 px-3.5 py-1.5 text-[12px] font-800 text-ink-600">По рейтингу</span></div></div>
+            <div><p class="mb-2 text-[12px] font-900 text-ink-500">Дата</p><div class="flex flex-wrap gap-2"><span class="rounded-full bg-brand-600 px-3.5 py-1.5 text-[12px] font-800 text-white">Сегодня</span><span class="rounded-full border-2 border-ink-200 px-3.5 py-1.5 text-[12px] font-800 text-ink-600">Завтра</span><span class="rounded-full border-2 border-ink-200 px-3.5 py-1.5 text-[12px] font-800 text-ink-600">Выбрать</span></div></div>
+            <div><p class="mb-2 text-[12px] font-900 text-ink-500">Цена, с</p><div class="flex items-center gap-2"><input value="500" class="w-full rounded-xl bg-ink-50 px-3 py-2.5 text-[14px] font-800 text-ink-900 outline-none"/><span class="text-ink-400">—</span><input value="2 000" class="w-full rounded-xl bg-ink-50 px-3 py-2.5 text-[14px] font-800 text-ink-900 outline-none"/></div></div>
+            <div class="flex items-center justify-between"><p class="text-[12px] font-900 text-ink-500">Минимум мест</p><div class="flex items-center gap-3"><button class="flex h-8 w-8 items-center justify-center rounded-full border-2 border-ink-200 font-900 text-ink-600">−</button><span class="text-[16px] font-900 text-ink-900">2</span><button class="flex h-8 w-8 items-center justify-center rounded-full border-2 border-ink-200 font-900 text-ink-600">+</button></div></div>
+          </div>
+          <div class="mt-5 flex gap-3"><button class="flex-1 rounded-2xl border-2 border-ink-200 py-3 text-[14px] font-800 text-ink-600">Сбросить</button><button class="flex-[2] rounded-2xl bg-brand-600 py-3 text-[14px] font-900 text-white shadow-brandcta">Показать 24</button></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── 28. CANCEL ───────────── -->
+    <section>
+      <h2 class="mb-1 text-[22px] font-900 text-ink-900">28 · Отмена + причина</h2>
+      <p class="mb-5 text-[13px] font-700 text-ink-400">Подтверждение отмены с выбором причины (нужно для аналитики и доверия).</p>
+      <div class="max-w-[420px] rounded-3xl bg-ink-800/40 p-6">
+        <div class="rounded-3xl bg-white p-6 shadow-soft">
+          <div class="mb-3 flex items-center gap-3"><div class="flex h-11 w-11 items-center justify-center rounded-full bg-coral-100 text-coral-500"><i data-lucide="x-circle" class="h-5 w-5"></i></div><p class="text-[17px] font-900 text-ink-900">Отменить бронь?</p></div>
+          <p class="mb-4 text-[13px] font-700 text-ink-500">Укажите причину:</p>
+          <div class="space-y-2">
+            <label class="flex items-center gap-3 rounded-2xl border-2 border-coral-400 bg-coral-100/30 p-3 text-[13px] font-800 text-ink-800"><span class="h-4 w-4 rounded-full border-[5px] border-coral-500"></span> Изменились планы</label>
+            <label class="flex items-center gap-3 rounded-2xl border-2 border-ink-200 p-3 text-[13px] font-800 text-ink-700"><span class="h-4 w-4 rounded-full border-2 border-ink-300"></span> Нашёл другой вариант</label>
+            <label class="flex items-center gap-3 rounded-2xl border-2 border-ink-200 p-3 text-[13px] font-800 text-ink-700"><span class="h-4 w-4 rounded-full border-2 border-ink-300"></span> Другое</label>
+          </div>
+          <div class="mt-5 flex gap-3"><button class="flex-1 rounded-2xl border-2 border-ink-200 py-3 text-[14px] font-800 text-ink-600">Назад</button><button class="flex-1 rounded-2xl bg-coral-500 py-3 text-[14px] font-900 text-white">Отменить бронь</button></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── 29. SETTINGS ───────────── -->
+    <section>
+      <h2 class="mb-1 text-[22px] font-900 text-ink-900">29 · Настройки</h2>
+      <p class="mb-5 text-[13px] font-700 text-ink-400">Язык RU / KY, уведомления, выход, удаление аккаунта.</p>
+      <div class="phone flex flex-col overflow-hidden bg-ink-50 shadow-soft ring-1 ring-ink-200">
+        <div class="bg-white px-5 py-4 ring-1 ring-ink-100"><p class="text-[18px] font-900 text-ink-900">Настройки</p></div>
+        <div class="flex-1 space-y-4 px-4 py-4">
+          <div class="rounded-2xl bg-white p-4 shadow-card">
+            <div class="mb-2 flex items-center gap-2"><i data-lucide="globe" class="h-4 w-4 text-brand-600"></i><p class="text-[13px] font-900 text-ink-900">Язык</p></div>
+            <div class="flex gap-1 rounded-xl bg-ink-100 p-1"><button class="flex-1 rounded-lg bg-white py-2 text-[13px] font-900 text-brand-700 shadow-sm">Русский</button><button class="flex-1 rounded-lg py-2 text-[13px] font-800 text-ink-500">Кыргызча</button></div>
+          </div>
+          <div class="divide-y divide-ink-100 rounded-2xl bg-white shadow-card">
+            <div class="flex items-center gap-3 px-5 py-3.5"><i data-lucide="bell" class="h-5 w-5 text-ink-500"></i><span class="flex-1 text-[14px] font-800 text-ink-800">Уведомления</span><span class="relative h-6 w-10 rounded-full bg-brand-600"><span class="absolute right-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow"></span></span></div>
+            <div class="flex items-center gap-3 px-5 py-3.5"><i data-lucide="message-circle" class="h-5 w-5 text-ink-500"></i><span class="flex-1 text-[14px] font-800 text-ink-800">Звук сообщений</span><span class="relative h-6 w-10 rounded-full bg-ink-200"><span class="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow"></span></span></div>
+          </div>
+          <div class="divide-y divide-ink-100 rounded-2xl bg-white shadow-card">
+            <button class="flex w-full items-center gap-3 px-5 py-3.5 text-left"><i data-lucide="log-out" class="h-5 w-5 text-ink-500"></i><span class="flex-1 text-[14px] font-800 text-ink-800">Выйти</span></button>
+            <button class="flex w-full items-center gap-3 px-5 py-3.5 text-left"><i data-lucide="trash-2" class="h-5 w-5 text-coral-500"></i><span class="flex-1 text-[14px] font-800 text-coral-600">Удалить аккаунт</span></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── 30. ROUTE WITH STOPS ───────────── -->
+    <section>
+      <h2 class="mb-1 text-[22px] font-900 text-ink-900">30 · Маршрут с остановками</h2>
+      <p class="mb-5 text-[13px] font-700 text-ink-400">Посадка / высадка по пути — таймлайн с промежуточными точками на детали поездки.</p>
+      <div class="max-w-[440px] rounded-3xl bg-white p-6 shadow-card">
+        <div class="flex gap-4">
+          <div class="flex flex-col items-center pt-1">
+            <span class="h-3.5 w-3.5 rounded-full border-2 border-brand-600 bg-white"></span>
+            <span class="my-1 h-7 w-0.5 bg-ink-200"></span>
+            <span class="h-2.5 w-2.5 rounded-full bg-sky-400"></span>
+            <span class="my-1 h-7 w-0.5 bg-ink-200"></span>
+            <span class="h-2.5 w-2.5 rounded-full bg-sky-400"></span>
+            <span class="my-1 h-7 w-0.5 bg-ink-200"></span>
+            <span class="h-3.5 w-3.5 rounded-full bg-accent-500"></span>
+          </div>
+          <div class="flex-1 space-y-[18px]">
+            <div><p class="text-[15px] font-900 text-ink-900">Бишкек</p><p class="text-[11px] font-800 uppercase tracking-wide text-brand-600">Отправление</p></div>
+            <div><p class="text-[14px] font-800 text-ink-700">Кара-Балта</p><p class="text-[11px] font-700 text-sky-600">посадка по пути</p></div>
+            <div><p class="text-[14px] font-800 text-ink-700">Токтогул</p><p class="text-[11px] font-700 text-sky-600">высадка по пути</p></div>
+            <div><p class="text-[15px] font-900 text-ink-900">Ош</p><p class="text-[11px] font-800 uppercase tracking-wide text-accent-600">Прибытие</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="border-t border-ink-200 pt-6 text-center text-[12px] font-700 text-ink-400">
+      Tappjet design system · вставь этот файл в Claude-артефакты и меняй дизайн. Классы Tailwind переносятся в React 1:1.
+    </footer>
+  </main>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>
