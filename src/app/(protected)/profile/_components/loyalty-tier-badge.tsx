@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 
 const TIER_COLORS: Record<string, string> = {
   novice: "bg-gray-100 text-gray-600",
-  traveler: "bg-blue-50 text-blue-700",
+  traveler: "bg-sky-50 text-sky-700",
   expert: "bg-purple-50 text-purple-700",
   elite: "bg-amber-50 text-amber-700",
 };

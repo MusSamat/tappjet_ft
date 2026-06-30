@@ -45,7 +45,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 const TIER_COLORS: Record<string, string> = {
-  traveler: "bg-blue-50 text-blue-700 border-blue-200",
+  traveler: "bg-sky-50 text-sky-700 border-sky-200",
   expert: "bg-purple-50 text-purple-700 border-purple-200",
   elite: "bg-amber-50 text-amber-700 border-amber-200",
 };

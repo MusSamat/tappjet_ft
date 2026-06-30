@@ -115,7 +115,7 @@ export function StepPreview({
       )}
 
       {createError && (
-        <div className="rounded-2xl bg-red-50 px-4 py-3 text-[13px] font-semibold text-red-700">
+        <div className="rounded-2xl bg-coral-50 px-4 py-3 text-[13px] font-semibold text-coral-700">
           {createError}
         </div>
       )}

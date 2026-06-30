@@ -62,7 +62,7 @@ export function PassengerCancelModal({
           type="button"
           onClick={onConfirm}
           disabled={isPending}
-          className="flex-1 rounded-xl bg-red-600 py-2.5 text-[13px] font-bold text-white hover:bg-red-700 disabled:opacity-50"
+          className="flex-1 rounded-xl bg-coral-600 py-2.5 text-[13px] font-bold text-white hover:bg-coral-700 disabled:opacity-50"
         >
           {isPending ? t("cancelling") : t("confirm_btn")}
         </button>

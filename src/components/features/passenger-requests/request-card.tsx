@@ -121,7 +121,7 @@ export function RequestCard({
           type="button"
           onClick={(e) => { e.stopPropagation(); onCancel(); }}
           disabled={cancelLoading}
-          className="flex-shrink-0 rounded-xl border border-gray-200 px-2.5 py-1 text-[11px] font-bold text-gray-500 hover:border-red-200 hover:text-red-600 disabled:opacity-40"
+          className="flex-shrink-0 rounded-xl border border-gray-200 px-2.5 py-1 text-[11px] font-bold text-gray-500 hover:border-coral-200 hover:text-coral-600 disabled:opacity-40"
         >
           {cancelLoading ? "…" : "Отменить"}
         </button>

@@ -228,7 +228,7 @@ export default function RatePage({ params }: Props) {
             </div>
 
             {errMsg && (
-              <p className="mt-3 rounded-xl bg-red-50 px-4 py-2 text-[13px] font-semibold text-red-700">{errMsg}</p>
+              <p className="mt-3 rounded-xl bg-coral-50 px-4 py-2 text-[13px] font-semibold text-coral-700">{errMsg}</p>
             )}
 
             <Button

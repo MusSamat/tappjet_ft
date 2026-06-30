@@ -129,7 +129,7 @@ export function RequestCard({
                 className={cn(
                   "rounded-full border-[1.5px] px-3 py-1.5 text-[12px] font-bold transition-colors",
                   reason === r
-                    ? "border-red-400 bg-red-50 text-red-700"
+                    ? "border-coral-400 bg-coral-50 text-coral-700"
                     : "border-gray-200 text-gray-700 hover:border-gray-300",
                 )}
               >
@@ -148,7 +148,7 @@ export function RequestCard({
             <button
               type="button"
               onClick={() => { onReject(reason); setShowReject(false); }}
-              className="rounded-xl bg-red-600 px-4 py-2 text-[13px] font-bold text-white hover:bg-red-700"
+              className="rounded-xl bg-coral-600 px-4 py-2 text-[13px] font-bold text-white hover:bg-coral-700"
             >
               {t("confirm_reject")}
             </button>

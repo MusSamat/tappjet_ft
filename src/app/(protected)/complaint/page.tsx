@@ -154,7 +154,7 @@ export default function ComplaintPage({ searchParams }: PageProps) {
           />
           <div className="mt-1 flex items-start justify-between gap-2">
             {errors.description ? (
-              <p className="text-[11px] font-semibold text-red-600">{errors.description.message}</p>
+              <p className="text-[11px] font-semibold text-coral-600">{errors.description.message}</p>
             ) : (
               <span />
             )}
@@ -192,7 +192,7 @@ export default function ComplaintPage({ searchParams }: PageProps) {
                 <button
                   type="button"
                   onClick={() => removeImage(idx)}
-                  className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-gray-900 text-white shadow hover:bg-red-600"
+                  className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-gray-900 text-white shadow hover:bg-coral-600"
                   aria-label={t("remove_photo_label", { n: idx + 1 })}
                 >
                   <X className="h-3 w-3" aria-hidden="true" />
@@ -218,7 +218,7 @@ export default function ComplaintPage({ searchParams }: PageProps) {
         </div>
 
         {errorMessage && (
-          <p className="text-[12px] font-semibold text-red-600">{errorMessage}</p>
+          <p className="text-[12px] font-semibold text-coral-600">{errorMessage}</p>
         )}
 
         <Button type="submit" variant="submit" size="lg" disabled={isPending} className="w-full">

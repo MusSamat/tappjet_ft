@@ -112,7 +112,7 @@ export function DriverBookingRow({
                 className={cn(
                   "rounded-full border-[1.5px] px-2.5 py-1 text-[11px] font-bold",
                   rejectReason === r
-                    ? "border-red-400 bg-red-50 text-red-700"
+                    ? "border-coral-400 bg-coral-50 text-coral-700"
                     : "border-gray-200 text-gray-600",
                 )}
               >
@@ -133,7 +133,7 @@ export function DriverBookingRow({
               type="button"
               onClick={onConfirmReject}
               disabled={rejectPending}
-              className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-red-600 py-2 text-[12px] font-bold text-white disabled:opacity-50"
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-coral-600 py-2 text-[12px] font-bold text-white disabled:opacity-50"
             >
               {rejectPending && <Spinner size={12} />}
               {t("reject_btn")}
@@ -176,7 +176,7 @@ export function DriverBookingRow({
             <button
               type="button"
               onClick={onCancelBooking}
-              className="flex items-center gap-1.5 rounded-xl border border-red-200 px-3 py-2 text-[12px] font-bold text-red-600 hover:bg-red-50"
+              className="flex items-center gap-1.5 rounded-xl border border-coral-200 px-3 py-2 text-[12px] font-bold text-coral-600 hover:bg-coral-50"
             >
               <X className="h-3.5 w-3.5" />
               {t("cancel_btn")}

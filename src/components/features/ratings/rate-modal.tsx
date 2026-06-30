@@ -203,7 +203,7 @@ export function RateModal({ rating, onClose }: Props) {
                   </div>
 
                   {errMsg && (
-                    <p className="mb-3 rounded-xl bg-red-50 px-4 py-2 text-[13px] font-semibold text-red-700">
+                    <p className="mb-3 rounded-xl bg-coral-50 px-4 py-2 text-[13px] font-semibold text-coral-700">
                       {errMsg}
                     </p>
                   )}

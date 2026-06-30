@@ -95,7 +95,7 @@ export function PassengerCard({ booking, pendingRating, onRate, onCancel }: {
             <button
               type="button"
               onClick={onCancel}
-              className="flex items-center gap-1.5 rounded-xl border border-gray-200 px-4 py-2 text-[13px] font-bold text-gray-600 hover:border-red-200 hover:text-red-600"
+              className="flex items-center gap-1.5 rounded-xl border border-gray-200 px-4 py-2 text-[13px] font-bold text-gray-600 hover:border-coral-200 hover:text-coral-600"
             >
               <X className="h-4 w-4" />
               {t("cancel_btn")}

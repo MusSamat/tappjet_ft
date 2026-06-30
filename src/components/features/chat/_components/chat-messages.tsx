@@ -83,7 +83,7 @@ export function ChatMessages({
       ) : (
         <>
           {sendError && (
-            <div className="mx-4 mb-1 rounded-xl bg-red-50 px-3 py-2 text-[12px] font-semibold text-red-700">
+            <div className="mx-4 mb-1 rounded-xl bg-coral-50 px-3 py-2 text-[12px] font-semibold text-coral-700">
               {sendError}
             </div>
           )}

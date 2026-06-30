@@ -129,7 +129,7 @@ export function CarPhotoUploader() {
           <p className="text-[11px] font-semibold text-teal-700">Фото обновлено</p>
         )}
         {error && (
-          <p className="text-[11px] font-semibold text-red-600">Ошибка загрузки. Попробуйте снова.</p>
+          <p className="text-[11px] font-semibold text-coral-600">Ошибка загрузки. Попробуйте снова.</p>
         )}
       </div>
 

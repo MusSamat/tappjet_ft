@@ -66,8 +66,8 @@ export function PassengerPanel({ trip, tripId }: { trip: TripDetail; tripId: str
   const STATUS_CFG: Record<string, { label: string; color: string; bg: string; dot: string }> = {
     pending:                { label: t("status_pending"),             color: "text-amber-800", bg: "bg-amber-50",  dot: "bg-amber-500" },
     accepted:               { label: t("status_accepted"),            color: "text-teal-800",  bg: "bg-teal-50",   dot: "bg-teal-500" },
-    completed:              { label: t("status_completed"),           color: "text-blue-700",  bg: "bg-blue-50",   dot: "bg-blue-400" },
-    rejected:               { label: t("status_rejected"),            color: "text-red-700",   bg: "bg-red-50",    dot: "bg-red-500"  },
+    completed:              { label: t("status_completed"),           color: "text-sky-700",  bg: "bg-sky-50",   dot: "bg-sky-400" },
+    rejected:               { label: t("status_rejected"),            color: "text-coral-700",   bg: "bg-coral-50",    dot: "bg-coral-500"  },
     cancelled_by_passenger: { label: t("status_cancelled_by_you"),   color: "text-gray-600",  bg: "bg-gray-100",  dot: "bg-gray-400" },
     cancelled_by_driver:    { label: t("status_cancelled_by_driver"), color: "text-gray-600",  bg: "bg-gray-100",  dot: "bg-gray-400" },
     expired:                { label: t("status_expired"),             color: "text-gray-500",  bg: "bg-gray-50",   dot: "bg-gray-300" },

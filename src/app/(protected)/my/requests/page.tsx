@@ -102,7 +102,7 @@ function OfferCard({
               type="button"
               disabled={acceptMut.isPending || declineMut.isPending}
               onClick={() => { setError(null); declineMut.mutate(); }}
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 hover:border-red-300 hover:text-red-600 disabled:opacity-40 transition-colors"
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 hover:border-coral-300 hover:text-coral-600 disabled:opacity-40 transition-colors"
               aria-label={t("reject_aria")}
             >
               {declineMut.isPending ? <Spinner size={14} /> : <X className="h-4 w-4" />}
@@ -120,7 +120,7 @@ function OfferCard({
           </span>
         )}
       </div>
-      {error && <p className="mt-2 text-[12px] font-semibold text-red-600">{error}</p>}
+      {error && <p className="mt-2 text-[12px] font-semibold text-coral-600">{error}</p>}
     </div>
   );
 }

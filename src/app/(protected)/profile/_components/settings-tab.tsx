@@ -91,7 +91,7 @@ export function SettingsTab({ isDriver, exportMutation, logoutMutation }: Props)
 
         <Link
           href="/profile/delete"
-          className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-[13px] font-semibold text-red-600 hover:bg-red-50"
+          className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-[13px] font-semibold text-coral-600 hover:bg-coral-50"
         >
           <Trash2 className="h-4 w-4" aria-hidden="true" />
           {t("delete_btn")}

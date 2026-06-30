@@ -155,7 +155,7 @@ export function AddPhoneModal({ open, onClose, onDone }: Props) {
         </ModalHeader>
 
         {error && (
-          <div className="mb-4 rounded-xl bg-red-50 px-3 py-2 text-[13px] font-semibold text-red-700">
+          <div className="mb-4 rounded-xl bg-coral-50 px-3 py-2 text-[13px] font-semibold text-coral-700">
             {error}
           </div>
         )}

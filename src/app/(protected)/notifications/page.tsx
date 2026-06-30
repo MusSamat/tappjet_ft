@@ -160,11 +160,11 @@ export default function NotificationsPage() {
             <Spinner size={24} />
           </div>
         ) : query.isError ? (
-          <div className="rounded-2xl border-[0.5px] border-red-100 bg-red-50 p-5 text-[13px] font-semibold text-red-700">
+          <div className="rounded-2xl border border-coral-200 bg-coral-50 p-5 text-[13px] font-semibold text-coral-600">
             {t("load_error")}
           </div>
         ) : notifications.length === 0 ? (
-          <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white p-10 text-center">
+          <div className="rounded-2xl border border-ink-100 bg-white p-10 text-center">
             <p className="text-[17px] font-bold text-gray-900">{t("empty_title")}</p>
             <p className="mt-2 text-[13px] text-gray-500">{t("empty_hint")}</p>
           </div>
@@ -183,7 +183,7 @@ export default function NotificationsPage() {
       </div>
 
       {/* Notification settings */}
-      <div className="mt-6 rounded-[20px] border-[0.5px] border-gray-200 bg-white p-5">
+      <div className="mt-6 rounded-3xl border border-ink-100 bg-white p-5">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-[16px] font-extrabold text-gray-900">{t("settings_title")}</h2>
           {prefsLoaded && (

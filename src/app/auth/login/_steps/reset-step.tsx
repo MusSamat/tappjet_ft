@@ -71,12 +71,12 @@ export function ResetStep({
           className={cn(
             "h-11 w-full rounded-xl border-[1.5px] bg-gray-50 px-3 text-[14px] font-semibold outline-none",
             confirmPassword && confirmPassword !== newPassword
-              ? "border-red-300 text-red-700"
+              ? "border-coral-300 text-coral-700"
               : "border-gray-200 text-gray-900 focus:border-teal-500",
           )}
         />
         {confirmPassword && confirmPassword !== newPassword && (
-          <p className="text-[11px] font-semibold text-red-600">{tl("passwords_mismatch")}</p>
+          <p className="text-[11px] font-semibold text-coral-600">{tl("passwords_mismatch")}</p>
         )}
       </div>
 

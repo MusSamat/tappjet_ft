@@ -12,16 +12,16 @@ import { cn } from "@/lib/utils/cn";
 const NOTIF_ICON_MAP: Record<string, { icon: React.ElementType; color: string }> = {
   new_booking_request:             { icon: Car,          color: "text-teal-600" },
   booking_accepted:                { icon: CheckCircle,  color: "text-teal-600" },
-  booking_rejected:                { icon: AlertCircle,  color: "text-red-500"  },
+  booking_rejected:                { icon: AlertCircle,  color: "text-coral-500"  },
   booking_expired:                 { icon: AlertCircle,  color: "text-amber-500" },
-  booking_cancelled_by_passenger:  { icon: AlertCircle,  color: "text-red-500"  },
-  booking_cancelled_by_driver:     { icon: AlertCircle,  color: "text-red-500"  },
-  trip_cancelled:                  { icon: Car,          color: "text-red-500"  },
+  booking_cancelled_by_passenger:  { icon: AlertCircle,  color: "text-coral-500"  },
+  booking_cancelled_by_driver:     { icon: AlertCircle,  color: "text-coral-500"  },
+  trip_cancelled:                  { icon: Car,          color: "text-coral-500"  },
   rating_received:                 { icon: Star,         color: "text-amber-500" },
-  rating_warning:                  { icon: AlertCircle,  color: "text-red-500"  },
+  rating_warning:                  { icon: AlertCircle,  color: "text-coral-500"  },
   verification_approved:           { icon: CheckCircle,  color: "text-teal-600" },
-  verification_rejected:           { icon: AlertCircle,  color: "text-red-500"  },
-  security_alert_reuse:            { icon: Shield,       color: "text-red-500"  },
+  verification_rejected:           { icon: AlertCircle,  color: "text-coral-500"  },
+  security_alert_reuse:            { icon: Shield,       color: "text-coral-500"  },
 };
 
 interface NotificationsTabProps {

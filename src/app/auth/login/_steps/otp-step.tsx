@@ -55,7 +55,7 @@ export function OtpStep({
               className={cn(
                 "h-14 w-12 rounded-xl border-[1.5px] bg-gray-50 text-center text-[24px] font-extrabold outline-none transition-colors",
                 serverError
-                  ? "border-red-400 text-red-700"
+                  ? "border-coral-400 text-coral-700"
                   : d
                     ? "border-teal-500 text-gray-900"
                     : "border-gray-200 text-gray-900 focus:border-teal-500",

@@ -5,14 +5,14 @@ import { cn } from "@/lib/utils/cn";
 
 const STATUS_CONFIG_STYLE = {
   pending:                { bg: "bg-amber-50",  text: "text-amber-800", dot: "bg-amber-500" },
-  viewed:                 { bg: "bg-blue-50",   text: "text-blue-700",  dot: "bg-blue-400" },
+  viewed:                 { bg: "bg-sky-50",   text: "text-sky-700",  dot: "bg-sky-400" },
   accepted:               { bg: "bg-teal-50",   text: "text-teal-800",  dot: "bg-teal-500" },
-  completed:              { bg: "bg-blue-50",   text: "text-blue-700",  dot: "bg-blue-400" },
-  rejected:               { bg: "bg-red-50",    text: "text-red-700",   dot: "bg-red-500"  },
+  completed:              { bg: "bg-sky-50",   text: "text-sky-700",  dot: "bg-sky-400" },
+  rejected:               { bg: "bg-coral-50",    text: "text-coral-700",   dot: "bg-coral-500"  },
   cancelled_by_passenger: { bg: "bg-gray-100",  text: "text-gray-600",  dot: "bg-gray-400" },
   cancelled_by_driver:    { bg: "bg-gray-100",  text: "text-gray-600",  dot: "bg-gray-400" },
-  cancelled_late:         { bg: "bg-red-50",    text: "text-red-700",   dot: "bg-red-400"  },
-  no_show:                { bg: "bg-red-50",    text: "text-red-700",   dot: "bg-red-400"  },
+  cancelled_late:         { bg: "bg-coral-50",    text: "text-coral-700",   dot: "bg-coral-400"  },
+  no_show:                { bg: "bg-coral-50",    text: "text-coral-700",   dot: "bg-coral-400"  },
   expired:                { bg: "bg-gray-100",  text: "text-gray-500",  dot: "bg-gray-300" },
 } as const;
 

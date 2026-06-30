@@ -21,8 +21,8 @@ export default function ProtectedError({
 
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center px-5 py-12 text-center">
-      <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-red-50">
-        <AlertTriangle className="h-7 w-7 text-red-500" aria-hidden="true" />
+      <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-coral-50">
+        <AlertTriangle className="h-7 w-7 text-coral-500" aria-hidden="true" />
       </div>
       <h1 className="text-[20px] font-extrabold text-gray-900">{t("page_title")}</h1>
       <p className="mt-2 max-w-sm text-[13px] text-gray-500">{t("page_desc")}</p>

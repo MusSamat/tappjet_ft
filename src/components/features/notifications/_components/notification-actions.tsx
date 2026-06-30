@@ -75,7 +75,7 @@ export function NotificationActions({ notification }: { notification: AppNotific
             type="button"
             onClick={() => decline()}
             disabled={accepting || declining}
-            className="inline-flex items-center gap-1.5 rounded-xl border border-red-200 px-3 py-1.5 text-[12px] font-bold text-red-600 hover:bg-red-50 disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-coral-200 px-3 py-1.5 text-[12px] font-bold text-coral-600 hover:bg-coral-50 disabled:opacity-50"
           >
             {declining ? <Spinner size={12} /> : <X className="h-3.5 w-3.5" aria-hidden="true" />}
             Отклонить

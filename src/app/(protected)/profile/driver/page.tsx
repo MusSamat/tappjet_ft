@@ -293,7 +293,7 @@ export default function DriverVerifyPage() {
                 <CheckCircle className="h-3.5 w-3.5" /> {t("change_btn")}
               </p>
             )}
-            {docError && <p className="mt-2 text-[12px] font-bold text-red-600">{docError}</p>}
+            {docError && <p className="mt-2 text-[12px] font-bold text-coral-600">{docError}</p>}
           </div>
 
           {currentDoc.key === "selfie" && (

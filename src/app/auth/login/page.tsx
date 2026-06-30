@@ -200,9 +200,9 @@ export default function LoginPage() {
 
         {/* Error banner */}
         {serverError && (
-          <div className="mb-5 flex items-start gap-2.5 rounded-[14px] bg-red-50 px-4 py-3">
-            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-red-500" aria-hidden />
-            <p className="text-[13px] font-semibold text-red-700">{serverError}</p>
+          <div className="mb-5 flex items-start gap-2.5 rounded-[14px] bg-coral-50 px-4 py-3">
+            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-coral-500" aria-hidden />
+            <p className="text-[13px] font-semibold text-coral-700">{serverError}</p>
           </div>
         )}
 
@@ -257,7 +257,7 @@ export default function LoginPage() {
                   className={cn(
                     "h-11 w-full rounded-[12px] border-[1.5px] bg-gray-50 px-3 pr-10 text-[14px] font-semibold outline-none transition-colors",
                     serverError
-                      ? "border-red-300 text-red-700"
+                      ? "border-coral-300 text-coral-700"
                       : "border-gray-200 text-gray-900 focus:border-teal-500",
                   )}
                 />

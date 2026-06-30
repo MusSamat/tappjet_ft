@@ -19,7 +19,7 @@ const TIER_COLORS: Record<Tier, {
   borderColor: string;
 }> = {
   novice:   { textColor: "text-gray-600",   bgColor: "bg-gray-100",   ringColor: "ring-gray-400",   progressBg: "bg-gray-500",   borderColor: "border-gray-200"   },
-  traveler: { textColor: "text-blue-700",   bgColor: "bg-blue-50",    ringColor: "ring-blue-400",   progressBg: "bg-blue-600",   borderColor: "border-blue-200"   },
+  traveler: { textColor: "text-sky-700",   bgColor: "bg-sky-50",    ringColor: "ring-sky-400",   progressBg: "bg-sky-600",   borderColor: "border-sky-200"   },
   expert:   { textColor: "text-purple-700", bgColor: "bg-purple-50",  ringColor: "ring-purple-400", progressBg: "bg-purple-600", borderColor: "border-purple-200" },
   elite:    { textColor: "text-amber-700",  bgColor: "bg-amber-50",   ringColor: "ring-amber-400",  progressBg: "bg-amber-500",  borderColor: "border-amber-200"  },
 };
@@ -215,7 +215,7 @@ export default function LoyaltyPage() {
                     </div>
                     <span className={cn(
                       "ml-3 flex-shrink-0 text-[16px] font-extrabold",
-                      tx.points > 0 ? "text-teal-600" : "text-red-500",
+                      tx.points > 0 ? "text-teal-600" : "text-coral-500",
                     )}>
                       {tx.points > 0 ? "+" : ""}{tx.points}
                     </span>

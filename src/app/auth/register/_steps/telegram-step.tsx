@@ -49,7 +49,7 @@ export function TelegramStep({ phone, token, deepLink, onVerified, onBack, onErr
   if (phase === "waiting") {
     return (
       <div className="flex flex-col gap-6">
-        <div className="rounded-2xl border border-blue-100 bg-blue-50 p-5 text-center">
+        <div className="rounded-2xl border border-sky-100 bg-sky-50 p-5 text-center">
           <p className="text-[28px]">✈️</p>
           <p className="mt-2 text-[15px] font-bold text-gray-900">{t("telegram_title")}</p>
           <p className="mt-1 text-[13px] text-gray-500">{t("telegram_hint")}</p>
