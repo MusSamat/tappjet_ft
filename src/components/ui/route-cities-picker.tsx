@@ -146,7 +146,7 @@ export function RouteCitiesPicker({
       {open && debounced.trim().length > 0 && (available.length > 0 || !isFetching) && (
         <ul
           style={popupStyle}
-          className="max-h-60 overflow-auto rounded-xl border border-gray-100 bg-white shadow-lg"
+          className="max-h-60 overflow-auto rounded-2xl border border-ink-100 bg-white shadow-soft"
         >
           {available.length === 0 ? (
             <li className="px-3 py-2 text-[12px] font-semibold text-gray-400">{emptyHint}</li>

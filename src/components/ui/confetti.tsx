@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-const COLORS = ["#F59E0B", "#0D9488", "#60A5FA", "#F472B6", "#34D399", "#FBBF24"];
+const COLORS = ["#F59E0B", "#0D9488", "#38BDF8", "#FB7185", "#8B5CF6", "#FBB924"];
 const COUNT = 28;
 
 interface Piece {

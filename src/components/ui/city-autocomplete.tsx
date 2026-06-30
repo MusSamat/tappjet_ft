@@ -258,7 +258,7 @@ export function CityAutocomplete({
           id={`${inputId}-list`}
           role="listbox"
           style={popupStyle}
-          className="overflow-hidden rounded-xl border border-gray-100 bg-white shadow-lg"
+          className="overflow-hidden rounded-2xl border border-ink-100 bg-white shadow-soft"
         >
           {showingPopular && (
             <li className="border-b border-gray-100 px-4 py-2">

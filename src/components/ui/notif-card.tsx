@@ -9,7 +9,7 @@ const notifVariants = cva("flex gap-3 rounded-2xl border-l-[4px] p-4", {
       info: "bg-teal-50 border-l-teal-500 text-gray-900",
       success: "bg-teal-50 border-l-success text-gray-900",
       warning: "bg-amber-50 border-l-amber-500 text-gray-900",
-      error: "bg-red-50 border-l-error text-gray-900",
+      error: "bg-coral-100/40 border-l-coral-500 text-gray-900",
     },
   },
   defaultVariants: { variant: "info" },

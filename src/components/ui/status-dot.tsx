@@ -6,11 +6,11 @@ const wrapperVariants = cva(
   {
     variants: {
       status: {
-        accepted: "bg-teal-50 text-teal-900",
-        pending: "bg-amber-50 text-amber-900",
-        rejected: "bg-red-50 text-error",
-        cancelled: "bg-gray-100 text-gray-700",
-        completed: "bg-teal-50 text-teal-900",
+        accepted: "bg-brand-50 text-brand-700",
+        pending: "bg-accent-100 text-accent-700",
+        rejected: "bg-coral-100 text-coral-600",
+        cancelled: "bg-ink-100 text-ink-600",
+        completed: "bg-brand-50 text-brand-700",
       },
     },
     defaultVariants: { status: "pending" },
@@ -20,11 +20,11 @@ const wrapperVariants = cva(
 const dotVariants = cva("h-2 w-2 rounded-full", {
   variants: {
     status: {
-      accepted: "bg-success",
-      pending: "bg-amber-500",
-      rejected: "bg-error",
-      cancelled: "bg-gray-500",
-      completed: "bg-success",
+      accepted: "bg-brand-500",
+      pending: "bg-accent-500",
+      rejected: "bg-coral-500",
+      cancelled: "bg-ink-400",
+      completed: "bg-brand-500",
     },
   },
   defaultVariants: { status: "pending" },

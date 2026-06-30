@@ -227,7 +227,7 @@ export function DatePicker({
                 key={d}
                 className={cn(
                   "text-center text-[11px] font-bold",
-                  i >= 5 ? "text-rose-400" : "text-gray-400",
+                  i >= 5 ? "text-coral-400" : "text-gray-400",
                 )}
               >
                 {d}
@@ -256,7 +256,7 @@ export function DatePicker({
                     selected && "bg-teal-600 font-bold text-white",
                     !selected && !disabled && "hover:bg-gray-100",
                     !selected && isToday && "ring-1 ring-teal-500 font-extrabold text-teal-600",
-                    !selected && !isToday && !disabled && weekend && "text-rose-500",
+                    !selected && !isToday && !disabled && weekend && "text-coral-500",
                     !selected && !isToday && !disabled && !weekend && "text-gray-800",
                   )}
                 >
