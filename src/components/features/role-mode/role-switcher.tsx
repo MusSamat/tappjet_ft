@@ -19,7 +19,7 @@ export function RoleSwitcher() {
         className={cn(
           "rounded-full px-3.5 py-1 transition-all",
           activeMode === "passenger"
-            ? "bg-teal-600 text-white shadow-sm"
+            ? "bg-grape-500 text-white shadow-sm"
             : "text-gray-500 hover:text-gray-700",
         )}
       >
@@ -31,7 +31,7 @@ export function RoleSwitcher() {
         className={cn(
           "rounded-full px-3.5 py-1 transition-all",
           activeMode === "driver"
-            ? "bg-sky-500 text-white shadow-sm"
+            ? "bg-brand-600 text-white shadow-sm"
             : "text-gray-500 hover:text-gray-700",
         )}
       >

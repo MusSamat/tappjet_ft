@@ -1,21 +1,23 @@
+// Role colour language — must match design/design-system.html:
+//   passenger = grape, driver = brand (teal). CTA stays amber elsewhere.
 export const ROLE_COLORS = {
   passenger: {
-    navActive:     "text-teal-600",
-    navActivePill: "bg-teal-50 text-teal-700",
-    avatarRingOn:  "ring-teal-600",
-    avatarRingOff: "ring-teal-200 hover:ring-teal-400",
-    avatarBgOn:    "bg-teal-600 text-white",
-    avatarBgOff:   "bg-teal-100 text-teal-700",
-    profileRing:   "ring-teal-500",
+    navActive:     "text-grape-600",
+    navActivePill: "bg-grape-100 text-grape-600",
+    avatarRingOn:  "ring-grape-500",
+    avatarRingOff: "ring-grape-200 hover:ring-grape-400",
+    avatarBgOn:    "bg-grape-500 text-white",
+    avatarBgOff:   "bg-grape-100 text-grape-600",
+    profileRing:   "ring-grape-500",
   },
   driver: {
-    navActive:     "text-sky-600",
-    navActivePill: "bg-sky-50 text-sky-700",
-    avatarRingOn:  "ring-sky-600",
-    avatarRingOff: "ring-sky-200 hover:ring-sky-400",
-    avatarBgOn:    "bg-sky-600 text-white",
-    avatarBgOff:   "bg-sky-100 text-sky-700",
-    profileRing:   "ring-sky-500",
+    navActive:     "text-brand-600",
+    navActivePill: "bg-brand-50 text-brand-700",
+    avatarRingOn:  "ring-brand-600",
+    avatarRingOff: "ring-brand-200 hover:ring-brand-400",
+    avatarBgOn:    "bg-brand-600 text-white",
+    avatarBgOff:   "bg-brand-100 text-brand-700",
+    profileRing:   "ring-brand-500",
   },
 } as const;
 

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Search, Plus, BookOpen, User, Users } from "lucide-react";
+import { Home, Search, Plus, BookOpen, User, Hand } from "lucide-react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { listIncomingBookings } from "@/lib/api/bookings";
@@ -48,8 +48,14 @@ export function BottomNav() {
         {/* Home */}
         <NavItem href="/" label={t("home")} icon={Home} active={active("/", true)} activeClass={colors.navActive} />
 
-        {/* Browse trips */}
-        <NavItem href="/trips" label={t("search")} icon={Search} active={active("/trips")} activeClass={colors.navActive} />
+        {/* Browse — role-aware: driver looks for requests, passenger for trips */}
+        <NavItem
+          href={isDriver ? "/requests" : "/trips"}
+          label={isDriver ? t("requests") : t("search")}
+          icon={isDriver ? Hand : Search}
+          active={isDriver ? active("/requests") : active("/trips")}
+          activeClass={colors.navActive}
+        />
 
         {/* Publish FAB */}
         <Link
@@ -61,9 +67,9 @@ export function BottomNav() {
             className={cn(
               "flex h-11 w-11 items-center justify-center rounded-[14px] shadow-md transition-colors",
               isDriver
-                ? "bg-gradient-to-br from-sky-400 to-sky-600 text-white"
+                ? "bg-gradient-to-br from-brand-500 to-brand-600 text-white"
                 : isAuthenticated
-                  ? "bg-gradient-to-br from-amber-400 to-amber-600 text-white"
+                  ? "bg-gradient-to-br from-grape-400 to-grape-600 text-white"
                   : "bg-gray-100 text-gray-400",
             )}
             style={{ marginTop: "-10px" }}
@@ -71,12 +77,12 @@ export function BottomNav() {
             {isDriver || !isAuthenticated ? (
               <Plus className="h-5 w-5" aria-hidden="true" />
             ) : (
-              <Users className="h-4 w-4" aria-hidden="true" />
+              <Hand className="h-4 w-4" aria-hidden="true" />
             )}
           </div>
           <span className={cn(
             "mt-0.5 text-[10px] font-bold",
-            isDriver ? "text-sky-600" : isAuthenticated ? "text-amber-600" : "text-gray-400",
+            isDriver ? "text-brand-600" : isAuthenticated ? "text-grape-600" : "text-gray-400",
           )}>
             {isDriver ? t("publish") : isAuthenticated ? t("create_request") : t("login")}
           </span>
@@ -130,7 +136,7 @@ export function BottomNav() {
                 {/* Mode indicator dot */}
                 <span className={cn(
                   "absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-[1.5px] border-white",
-                  isDriver ? "bg-sky-500" : "bg-amber-500",
+                  isDriver ? "bg-brand-500" : "bg-grape-500",
                 )} />
                 {unread > 0 && (
                   <span className="absolute -right-0.5 -top-0.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full border border-white bg-amber-500 px-0.5 text-[8px] font-extrabold leading-none text-white">
