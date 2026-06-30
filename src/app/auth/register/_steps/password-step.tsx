@@ -17,9 +17,12 @@ interface Props {
 export function PasswordStep({ onDone, onSkip, onError }: Props) {
   const t = useTranslations("auth.register");
   const [password, setPasswordValue] = useState("");
+  const [confirm, setConfirm] = useState("");
   const [touched, setTouched] = useState(false);
   const parsed = passwordSchema.safeParse(password);
   const errMsg = touched && !parsed.success ? parsed.error.issues[0]?.message : undefined;
+  const mismatch = confirm.length > 0 && confirm !== password;
+  const canSubmit = parsed.success && confirm === password;
 
   const mutation = useMutation({
     mutationFn: () => setPassword(password),
@@ -32,7 +35,7 @@ export function PasswordStep({ onDone, onSkip, onError }: Props) {
       onSubmit={(e) => {
         e.preventDefault();
         setTouched(true);
-        if (!parsed.success) return;
+        if (!canSubmit) return;
         mutation.mutate();
       }}
       className="flex flex-col gap-4"
@@ -58,8 +61,21 @@ export function PasswordStep({ onDone, onSkip, onError }: Props) {
         {errMsg && <span className="text-caption text-error">{errMsg}</span>}
       </div>
 
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="confirm">{t("confirm_password_label")}</Label>
+        <PasswordInput
+          id="confirm"
+          value={confirm}
+          onChange={(e) => setConfirm(e.target.value)}
+          placeholder={t("confirm_password_placeholder")}
+          autoComplete="new-password"
+          invalid={mismatch}
+        />
+        {mismatch && <span className="text-caption text-error">{t("passwords_mismatch")}</span>}
+      </div>
+
       <div className="flex flex-col gap-2">
-        <Button type="submit" variant="submit" size="lg" disabled={mutation.isPending || !parsed.success}>
+        <Button type="submit" variant="submit" size="lg" disabled={mutation.isPending || !canSubmit}>
           {mutation.isPending ? t("saving") : t("done")}
         </Button>
         <Button type="button" variant="ghost" size="lg" onClick={onSkip}>

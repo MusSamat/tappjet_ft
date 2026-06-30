@@ -210,7 +210,10 @@
       "telegram_open_btn": "Открыть бот в Telegram",
       "telegram_waiting": "Ожидаем подтверждения в Telegram…",
       "telegram_otp_prompt": "Введите код из Telegram, отправленный на номер",
-      "err_telegram_expired": "Ссылка устарела. Начните заново."
+      "err_telegram_expired": "Ссылка устарела. Начните заново.",
+      "confirm_password_label": "Повторите пароль",
+      "confirm_password_placeholder": "Повторите пароль",
+      "passwords_mismatch": "Пароли не совпадают"
     }
   },
   "trips": {
