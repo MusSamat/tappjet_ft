@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
+import { ArrowRight } from "lucide-react";
 import { initTelegramLink } from "@/lib/api/auth";
 import { phoneSchema } from "@/lib/validation/auth";
 import { Button, Label, PhoneInput } from "@/components/ui";
@@ -49,6 +50,7 @@ export function PhoneStep({ phone, onPhone, onNext, onError }: Props) {
       </div>
       <Button type="submit" variant="submit" size="lg" disabled={sendMutation.isPending}>
         {sendMutation.isPending ? t("sending") : t("get_code")}
+        <ArrowRight className="h-5 w-5" />
       </Button>
     </form>
   );

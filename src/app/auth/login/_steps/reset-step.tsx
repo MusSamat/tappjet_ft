@@ -30,14 +30,11 @@ export function ResetStep({
         <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-brand-50">
           <CheckCircle className="h-6 w-6 text-brand-600" aria-hidden="true" />
         </div>
-        <p className="text-[16px] font-extrabold text-ink-900">{tl("reset_title")}</p>
-        <p className="mt-1 text-[12px] font-semibold text-ink-500">{tl("reset_min_chars")}</p>
+        <p className="text-[16px] font-800 text-ink-900">{tl("reset_title")}</p>
+        <p className="mt-1 text-[12px] font-600 text-ink-500">{tl("reset_min_chars")}</p>
       </div>
 
       <div className="mb-3 flex flex-col gap-1.5">
-        <span className="text-[10px] font-bold uppercase tracking-widest text-ink-400">
-          {tl("new_password_label")}
-        </span>
         <div className="relative">
           <input
             ref={newPasswordRef}
@@ -45,7 +42,7 @@ export function ResetStep({
             value={newPassword}
             onChange={(e) => { setNewPassword(e.target.value); setServerError(null); }}
             placeholder={tl("new_password_placeholder")}
-            className="h-12 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 pr-10 text-[14px] font-semibold text-ink-900 outline-none focus:border-brand-500"
+            className="h-12 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 pr-10 text-[15px] font-800 text-ink-900 outline-none focus:border-brand-500"
           />
           <button
             type="button"
@@ -59,9 +56,6 @@ export function ResetStep({
       </div>
 
       <div className="mb-5 flex flex-col gap-1.5">
-        <span className="text-[10px] font-bold uppercase tracking-widest text-ink-400">
-          {tl("confirm_password_label")}
-        </span>
         <input
           type="password"
           value={confirmPassword}
@@ -69,14 +63,14 @@ export function ResetStep({
           onKeyDown={(e) => { if (e.key === "Enter" && canReset) resetMutation.mutate(); }}
           placeholder={tl("confirm_password_placeholder")}
           className={cn(
-            "h-12 w-full rounded-2xl border-2 bg-ink-50 px-3 text-[14px] font-semibold outline-none",
+            "h-12 w-full rounded-2xl border-2 bg-ink-50 px-4 text-[15px] font-800 outline-none",
             confirmPassword && confirmPassword !== newPassword
               ? "border-coral-300 text-coral-700"
               : "border-ink-200 text-ink-900 focus:border-brand-500",
           )}
         />
         {confirmPassword && confirmPassword !== newPassword && (
-          <p className="text-[11px] font-semibold text-coral-600">{tl("passwords_mismatch")}</p>
+          <p className="text-[11px] font-600 text-coral-600">{tl("passwords_mismatch")}</p>
         )}
       </div>
 
@@ -84,7 +78,7 @@ export function ResetStep({
         type="button"
         disabled={!canReset || resetMutation.isPending}
         onClick={() => resetMutation.mutate()}
-        className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 text-[14px] font-bold text-[#4A2C00] shadow-cta transition-colors hover:bg-accent-400 disabled:opacity-40"
+        className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 text-[15px] font-700 text-[#4A2C00] shadow-cta transition-colors hover:bg-accent-400 disabled:opacity-40"
       >
         {resetMutation.isPending ? tl("saving") : tl("save_password")}
       </button>
@@ -92,7 +86,7 @@ export function ResetStep({
       <button
         type="button"
         onClick={onSkip}
-        className="mt-3 w-full text-center text-[13px] font-semibold text-ink-500 hover:text-ink-700"
+        className="mt-3 w-full text-center text-[13px] font-800 text-ink-400 hover:text-ink-700"
       >
         {tl("skip_btn")}
       </button>

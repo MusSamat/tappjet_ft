@@ -10,7 +10,6 @@ import {
   loginWithPassword,
   resetPassword,
   initTelegramLink,
-  getTelegramLinkStatus,
   sendTelegramOtp,
   verifyOtp,
 } from "@/lib/api/auth";
@@ -25,7 +24,7 @@ import { ResetStep } from "./_steps/reset-step";
 import { cn } from "@/lib/utils/cn";
 import { SocialButtons } from "@/components/features/auth/social-buttons";
 
-type Step = "login" | "tg-forgot" | "otp" | "reset";
+type Step = "login" | "otp" | "reset";
 
 const FULL_PHONE_RE = /^\+996\d{9}$/;
 
@@ -44,11 +43,9 @@ export default function LoginPage() {
   const [digits, setDigits] = useState<string[]>(["", "", "", "", "", ""]);
   const [serverError, setServerError] = useState<string | null>(null);
   const [resendSeconds, setResendSeconds] = useState(0);
-  const [tgDeepLink, setTgDeepLink] = useState<{ token: string; deepLink: string } | null>(null);
 
   const passwordRef = useRef<HTMLInputElement>(null);
   const newPasswordRef = useRef<HTMLInputElement>(null);
-  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const digitRefs: React.RefObject<HTMLInputElement>[] = [
     useRef<HTMLInputElement>(null),
     useRef<HTMLInputElement>(null),
@@ -69,10 +66,6 @@ export default function LoginPage() {
     return () => clearInterval(t);
   }, [resendSeconds]);
 
-  useEffect(() => {
-    return () => { if (pollRef.current) clearInterval(pollRef.current); };
-  }, []);
-
   // ── Login with password ────────────────────────────────────────────────
   const loginMutation = useMutation({
     mutationFn: () => loginWithPassword(phone, password),
@@ -87,32 +80,13 @@ export default function LoginPage() {
   // ── Forgot password: initTelegramLink works for ALL users ─────────────
   const forgotMutation = useMutation({
     mutationFn: () => initTelegramLink(phone),
-    onSuccess: ({ token, deepLink }) => {
+    onSuccess: ({ deepLink }) => {
       setServerError(null);
-      setTgDeepLink({ token, deepLink });
-      window.open(deepLink, "_blank");
-      setStep("tg-forgot");
-      if (pollRef.current) clearInterval(pollRef.current);
-      pollRef.current = setInterval(async () => {
-        try {
-          const { status } = await getTelegramLinkStatus(token);
-          if (status === "sent") {
-            clearInterval(pollRef.current!);
-            pollRef.current = null;
-            setResendSeconds(60);
-            setStep("otp");
-            setTimeout(() => digitRefs[0]?.current?.focus(), 100);
-          } else if (status === "expired") {
-            clearInterval(pollRef.current!);
-            pollRef.current = null;
-            setTgDeepLink(null);
-            setStep("login");
-            setServerError("Ссылка истекла. Попробуйте снова.");
-          }
-        } catch {
-          // keep polling
-        }
-      }, 2000);
+      // Opening the deep-link triggers the bot's /start → auto-sends the OTP.
+      window.open(deepLink, "_blank", "noopener,noreferrer");
+      setResendSeconds(60);
+      setStep("otp");
+      setTimeout(() => digitRefs[0]?.current?.focus(), 100);
     },
     onError: (e) => setServerError(friendlyError(extractError(e))),
   });
@@ -201,22 +175,22 @@ export default function LoginPage() {
       className="flex min-h-[calc(100vh-64px)] items-center justify-center px-5 py-10"
       style={{ background: "linear-gradient(180deg, #ECFDF8 0%, #ffffff 60%)" }}
     >
-      <div className="w-full max-w-[420px] rounded-3xl border border-ink-100 bg-white p-8 shadow-soft">
+      <div className="w-full max-w-[380px] rounded-3xl border border-ink-100 bg-white p-7 shadow-soft">
 
         {/* Logo */}
         <div className="mb-7 text-center">
           <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-600 to-brand-500 shadow-brandcta">
-            <span className="text-[22px] font-black tracking-tight text-white">Tj</span>
+            <span className="text-[20px] font-900 tracking-tight text-white">Tj</span>
           </div>
-          <h1 className="text-[22px] font-extrabold text-ink-900">Вход в Tappjet</h1>
-          <p className="mt-1 text-[13px] font-medium text-ink-400">Попутчики и такси по Кыргызстану</p>
+          <h1 className="text-[20px] font-900 text-ink-900">Вход в Tappjet</h1>
+          <p className="mt-1 text-[13px] font-700 text-ink-400">Попутчики по Кыргызстану</p>
         </div>
 
         {/* Error banner */}
         {serverError && (
           <div className="mb-5 flex items-start gap-2.5 rounded-2xl bg-coral-50 px-4 py-3">
             <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-coral-500" aria-hidden />
-            <p className="text-[13px] font-semibold text-coral-700">{serverError}</p>
+            <p className="text-[13px] font-800 text-coral-600">{serverError}</p>
           </div>
         )}
 
@@ -225,41 +199,29 @@ export default function LoginPage() {
           <>
             <SocialButtons />
 
-            <div className="my-5 flex items-center gap-3">
-              <span className="h-px flex-1 bg-ink-100" />
-              <span className="text-[11px] font-bold uppercase tracking-widest text-ink-400">
+            <div className="my-4 flex items-center gap-3">
+              <span className="h-px flex-1 bg-ink-200" />
+              <span className="text-[11px] font-800 text-ink-400">
                 {tl("or_phone")}
               </span>
-              <span className="h-px flex-1 bg-ink-100" />
+              <span className="h-px flex-1 bg-ink-200" />
             </div>
 
             {/* Phone */}
             <div className="mb-3">
-              <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-widest text-ink-400">
-                {tl("phone_label")}
-              </label>
-              <div className="flex gap-2">
-                <div className="flex h-12 w-[52px] shrink-0 items-center justify-center rounded-2xl border-2 border-ink-200 text-[20px]">
-                  🇰🇬
-                </div>
-                <PhoneInput
-                  value={phone}
-                  onValueChange={(v) => { setPhone(v); setServerError(null); }}
-                  invalid={false}
-                  className="flex-1"
-                  placeholder="700 123 456"
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && FULL_PHONE_RE.test(phone)) passwordRef.current?.focus();
-                  }}
-                />
-              </div>
+              <PhoneInput
+                value={phone}
+                onValueChange={(v) => { setPhone(v); setServerError(null); }}
+                invalid={false}
+                placeholder="700 123 456"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && FULL_PHONE_RE.test(phone)) passwordRef.current?.focus();
+                }}
+              />
             </div>
 
             {/* Password */}
             <div className="mb-5">
-              <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-widest text-ink-400">
-                {tl("password_label")}
-              </label>
               <div className="relative">
                 <input
                   ref={passwordRef}
@@ -269,7 +231,7 @@ export default function LoginPage() {
                   onKeyDown={(e) => { if (e.key === "Enter" && canSubmitLogin) loginMutation.mutate(); }}
                   placeholder={tl("password_placeholder")}
                   className={cn(
-                    "h-12 w-full rounded-2xl border-2 bg-ink-50 px-3 pr-10 text-[14px] font-semibold outline-none transition-colors",
+                    "h-12 w-full rounded-2xl border-2 bg-ink-50 px-4 pr-10 text-[15px] font-800 outline-none transition-colors",
                     serverError
                       ? "border-coral-300 text-coral-700"
                       : "border-ink-200 text-ink-900 focus:border-brand-500",
@@ -291,7 +253,7 @@ export default function LoginPage() {
               type="button"
               disabled={!canSubmitLogin || loginMutation.isPending}
               onClick={() => loginMutation.mutate()}
-              className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 text-[14px] font-bold text-[#4A2C00] shadow-cta transition-colors hover:bg-accent-400 disabled:opacity-40"
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 text-[15px] font-900 text-[#4A2C00] shadow-cta transition-colors hover:bg-accent-400 disabled:opacity-40"
             >
               {loginMutation.isPending ? <><Spinner size={16} />{tl("logging_in")}</> : tl("login_btn")}
             </button>
@@ -302,70 +264,19 @@ export default function LoginPage() {
                 type="button"
                 disabled={tgAutoMutation.isPending || forgotMutation.isPending}
                 onClick={handleForgot}
-                className="flex items-center gap-1.5 text-[13px] font-semibold text-ink-500 hover:text-brand-600 disabled:opacity-50"
+                className="flex items-center gap-1.5 text-[13px] font-700 text-ink-500 hover:text-brand-600 disabled:opacity-50"
               >
                 {(tgAutoMutation.isPending || forgotMutation.isPending) && <Spinner size={13} />}
                 {tgAutoMutation.isPending || forgotMutation.isPending ? "Отправляем код…" : tl("forgot_password")}
               </button>
-              <p className="text-[12px] text-ink-400">
+              <p className="text-[12px] font-700 text-ink-400">
                 {tl("no_account")}{" "}
-                <Link href="/auth/register" className="font-bold text-brand-600 hover:text-brand-700">
+                <Link href="/auth/register" className="font-900 text-brand-700 hover:text-brand-700">
                   {tl("register_link")}
                 </Link>
               </p>
             </div>
           </>
-        )}
-
-        {/* ── Step: waiting for Telegram bot to send OTP ── */}
-        {step === "tg-forgot" && tgDeepLink && (
-          <div className="text-center">
-            <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-[#e8f4fc]">
-              <svg viewBox="0 0 24 24" fill="#0088cc" className="h-8 w-8" aria-hidden>
-                <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
-              </svg>
-            </div>
-
-            <h2 className="text-[20px] font-extrabold text-ink-900">Подтвердите в Telegram</h2>
-            <p className="mt-2 text-[13px] leading-relaxed text-ink-500">
-              Откройте бот{" "}
-              <span className="font-bold text-brand-600">@tappjet_bot</span>{" "}
-              и нажмите «Запустить» — получите код подтверждения
-            </p>
-
-            {/* Progress pulse */}
-            <div className="my-5 h-1.5 w-full overflow-hidden rounded-full bg-ink-100">
-              <div
-                className="h-full animate-pulse rounded-full bg-[#0088cc]"
-                style={{ width: "55%" }}
-              />
-            </div>
-
-            <a
-              href={tgDeepLink.deepLink}
-              target="_blank"
-              rel="noreferrer"
-              className="flex h-12 w-full items-center justify-center gap-2.5 rounded-2xl bg-[#0088cc] text-[14px] font-bold text-white transition-opacity hover:opacity-90"
-            >
-              <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 shrink-0" aria-hidden>
-                <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
-              </svg>
-              Открыть Telegram
-            </a>
-
-            <button
-              type="button"
-              className="mt-3 w-full text-[13px] font-semibold text-ink-400 hover:text-ink-600"
-              onClick={() => {
-                if (pollRef.current) clearInterval(pollRef.current);
-                setTgDeepLink(null);
-                setStep("login");
-                setServerError(null);
-              }}
-            >
-              ← Назад
-            </button>
-          </div>
         )}
 
         {/* ── Step: OTP input ── */}

@@ -7,7 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { updateProfile } from "@/lib/api/auth";
 import { nameSchema, languageSchema } from "@/lib/validation/auth";
-import { Button, Checkbox, Input, Label } from "@/components/ui";
+import { Button, Checkbox, Input } from "@/components/ui";
 
 interface Props {
   onSaved: (patch: { name: string; language: "ru" | "kg" }) => void;
@@ -44,40 +44,60 @@ export function ProfileStep({ onSaved, onError }: Props) {
       className="flex flex-col gap-4"
       noValidate
     >
-      <div className="flex flex-col gap-1.5">
-        <Label htmlFor="name">{t("name_label")}</Label>
+      <div className="space-y-1.5">
+        <label htmlFor="name" className="text-[11px] font-900 uppercase tracking-wider text-ink-400">
+          {t("name_label")}
+        </label>
         <Input
           id="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Асан"
           aria-invalid={Boolean(nameErr) || undefined}
+          className="rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 py-3 text-[15px] font-800"
         />
         {nameErr && <span className="text-caption text-coral-500">{nameErr}</span>}
       </div>
 
-      <div className="flex flex-col gap-1.5">
-        <Label htmlFor="language">{t("lang_label")}</Label>
-        <select
-          id="language"
-          value={language}
-          onChange={(e) => setLanguage(languageSchema.parse(e.target.value))}
-          className="flex h-12 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 text-body-lg font-bold text-ink-900 outline-none focus:border-brand-500 focus:bg-white"
-        >
-          <option value="ru">{tLocale("ru")}</option>
-          <option value="kg">{tLocale("kg")}</option>
-        </select>
+      <div className="space-y-1.5">
+        <label className="text-[11px] font-900 uppercase tracking-wider text-ink-400">
+          {t("lang_label")}
+        </label>
+        <div className="flex gap-1 rounded-2xl bg-ink-100 p-1">
+          <button
+            type="button"
+            onClick={() => setLanguage(languageSchema.parse("ru"))}
+            className={
+              language === "ru"
+                ? "flex-1 rounded-xl bg-white py-2 text-[13px] font-900 text-brand-700 shadow-sm"
+                : "flex-1 rounded-xl py-2 text-[13px] font-800 text-ink-500"
+            }
+          >
+            {tLocale("ru")}
+          </button>
+          <button
+            type="button"
+            onClick={() => setLanguage(languageSchema.parse("kg"))}
+            className={
+              language === "kg"
+                ? "flex-1 rounded-xl bg-white py-2 text-[13px] font-900 text-brand-700 shadow-sm"
+                : "flex-1 rounded-xl py-2 text-[13px] font-800 text-ink-500"
+            }
+          >
+            {tLocale("kg")}
+          </button>
+        </div>
       </div>
 
       <label className="flex items-start gap-2">
         <Checkbox id="terms" checked={terms} onCheckedChange={(v) => setTerms(v === true)} />
         <span className="text-body-lg text-ink-700">
           {t("terms_prefix")}{" "}
-          <Link href="/terms" className="font-bold text-brand-700 hover:text-brand-800">
+          <Link href="/terms" className="font-700 text-brand-700 hover:text-brand-800">
             {t("terms_link")}
           </Link>{" "}
           {t("terms_and")}{" "}
-          <Link href="/privacy" className="font-bold text-brand-700 hover:text-brand-800">
+          <Link href="/privacy" className="font-700 text-brand-700 hover:text-brand-800">
             {t("privacy_link")}
           </Link>
         </span>

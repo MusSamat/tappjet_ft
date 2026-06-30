@@ -13,9 +13,9 @@ import { cn } from "@/lib/utils/cn";
 import "./social-buttons-types";
 
 const baseBtn =
-  "flex h-12 w-full items-center justify-center gap-2 rounded-2xl border-2 border-ink-200 bg-white text-body-lg font-extrabold text-ink-700 transition-colors hover:bg-ink-50 focus-visible:border-brand-500 focus-visible:outline-none disabled:opacity-50";
+  "flex h-12 w-full items-center justify-center gap-2 rounded-2xl border-2 border-ink-200 bg-white text-body-lg font-800 text-ink-700 transition-colors hover:bg-ink-50 focus-visible:border-brand-500 focus-visible:outline-none disabled:opacity-50";
 
-const tgBtn = "border-[#0088cc] bg-[#0088cc] font-black text-white hover:bg-[#0088cc]/90";
+const tgBtn = "border-[#0088cc] bg-[#0088cc] font-900 text-white hover:bg-[#0088cc]/90";
 
 interface Props {
   onDone?: () => void;
@@ -116,7 +116,7 @@ export function SocialButtons({ onDone }: Props) {
           </a>
           <button
             type="button"
-            className="text-center text-[12px] font-semibold text-brand-600 hover:text-brand-700"
+            className="text-center text-[12px] font-700 text-brand-600 hover:text-brand-700"
             onClick={() => {
               window.open(tgBotLink.deepLink, "_blank");
             }}

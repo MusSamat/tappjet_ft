@@ -99,9 +99,9 @@ export const OtpInput = forwardRef<OtpInputHandle, OtpInputProps>(
             aria-label={`Цифра ${i + 1}`}
             aria-invalid={invalid || undefined}
             className={cn(
-              "h-12 w-10 rounded-2xl border-2 bg-white text-center text-h1 font-bold text-ink-900 outline-none transition-colors focus:border-brand-500",
-              invalid ? "border-coral-500" : "border-ink-200",
-              "disabled:opacity-50 sm:h-14 sm:w-12",
+              "h-14 w-11 rounded-2xl border-2 bg-ink-50 text-center text-[22px] font-900 text-ink-900 outline-none transition-colors focus:border-brand-500",
+              invalid ? "border-coral-500" : v ? "border-brand-500" : "border-ink-200",
+              "disabled:opacity-50",
             )}
           />
         ))}

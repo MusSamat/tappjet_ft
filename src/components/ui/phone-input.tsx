@@ -42,13 +42,13 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
       <div className="flex flex-col gap-1.5">
         <div
           className={cn(
-            "flex h-12 items-center gap-2 rounded-2xl border-2 bg-white px-4 transition-colors focus-within:border-brand-500",
+            "flex h-12 items-center gap-2 rounded-2xl border-2 bg-ink-50 px-4 transition-colors focus-within:border-brand-500",
             invalid ? "border-coral-400 bg-coral-100/40" : "border-ink-200",
             disabled && "opacity-50",
             className,
           )}
         >
-          <span className="select-none text-body-lg font-extrabold text-ink-500">{PREFIX}</span>
+          <span className="select-none text-[15px] font-800 text-ink-500">{PREFIX}</span>
           <input
             ref={ref}
             type="tel"
@@ -59,7 +59,7 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
             onChange={(e) => handleChange(e.target.value)}
             aria-invalid={invalid || undefined}
             disabled={disabled}
-            className="w-full border-none bg-transparent p-0 text-body-lg font-extrabold text-ink-900 outline-none placeholder:text-ink-400 placeholder:font-semibold"
+            className="w-full border-none bg-transparent p-0 text-[15px] font-800 text-ink-900 outline-none placeholder:text-ink-400 placeholder:font-700"
             {...rest}
           />
         </div>

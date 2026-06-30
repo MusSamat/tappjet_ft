@@ -25,20 +25,18 @@ export function OtpStep({
 }: Props) {
   return (
     <>
+      <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-sky-100"><span className="text-[32px] leading-none">✈️</span></div>
       <div className="mb-2 text-center">
-        <p className="text-[14px] text-ink-600">{tl("otp_reset_sent")}</p>
-        <p className="mt-1 text-[13px] font-semibold text-brand-700">{tl("otp_telegram_hint")}</p>
-        <p className="mt-1 text-[17px] font-bold text-ink-900">+996 {displayPhone}</p>
+        <p className="text-[17px] text-ink-600">{tl("otp_reset_sent")}</p>
+        <p className="mt-1 text-[13px] font-600 text-brand-700">{tl("otp_telegram_hint")}</p>
+        <p className="mt-1 text-[17px] font-700 text-ink-900">+996 {displayPhone}</p>
       </div>
 
-      <p className="mb-4 text-center text-[12px] font-semibold text-accent-700">
+      <p className="mb-4 text-center text-[12px] font-600 text-accent-700">
         {tl("otp_reset_hint")}
       </p>
 
       <div className="mb-5 flex flex-col gap-1.5">
-        <span className="text-[10px] font-bold uppercase tracking-widest text-ink-400">
-          {tl("otp_label")}
-        </span>
         <div className="flex justify-center gap-3">
           {digits.map((d, idx) => (
             <input
@@ -53,7 +51,7 @@ export function OtpStep({
               onKeyDown={(e) => onDigitKeyDown(idx, e)}
               onFocus={(e) => e.target.select()}
               className={cn(
-                "h-14 w-12 rounded-2xl border-2 bg-ink-50 text-center text-[24px] font-extrabold outline-none transition-colors",
+                "h-14 w-12 rounded-2xl border-2 bg-ink-50 text-center text-[24px] font-800 outline-none transition-colors",
                 serverError
                   ? "border-coral-400 text-coral-700"
                   : d
@@ -70,7 +68,7 @@ export function OtpStep({
         type="button"
         disabled={digits.some((d) => !d) || otp.length < 6 || verifyMutation.isPending || resendSeconds > 0}
         onClick={() => verifyMutation.mutate()}
-        className="flex h-12 w-full items-center justify-center rounded-2xl bg-accent-500 text-[14px] font-bold text-[#4A2C00] shadow-cta transition-colors hover:bg-accent-400 disabled:opacity-40"
+        className="flex h-12 w-full items-center justify-center rounded-2xl bg-accent-500 text-[15px] font-700 text-[#4A2C00] shadow-cta transition-colors hover:bg-accent-400 disabled:opacity-40"
       >
         {verifyMutation.isPending
           ? tl("verifying")
@@ -80,7 +78,7 @@ export function OtpStep({
       </button>
 
       <div className="mt-4 flex flex-col items-center gap-2">
-        <button type="button" onClick={onBack} className="text-[13px] font-bold text-ink-600 hover:text-ink-900">
+        <button type="button" onClick={onBack} className="text-[13px] font-700 text-ink-600 hover:text-ink-900">
           {tl("back_btn")}
         </button>
         {resendSeconds > 0 ? (
@@ -90,7 +88,7 @@ export function OtpStep({
             type="button"
             onClick={onResend}
             disabled={sendMutation.isPending}
-            className="text-[12px] font-bold text-brand-600 hover:text-brand-700"
+            className="text-[12px] font-700 text-brand-600 hover:text-brand-700"
           >
             {sendMutation.isPending ? tl("sending") : tl("resend_btn")}
           </button>

@@ -21,12 +21,12 @@ export function PhoneStep({ tl, phone, setPhone, setServerError, isPending, onCo
       </div>
       <div className="mb-5 flex items-center gap-3">
         <span className="h-px flex-1 bg-ink-200" />
-        <span className="text-[12px] font-semibold text-ink-400">{tl("or_phone")}</span>
+        <span className="text-[12px] font-600 text-ink-400">{tl("or_phone")}</span>
         <span className="h-px flex-1 bg-ink-200" />
       </div>
 
       <div className="mb-4 flex flex-col gap-1.5">
-        <span className="text-[10px] font-bold uppercase tracking-widest text-ink-400">
+        <span className="text-[10px] font-700 uppercase tracking-widest text-ink-400">
           {tl("phone_label")}
         </span>
         <PhoneInput
@@ -42,7 +42,7 @@ export function PhoneStep({ tl, phone, setPhone, setServerError, isPending, onCo
         type="button"
         disabled={!FULL_PHONE_RE.test(phone) || isPending}
         onClick={onContinue}
-        className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 text-[14px] font-bold text-[#4A2C00] transition-colors hover:bg-accent-600 disabled:opacity-40"
+        className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 text-[14px] font-700 text-[#4A2C00] transition-colors hover:bg-accent-600 disabled:opacity-40"
       >
         {isPending ? tl("checking") : tl("continue_btn")}
       </button>

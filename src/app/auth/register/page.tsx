@@ -58,7 +58,7 @@ export default function RegisterPage() {
         className="flex min-h-[calc(100vh-64px)] items-center justify-center px-5 py-10"
         style={{ background: "linear-gradient(180deg, #ECFDF8 0%, #ffffff 60%)" }}
       >
-        <div className="w-full max-w-[440px] rounded-3xl border border-ink-100 bg-white p-7 shadow-soft">
+        <div className="w-full max-w-[400px] rounded-3xl border border-ink-100 bg-white p-7 shadow-soft">
           <RoutePickerStep />
         </div>
       </div>
@@ -70,15 +70,15 @@ export default function RegisterPage() {
       className="flex min-h-[calc(100vh-64px)] items-center justify-center px-5 py-10"
       style={{ background: "linear-gradient(180deg, #ECFDF8 0%, #ffffff 60%)" }}
     >
-      <div className="w-full max-w-[440px] rounded-3xl border border-ink-100 bg-white p-7 shadow-soft">
+      <div className="w-full max-w-[400px] rounded-3xl border border-ink-100 bg-white p-7 shadow-soft">
         <div className="mb-5 text-center">
-          <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-600 to-brand-500 text-[20px] font-black text-white shadow-brandcta">
+          <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-600 to-brand-500 text-[20px] font-900 text-white shadow-brandcta">
             Tj
           </div>
-          <h1 className="text-[22px] font-extrabold text-ink-900">{t("title")}</h1>
-          <p className="mt-1 text-[13px] font-semibold text-ink-400">
+          <h1 className="text-[22px] font-800 text-ink-900">{t("title")}</h1>
+          <p className="mt-1 text-[13px] font-600 text-ink-400">
             {t("have_account")}{" "}
-            <Link href="/auth/login" className="font-extrabold text-brand-700 hover:text-brand-800">
+            <Link href="/auth/login" className="font-800 text-brand-700 hover:text-brand-800">
               {t("sign_in")}
             </Link>
           </p>
@@ -107,6 +107,8 @@ export default function RegisterPage() {
                 setLinkToken(token);
                 setDeepLink(dl);
                 setServerError(null);
+                // Opening the deep-link triggers the bot's /start → auto-sends the OTP.
+                if (dl) window.open(dl, "_blank", "noopener,noreferrer");
                 setStep("telegram");
               }}
               onError={handleError}
