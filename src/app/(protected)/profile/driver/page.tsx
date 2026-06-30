@@ -147,7 +147,7 @@ export default function DriverVerifyPage() {
       {/* Step 1 — car data */}
       {step === 1 && (
         <>
-          <div className="rounded-[20px] border-[0.5px] border-gray-200 bg-white p-5 shadow-sm">
+          <div className="rounded-3xl border border-ink-100 bg-white p-5 shadow-sm">
             <h2 className="mb-4 text-[16px] font-extrabold text-gray-900">{t("car_section")}</h2>
             <div className="flex flex-col gap-3">
               <div className="flex gap-2">
@@ -246,7 +246,7 @@ export default function DriverVerifyPage() {
       {/* Steps 2..5 — one document photo each */}
       {currentDoc && (
         <>
-          <div className="rounded-[20px] border-[0.5px] border-gray-200 bg-white p-5 shadow-sm">
+          <div className="rounded-3xl border border-ink-100 bg-white p-5 shadow-sm">
             <div className="mb-1 flex items-center gap-2">
               <currentDoc.icon className="h-[18px] w-[18px] text-teal-700" aria-hidden="true" />
               <h2 className="text-[16px] font-extrabold text-gray-900">
@@ -297,7 +297,7 @@ export default function DriverVerifyPage() {
           </div>
 
           {currentDoc.key === "selfie" && (
-            <div className="mt-4 rounded-[14px] bg-gray-50 px-4 py-3">
+            <div className="mt-4 rounded-2xl bg-gray-50 px-4 py-3">
               <div className="mb-1 flex items-center gap-2">
                 <Lock className="h-3.5 w-3.5 flex-shrink-0 text-gray-600" aria-hidden="true" />
                 <span className="text-[13px] font-bold text-gray-900">{t("privacy_note")}</span>

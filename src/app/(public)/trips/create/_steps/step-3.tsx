@@ -34,7 +34,7 @@ export function Step3({
     <div className="flex flex-col gap-4">
       <h2 className="text-[17px] font-bold text-gray-900">{t("step3_title")}</h2>
 
-      <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white p-5">
+      <div className="rounded-2xl border border-ink-100 bg-white p-5">
         <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-gray-400">
           {t("prefs_label")}
         </p>
@@ -59,7 +59,7 @@ export function Step3({
         </div>
       </div>
 
-      <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white p-5">
+      <div className="rounded-2xl border border-ink-100 bg-white p-5">
         <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-gray-400">
           {t("comment_label")}
         </p>

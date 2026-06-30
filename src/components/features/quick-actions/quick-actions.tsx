@@ -157,7 +157,7 @@ export function QuickActions() {
       {open && (
         <div
           ref={panelRef}
-          className="qa-panel-bottom fixed right-5 z-50 flex w-[340px] flex-col overflow-hidden rounded-2xl border-[0.5px] border-gray-200 bg-white shadow-2xl"
+          className="qa-panel-bottom fixed right-5 z-50 flex w-[340px] flex-col overflow-hidden rounded-2xl border border-ink-100 bg-white shadow-2xl"
           style={{ maxHeight: "60vh" }}
         >
           {/* Header */}

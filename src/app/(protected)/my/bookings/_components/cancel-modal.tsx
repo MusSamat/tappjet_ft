@@ -79,7 +79,7 @@ export function CancelModal({
           </p>
 
           {late && (
-            <div className="mt-4 flex items-start gap-3 rounded-[14px] bg-coral-50 p-4">
+            <div className="mt-4 flex items-start gap-3 rounded-2xl bg-coral-50 p-4">
               <AlertTriangle className="mt-0.5 h-4 w-4 flex-shrink-0 text-coral-600" />
               <div>
                 <p className="text-[13px] font-bold text-coral-800">{t("late_cancel")}</p>
@@ -90,7 +90,7 @@ export function CancelModal({
             </div>
           )}
 
-          <div className="mt-4 rounded-[14px] bg-gray-50 p-4 text-[12px] text-gray-600">
+          <div className="mt-4 rounded-2xl bg-gray-50 p-4 text-[12px] text-gray-600">
             <p className="font-bold text-gray-800">{t("cancel_policy_title")}</p>
             <ul className="mt-1.5 space-y-1">
               <li>{t("cancel_policy_free", { n: LATE_CANCEL_HOURS })}</li>
@@ -105,7 +105,7 @@ export function CancelModal({
               onClick={onConfirm}
               disabled={isPending}
               className={cn(
-                "w-full rounded-[14px] py-3 text-[15px] font-bold transition-colors",
+                "w-full rounded-2xl py-3 text-[15px] font-bold transition-colors",
                 late
                   ? "bg-coral-600 text-white hover:bg-coral-700 disabled:opacity-50"
                   : "bg-gray-900 text-white hover:bg-gray-800 disabled:opacity-50",
@@ -116,7 +116,7 @@ export function CancelModal({
             <button
               type="button"
               onClick={onClose}
-              className="w-full rounded-[14px] border border-gray-200 py-3 text-[15px] font-bold text-gray-700 hover:bg-gray-50"
+              className="w-full rounded-2xl border border-gray-200 py-3 text-[15px] font-bold text-gray-700 hover:bg-gray-50"
             >
               {t("keep_booking")}
             </button>

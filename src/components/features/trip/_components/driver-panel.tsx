@@ -106,7 +106,7 @@ export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="rounded-2xl border-[0.5px] border-gray-300 bg-white p-5">
+      <div className="rounded-2xl border border-ink-200 bg-white p-5">
         <div className="mb-4 flex items-center justify-between">
           <p className="text-[13px] font-extrabold text-gray-900">{t("trip_control_title")}</p>
           <span className={cn(
@@ -164,11 +164,11 @@ export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string
       ))}
 
       {isLoading ? (
-        <div className="flex justify-center rounded-2xl border-[0.5px] border-gray-200 bg-white py-8">
+        <div className="flex justify-center rounded-2xl border border-ink-100 bg-white py-8">
           <Spinner size={20} />
         </div>
       ) : bookings.length === 0 ? (
-        <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white p-6 text-center">
+        <div className="rounded-2xl border border-ink-100 bg-white p-6 text-center">
           <Users className="mx-auto mb-2 h-8 w-8 text-gray-300" />
           <p className="text-[14px] font-bold text-gray-700">{t("no_requests")}</p>
         </div>

@@ -32,7 +32,7 @@ export function RoutePickerStep() {
               localStorage.setItem("tappjet_onboarding_done", "1");
               router.replace(`/trips?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`);
             }}
-            className="flex flex-col items-start rounded-[16px] border-[1.5px] border-gray-200 bg-white p-4 text-left transition-all hover:border-teal-400 hover:shadow-sm active:scale-[0.97]"
+            className="flex flex-col items-start rounded-2xl border-[1.5px] border-gray-200 bg-white p-4 text-left transition-all hover:border-teal-400 hover:shadow-sm active:scale-[0.97]"
           >
             <span className="text-[15px] font-extrabold text-gray-900">{from}</span>
             <span className="mt-0.5 text-[11px] font-bold uppercase tracking-widest text-gray-400">↓</span>

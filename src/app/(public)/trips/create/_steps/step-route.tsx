@@ -34,7 +34,7 @@ export function StepRoute({
     <div className="flex flex-col gap-5">
       <h2 className="text-[17px] font-bold text-gray-900">{t("step1_title")}</h2>
 
-      <div className="flex flex-col gap-3 rounded-2xl border-[0.5px] border-gray-200 bg-white p-5">
+      <div className="flex flex-col gap-3 rounded-2xl border border-ink-100 bg-white p-5">
         <CityAutocomplete
           label={t("from_label")}
           value={originCity}

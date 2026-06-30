@@ -11,7 +11,7 @@ import type { TripDetail } from "@/lib/api/trips";
 function BookView({ trip }: { trip: TripDetail }) {
   const t = useTranslations("trip_actions");
   return (
-    <div className="rounded-2xl border-[0.5px] border-gray-300 bg-white p-5">
+    <div className="rounded-2xl border border-ink-200 bg-white p-5">
       <div className="mb-4 flex items-baseline justify-between">
         <span className="text-display font-extrabold text-teal-700">
           {formatPrice((trip.pricePerSeat as number | undefined) ?? 0)}
@@ -38,7 +38,7 @@ export function TripActionsPanel({ trip }: { trip: TripDetail }) {
 
   if (status === "loading" || status === "idle") {
     return (
-      <div className="rounded-2xl border-[0.5px] border-gray-300 bg-white p-5">
+      <div className="rounded-2xl border border-ink-200 bg-white p-5">
         <div className="mb-4 h-9 w-28 animate-pulse rounded-lg bg-gray-100" />
         <div className="mb-3 h-4 w-full animate-pulse rounded bg-gray-100" />
         <div className="h-12 animate-pulse rounded-xl bg-gray-100" />

@@ -135,7 +135,7 @@ export default function RatePage({ params }: Props) {
         {t("back")}
       </button>
 
-      <div className="rounded-[20px] border-[0.5px] border-gray-200 bg-white p-6 shadow-sm">
+      <div className="rounded-3xl border border-ink-100 bg-white p-6 shadow-sm">
         <div className="flex flex-col items-center gap-3 text-center">
           <DriverAvatar name={pending.counterpartName} size="lg" />
           <div>
@@ -217,7 +217,7 @@ export default function RatePage({ params }: Props) {
             </div>
 
             {/* Mutual review notice */}
-            <div className="mt-4 rounded-[14px] bg-gray-50 p-3">
+            <div className="mt-4 rounded-2xl bg-gray-50 p-3">
               <div className="flex items-center gap-2 mb-1">
                 <svg className="h-3.5 w-3.5 text-gray-700 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V5l8-3 8 3v8z"/><path d="m9 12 2 2 4-4"/></svg>
                 <span className="text-[13px] font-bold text-gray-900">{t("blind_title")}</span>

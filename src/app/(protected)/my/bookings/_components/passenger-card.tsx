@@ -41,7 +41,7 @@ export function PassengerCard({ booking, pendingRating, onRate, onCancel }: {
   const status = booking.status as string;
 
   return (
-    <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white p-5 transition-shadow hover:shadow-md">
+    <div className="rounded-2xl border border-ink-100 bg-white p-5 transition-shadow hover:shadow-md">
       <Link href={tripId ? `/trips/${tripId}` : "#"} className="block">
         <div className="flex items-start justify-between gap-3">
           <div className="flex min-w-0 flex-1 items-center gap-3">

@@ -71,7 +71,7 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
 
   if (step === "waiting") {
     return (
-      <div className="rounded-[20px] border-[0.5px] border-gray-200 bg-white p-8 text-center shadow-sm">
+      <div className="rounded-3xl border border-ink-100 bg-white p-8 text-center shadow-sm">
         <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-amber-50">
           <Clock className="h-9 w-9 text-amber-500" aria-hidden="true" />
         </div>
@@ -86,7 +86,7 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
         </div>
 
         {/* Pre-booking chat notice */}
-        <div className="mx-auto mt-5 max-w-[400px] rounded-[14px] border border-teal-100 bg-teal-50 px-4 py-3 text-left">
+        <div className="mx-auto mt-5 max-w-[400px] rounded-2xl border border-teal-100 bg-teal-50 px-4 py-3 text-left">
           <div className="flex items-center gap-2 mb-1">
             <MessageCircle className="h-3.5 w-3.5 text-teal-700 flex-shrink-0" aria-hidden="true" />
             <span className="text-[13px] font-extrabold text-teal-800">Чат до бронирования</span>
@@ -138,7 +138,7 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
       )}
 
       {/* Seat stepper */}
-      <div className="rounded-[16px] border-[0.5px] border-gray-300 bg-white p-4">
+      <div className="rounded-2xl border border-ink-200 bg-white p-4">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-[15px] font-bold text-gray-900">Количество мест</p>
@@ -194,7 +194,7 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
       </div>
 
       {/* Price summary */}
-      <div className="rounded-[16px] border border-teal-100 bg-teal-50 p-4">
+      <div className="rounded-2xl border border-teal-100 bg-teal-50 p-4">
         <div className="flex items-center justify-between">
           <span className="text-[15px] font-extrabold text-gray-900">К оплате водителю</span>
           <span className="text-[24px] font-extrabold text-teal-700">{formatPrice(total)}</span>
@@ -205,7 +205,7 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
       </div>
 
       {/* Warning */}
-      <div className="rounded-[14px] border border-amber-100 bg-amber-50 px-3 py-2.5">
+      <div className="rounded-2xl border border-amber-100 bg-amber-50 px-3 py-2.5">
         <div className="flex items-center gap-2">
           <AlertTriangle className="h-3.5 w-3.5 flex-shrink-0 text-amber-600" aria-hidden="true" />
           <span className="text-[13px] font-bold text-gray-900">Водитель может отклонить запрос</span>

@@ -47,7 +47,7 @@ export default async function BookTripPage({ params, searchParams }: Props) {
       <p className="mt-1 text-[13px] font-semibold text-gray-500">{t("subtitle")}</p>
 
       {/* Driver + trip card */}
-      <div className="mt-5 rounded-[20px] border-[0.5px] border-gray-200 bg-white p-5 shadow-sm">
+      <div className="mt-5 rounded-3xl border border-ink-100 bg-white p-5 shadow-sm">
         {/* Driver row */}
         <div className="flex items-center gap-3 mb-4">
           <DriverAvatar name={driver?.name ?? "?"} src={driver?.avatarUrl ?? null} size="lg" />

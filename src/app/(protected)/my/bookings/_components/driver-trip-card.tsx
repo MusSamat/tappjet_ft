@@ -34,7 +34,7 @@ export function DriverTripCard({ trip, onComplete, completing, onCancel }: {
     : trip.status === "active" ? "bg-teal-50 text-teal-700" : "bg-gray-100 text-gray-600";
 
   return (
-    <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white p-5 transition-shadow hover:shadow-md">
+    <div className="rounded-2xl border border-ink-100 bg-white p-5 transition-shadow hover:shadow-md">
       <Link href={`/trips/${trip.id}`} className="block">
         <div className="flex items-start justify-between gap-3">
           <div>

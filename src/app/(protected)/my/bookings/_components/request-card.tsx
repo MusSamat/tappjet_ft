@@ -64,7 +64,7 @@ export function RequestCard({
   ];
 
   return (
-    <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white p-5">
+    <div className="rounded-2xl border border-ink-100 bg-white p-5">
       <div className="mb-3 flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
           {passengerId ? (

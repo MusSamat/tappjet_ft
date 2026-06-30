@@ -79,7 +79,7 @@ export function BookingCard({ booking, role }: Props) {
   const canChat = status === "accepted" || status === "completed";
 
   return (
-    <article className="flex flex-col gap-3 rounded-2xl border-[0.5px] border-gray-300 bg-white p-4">
+    <article className="flex flex-col gap-3 rounded-2xl border border-ink-200 bg-white p-4">
       <div className="flex items-start justify-between gap-3">
         <div className="flex flex-col gap-1">
           {trip?.departureAt && (

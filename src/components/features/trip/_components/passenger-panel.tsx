@@ -38,7 +38,7 @@ function tripIdOf(b: BookingExt): string | undefined {
 function BookView({ trip }: { trip: TripDetail }) {
   const t = useTranslations("trip_actions");
   return (
-    <div className="rounded-2xl border-[0.5px] border-gray-300 bg-white p-5">
+    <div className="rounded-2xl border border-ink-200 bg-white p-5">
       <div className="mb-4 flex items-baseline justify-between">
         <span className="text-display font-extrabold text-teal-700">
           {formatPrice((trip.pricePerSeat as number | undefined) ?? 0)}
@@ -105,7 +105,7 @@ export function PassengerPanel({ trip, tripId }: { trip: TripDetail; tripId: str
 
   if (isLoading) {
     return (
-      <div className="flex justify-center rounded-2xl border-[0.5px] border-gray-300 bg-white py-10">
+      <div className="flex justify-center rounded-2xl border border-ink-200 bg-white py-10">
         <Spinner size={24} />
       </div>
     );
@@ -121,7 +121,7 @@ export function PassengerPanel({ trip, tripId }: { trip: TripDetail; tripId: str
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="rounded-2xl border-[0.5px] border-gray-300 bg-white p-5">
+      <div className="rounded-2xl border border-ink-200 bg-white p-5">
         <div className="mb-4 flex items-center justify-between">
           <p className="text-[11px] font-bold uppercase tracking-widest text-gray-400">
             {t("your_booking")}

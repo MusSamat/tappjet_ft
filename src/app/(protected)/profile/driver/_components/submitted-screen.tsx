@@ -18,7 +18,7 @@ export function SubmittedScreen() {
 
   return (
     <div className="mx-auto max-w-[720px] px-4 py-8">
-      <div className="rounded-[20px] border-[0.5px] border-gray-200 bg-white p-8 text-center shadow-sm">
+      <div className="rounded-3xl border border-ink-100 bg-white p-8 text-center shadow-sm">
         <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-amber-50">
           <Clock className="h-9 w-9 text-amber-500" aria-hidden="true" />
         </div>

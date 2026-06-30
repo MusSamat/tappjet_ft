@@ -8,14 +8,14 @@ export function PassengerEmptyState({ subTab }: { subTab: "active" | "history" }
   const t = useTranslations("bookings");
   if (subTab === "history") {
     return (
-      <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white p-8 text-center">
+      <div className="rounded-2xl border border-ink-100 bg-white p-8 text-center">
         <p className="text-[17px] font-bold text-gray-900">{t("empty_history")}</p>
         <p className="mt-2 text-[13px] text-gray-500">{t("history_hint")}</p>
       </div>
     );
   }
   return (
-    <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white p-8 text-center">
+    <div className="rounded-2xl border border-ink-100 bg-white p-8 text-center">
       <p className="text-[17px] font-bold text-gray-900">{t("no_active_trips")}</p>
       <p className="mt-2 text-[13px] text-gray-500">{t("no_active_hint")}</p>
       <Link href="/trips">
@@ -34,14 +34,14 @@ export function DriverEmptyState({ subTab }: { subTab: "active" | "history" }) {
   const t = useTranslations("bookings");
   if (subTab === "history") {
     return (
-      <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white p-8 text-center">
+      <div className="rounded-2xl border border-ink-100 bg-white p-8 text-center">
         <p className="text-[17px] font-bold text-gray-900">{t("no_trip_history")}</p>
         <p className="mt-2 text-[13px] text-gray-500">{t("history_hint")}</p>
       </div>
     );
   }
   return (
-    <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white p-8 text-center">
+    <div className="rounded-2xl border border-ink-100 bg-white p-8 text-center">
       <p className="text-[17px] font-bold text-gray-900">{t("no_published_trips")}</p>
       <p className="mt-2 text-[13px] text-gray-500">{t("no_published_hint")}</p>
       <Link href="/trips/create">
@@ -60,7 +60,7 @@ export function DriverEmptyState({ subTab }: { subTab: "active" | "history" }) {
 export function RequestsEmptyState() {
   const t = useTranslations("bookings");
   return (
-    <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white p-8 text-center">
+    <div className="rounded-2xl border border-ink-100 bg-white p-8 text-center">
       <p className="text-[17px] font-bold text-gray-900">{t("no_requests_label")}</p>
       <p className="mt-2 text-[13px] text-gray-500">{t("requests_hint")}</p>
     </div>

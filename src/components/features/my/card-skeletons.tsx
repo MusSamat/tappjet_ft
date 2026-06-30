@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 // Matches PassengerCard / RequestCard in my/bookings (passenger tab)
 export function BookingCardSkeleton() {
   return (
-    <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white p-5">
+    <div className="rounded-2xl border border-ink-100 bg-white p-5">
       <div className="mb-3 flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
           <Skeleton className="h-10 w-10 flex-shrink-0 rounded-full" />
@@ -26,7 +26,7 @@ export function BookingCardSkeleton() {
 // Matches DriverTripCard in my/bookings (driver tab)
 export function DriverTripCardSkeleton() {
   return (
-    <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white p-5">
+    <div className="rounded-2xl border border-ink-100 bg-white p-5">
       <div className="mb-3 flex items-start justify-between gap-3">
         <div className="space-y-1.5">
           <Skeleton className="h-[16px] w-44" />
@@ -46,7 +46,7 @@ export function DriverTripCardSkeleton() {
 // Matches incoming RequestCard in my/bookings (requests tab)
 export function IncomingRequestSkeleton() {
   return (
-    <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white p-5">
+    <div className="rounded-2xl border border-ink-100 bg-white p-5">
       <div className="mb-3 flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
           <Skeleton className="h-10 w-10 flex-shrink-0 rounded-full" />

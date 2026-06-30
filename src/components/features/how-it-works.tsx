@@ -19,7 +19,7 @@ export async function HowItWorks() {
         {STEPS.map(({ Icon, title, description }, idx) => (
           <li
             key={idx}
-            className="relative flex flex-col gap-3 rounded-2xl border-[0.5px] border-gray-300 bg-white p-6"
+            className="relative flex flex-col gap-3 rounded-2xl border border-ink-200 bg-white p-6"
           >
             <span className="absolute right-4 top-4 text-h1 font-extrabold text-gray-100" aria-hidden="true">
               {idx + 1}

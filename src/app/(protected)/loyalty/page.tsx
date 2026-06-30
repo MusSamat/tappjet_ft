@@ -120,7 +120,7 @@ export default function LoyaltyPage() {
           </div>
 
           {/* ── Tier roadmap ── */}
-          <div className="mb-4 rounded-2xl border-[0.5px] border-gray-200 bg-white p-5">
+          <div className="mb-4 rounded-2xl border border-ink-100 bg-white p-5">
             <h2 className="mb-5 text-[15px] font-extrabold text-gray-900">{t("tiers_section")}</h2>
             <div className="relative flex items-start">
               {/* Track line */}
@@ -166,7 +166,7 @@ export default function LoyaltyPage() {
           </div>
 
           {/* ── How to earn ── */}
-          <div className="mb-4 rounded-2xl border-[0.5px] border-gray-200 bg-white p-5">
+          <div className="mb-4 rounded-2xl border border-ink-100 bg-white p-5">
             <h2 className="mb-4 text-[15px] font-extrabold text-gray-900">{t("how_to_earn_section")}</h2>
             <div className="flex flex-col divide-y divide-gray-100">
               {(["driver", "passenger", "five_stars"] as const).map((key, idx) => (
@@ -182,7 +182,7 @@ export default function LoyaltyPage() {
           </div>
 
           {/* ── Transaction history ── */}
-          <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white">
+          <div className="rounded-2xl border border-ink-100 bg-white">
             <div className="border-b border-gray-100 px-5 py-4">
               <h2 className="text-[15px] font-extrabold text-gray-900">{t("history_section")}</h2>
             </div>

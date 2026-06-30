@@ -65,7 +65,7 @@ export function HeroSearchForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="mx-auto mt-6 max-w-[880px] rounded-[20px] bg-white shadow-[0_20px_50px_rgba(17,24,39,.10)]"
+      className="mx-auto mt-6 max-w-[880px] rounded-3xl bg-white shadow-[0_20px_50px_rgba(17,24,39,.10)]"
     >
       {/* ── Row 1: FROM | swap | TO ─────────────────────────────────── */}
       <div className="flex items-stretch">

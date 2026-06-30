@@ -61,7 +61,7 @@ export function StepPreview({
         <p className="mt-1 text-[12px] font-semibold text-gray-400">{t("preview_subtitle")}</p>
       </div>
 
-      <div className="divide-y divide-gray-100 rounded-2xl border-[0.5px] border-gray-200 bg-white px-5 py-2">
+      <div className="divide-y divide-gray-100 rounded-2xl border border-ink-100 bg-white px-5 py-2">
         <Row icon={<MapPin className="h-4 w-4" />} label={t("from_label")} value={originCity} />
         {pickupCities.length > 0 && (
           <Row
@@ -97,7 +97,7 @@ export function StepPreview({
       </div>
 
       {(prefLabels.length > 0 || comment) && (
-        <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white p-5">
+        <div className="rounded-2xl border border-ink-100 bg-white p-5">
           {prefLabels.length > 0 && (
             <div className="mb-3 flex flex-wrap gap-2">
               {prefLabels.map((p) => (

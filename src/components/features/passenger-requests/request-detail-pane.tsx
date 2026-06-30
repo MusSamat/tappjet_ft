@@ -96,18 +96,18 @@ export function RequestDetailPane({ request }: Props) {
           <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.08em] text-gray-500">
             {tFilters("route_label")}
           </p>
-          <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white p-4">
+          <div className="rounded-2xl border border-ink-100 bg-white p-4">
             <div className="flex items-start gap-3">
               <div className="flex flex-col items-center pt-1">
                 <span
                   className="h-2.5 w-2.5 flex-shrink-0 rounded-full bg-grape-500"
-                  style={{ boxShadow: "0 0 0 3px #E0F2FE" }}
+                  style={{ boxShadow: "0 0 0 3px #EDE9FE" }}
                   aria-hidden
                 />
                 <div className="my-1.5 h-10 w-0.5 bg-gray-200" aria-hidden />
                 <span
                   className="h-2.5 w-2.5 flex-shrink-0 rounded-full bg-grape-400"
-                  style={{ boxShadow: "0 0 0 3px #E0F2FE" }}
+                  style={{ boxShadow: "0 0 0 3px #EDE9FE" }}
                   aria-hidden
                 />
               </div>
@@ -135,7 +135,7 @@ export function RequestDetailPane({ request }: Props) {
 
         {/* Details */}
         <div className="grid grid-cols-2 gap-3">
-          <div className="flex flex-col gap-1 rounded-2xl border-[0.5px] border-gray-200 bg-white p-3">
+          <div className="flex flex-col gap-1 rounded-2xl border border-ink-100 bg-white p-3">
             <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-gray-400">
               <Calendar className="h-3 w-3" aria-hidden />
               {t("date_detail")}
@@ -149,7 +149,7 @@ export function RequestDetailPane({ request }: Props) {
             )}
           </div>
 
-          <div className="flex flex-col gap-1 rounded-2xl border-[0.5px] border-gray-200 bg-white p-3">
+          <div className="flex flex-col gap-1 rounded-2xl border border-ink-100 bg-white p-3">
             <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-gray-400">
               <Users className="h-3 w-3" aria-hidden />
               {t("seats_needed")}

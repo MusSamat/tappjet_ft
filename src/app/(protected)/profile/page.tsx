@@ -101,7 +101,7 @@ export default function ProfilePage() {
         onClose={() => setShowAddPhone(false)}
       />
 
-      <div className="mb-4 rounded-2xl border-[0.5px] border-gray-200 bg-white p-6">
+      <div className="mb-4 rounded-2xl border border-ink-100 bg-white p-6">
         <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-start sm:gap-6">
           <AvatarUploader />
 
@@ -163,7 +163,7 @@ export default function ProfilePage() {
       </div>
 
       {isDriver && (
-        <div className="mb-4 flex items-center justify-between rounded-2xl border-[0.5px] border-gray-200 bg-white px-5 py-3 md:hidden">
+        <div className="mb-4 flex items-center justify-between rounded-2xl border border-ink-100 bg-white px-5 py-3 md:hidden">
           <span className="text-[13px] font-semibold text-gray-600">{t("mode_label")}</span>
           <RoleSwitcher />
         </div>
@@ -198,7 +198,7 @@ export default function ProfilePage() {
       {tab === "about" && (
         <div className="flex flex-col gap-4">
           <ProfileCompletion user={user} isDriver={!!isDriver} />
-          <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white p-5">
+          <div className="rounded-2xl border border-ink-100 bg-white p-5">
             <h2 className="mb-4 text-[15px] font-extrabold text-gray-900">{t("stats_title")}</h2>
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
               <StatBlock value={user?.rating != null ? user.rating.toFixed(1) : "—"} label={t("stat_rating")} />
@@ -231,7 +231,7 @@ export default function ProfilePage() {
             </div>
           )}
 
-          <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white p-5">
+          <div className="rounded-2xl border border-ink-100 bg-white p-5">
             <h2 className="mb-3 text-[15px] font-extrabold text-gray-900">{t("bio_title")}</h2>
             <p className="text-[14px] leading-relaxed text-gray-700">
               {(user as { bio?: string | null } | null)?.bio || t("bio_placeholder")}
@@ -245,7 +245,7 @@ export default function ProfilePage() {
           {ratingsLoading ? (
             Array.from({ length: 3 }).map((_, i) => <ReviewCardSkeleton key={i} />)
           ) : ratingsData?.data.length === 0 ? (
-            <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white p-10 text-center">
+            <div className="rounded-2xl border border-ink-100 bg-white p-10 text-center">
               <p className="text-[17px] font-bold text-gray-900">{t("no_reviews")}</p>
               <p className="mt-2 text-[13px] text-gray-500">{t("no_reviews_hint")}</p>
             </div>
@@ -256,7 +256,7 @@ export default function ProfilePage() {
       )}
 
       {tab === "history" && (
-        <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white p-10 text-center">
+        <div className="rounded-2xl border border-ink-100 bg-white p-10 text-center">
           <p className="text-[13px] font-semibold text-gray-500">
             {t("history_hint")}
           </p>

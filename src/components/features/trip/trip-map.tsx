@@ -51,7 +51,7 @@ export function TripMap({ origin, destination, className }: TripMapProps) {
     : originPos;
 
   return (
-    <div className={`isolate ${className ?? "h-64 w-full overflow-hidden rounded-2xl border-[0.5px] border-gray-300"}`}>
+    <div className={`isolate ${className ?? "h-64 w-full overflow-hidden rounded-2xl border border-ink-200"}`}>
       <MapContainer
         center={center}
         zoom={destination ? 7 : 12}

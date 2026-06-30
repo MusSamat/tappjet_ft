@@ -74,14 +74,14 @@ export function CancelTripModal({ trip, isPending, onConfirm, onClose }: {
               type="button"
               onClick={() => onConfirm(reason || undefined)}
               disabled={isPending}
-              className="w-full rounded-[14px] bg-coral-600 py-3 text-[15px] font-bold text-white hover:bg-coral-700 disabled:opacity-50"
+              className="w-full rounded-2xl bg-coral-600 py-3 text-[15px] font-bold text-white hover:bg-coral-700 disabled:opacity-50"
             >
               {isPending ? t("cancelling") : t("cancel_confirm")}
             </button>
             <button
               type="button"
               onClick={onClose}
-              className="w-full rounded-[14px] border border-gray-200 py-3 text-[15px] font-bold text-gray-700 hover:bg-gray-50"
+              className="w-full rounded-2xl border border-gray-200 py-3 text-[15px] font-bold text-gray-700 hover:bg-gray-50"
             >
               {t("keep_trip")}
             </button>

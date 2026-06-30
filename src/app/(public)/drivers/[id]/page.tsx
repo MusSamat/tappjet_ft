@@ -52,7 +52,7 @@ const TIER_COLORS: Record<string, string> = {
 
 function StatCard({ icon: Icon, label, value }: { icon: React.ElementType; label: string; value: string }) {
   return (
-    <div className="flex flex-col items-center gap-1 rounded-2xl border-[0.5px] border-gray-200 bg-white p-4 text-center">
+    <div className="flex flex-col items-center gap-1 rounded-2xl border border-ink-100 bg-white p-4 text-center">
       <Icon className="h-5 w-5 text-teal-500" aria-hidden="true" />
       <span className="text-[22px] font-extrabold leading-none text-gray-900">{value}</span>
       <span className="text-[11px] font-semibold text-gray-500">{label}</span>
@@ -77,7 +77,7 @@ export default async function UserProfilePage({ params }: Props) {
     <Container className="py-6 lg:py-10">
       <BackButton />
       {/* Hero */}
-      <div className="mb-5 flex flex-col items-center gap-4 rounded-2xl border-[0.5px] border-gray-200 bg-white p-6 sm:flex-row sm:items-start sm:text-left">
+      <div className="mb-5 flex flex-col items-center gap-4 rounded-2xl border border-ink-100 bg-white p-6 sm:flex-row sm:items-start sm:text-left">
         <DriverAvatar name={user.name ?? "?"} src={user.avatarUrl ?? null} size="lg" />
         <div className="flex-1 text-center sm:text-left">
           <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
@@ -126,7 +126,7 @@ export default async function UserProfilePage({ params }: Props) {
 
       {/* Car section — driver only */}
       {isDriver && car && (
-        <div className="mb-5 overflow-hidden rounded-2xl border-[0.5px] border-gray-200 bg-white">
+        <div className="mb-5 overflow-hidden rounded-2xl border border-ink-100 bg-white">
           {/* Car photo */}
           {car.carPhotoUrl && (
             // eslint-disable-next-line @next/next/no-img-element
@@ -187,13 +187,13 @@ export default async function UserProfilePage({ params }: Props) {
           {t("reviews_title")} {ratingCount > 0 && <span className="text-gray-400">({ratingCount})</span>}
         </h2>
         {ratings.length === 0 ? (
-          <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white p-8 text-center">
+          <div className="rounded-2xl border border-ink-100 bg-white p-8 text-center">
             <p className="text-[14px] font-semibold text-gray-500">{t("no_reviews")}</p>
           </div>
         ) : (
           <ul className="flex flex-col gap-3">
             {ratings.map((r) => (
-              <li key={r.id} className="rounded-2xl border-[0.5px] border-gray-200 bg-white p-4">
+              <li key={r.id} className="rounded-2xl border border-ink-100 bg-white p-4">
                 <div className="flex items-start gap-3">
                   <DriverAvatar name={r.rater?.name ?? "?"} src={r.rater?.avatarUrl ?? null} size="sm" />
                   <div className="flex-1">

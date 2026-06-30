@@ -250,7 +250,7 @@ export default function CreateRequestPage() {
         </button>
 
         {/* Comment */}
-        <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white p-5">
+        <div className="rounded-2xl border border-ink-100 bg-white p-5">
           <div className="mb-2 flex items-center gap-2">
             <MessageCircle className="h-3.5 w-3.5 text-gray-400" />
             <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">

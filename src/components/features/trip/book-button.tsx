@@ -59,7 +59,7 @@ export function BookButton({ tripId, seatsAvailable, driverId, disabled }: Props
 
   if (soldOut) {
     return (
-      <div className="rounded-2xl border-[0.5px] border-gray-300 bg-gray-50 p-4 text-center">
+      <div className="rounded-2xl border border-ink-200 bg-gray-50 p-4 text-center">
         <p className="text-body font-bold text-gray-700">Мест больше нет</p>
         <p className="mt-1 text-caption text-gray-500">Попробуйте другую поездку</p>
       </div>
@@ -69,7 +69,7 @@ export function BookButton({ tripId, seatsAvailable, driverId, disabled }: Props
   return (
     <>
       <div className="flex flex-col gap-3">
-        <label className="flex items-center justify-between rounded-2xl border-[0.5px] border-gray-300 bg-white p-4">
+        <label className="flex items-center justify-between rounded-2xl border border-ink-200 bg-white p-4">
           <span className="text-body font-bold text-gray-900">Количество мест</span>
           <div className="flex items-center gap-2">
             <button

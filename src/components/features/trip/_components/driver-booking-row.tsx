@@ -56,7 +56,7 @@ export function DriverBookingRow({
   const t = useTranslations("trip_actions");
 
   return (
-    <div key={id} className="rounded-2xl border-[0.5px] border-gray-200 bg-white p-4">
+    <div key={id} className="rounded-2xl border border-ink-100 bg-white p-4">
       <div className="mb-3 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2.5">
           {passengerId ? (

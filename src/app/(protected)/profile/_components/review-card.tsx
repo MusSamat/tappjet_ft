@@ -5,7 +5,7 @@ import { formatShortDate } from "@/lib/utils/date";
 
 export function ReviewCardSkeleton() {
   return (
-    <div className="animate-pulse rounded-2xl border-[0.5px] border-gray-200 bg-white p-4">
+    <div className="animate-pulse rounded-2xl border border-ink-100 bg-white p-4">
       <div className="flex items-start gap-3">
         <div className="h-10 w-10 flex-shrink-0 rounded-full bg-gray-200" />
         <div className="flex-1 space-y-2">
@@ -34,7 +34,7 @@ export function ReviewCard({
   };
 }) {
   return (
-    <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white p-4">
+    <div className="rounded-2xl border border-ink-100 bg-white p-4">
       <div className="flex items-start gap-3">
         <DriverAvatar name={review.rater.name} src={review.rater.avatarUrl} size="md" />
         <div className="flex-1">

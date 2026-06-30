@@ -188,7 +188,7 @@ export function RateModal({ rating, onClose }: Props) {
                   </div>
 
                   {/* Mutual review notice */}
-                  <div className="mb-4 rounded-[14px] bg-gray-50 p-3">
+                  <div className="mb-4 rounded-2xl bg-gray-50 p-3">
                     <div className="mb-1 flex items-center gap-2">
                       <svg className="h-3.5 w-3.5 flex-shrink-0 text-gray-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                         <path d="M20 13c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V5l8-3 8 3v8z" />
@@ -212,7 +212,7 @@ export function RateModal({ rating, onClose }: Props) {
                     type="button"
                     disabled={score === 0 || isPending}
                     onClick={() => mutate()}
-                    className="w-full rounded-[14px] bg-amber-500 py-3.5 text-[15px] font-bold text-[#4A2C00] transition-colors hover:bg-amber-600 disabled:opacity-50"
+                    className="w-full rounded-2xl bg-amber-500 py-3.5 text-[15px] font-bold text-[#4A2C00] transition-colors hover:bg-amber-600 disabled:opacity-50"
                   >
                     {isPending ? <Spinner size={18} /> : "Отправить отзыв"}
                   </button>

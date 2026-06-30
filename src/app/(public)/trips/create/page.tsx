@@ -256,7 +256,7 @@ export default function CreateTripPage() {
             <Spinner size={28} />
           </div>
         ) : (
-          <div className="flex flex-col items-center gap-4 rounded-3xl border-[0.5px] border-gray-200 bg-white px-6 py-10 text-center">
+          <div className="flex flex-col items-center gap-4 rounded-3xl border border-ink-100 bg-white px-6 py-10 text-center">
             <div
               className={cn(
                 "flex h-14 w-14 items-center justify-center rounded-2xl",

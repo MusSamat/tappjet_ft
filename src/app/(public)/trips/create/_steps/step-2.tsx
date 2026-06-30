@@ -37,7 +37,7 @@ export function Step2({
     <div className="flex flex-col gap-4">
       <h2 className="text-[17px] font-bold text-gray-900">{t("step2_title")}</h2>
 
-      <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white p-5">
+      <div className="rounded-2xl border border-ink-100 bg-white p-5">
         <div className="flex items-center justify-between">
           <div>
             <div className="text-[15px] font-bold text-gray-900">{t("seats_title")}</div>
@@ -67,7 +67,7 @@ export function Step2({
         </div>
       </div>
 
-      <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white p-5">
+      <div className="rounded-2xl border border-ink-100 bg-white p-5">
         <div className="mb-3">
           <div className="text-[10px] font-bold uppercase tracking-widest text-gray-400">{t("price_label")}</div>
           <div className="mt-2 flex items-center gap-2">
@@ -93,7 +93,7 @@ export function Step2({
         </label>
       </div>
 
-      <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white p-5">
+      <div className="rounded-2xl border border-ink-100 bg-white p-5">
         <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-gray-400">{t("luggage_section")}</p>
         <div className="flex flex-wrap gap-2">
           {([

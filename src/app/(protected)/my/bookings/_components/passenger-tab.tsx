@@ -53,7 +53,7 @@ export function PassengerTab({
             historyCount={historyCount}
           />
           {displayedBookings.length === 0 ? (
-            <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white p-8 text-center">
+            <div className="rounded-2xl border border-ink-100 bg-white p-8 text-center">
               {passengerSubTab === "active" ? (
                 <>
                   <p className="text-[17px] font-bold text-gray-900">{t("no_active_trips")}</p>

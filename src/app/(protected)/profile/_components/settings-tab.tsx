@@ -21,7 +21,7 @@ export function SettingsTab({ isDriver, exportMutation, logoutMutation }: Props)
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white">
+      <div className="rounded-2xl border border-ink-100 bg-white">
         <div className="border-b border-gray-100 px-5 py-4">
           <h2 className="text-[15px] font-bold text-gray-900">{t("lang_section")}</h2>
         </div>
@@ -30,7 +30,7 @@ export function SettingsTab({ isDriver, exportMutation, logoutMutation }: Props)
         </div>
       </div>
 
-      <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white">
+      <div className="rounded-2xl border border-ink-100 bg-white">
         <div className="border-b border-gray-100 px-5 py-4">
           <h2 className="text-[15px] font-bold text-gray-900">{t("personal_section")}</h2>
         </div>
@@ -40,7 +40,7 @@ export function SettingsTab({ isDriver, exportMutation, logoutMutation }: Props)
       </div>
 
       {isDriver && (
-        <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white">
+        <div className="rounded-2xl border border-ink-100 bg-white">
           <div className="border-b border-gray-100 px-5 py-4">
             <h2 className="text-[15px] font-bold text-gray-900">{t("car_photo_section")}</h2>
           </div>
@@ -50,7 +50,7 @@ export function SettingsTab({ isDriver, exportMutation, logoutMutation }: Props)
         </div>
       )}
 
-      <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white">
+      <div className="rounded-2xl border border-ink-100 bg-white">
         <div className="border-b border-gray-100 px-5 py-4">
           <h2 className="text-[15px] font-bold text-gray-900">{t("password_section")}</h2>
         </div>
@@ -59,7 +59,7 @@ export function SettingsTab({ isDriver, exportMutation, logoutMutation }: Props)
         </div>
       </div>
 
-      <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white">
+      <div className="rounded-2xl border border-ink-100 bg-white">
         <div className="border-b border-gray-100 px-5 py-4">
           <h2 className="text-[15px] font-bold text-gray-900">{t("phone_section")}</h2>
         </div>
@@ -68,7 +68,7 @@ export function SettingsTab({ isDriver, exportMutation, logoutMutation }: Props)
         </div>
       </div>
 
-      <div className="flex flex-col gap-2 rounded-2xl border-[0.5px] border-gray-200 bg-white p-4">
+      <div className="flex flex-col gap-2 rounded-2xl border border-ink-100 bg-white p-4">
         <button
           type="button"
           className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-[13px] font-semibold text-gray-700 hover:bg-gray-50"

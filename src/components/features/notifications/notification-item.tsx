@@ -52,7 +52,7 @@ export function NotificationItem({ notification }: Props) {
   return (
     <article
       className={cn(
-        "overflow-hidden rounded-2xl border-[0.5px] border-gray-200 bg-white transition-colors",
+        "overflow-hidden rounded-2xl border border-ink-100 bg-white transition-colors",
         !read && "border-teal-200 bg-teal-50/40",
       )}
     >

@@ -117,7 +117,7 @@ export default function RequestsPage() {
       : t("page_title");
 
   const empty = (
-    <div className="rounded-2xl border-[0.5px] border-gray-200 bg-white p-8 text-center">
+    <div className="rounded-2xl border border-ink-100 bg-white p-8 text-center">
       <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-sky-100">
         <Users className="h-6 w-6 text-sky-400" aria-hidden />
       </div>
@@ -147,7 +147,7 @@ export default function RequestsPage() {
             }
             className={
               !onSelect && selectedId === req.id
-                ? "border-sky-400 shadow-[0_0_0_2px_#E0F2FE]"
+                ? "border-grape-400 shadow-[0_0_0_2px_#EDE9FE]"
                 : ""
             }
           />
