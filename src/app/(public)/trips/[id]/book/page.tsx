@@ -39,12 +39,12 @@ export default async function BookTripPage({ params, searchParams }: Props) {
 
   return (
     <div className="mx-auto max-w-[720px] px-4 py-8">
-      <Link href={`/trips/${params.id}`} className="mb-4 inline-flex items-center gap-1 text-[13px] font-bold text-gray-600 hover:text-gray-900">
+      <Link href={`/trips/${params.id}`} className="mb-4 inline-flex items-center gap-1 text-[13px] font-bold text-ink-600 hover:text-ink-900">
         {t("back")}
       </Link>
 
-      <h1 className="text-[24px] font-extrabold text-gray-900">{t("title")}</h1>
-      <p className="mt-1 text-[13px] font-semibold text-gray-500">{t("subtitle")}</p>
+      <h1 className="text-[24px] font-extrabold text-ink-900">{t("title")}</h1>
+      <p className="mt-1 text-[13px] font-semibold text-ink-500">{t("subtitle")}</p>
 
       {/* Driver + trip card */}
       <div className="mt-5 rounded-3xl border border-ink-100 bg-white p-5 shadow-sm">
@@ -53,34 +53,34 @@ export default async function BookTripPage({ params, searchParams }: Props) {
           <DriverAvatar name={driver?.name ?? "?"} src={driver?.avatarUrl ?? null} size="lg" />
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
-              <span className="text-[16px] font-extrabold text-gray-900">{driver?.name ?? t("driver_section")}</span>
+              <span className="text-[16px] font-extrabold text-ink-900">{driver?.name ?? t("driver_section")}</span>
               {driver?.verified && (
-                <Shield className="h-3.5 w-3.5 text-teal-600 flex-shrink-0" aria-hidden="true" />
+                <Shield className="h-3.5 w-3.5 text-brand-600 flex-shrink-0" aria-hidden="true" />
               )}
             </div>
             {rating !== null && ratingCount >= 3 && (
               <div className="mt-0.5 flex items-center gap-1">
-                <Star className="h-3 w-3 fill-amber-400 text-amber-400" aria-hidden="true" />
-                <span className="text-[13px] font-bold text-gray-900">{rating.toFixed(1)}</span>
+                <Star className="h-3 w-3 fill-accent-400 text-accent-400" aria-hidden="true" />
+                <span className="text-[13px] font-bold text-ink-900">{rating.toFixed(1)}</span>
               </div>
             )}
           </div>
         </div>
 
-        <div className="border-t border-gray-100 pt-4">
+        <div className="border-t border-ink-100 pt-4">
           <div className="flex flex-wrap gap-6">
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">{t("route_section")}</p>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{t("route_section")}</p>
               <div className="mt-1 flex items-center gap-1.5">
-                <span className="text-[15px] font-bold text-gray-900">{trip.originCity}</span>
-                <ArrowRight className="h-3.5 w-3.5 text-gray-400" aria-hidden="true" />
-                <span className="text-[15px] font-bold text-gray-900">{trip.destinationCity}</span>
+                <span className="text-[15px] font-bold text-ink-900">{trip.originCity}</span>
+                <ArrowRight className="h-3.5 w-3.5 text-ink-400" aria-hidden="true" />
+                <span className="text-[15px] font-bold text-ink-900">{trip.destinationCity}</span>
               </div>
               <RouteStops pickup={trip.pickupCities} dropoff={trip.dropoffCities} className="mt-1.5" />
             </div>
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">{t("departure_section")}</p>
-              <p className="mt-1 text-[15px] font-bold text-gray-900">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{t("departure_section")}</p>
+              <p className="mt-1 text-[15px] font-bold text-ink-900">
                 {trip.departureAt ? formatDepartureLabel(trip.departureAt) : "—"}
               </p>
             </div>

@@ -246,7 +246,7 @@ export default function CreateTripPage() {
         <button
           type="button"
           onClick={() => router.back()}
-          className="mb-6 flex items-center gap-1.5 rounded-xl px-2 py-1.5 text-[13px] font-semibold text-gray-600 hover:bg-gray-100"
+          className="mb-6 flex items-center gap-1.5 rounded-xl px-2 py-1.5 text-[13px] font-semibold text-ink-600 hover:bg-ink-100"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           {t("back")}
@@ -260,21 +260,21 @@ export default function CreateTripPage() {
             <div
               className={cn(
                 "flex h-14 w-14 items-center justify-center rounded-2xl",
-                pending ? "bg-amber-50 text-amber-600" : "bg-teal-50 text-teal-600",
+                pending ? "bg-accent-50 text-accent-600" : "bg-brand-50 text-brand-600",
               )}
             >
               {pending ? <Clock className="h-7 w-7" /> : <ShieldCheck className="h-7 w-7" />}
             </div>
-            <h1 className="text-[20px] font-extrabold text-gray-900">
+            <h1 className="text-[20px] font-extrabold text-ink-900">
               {pending ? t("gate_pending_title") : t("gate_unverified_title")}
             </h1>
-            <p className="max-w-[380px] text-[13px] font-semibold text-gray-500">
+            <p className="max-w-[380px] text-[13px] font-semibold text-ink-500">
               {pending ? t("gate_pending_text") : t("gate_unverified_text")}
             </p>
             <button
               type="button"
               onClick={() => router.push("/profile/driver")}
-              className="mt-2 flex h-12 w-full max-w-[320px] items-center justify-center rounded-xl bg-teal-600 text-[14px] font-bold text-white transition-colors hover:bg-teal-700"
+              className="mt-2 flex h-12 w-full max-w-[320px] items-center justify-center rounded-2xl bg-brand-600 text-[14px] font-bold text-white transition-colors hover:bg-brand-700"
             >
               {pending ? t("gate_pending_cta") : t("gate_cta")}
             </button>
@@ -291,37 +291,37 @@ export default function CreateTripPage() {
         <button
           type="button"
           onClick={() => (step > 1 ? setStep((s) => s - 1) : router.back())}
-          className="mb-4 flex items-center gap-1.5 rounded-xl px-2 py-1.5 text-[13px] font-semibold text-gray-600 hover:bg-gray-100"
+          className="mb-4 flex items-center gap-1.5 rounded-xl px-2 py-1.5 text-[13px] font-semibold text-ink-600 hover:bg-ink-100"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           {t("back")}
         </button>
 
-        <h1 className="mb-1 text-[26px] font-extrabold text-gray-900">{t("title")}</h1>
-        <p className="mb-5 text-[12px] font-semibold text-gray-400">{t("step", { step })}</p>
+        <h1 className="mb-1 text-[26px] font-extrabold text-ink-900">{t("title")}</h1>
+        <p className="mb-5 text-[12px] font-semibold text-ink-400">{t("step", { step })}</p>
 
-        <div className="mb-8 h-1.5 overflow-hidden rounded-full bg-gray-100">
+        <div className="mb-8 h-1.5 overflow-hidden rounded-full bg-ink-100">
           <div
-            className="h-full rounded-full bg-teal-600 transition-all duration-300"
+            className="h-full rounded-full bg-brand-600 transition-all duration-300"
             style={{ width: `${(step / TOTAL_STEPS) * 100}%` }}
           />
         </div>
 
         {pendingDraft && (
-          <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-[13px] font-bold text-amber-900">{t("draft_title")}</p>
+          <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-accent-200 bg-accent-50 p-4 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-[13px] font-bold text-accent-700">{t("draft_title")}</p>
             <div className="flex gap-2">
               <button
                 type="button"
                 onClick={discardDraft}
-                className="rounded-xl border border-amber-300 bg-white px-4 py-2 text-[13px] font-bold text-amber-800 hover:bg-amber-100"
+                className="rounded-xl border border-accent-300 bg-white px-4 py-2 text-[13px] font-bold text-accent-700 hover:bg-accent-100"
               >
                 {t("draft_discard")}
               </button>
               <button
                 type="button"
                 onClick={resumeDraft}
-                className="rounded-xl bg-amber-500 px-4 py-2 text-[13px] font-bold text-[#4A2C00] hover:bg-amber-600"
+                className="rounded-xl bg-accent-500 px-4 py-2 text-[13px] font-bold text-[#4A2C00] hover:bg-accent-600"
               >
                 {t("draft_continue")}
               </button>

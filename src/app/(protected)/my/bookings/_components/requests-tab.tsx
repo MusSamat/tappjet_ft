@@ -38,8 +38,8 @@ export function RequestsTab({ isLoading, bookings, onAccept, onReject }: Props) 
         <IncomingRequestSkeletonList />
       ) : bookings.length === 0 ? (
         <div className="rounded-2xl border border-ink-100 bg-white p-8 text-center">
-          <p className="text-[17px] font-bold text-gray-900">{t("no_requests_label")}</p>
-          <p className="mt-2 text-[13px] text-gray-500">{t("requests_hint")}</p>
+          <p className="text-[17px] font-bold text-ink-900">{t("no_requests_label")}</p>
+          <p className="mt-2 text-[13px] text-ink-500">{t("requests_hint")}</p>
         </div>
       ) : (
         bookings.map((b) => (

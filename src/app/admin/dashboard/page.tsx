@@ -102,11 +102,11 @@ export default function AdminDashboard() {
             <KpiCard label="Пользователи" value={k?.users.total ?? 0} sub={`+${k?.users.last_7d ?? 0} за 7 дней`} icon={Users} />
             <KpiCard label="Активные водители" value={k?.activeDrivers7d ?? 0} sub="за последние 7 дней" icon={UserCheck} />
             <KpiCard label="Активные поездки" value={k?.publishedTripsNow ?? 0} sub="прямо сейчас" icon={Car} />
-            <KpiCard label="Завершено поездок" value={k?.completedTrips.last_7d ?? 0} sub={`${k?.completedTrips.last_30d ?? 0} за 30 дней`} icon={CheckCircle2} accent="text-teal-600" />
+            <KpiCard label="Завершено поездок" value={k?.completedTrips.last_7d ?? 0} sub={`${k?.completedTrips.last_30d ?? 0} за 30 дней`} icon={CheckCircle2} accent="text-brand-600" />
             <KpiCard label="Принятие брони, %" value={k?.acceptanceRate7d != null ? `${k.acceptanceRate7d}%` : "—"} sub="за 7 дней" icon={TrendingUp} accent="text-blue-600" />
-            <KpiCard label="Верификации" value={k?.pendingVerifications ?? 0} sub="ожидают проверки" icon={ShieldAlert} accent={k?.pendingVerifications ? "text-amber-600" : undefined} href="/admin/verifications" />
+            <KpiCard label="Верификации" value={k?.pendingVerifications ?? 0} sub="ожидают проверки" icon={ShieldAlert} accent={k?.pendingVerifications ? "text-accent-600" : undefined} href="/admin/verifications" />
             <KpiCard label="Открытые жалобы" value={k?.openComplaints ?? 0} sub="требуют реакции" icon={MessageSquareWarning} accent={k?.openComplaints ? "text-red-600" : undefined} href="/admin/complaints" />
-            <KpiCard label="Рейтинг водителей" value={k?.avgDriverRating != null ? k.avgDriverRating.toFixed(2) : "—"} sub="среднее (≥3 отзывов)" icon={Star} accent="text-amber-500" />
+            <KpiCard label="Рейтинг водителей" value={k?.avgDriverRating != null ? k.avgDriverRating.toFixed(2) : "—"} sub="среднее (≥3 отзывов)" icon={Star} accent="text-accent-500" />
           </>
         )}
       </div>
@@ -132,11 +132,11 @@ export default function AdminDashboard() {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {(k?.pendingVerifications ?? 0) > 0 && (
             <Link href="/admin/verifications">
-              <div className="flex items-center gap-4 rounded-2xl border-2 border-amber-200 bg-amber-50 p-5 hover:bg-amber-100">
-                <ShieldAlert className="h-8 w-8 text-amber-500" />
+              <div className="flex items-center gap-4 rounded-2xl border-2 border-accent-200 bg-accent-50 p-5 hover:bg-accent-100">
+                <ShieldAlert className="h-8 w-8 text-accent-500" />
                 <div>
-                  <p className="font-bold text-amber-900">{k!.pendingVerifications} верификаций ждут проверки</p>
-                  <p className="text-[12px] text-amber-700">Перейти к очереди</p>
+                  <p className="font-bold text-accent-700">{k!.pendingVerifications} верификаций ждут проверки</p>
+                  <p className="text-[12px] text-accent-700">Перейти к очереди</p>
                 </div>
               </div>
             </Link>

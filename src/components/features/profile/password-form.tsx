@@ -50,19 +50,19 @@ export function PasswordForm() {
         <Label htmlFor="newPassword">{t("new_label")}</Label>
         <PasswordInput id="newPassword" {...register("newPassword")} className="mt-1" />
         {errors.newPassword && (
-          <p className="mt-1 text-caption text-error">{errors.newPassword.message}</p>
+          <p className="mt-1 text-caption text-coral-500">{errors.newPassword.message}</p>
         )}
       </div>
       <div>
         <Label htmlFor="confirmPassword">{t("repeat_label")}</Label>
         <PasswordInput id="confirmPassword" {...register("confirmPassword")} className="mt-1" />
         {errors.confirmPassword && (
-          <p className="mt-1 text-caption text-error">{errors.confirmPassword.message}</p>
+          <p className="mt-1 text-caption text-coral-500">{errors.confirmPassword.message}</p>
         )}
       </div>
 
-      {error && <p className="text-caption text-error">{t("wrong_current")}</p>}
-      {isSuccess && <p className="text-caption text-teal-700">{t("success")}</p>}
+      {error && <p className="text-caption text-coral-500">{t("wrong_current")}</p>}
+      {isSuccess && <p className="text-caption text-brand-700">{t("success")}</p>}
 
       <Button type="submit" variant="primary" size="md" disabled={isPending}>
         {isPending ? <Spinner size={16} /> : t("title")}

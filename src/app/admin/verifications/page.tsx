@@ -18,8 +18,8 @@ const STATUS_TABS: { id: StatusFilter; label: string }[] = [
 ];
 
 const STATUS_CFG: Record<string, { label: string; bg: string; text: string; dot: string }> = {
-  pending: { label: "На проверке", bg: "bg-amber-50", text: "text-amber-800", dot: "bg-amber-500" },
-  verified: { label: "Одобрен", bg: "bg-teal-50", text: "text-teal-800", dot: "bg-teal-500" },
+  pending: { label: "На проверке", bg: "bg-accent-50", text: "text-accent-700", dot: "bg-accent-500" },
+  verified: { label: "Одобрен", bg: "bg-brand-50", text: "text-brand-800", dot: "bg-brand-500" },
   rejected: { label: "Отклонён", bg: "bg-red-50", text: "text-red-700", dot: "bg-red-500" },
   docs_requested: {
     label: "Нужны доки",

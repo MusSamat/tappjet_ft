@@ -18,8 +18,8 @@ export function Chip({
       className={cn(
         "rounded-full border-2 px-3.5 py-1.5 text-[12px] font-bold transition-colors",
         active
-          ? "border-teal-600 bg-teal-50 text-teal-700"
-          : "border-gray-200 text-gray-700 hover:border-teal-400",
+          ? "border-brand-600 bg-brand-50 text-brand-700"
+          : "border-ink-200 text-ink-700 hover:border-brand-400",
       )}
     >
       {children}

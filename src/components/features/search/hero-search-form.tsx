@@ -71,11 +71,11 @@ export function HeroSearchForm() {
       <div className="flex items-stretch">
         {/* FROM */}
         <div className="flex min-w-0 flex-1 items-center gap-2.5 rounded-tl-[20px] px-3 py-3 sm:px-4">
-          <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl bg-teal-50">
-            <MapPin className="h-3.5 w-3.5 text-teal-700" aria-hidden="true" />
+          <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl bg-brand-50">
+            <MapPin className="h-3.5 w-3.5 text-brand-700" aria-hidden="true" />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">{t("from_label")}</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{t("from_label")}</p>
             <CityAutocomplete
               borderless
               value={from}
@@ -93,7 +93,7 @@ export function HeroSearchForm() {
             onClick={swap}
             disabled={!from && !to}
             aria-label={t("swap_aria")}
-            className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border border-gray-200 text-gray-400 transition-colors hover:border-teal-400 hover:text-teal-600 disabled:opacity-30"
+            className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border border-ink-200 text-ink-400 transition-colors hover:border-brand-400 hover:text-brand-600 disabled:opacity-30"
           >
             <ArrowLeftRight className="h-3 w-3" />
           </button>
@@ -101,11 +101,11 @@ export function HeroSearchForm() {
 
         {/* TO */}
         <div className="flex min-w-0 flex-1 items-center gap-2.5 rounded-tr-[20px] px-3 py-3 sm:px-4">
-          <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl bg-amber-50">
-            <Flag className="h-3.5 w-3.5 text-amber-600" aria-hidden="true" />
+          <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl bg-accent-50">
+            <Flag className="h-3.5 w-3.5 text-accent-600" aria-hidden="true" />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">{t("to_label")}</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{t("to_label")}</p>
             <CityAutocomplete
               borderless
               value={to}
@@ -118,7 +118,7 @@ export function HeroSearchForm() {
       </div>
 
       {/* Divider */}
-      <div className="h-px bg-gray-100" aria-hidden="true" />
+      <div className="h-px bg-ink-100" aria-hidden="true" />
 
       {/* ── Row 2: Date | Seats (always side-by-side) + Button ──────── */}
       <div className="flex flex-col sm:flex-row sm:items-stretch">
@@ -126,11 +126,11 @@ export function HeroSearchForm() {
         <div className="flex flex-1 items-stretch">
           {/* Date */}
           <div className="flex min-w-0 flex-1 items-center gap-2.5 px-3 py-2.5 sm:px-4 sm:py-3">
-            <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl bg-teal-50">
-              <CalendarDays className="h-3.5 w-3.5 text-teal-700" aria-hidden="true" />
+            <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl bg-brand-50">
+              <CalendarDays className="h-3.5 w-3.5 text-brand-700" aria-hidden="true" />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">{t("date_label")}</p>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{t("date_label")}</p>
               <DatePicker
                 borderless
                 value={date}
@@ -141,29 +141,29 @@ export function HeroSearchForm() {
             </div>
           </div>
 
-          <div className="w-px self-stretch bg-gray-100" aria-hidden="true" />
+          <div className="w-px self-stretch bg-ink-100" aria-hidden="true" />
 
           {/* Seats */}
           <div className="flex w-[88px] flex-shrink-0 items-center gap-2 px-2.5 py-2.5 sm:w-[110px] sm:px-3 sm:py-3">
-            <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl bg-gray-100">
-              <Users className="h-3.5 w-3.5 text-gray-700" aria-hidden="true" />
+            <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl bg-ink-100">
+              <Users className="h-3.5 w-3.5 text-ink-700" aria-hidden="true" />
             </div>
             <div className="min-w-0">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">{t("seats_label")}</p>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{t("seats_label")}</p>
               <input
                 type="number"
                 min={1}
                 max={4}
                 value={seats}
                 onChange={(e) => setSeats(e.target.value)}
-                className="mt-0.5 w-full bg-transparent text-[14px] font-semibold text-gray-900 outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                className="mt-0.5 w-full bg-transparent text-[14px] font-semibold text-ink-900 outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
               />
             </div>
           </div>
         </div>
 
         {/* Submit */}
-        <div className="flex items-center border-t border-gray-100 p-3 sm:border-l sm:border-t-0">
+        <div className="flex items-center border-t border-ink-100 p-3 sm:border-l sm:border-t-0">
           <Button
             type="submit"
             variant="submit"

@@ -57,13 +57,13 @@ export function ForceCancelModal({
           </button>
         </div>
 
-        <div className="mb-4 flex items-center gap-3 rounded-xl bg-amber-50 p-3">
-          <AlertTriangle className="h-5 w-5 flex-shrink-0 text-amber-600" />
+        <div className="mb-4 flex items-center gap-3 rounded-xl bg-accent-50 p-3">
+          <AlertTriangle className="h-5 w-5 flex-shrink-0 text-accent-600" />
           <div>
-            <p className="text-[13px] font-bold text-amber-900">
+            <p className="text-[13px] font-bold text-accent-700">
               {cancelTarget.originCity} → {cancelTarget.destinationCity}
             </p>
-            <p className="text-[12px] text-amber-700">{fmtDate(cancelTarget.departureAt)}</p>
+            <p className="text-[12px] text-accent-700">{fmtDate(cancelTarget.departureAt)}</p>
           </div>
         </div>
 

@@ -29,14 +29,14 @@ export const CardField = forwardRef<HTMLInputElement, CardFieldProps>(
         {icon}
       </span>
       <span className="flex min-w-0 flex-1 flex-col">
-        <span className="text-label uppercase tracking-wider text-gray-500">{label}</span>
+        <span className="text-label uppercase tracking-wider text-ink-500">{label}</span>
         <input
           ref={ref}
           type="text"
           defaultValue={value}
           placeholder={placeholder}
           readOnly={readOnly}
-          className="mt-0.5 w-full border-none bg-transparent p-0 text-body font-bold text-gray-900 outline-none placeholder:text-gray-500 placeholder:font-semibold"
+          className="mt-0.5 w-full border-none bg-transparent p-0 text-body-lg font-bold text-ink-900 outline-none placeholder:text-ink-500 placeholder:font-semibold"
           {...rest}
         />
       </span>

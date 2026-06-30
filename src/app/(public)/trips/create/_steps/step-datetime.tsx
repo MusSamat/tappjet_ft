@@ -38,10 +38,10 @@ export function StepDateTime({
 }: StepDateTimeProps) {
   return (
     <div className="flex flex-col gap-5">
-      <h2 className="text-[17px] font-bold text-gray-900">{t("step_datetime_title")}</h2>
+      <h2 className="text-[17px] font-bold text-ink-900">{t("step_datetime_title")}</h2>
 
       <div>
-        <p className="mb-2.5 text-[10px] font-bold uppercase tracking-widest text-gray-500">
+        <p className="mb-2.5 text-[10px] font-bold uppercase tracking-widest text-ink-500">
           {t("date_label")}
         </p>
         <div className="flex flex-wrap gap-2">
@@ -61,7 +61,7 @@ export function StepDateTime({
       </div>
 
       <div>
-        <p className="mb-2.5 text-[10px] font-bold uppercase tracking-widest text-gray-500">
+        <p className="mb-2.5 text-[10px] font-bold uppercase tracking-widest text-ink-500">
           {t("time_label")}
         </p>
         <div className="flex flex-wrap gap-2">
@@ -77,7 +77,7 @@ export function StepDateTime({
         <button
           type="button"
           onClick={onBack}
-          className="flex h-12 flex-1 items-center justify-center rounded-xl border-2 border-ink-200 text-[14px] font-bold text-gray-700 hover:bg-gray-50"
+          className="flex h-12 flex-1 items-center justify-center rounded-2xl border-2 border-ink-200 text-[14px] font-bold text-ink-700 hover:bg-ink-50"
         >
           {t("back")}
         </button>
@@ -85,7 +85,7 @@ export function StepDateTime({
           type="button"
           disabled={!canNext}
           onClick={onNext}
-          className="flex h-12 flex-[2] items-center justify-center gap-2 rounded-xl bg-amber-500 text-[14px] font-bold text-[#4A2C00] transition-colors hover:bg-amber-600 disabled:opacity-40"
+          className="flex h-12 flex-[2] items-center justify-center gap-2 rounded-2xl bg-accent-500 text-[14px] font-bold text-[#4A2C00] transition-colors hover:bg-accent-600 disabled:opacity-40"
         >
           {t("next")} <ArrowRight className="h-4 w-4" aria-hidden="true" />
         </button>

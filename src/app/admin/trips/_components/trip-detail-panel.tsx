@@ -19,8 +19,8 @@ function fmtDateShort(iso: string): string {
 }
 
 const BOOKING_STATUS_BADGE: Record<string, string> = {
-  pending:                  "bg-amber-50 text-amber-700",
-  accepted:                 "bg-teal-50 text-teal-700",
+  pending:                  "bg-accent-50 text-accent-700",
+  accepted:                 "bg-brand-50 text-brand-700",
   rejected:                 "bg-red-50 text-red-700",
   completed:                "bg-blue-50 text-blue-700",
   cancelled_by_passenger:   "bg-slate-100 text-slate-600",
@@ -31,8 +31,8 @@ const BOOKING_STATUS_BADGE: Record<string, string> = {
 };
 
 const VERIF_STATUS: Record<string, { label: string; cls: string }> = {
-  verified:   { label: "Верифицирован",  cls: "bg-teal-50 text-teal-700" },
-  pending:    { label: "На проверке",    cls: "bg-amber-50 text-amber-700" },
+  verified:   { label: "Верифицирован",  cls: "bg-brand-50 text-brand-700" },
+  pending:    { label: "На проверке",    cls: "bg-accent-50 text-accent-700" },
   rejected:   { label: "Отклонён",       cls: "bg-red-50 text-red-700" },
   suspended:  { label: "Приостановлен",  cls: "bg-orange-50 text-orange-700" },
   blocked:    { label: "Заблокирован",   cls: "bg-red-50 text-red-700" },
@@ -153,7 +153,7 @@ export function TripDetailPanel({ detail, isLoading, onClose, onForceCancel }: T
               {detail.driver.phone && (
                 <a
                   href={`tel:${detail.driver.phone}`}
-                  className="flex items-center gap-1.5 text-[12px] text-teal-700 hover:underline"
+                  className="flex items-center gap-1.5 text-[12px] text-brand-700 hover:underline"
                 >
                   <Phone className="h-3.5 w-3.5" />
                   {detail.driver.phone}
@@ -223,7 +223,7 @@ export function TripDetailPanel({ detail, isLoading, onClose, onForceCancel }: T
                   </div>
                   <div className="mt-1 flex items-center gap-3 text-[11px] text-slate-500">
                     {b.passengerPhone && (
-                      <a href={`tel:${b.passengerPhone}`} className="flex items-center gap-1 text-teal-700 hover:underline">
+                      <a href={`tel:${b.passengerPhone}`} className="flex items-center gap-1 text-brand-700 hover:underline">
                         <Phone className="h-3 w-3" />{b.passengerPhone}
                       </a>
                     )}

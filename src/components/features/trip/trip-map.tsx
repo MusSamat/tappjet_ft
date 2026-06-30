@@ -22,7 +22,7 @@ interface TripMapProps {
 
 function MapSkeleton() {
   return (
-    <div className="h-full w-full animate-pulse bg-gray-100" aria-label="Загрузка карты" />
+    <div className="h-full w-full animate-pulse bg-ink-100" aria-label="Загрузка карты" />
   );
 }
 

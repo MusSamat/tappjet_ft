@@ -71,24 +71,24 @@ export function DriverBookingRow({
             <DriverAvatar name={passenger?.name ?? "?"} src={passenger?.avatarUrl} size="sm" />
           )}
           <div>
-            <p className="text-[14px] font-bold text-gray-900">
+            <p className="text-[14px] font-bold text-ink-900">
               {passenger?.name ?? t("passenger_fallback")}
             </p>
             {passenger?.rating != null && (
-              <span className="flex items-center gap-0.5 text-[11px] text-gray-500">
-                <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+              <span className="flex items-center gap-0.5 text-[11px] text-ink-500">
+                <Star className="h-3 w-3 fill-accent-400 text-accent-400" />
                 {passenger.rating.toFixed(1)} · {passenger.ratingCount} {t("reviews_short")}
               </span>
             )}
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-[12px] font-bold text-gray-600">{seatsCount} {t("seats_unit")}</span>
+          <span className="text-[12px] font-bold text-ink-600">{seatsCount} {t("seats_unit")}</span>
           <span className={cn(
             "rounded-full px-2 py-0.5 text-[10px] font-bold",
             bStatus === "accepted"
-              ? "bg-teal-50 text-teal-700"
-              : "bg-amber-50 text-amber-700",
+              ? "bg-brand-50 text-brand-700"
+              : "bg-accent-50 text-accent-700",
           )}>
             {bStatus === "accepted" ? t("booking_accepted") : t("booking_pending")}
           </span>
@@ -96,7 +96,7 @@ export function DriverBookingRow({
       </div>
 
       {comment && (
-        <p className="mb-3 rounded-xl bg-gray-50 px-3 py-2 text-[12px] text-gray-600">
+        <p className="mb-3 rounded-xl bg-ink-50 px-3 py-2 text-[12px] text-ink-600">
           «{comment}»
         </p>
       )}
@@ -113,7 +113,7 @@ export function DriverBookingRow({
                   "rounded-full border-2 px-2.5 py-1 text-[11px] font-bold",
                   rejectReason === r
                     ? "border-coral-400 bg-coral-50 text-coral-700"
-                    : "border-gray-200 text-gray-600",
+                    : "border-ink-200 text-ink-600",
                 )}
               >
                 {r}
@@ -125,7 +125,7 @@ export function DriverBookingRow({
               type="button"
               onClick={onCancelReject}
               disabled={rejectPending}
-              className="flex-1 rounded-xl border border-gray-200 py-2 text-[12px] font-bold text-gray-600 disabled:opacity-50"
+              className="flex-1 rounded-xl border border-ink-200 py-2 text-[12px] font-bold text-ink-600 disabled:opacity-50"
             >
               {t("cancel_btn")}
             </button>
@@ -148,7 +148,7 @@ export function DriverBookingRow({
                 type="button"
                 onClick={onAccept}
                 disabled={acceptPending}
-                className="flex items-center gap-1.5 rounded-xl bg-teal-600 px-3 py-2 text-[12px] font-bold text-white hover:bg-teal-700 disabled:opacity-50"
+                className="flex items-center gap-1.5 rounded-xl bg-brand-600 px-3 py-2 text-[12px] font-bold text-white hover:bg-brand-700 disabled:opacity-50"
               >
                 {acceptPending ? <Spinner size={12} /> : <CheckCircle className="h-3.5 w-3.5" />}
                 {t("accept_btn")}
@@ -156,7 +156,7 @@ export function DriverBookingRow({
               <button
                 type="button"
                 onClick={onStartReject}
-                className="flex items-center gap-1.5 rounded-xl border border-gray-200 px-3 py-2 text-[12px] font-bold text-gray-600 hover:bg-gray-50"
+                className="flex items-center gap-1.5 rounded-xl border border-ink-200 px-3 py-2 text-[12px] font-bold text-ink-600 hover:bg-ink-50"
               >
                 <XCircle className="h-3.5 w-3.5" />
                 {t("reject_btn")}
@@ -166,7 +166,7 @@ export function DriverBookingRow({
           <Link href={`/my/bookings/${bookingId}/chat`}>
             <button
               type="button"
-              className="flex items-center gap-1.5 rounded-xl border border-teal-200 bg-teal-50 px-3 py-2 text-[12px] font-bold text-teal-700 hover:bg-teal-100"
+              className="flex items-center gap-1.5 rounded-xl border border-brand-200 bg-brand-50 px-3 py-2 text-[12px] font-bold text-brand-700 hover:bg-brand-100"
             >
               <MessageCircle className="h-3.5 w-3.5" />
               {t("chat_btn")}

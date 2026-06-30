@@ -13,13 +13,13 @@ function BookView({ trip }: { trip: TripDetail }) {
   return (
     <div className="rounded-2xl border border-ink-200 bg-white p-5">
       <div className="mb-4 flex items-baseline justify-between">
-        <span className="text-display font-extrabold text-teal-700">
+        <span className="text-display font-extrabold text-brand-700">
           {formatPrice((trip.pricePerSeat as number | undefined) ?? 0)}
         </span>
-        <span className="text-caption text-gray-500">{t("per_seat")}</span>
+        <span className="text-caption text-ink-500">{t("per_seat")}</span>
       </div>
       {trip.priceNegotiable && (
-        <p className="mb-4 rounded-xl bg-amber-50 p-3 text-caption text-amber-900">
+        <p className="mb-4 rounded-xl bg-accent-50 p-3 text-caption text-accent-700">
           {t("price_negotiable_hint")}
         </p>
       )}
@@ -39,9 +39,9 @@ export function TripActionsPanel({ trip }: { trip: TripDetail }) {
   if (status === "loading" || status === "idle") {
     return (
       <div className="rounded-2xl border border-ink-200 bg-white p-5">
-        <div className="mb-4 h-9 w-28 animate-pulse rounded-lg bg-gray-100" />
-        <div className="mb-3 h-4 w-full animate-pulse rounded bg-gray-100" />
-        <div className="h-12 animate-pulse rounded-xl bg-gray-100" />
+        <div className="mb-4 h-9 w-28 animate-pulse rounded-lg bg-ink-100" />
+        <div className="mb-3 h-4 w-full animate-pulse rounded bg-ink-100" />
+        <div className="h-12 animate-pulse rounded-2xl bg-ink-100" />
       </div>
     );
   }

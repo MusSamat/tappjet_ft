@@ -62,27 +62,27 @@ const DEMO_TRIP: TripListItem = {
 };
 
 const COLORS = [
-  { name: "teal-50", cls: "bg-teal-50 text-teal-900" },
-  { name: "teal-100", cls: "bg-teal-100 text-teal-900" },
-  { name: "teal-400", cls: "bg-teal-400 text-white" },
-  { name: "teal-500", cls: "bg-teal-500 text-white" },
-  { name: "teal-600", cls: "bg-teal-600 text-white" },
-  { name: "teal-700", cls: "bg-teal-700 text-white" },
-  { name: "teal-900", cls: "bg-teal-900 text-white" },
-  { name: "amber-50", cls: "bg-amber-50 text-amber-900" },
-  { name: "amber-100", cls: "bg-amber-100 text-amber-900" },
-  { name: "amber-400", cls: "bg-amber-400 text-white" },
-  { name: "amber-500", cls: "bg-amber-500 text-white" },
-  { name: "amber-600", cls: "bg-amber-600 text-white" },
+  { name: "teal-50", cls: "bg-brand-50 text-brand-900" },
+  { name: "teal-100", cls: "bg-brand-100 text-brand-900" },
+  { name: "teal-400", cls: "bg-brand-400 text-white" },
+  { name: "teal-500", cls: "bg-brand-500 text-white" },
+  { name: "teal-600", cls: "bg-brand-600 text-white" },
+  { name: "teal-700", cls: "bg-brand-700 text-white" },
+  { name: "teal-900", cls: "bg-brand-900 text-white" },
+  { name: "amber-50", cls: "bg-accent-50 text-accent-700" },
+  { name: "amber-100", cls: "bg-accent-100 text-accent-700" },
+  { name: "amber-400", cls: "bg-accent-400 text-white" },
+  { name: "amber-500", cls: "bg-accent-500 text-white" },
+  { name: "amber-600", cls: "bg-accent-600 text-white" },
   { name: "success", cls: "bg-success text-white" },
-  { name: "error", cls: "bg-error text-white" },
+  { name: "error", cls: "bg-coral-500 text-white" },
   { name: "warning", cls: "bg-warning text-white" },
 ] as const;
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="border-t border-gray-100 py-8">
-      <h2 className="mb-4 text-h1 text-gray-900">{title}</h2>
+    <section className="border-t border-ink-100 py-8">
+      <h2 className="mb-4 text-h1 text-ink-900">{title}</h2>
       <div className="flex flex-wrap items-start gap-4">{children}</div>
     </section>
   );
@@ -91,8 +91,8 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 export function DesignSystemShowcase() {
   return (
     <div className="container py-10">
-      <h1 className="text-display text-gray-900">Design System</h1>
-      <p className="mt-2 text-body-lg text-gray-700">
+      <h1 className="text-display text-ink-900">Design System</h1>
+      <p className="mt-2 text-body-lg text-ink-700">
         Визуальная верификация компонентов — ТЗ §27. Не индексируется поисковиками.
       </p>
 
@@ -139,19 +139,19 @@ export function DesignSystemShowcase() {
             <Label htmlFor="name">Имя</Label>
             <Input id="name" placeholder="Асан Кадыров" />
           </div>
-          <div className="overflow-hidden rounded-2xl border-2 border-ink-300 bg-white">
+          <div className="overflow-hidden rounded-2xl border-2 border-ink-200 bg-white">
             <CardField
-              icon={<MapPin className="h-4 w-4 text-teal-700" />}
+              icon={<MapPin className="h-4 w-4 text-brand-700" />}
               label="ОТКУДА"
               defaultValue="Бишкек"
-              iconBg="bg-teal-50"
-              className="border-b-[0.5px] border-gray-100"
+              iconBg="bg-brand-50"
+              className="border-b-[0.5px] border-ink-100"
             />
             <CardField
-              icon={<Flag className="h-4 w-4 text-amber-600" />}
+              icon={<Flag className="h-4 w-4 text-accent-600" />}
               label="КУДА"
               placeholder="Куда едете?"
-              iconBg="bg-amber-50"
+              iconBg="bg-accent-50"
             />
           </div>
           <div className="flex flex-col gap-1.5">
@@ -160,7 +160,7 @@ export function DesignSystemShowcase() {
           </div>
           <label className="flex items-center gap-2">
             <Checkbox id="terms" />
-            <span className="text-body-lg text-gray-700">Я согласен с условиями</span>
+            <span className="text-body-lg text-ink-700">Я согласен с условиями</span>
           </label>
         </div>
       </Section>
@@ -277,12 +277,12 @@ export function DesignSystemShowcase() {
             </BottomSheetHeader>
             <div className="flex flex-col gap-3">
               <CardField
-                icon={<Clock className="h-4 w-4 text-teal-700" />}
+                icon={<Clock className="h-4 w-4 text-brand-700" />}
                 label="ВРЕМЯ"
                 placeholder="Любое"
               />
               <CardField
-                icon={<Users className="h-4 w-4 text-gray-700" />}
+                icon={<Users className="h-4 w-4 text-ink-700" />}
                 label="МЕСТ"
                 defaultValue="1"
               />

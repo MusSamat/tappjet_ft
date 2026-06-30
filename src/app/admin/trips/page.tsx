@@ -23,7 +23,7 @@ function fmtDateShort(iso: string): string {
 type StatusTab = "active" | "completed" | "cancelled" | "all";
 
 const STATUS_BADGE: Record<string, string> = {
-  active:    "bg-teal-50 text-teal-700",
+  active:    "bg-brand-50 text-brand-700",
   completed: "bg-blue-50 text-blue-700",
   cancelled: "bg-slate-100 text-slate-600",
 };
@@ -164,7 +164,7 @@ export default function AdminTripsPage() {
                       {" · "}
                       {t.pricePerSeat} сом
                       {t.bookingsCount > 0 && (
-                        <span className="ml-1.5 rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold text-amber-800">
+                        <span className="ml-1.5 rounded-full bg-accent-100 px-1.5 py-0.5 text-[10px] font-bold text-accent-700">
                           {t.bookingsCount} брон.
                         </span>
                       )}

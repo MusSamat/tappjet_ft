@@ -9,7 +9,7 @@ export function BackButton({ label = "Назад" }: { label?: string }) {
     <button
       type="button"
       onClick={() => router.back()}
-      className="mb-4 inline-flex items-center gap-1 text-[13px] font-bold text-gray-600 hover:text-gray-900"
+      className="mb-4 inline-flex items-center gap-1 text-[13px] font-bold text-ink-600 hover:text-ink-900"
     >
       <ArrowLeft className="h-4 w-4" />
       {label}

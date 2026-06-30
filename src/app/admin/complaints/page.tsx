@@ -19,15 +19,15 @@ const STATUS_TABS: { id: StatusFilter; label: string }[] = [
 
 const STATUS_CFG: Record<string, { label: string; bg: string; text: string; dot: string }> = {
   new:       { label: "Новая",           bg: "bg-red-50",    text: "text-red-700",   dot: "bg-red-500" },
-  in_review: { label: "На рассмотрении", bg: "bg-amber-50",  text: "text-amber-800", dot: "bg-amber-500" },
-  resolved:  { label: "Решена",          bg: "bg-teal-50",   text: "text-teal-800",  dot: "bg-teal-500" },
+  in_review: { label: "На рассмотрении", bg: "bg-accent-50",  text: "text-accent-700", dot: "bg-accent-500" },
+  resolved:  { label: "Решена",          bg: "bg-brand-50",   text: "text-brand-800",  dot: "bg-brand-500" },
   dismissed: { label: "Отклонена",       bg: "bg-slate-100", text: "text-slate-600", dot: "bg-slate-400" },
 };
 
 const PRIORITY_CFG: Record<string, string> = {
   P0: "bg-red-600 text-white",
   P1: "bg-orange-500 text-white",
-  P2: "bg-amber-400 text-amber-900",
+  P2: "bg-accent-400 text-accent-700",
   P3: "bg-slate-200 text-slate-600",
 };
 

@@ -14,17 +14,17 @@ function fmt(iso: string): string {
 }
 
 const ACTION_COLORS: Record<string, string> = {
-  approve_verification: "bg-teal-50 text-teal-700",
+  approve_verification: "bg-brand-50 text-brand-700",
   reject_verification:  "bg-red-50 text-red-700",
   request_docs:         "bg-blue-50 text-blue-700",
   block_user:           "bg-red-50 text-red-700",
-  unblock_user:         "bg-teal-50 text-teal-700",
-  force_cancel_trip:    "bg-amber-50 text-amber-800",
-  resolve_complaint:    "bg-teal-50 text-teal-700",
+  unblock_user:         "bg-brand-50 text-brand-700",
+  force_cancel_trip:    "bg-accent-50 text-accent-700",
+  resolve_complaint:    "bg-brand-50 text-brand-700",
   dismiss_complaint:    "bg-slate-100 text-slate-600",
   create_city:          "bg-blue-50 text-blue-700",
   update_city:          "bg-blue-50 text-blue-700",
-  create_admin:         "bg-amber-50 text-amber-800",
+  create_admin:         "bg-accent-50 text-accent-700",
 };
 
 function ActionBadge({ action }: { action: string }) {

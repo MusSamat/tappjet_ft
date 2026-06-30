@@ -95,9 +95,9 @@ export default function ComplaintPage({ searchParams }: PageProps) {
   if (isSuccess) {
     return (
       <div className="container max-w-lg py-20 text-center">
-        <CheckCircle className="mx-auto h-12 w-12 text-teal-600" aria-hidden="true" />
-        <h1 className="mt-4 text-[22px] font-extrabold text-gray-900">{t("success_title")}</h1>
-        <p className="mt-2 text-[14px] text-gray-700">{t("success_hint")}</p>
+        <CheckCircle className="mx-auto h-12 w-12 text-brand-600" aria-hidden="true" />
+        <h1 className="mt-4 text-[22px] font-extrabold text-ink-900">{t("success_title")}</h1>
+        <p className="mt-2 text-[14px] text-ink-700">{t("success_hint")}</p>
         <Button variant="primary" size="md" className="mt-6" onClick={() => router.back()}>
           {t("back_btn")}
         </Button>
@@ -110,13 +110,13 @@ export default function ComplaintPage({ searchParams }: PageProps) {
       <button
         type="button"
         onClick={() => router.back()}
-        className="mb-4 inline-flex items-center gap-1 text-[13px] font-bold text-gray-600 hover:text-gray-900"
+        className="mb-4 inline-flex items-center gap-1 text-[13px] font-bold text-ink-600 hover:text-ink-900"
       >
         <ArrowLeft className="h-4 w-4" aria-hidden="true" />
         {t("back_btn")}
       </button>
-      <h1 className="text-[22px] font-extrabold text-gray-900">{t("title")}</h1>
-      <p className="mt-1 text-[14px] text-gray-700">{t("subtitle")}</p>
+      <h1 className="text-[22px] font-extrabold text-ink-900">{t("title")}</h1>
+      <p className="mt-1 text-[14px] text-ink-700">{t("subtitle")}</p>
 
       <form onSubmit={handleSubmit((d) => mutate(d))} className="mt-6 space-y-5">
         {/* Category */}
@@ -130,8 +130,8 @@ export default function ComplaintPage({ searchParams }: PageProps) {
                   className={cn(
                     "rounded-full border px-4 py-1.5 text-[13px] font-semibold transition-colors",
                     watch("category") === value
-                      ? "border-teal-500 bg-teal-50 text-teal-700"
-                      : "border-gray-300 text-gray-700 hover:border-teal-400",
+                      ? "border-brand-500 bg-brand-50 text-brand-700"
+                      : "border-ink-300 text-ink-700 hover:border-brand-400",
                   )}
                 >
                   {label}
@@ -158,14 +158,14 @@ export default function ComplaintPage({ searchParams }: PageProps) {
             ) : (
               <span />
             )}
-            <span className="text-[11px] text-gray-500">{description.length}/1000</span>
+            <span className="text-[11px] text-ink-500">{description.length}/1000</span>
           </div>
         </div>
 
         {/* Image attachments */}
         <div>
           <Label>{t("photos_label")}</Label>
-          <p className="mb-3 mt-0.5 text-[12px] text-gray-500">
+          <p className="mb-3 mt-0.5 text-[12px] text-ink-500">
             {t("photos_hint", { n: MAX_IMAGES })}
           </p>
 
@@ -192,7 +192,7 @@ export default function ComplaintPage({ searchParams }: PageProps) {
                 <button
                   type="button"
                   onClick={() => removeImage(idx)}
-                  className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-gray-900 text-white shadow hover:bg-coral-600"
+                  className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-ink-900 text-white shadow hover:bg-coral-600"
                   aria-label={t("remove_photo_label", { n: idx + 1 })}
                 >
                   <X className="h-3 w-3" aria-hidden="true" />
@@ -205,7 +205,7 @@ export default function ComplaintPage({ searchParams }: PageProps) {
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="flex h-20 w-20 flex-shrink-0 flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-gray-300 text-gray-400 hover:border-teal-400 hover:text-teal-500 transition-colors"
+                className="flex h-20 w-20 flex-shrink-0 flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-ink-300 text-ink-400 hover:border-brand-400 hover:text-brand-500 transition-colors"
                 aria-label={t("add_photo_aria")}
               >
                 <Camera className="h-5 w-5" aria-hidden="true" />

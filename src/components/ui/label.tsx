@@ -11,7 +11,7 @@ export const Label = forwardRef<
   <LabelPrimitive.Root
     ref={ref}
     className={cn(
-      "text-caption font-bold text-gray-900 peer-disabled:cursor-not-allowed peer-disabled:opacity-50",
+      "text-caption font-bold text-ink-900 peer-disabled:cursor-not-allowed peer-disabled:opacity-50",
       className,
     )}
     {...rest}

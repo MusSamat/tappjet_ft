@@ -205,11 +205,11 @@ export default function LoginPage() {
 
         {/* Logo */}
         <div className="mb-7 text-center">
-          <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-600 to-teal-500 shadow-brandcta">
+          <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-600 to-brand-500 shadow-brandcta">
             <span className="text-[22px] font-black tracking-tight text-white">Tj</span>
           </div>
-          <h1 className="text-[22px] font-extrabold text-gray-900">Вход в Tappjet</h1>
-          <p className="mt-1 text-[13px] font-medium text-gray-400">Попутчики и такси по Кыргызстану</p>
+          <h1 className="text-[22px] font-extrabold text-ink-900">Вход в Tappjet</h1>
+          <p className="mt-1 text-[13px] font-medium text-ink-400">Попутчики и такси по Кыргызстану</p>
         </div>
 
         {/* Error banner */}
@@ -226,16 +226,16 @@ export default function LoginPage() {
             <SocialButtons />
 
             <div className="my-5 flex items-center gap-3">
-              <span className="h-px flex-1 bg-gray-100" />
-              <span className="text-[11px] font-bold uppercase tracking-widest text-gray-400">
+              <span className="h-px flex-1 bg-ink-100" />
+              <span className="text-[11px] font-bold uppercase tracking-widest text-ink-400">
                 {tl("or_phone")}
               </span>
-              <span className="h-px flex-1 bg-gray-100" />
+              <span className="h-px flex-1 bg-ink-100" />
             </div>
 
             {/* Phone */}
             <div className="mb-3">
-              <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-widest text-gray-400">
+              <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-widest text-ink-400">
                 {tl("phone_label")}
               </label>
               <div className="flex gap-2">
@@ -257,7 +257,7 @@ export default function LoginPage() {
 
             {/* Password */}
             <div className="mb-5">
-              <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-widest text-gray-400">
+              <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-widest text-ink-400">
                 {tl("password_label")}
               </label>
               <div className="relative">
@@ -272,13 +272,13 @@ export default function LoginPage() {
                     "h-12 w-full rounded-2xl border-2 bg-ink-50 px-3 pr-10 text-[14px] font-semibold outline-none transition-colors",
                     serverError
                       ? "border-coral-300 text-coral-700"
-                      : "border-gray-200 text-gray-900 focus:border-teal-500",
+                      : "border-ink-200 text-ink-900 focus:border-brand-500",
                   )}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-400 hover:text-ink-600"
                   tabIndex={-1}
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -291,7 +291,7 @@ export default function LoginPage() {
               type="button"
               disabled={!canSubmitLogin || loginMutation.isPending}
               onClick={() => loginMutation.mutate()}
-              className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-amber-500 text-[14px] font-bold text-[#4A2C00] shadow-cta transition-colors hover:bg-amber-400 disabled:opacity-40"
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 text-[14px] font-bold text-[#4A2C00] shadow-cta transition-colors hover:bg-accent-400 disabled:opacity-40"
             >
               {loginMutation.isPending ? <><Spinner size={16} />{tl("logging_in")}</> : tl("login_btn")}
             </button>
@@ -302,14 +302,14 @@ export default function LoginPage() {
                 type="button"
                 disabled={tgAutoMutation.isPending || forgotMutation.isPending}
                 onClick={handleForgot}
-                className="flex items-center gap-1.5 text-[13px] font-semibold text-gray-500 hover:text-teal-600 disabled:opacity-50"
+                className="flex items-center gap-1.5 text-[13px] font-semibold text-ink-500 hover:text-brand-600 disabled:opacity-50"
               >
                 {(tgAutoMutation.isPending || forgotMutation.isPending) && <Spinner size={13} />}
                 {tgAutoMutation.isPending || forgotMutation.isPending ? "Отправляем код…" : tl("forgot_password")}
               </button>
-              <p className="text-[12px] text-gray-400">
+              <p className="text-[12px] text-ink-400">
                 {tl("no_account")}{" "}
-                <Link href="/auth/register" className="font-bold text-teal-600 hover:text-teal-700">
+                <Link href="/auth/register" className="font-bold text-brand-600 hover:text-brand-700">
                   {tl("register_link")}
                 </Link>
               </p>
@@ -326,15 +326,15 @@ export default function LoginPage() {
               </svg>
             </div>
 
-            <h2 className="text-[20px] font-extrabold text-gray-900">Подтвердите в Telegram</h2>
-            <p className="mt-2 text-[13px] leading-relaxed text-gray-500">
+            <h2 className="text-[20px] font-extrabold text-ink-900">Подтвердите в Telegram</h2>
+            <p className="mt-2 text-[13px] leading-relaxed text-ink-500">
               Откройте бот{" "}
-              <span className="font-bold text-teal-600">@tappjet_bot</span>{" "}
+              <span className="font-bold text-brand-600">@tappjet_bot</span>{" "}
               и нажмите «Запустить» — получите код подтверждения
             </p>
 
             {/* Progress pulse */}
-            <div className="my-5 h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
+            <div className="my-5 h-1.5 w-full overflow-hidden rounded-full bg-ink-100">
               <div
                 className="h-full animate-pulse rounded-full bg-[#0088cc]"
                 style={{ width: "55%" }}
@@ -355,7 +355,7 @@ export default function LoginPage() {
 
             <button
               type="button"
-              className="mt-3 w-full text-[13px] font-semibold text-gray-400 hover:text-gray-600"
+              className="mt-3 w-full text-[13px] font-semibold text-ink-400 hover:text-ink-600"
               onClick={() => {
                 if (pollRef.current) clearInterval(pollRef.current);
                 setTgDeepLink(null);

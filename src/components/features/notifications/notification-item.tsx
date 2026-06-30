@@ -31,7 +31,7 @@ export function NotificationItem({ notification }: Props) {
   const queryClient = useQueryClient();
   const router = useRouter();
   const [read, setRead] = useState(!!notification.readAt);
-  const config = TYPE_CONFIG[notification.type] ?? { icon: Bell, label: "Уведомление", color: "text-gray-700" };
+  const config = TYPE_CONFIG[notification.type] ?? { icon: Bell, label: "Уведомление", color: "text-ink-700" };
   const Icon = config.icon;
   const hasActions = ACTION_TYPES.has(notification.type);
   const deepLink = buildDeepLink(notification);
@@ -53,7 +53,7 @@ export function NotificationItem({ notification }: Props) {
     <article
       className={cn(
         "overflow-hidden rounded-2xl border border-ink-100 bg-white transition-colors",
-        !read && "border-teal-200 bg-teal-50/40",
+        !read && "border-brand-200 bg-brand-50/40",
       )}
     >
       <button
@@ -64,23 +64,23 @@ export function NotificationItem({ notification }: Props) {
           deepLink && "cursor-pointer",
         )}
       >
-        <span className={cn("mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-gray-100", !read && "bg-teal-100")}>
+        <span className={cn("mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-ink-100", !read && "bg-brand-100")}>
           <Icon className={cn("h-5 w-5", config.color)} aria-hidden="true" />
         </span>
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
-            <p className={cn("text-body text-gray-900", !read && "font-semibold")}>{config.label}</p>
-            <span className="flex-shrink-0 text-caption text-gray-500">{formatNotifTime(notification.createdAt)}</span>
+            <p className={cn("text-body text-ink-900", !read && "font-semibold")}>{config.label}</p>
+            <span className="flex-shrink-0 text-caption text-ink-500">{formatNotifTime(notification.createdAt)}</span>
           </div>
-          <p className="mt-0.5 text-body-lg text-gray-700">{buildBody(notification)}</p>
+          <p className="mt-0.5 text-body-lg text-ink-700">{buildBody(notification)}</p>
         </div>
         {!read && (
-          <span className="mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-teal-500" aria-hidden="true" />
+          <span className="mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-brand-500" aria-hidden="true" />
         )}
       </button>
 
       {hasActions && (
-        <div className="border-t border-gray-100 px-4 pb-3 pt-2.5">
+        <div className="border-t border-ink-100 px-4 pb-3 pt-2.5">
           <NotificationActions notification={notification} />
         </div>
       )}

@@ -56,23 +56,23 @@ function OfferCard({
   const isDeclined = response.status === "declined";
 
   return (
-    <div className={`rounded-2xl border bg-white p-4 ${isDeclined ? "opacity-50" : isAccepted ? "border-teal-300" : "border-gray-200"}`}>
+    <div className={`rounded-2xl border bg-white p-4 ${isDeclined ? "opacity-50" : isAccepted ? "border-brand-300" : "border-ink-200"}`}>
       <div className="flex items-start gap-3">
         <DriverAvatar name={response.driver.name} src={response.driver.avatarUrl} size="md" />
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5">
-            <span className="text-[14px] font-bold text-gray-900">{response.driver.name}</span>
-            {response.driver.verified && <Shield className="h-3.5 w-3.5 text-teal-500" aria-hidden />}
+            <span className="text-[14px] font-bold text-ink-900">{response.driver.name}</span>
+            {response.driver.verified && <Shield className="h-3.5 w-3.5 text-brand-500" aria-hidden />}
             {response.driver.rating !== null && (
               <div className="flex items-center gap-0.5">
-                <Star className="h-3 w-3 fill-amber-400 text-amber-400" aria-hidden />
-                <span className="text-[11px] font-bold text-gray-600">{response.driver.rating.toFixed(1)}</span>
+                <Star className="h-3 w-3 fill-accent-400 text-accent-400" aria-hidden />
+                <span className="text-[11px] font-bold text-ink-600">{response.driver.rating.toFixed(1)}</span>
               </div>
             )}
           </div>
           <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5">
             <span className="text-[18px] font-extrabold text-sky-600">{response.price} {t("som")}</span>
-            <span className="text-[12px] text-gray-500">
+            <span className="text-[12px] text-ink-500">
               {new Date(response.departureTime).toLocaleString("ru-RU", {
                 weekday: "short",
                 day: "numeric",
@@ -83,7 +83,7 @@ function OfferCard({
             </span>
           </div>
           {response.message && (
-            <p className="mt-1.5 text-[12px] leading-relaxed text-gray-600">«{response.message}»</p>
+            <p className="mt-1.5 text-[12px] leading-relaxed text-ink-600">«{response.message}»</p>
           )}
         </div>
 
@@ -93,7 +93,7 @@ function OfferCard({
               type="button"
               disabled={acceptMut.isPending || declineMut.isPending}
               onClick={() => { setError(null); acceptMut.mutate(); }}
-              className="flex h-8 w-8 items-center justify-center rounded-full bg-teal-600 text-white hover:bg-teal-700 disabled:opacity-40 transition-colors"
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-600 text-white hover:bg-brand-700 disabled:opacity-40 transition-colors"
               aria-label={t("accept_aria")}
             >
               {acceptMut.isPending ? <Spinner size={14} /> : <Check className="h-4 w-4" />}
@@ -102,7 +102,7 @@ function OfferCard({
               type="button"
               disabled={acceptMut.isPending || declineMut.isPending}
               onClick={() => { setError(null); declineMut.mutate(); }}
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 hover:border-coral-300 hover:text-coral-600 disabled:opacity-40 transition-colors"
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-ink-200 bg-white text-ink-500 hover:border-coral-300 hover:text-coral-600 disabled:opacity-40 transition-colors"
               aria-label={t("reject_aria")}
             >
               {declineMut.isPending ? <Spinner size={14} /> : <X className="h-4 w-4" />}
@@ -110,12 +110,12 @@ function OfferCard({
           </div>
         )}
         {isAccepted && (
-          <span className="flex-shrink-0 rounded-full bg-teal-100 px-2.5 py-1 text-[11px] font-bold text-teal-700">
+          <span className="flex-shrink-0 rounded-full bg-brand-100 px-2.5 py-1 text-[11px] font-bold text-brand-700">
             {t("accepted")}
           </span>
         )}
         {isDeclined && (
-          <span className="flex-shrink-0 rounded-full bg-gray-100 px-2.5 py-1 text-[11px] font-bold text-gray-500">
+          <span className="flex-shrink-0 rounded-full bg-ink-100 px-2.5 py-1 text-[11px] font-bold text-ink-500">
             {t("rejected")}
           </span>
         )}
@@ -161,7 +161,7 @@ function RequestWithOffers({
         <button
           type="button"
           onClick={() => setExpanded((v) => !v)}
-          className="flex items-center justify-between rounded-xl border border-dashed border-sky-200 bg-sky-50 px-4 py-2.5 text-left hover:border-sky-300 hover:bg-sky-100 transition-colors"
+          className="flex items-center justify-between rounded-2xl border border-dashed border-sky-200 bg-sky-50 px-4 py-2.5 text-left hover:border-sky-300 hover:bg-sky-100 transition-colors"
         >
           <span className="text-[12px] font-bold text-sky-700">
             {expanded
@@ -179,7 +179,7 @@ function RequestWithOffers({
           {isLoading ? (
             <div className="flex justify-center py-4"><Spinner size={20} /></div>
           ) : !responses?.length ? (
-            <p className="py-3 text-center text-[12px] font-semibold text-gray-400">
+            <p className="py-3 text-center text-[12px] font-semibold text-ink-400">
               {t("no_offers")}
             </p>
           ) : (
@@ -221,13 +221,13 @@ export default function MyRequestsPage() {
     <Container className="py-6 sm:py-8">
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-[22px] font-extrabold text-gray-900 sm:text-[26px]">{t("title")}</h1>
-          <p className="mt-0.5 text-[13px] text-gray-500">{t("subtitle")}</p>
+          <h1 className="text-[22px] font-extrabold text-ink-900 sm:text-[26px]">{t("title")}</h1>
+          <p className="mt-0.5 text-[13px] text-ink-500">{t("subtitle")}</p>
         </div>
         <Link href="/requests/create">
           <button
             type="button"
-            className="flex items-center gap-1.5 rounded-xl bg-sky-600 px-4 py-2.5 text-[13px] font-bold text-white hover:bg-sky-700"
+            className="flex items-center gap-1.5 rounded-2xl bg-sky-600 px-4 py-2.5 text-[13px] font-bold text-white hover:bg-sky-700"
           >
             <Plus className="h-4 w-4" />
             <span className="hidden sm:inline">{t("create_label")}</span>
@@ -243,12 +243,12 @@ export default function MyRequestsPage() {
           <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-sky-100">
             <Users className="h-8 w-8 text-sky-400" />
           </div>
-          <p className="text-[16px] font-bold text-gray-700">{t("empty_title")}</p>
-          <p className="mt-1 mb-5 text-[13px] text-gray-500">{t("empty_hint")}</p>
+          <p className="text-[16px] font-bold text-ink-700">{t("empty_title")}</p>
+          <p className="mt-1 mb-5 text-[13px] text-ink-500">{t("empty_hint")}</p>
           <Link href="/requests/create">
             <button
               type="button"
-              className="flex items-center gap-2 rounded-xl bg-sky-600 px-6 py-2.5 text-[14px] font-bold text-white hover:bg-sky-700"
+              className="flex items-center gap-2 rounded-2xl bg-sky-600 px-6 py-2.5 text-[14px] font-bold text-white hover:bg-sky-700"
             >
               <Plus className="h-4 w-4" />
               {t("create_label")}
@@ -277,7 +277,7 @@ export default function MyRequestsPage() {
 
           {past.length > 0 && (
             <section>
-              <h2 className="mb-3 text-[13px] font-bold uppercase tracking-widest text-gray-400">
+              <h2 className="mb-3 text-[13px] font-bold uppercase tracking-widest text-ink-400">
                 {t("history_count", { n: past.length })}
               </h2>
               <div className="flex flex-col gap-3">

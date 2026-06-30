@@ -32,7 +32,7 @@ export function StepRoute({
 }: StepRouteProps) {
   return (
     <div className="flex flex-col gap-5">
-      <h2 className="text-[17px] font-bold text-gray-900">{t("step1_title")}</h2>
+      <h2 className="text-[17px] font-bold text-ink-900">{t("step1_title")}</h2>
 
       <div className="flex flex-col gap-3 rounded-2xl border border-ink-100 bg-white p-5">
         <CityAutocomplete
@@ -69,7 +69,7 @@ export function StepRoute({
         type="button"
         disabled={!canNext}
         onClick={onNext}
-        className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-amber-500 text-[14px] font-bold text-[#4A2C00] transition-colors hover:bg-amber-600 disabled:opacity-40"
+        className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 text-[14px] font-bold text-[#4A2C00] transition-colors hover:bg-accent-600 disabled:opacity-40"
       >
         {t("next")} <ArrowRight className="h-4 w-4" aria-hidden="true" />
       </button>

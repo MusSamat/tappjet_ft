@@ -94,7 +94,7 @@ export default function AdminUserDetailPage() {
                 {user.roles.map((r) => (
                   <span key={r} className={cn(
                     "rounded px-1.5 py-0.5 text-[10px] font-bold",
-                    r === "driver" ? "bg-sky-100 text-sky-700" : "bg-teal-100 text-teal-700",
+                    r === "driver" ? "bg-sky-100 text-sky-700" : "bg-brand-100 text-brand-700",
                   )}>
                     {r}
                   </span>
@@ -114,7 +114,7 @@ export default function AdminUserDetailPage() {
               type="button"
               onClick={() => unblockMut.mutate()}
               disabled={unblockMut.isPending}
-              className="flex items-center gap-2 rounded-xl bg-teal-600 px-4 py-2.5 text-[13px] font-bold text-white hover:bg-teal-700 disabled:opacity-50"
+              className="flex items-center gap-2 rounded-xl bg-brand-600 px-4 py-2.5 text-[13px] font-bold text-white hover:bg-brand-700 disabled:opacity-50"
             >
               <ShieldCheck className="h-4 w-4" />
               {unblockMut.isPending ? "Снимаем блок…" : "Разблокировать"}
@@ -141,7 +141,7 @@ export default function AdminUserDetailPage() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Star className="h-4 w-4 text-amber-400" />
+            <Star className="h-4 w-4 text-accent-400" />
             <div>
               <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Рейтинг</p>
               <p className="text-[13px] font-bold text-slate-900">
@@ -198,9 +198,9 @@ export default function AdminUserDetailPage() {
               </p>
               <span className={cn(
                 "text-[12px] font-bold",
-                user.driverProfile.verificationStatus === "verified" ? "text-teal-600" :
+                user.driverProfile.verificationStatus === "verified" ? "text-brand-600" :
                 user.driverProfile.verificationStatus === "rejected" ? "text-red-600" :
-                user.driverProfile.verificationStatus === "pending" ? "text-amber-600" :
+                user.driverProfile.verificationStatus === "pending" ? "text-accent-600" :
                 "text-slate-500",
               )}>
                 Верификация: {user.driverProfile.verificationStatus}

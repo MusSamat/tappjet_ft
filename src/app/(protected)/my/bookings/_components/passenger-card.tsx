@@ -51,28 +51,28 @@ export function PassengerCard({ booking, pendingRating, onRate, onCancel }: {
               size="md"
             />
             <div className="min-w-0">
-              <p className="truncate text-[15px] font-extrabold text-gray-900">
+              <p className="truncate text-[15px] font-extrabold text-ink-900">
                 {trip?.originCity} → {trip?.destinationCity}
               </p>
-              <p className="text-[12px] text-gray-500">
+              <p className="text-[12px] text-ink-500">
                 {trip?.driver?.name ?? t("driver_fallback")} · {fmtDate(trip?.departureAt)}
               </p>
             </div>
           </div>
           <div className="flex flex-shrink-0 items-center gap-2">
             <StatusBadge status={status} />
-            <ArrowRight className="h-4 w-4 text-gray-400" />
+            <ArrowRight className="h-4 w-4 text-ink-400" />
           </div>
         </div>
 
         <div className="mt-3 flex gap-5">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">{t("seats_label")}</p>
-            <p className="text-[13px] font-bold text-gray-900">{booking.seatsCount}</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{t("seats_label")}</p>
+            <p className="text-[13px] font-bold text-ink-900">{booking.seatsCount}</p>
           </div>
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">{t("sum_label")}</p>
-            <p className="text-[13px] font-bold text-teal-700">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{t("sum_label")}</p>
+            <p className="text-[13px] font-bold text-brand-700">
               {booking.totalPrice ?? "—"} {t("som")}
             </p>
           </div>
@@ -80,12 +80,12 @@ export function PassengerCard({ booking, pendingRating, onRate, onCancel }: {
       </Link>
 
       {(pendingRating || onCancel) && (
-        <div className="mt-3 flex flex-wrap gap-2 border-t border-gray-100 pt-3">
+        <div className="mt-3 flex flex-wrap gap-2 border-t border-ink-100 pt-3">
           {pendingRating && onRate && (
             <button
               type="button"
               onClick={onRate}
-              className="flex items-center gap-1.5 rounded-xl bg-amber-500 px-4 py-2 text-[13px] font-bold text-[#4A2C00] hover:bg-amber-600"
+              className="flex items-center gap-1.5 rounded-2xl bg-accent-500 px-4 py-2 text-[13px] font-bold text-[#4A2C00] hover:bg-accent-600"
             >
               <Star className="h-4 w-4" />
               {t("rate_btn")}
@@ -95,7 +95,7 @@ export function PassengerCard({ booking, pendingRating, onRate, onCancel }: {
             <button
               type="button"
               onClick={onCancel}
-              className="flex items-center gap-1.5 rounded-xl border border-gray-200 px-4 py-2 text-[13px] font-bold text-gray-600 hover:border-coral-200 hover:text-coral-600"
+              className="flex items-center gap-1.5 rounded-2xl border border-ink-200 px-4 py-2 text-[13px] font-bold text-ink-600 hover:border-coral-200 hover:text-coral-600"
             >
               <X className="h-4 w-4" />
               {t("cancel_btn")}

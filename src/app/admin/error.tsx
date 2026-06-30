@@ -19,12 +19,12 @@ export default function AdminError({
       <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-red-50">
         <AlertTriangle className="h-7 w-7 text-red-500" aria-hidden="true" />
       </div>
-      <h1 className="text-[20px] font-extrabold text-gray-900">Ошибка</h1>
-      <p className="mt-2 text-[13px] text-gray-500">
+      <h1 className="text-[20px] font-extrabold text-ink-900">Ошибка</h1>
+      <p className="mt-2 text-[13px] text-ink-500">
         Произошла ошибка. Попробуйте перезагрузить страницу.
       </p>
       {error.digest && (
-        <p className="mt-1 font-mono text-[11px] text-gray-400">Код: {error.digest}</p>
+        <p className="mt-1 font-mono text-[11px] text-ink-400">Код: {error.digest}</p>
       )}
       <button
         type="button"

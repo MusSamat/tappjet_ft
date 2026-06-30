@@ -62,14 +62,14 @@ export function RequestCard({
         {/* Row 1: name + route + price slot */}
         <div className="flex items-center gap-2">
           <ListingTypeBadge type="request" className="flex-shrink-0" />
-          <span className="text-[13px] font-bold text-gray-900">{passenger.name.split(" ")[0]}</span>
+          <span className="text-[13px] font-bold text-ink-900">{passenger.name.split(" ")[0]}</span>
           {showRating && (
-            <span className="flex items-center gap-0.5 text-[11px] text-gray-500">
-              <Star className="h-2.5 w-2.5 fill-amber-400 text-amber-400" aria-hidden />
+            <span className="flex items-center gap-0.5 text-[11px] text-ink-500">
+              <Star className="h-2.5 w-2.5 fill-accent-400 text-accent-400" aria-hidden />
               {passenger.rating!.toFixed(1)}
             </span>
           )}
-          <span className="ml-auto flex-shrink-0 text-[11px] font-semibold text-gray-400">
+          <span className="ml-auto flex-shrink-0 text-[11px] font-semibold text-ink-400">
             {fmtDate(request.departureDate)}
           </span>
           <LikeButton
@@ -82,9 +82,9 @@ export function RequestCard({
         </div>
 
         {/* Row 2: route */}
-        <div className="mt-0.5 flex items-center gap-1 text-[14px] font-extrabold text-gray-900">
+        <div className="mt-0.5 flex items-center gap-1 text-[14px] font-extrabold text-ink-900">
           <span className="truncate">{request.originCity}</span>
-          <ArrowRight className="h-3.5 w-3.5 flex-shrink-0 text-gray-400" aria-hidden />
+          <ArrowRight className="h-3.5 w-3.5 flex-shrink-0 text-ink-400" aria-hidden />
           <span className="truncate">{request.destinationCity}</span>
         </div>
 
@@ -101,12 +101,12 @@ export function RequestCard({
             </span>
           )}
           {!isOpen && (
-            <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[11px] font-bold text-gray-500">
+            <span className="rounded-full bg-ink-100 px-2 py-0.5 text-[11px] font-bold text-ink-500">
               {request.status === "cancelled" ? "Отменена" : "Закрыта"}
             </span>
           )}
           {request.comment && (
-            <span className="truncate text-[11px] italic text-gray-400">
+            <span className="truncate text-[11px] italic text-ink-400">
               «{request.comment.slice(0, 40)}{request.comment.length > 40 ? "…" : ""}»
             </span>
           )}
@@ -121,7 +121,7 @@ export function RequestCard({
           type="button"
           onClick={(e) => { e.stopPropagation(); onCancel(); }}
           disabled={cancelLoading}
-          className="flex-shrink-0 rounded-xl border border-gray-200 px-2.5 py-1 text-[11px] font-bold text-gray-500 hover:border-coral-200 hover:text-coral-600 disabled:opacity-40"
+          className="flex-shrink-0 rounded-xl border border-ink-200 px-2.5 py-1 text-[11px] font-bold text-ink-500 hover:border-coral-200 hover:text-coral-600 disabled:opacity-40"
         >
           {cancelLoading ? "…" : "Отменить"}
         </button>

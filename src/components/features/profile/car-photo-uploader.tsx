@@ -93,7 +93,7 @@ export function CarPhotoUploader() {
           onClick={() => inputRef.current?.click()}
           disabled={isPending}
           className={cn(
-            "group relative h-32 w-48 overflow-hidden rounded-2xl ring-2 ring-teal-500/30 transition hover:ring-teal-500",
+            "group relative h-32 w-48 overflow-hidden rounded-2xl ring-2 ring-brand-500/30 transition hover:ring-brand-500",
             isPending && "opacity-70",
           )}
           aria-label="Загрузить фото автомобиля"
@@ -106,8 +106,8 @@ export function CarPhotoUploader() {
               className="h-full w-full object-cover"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-gray-100">
-              <Car className="h-10 w-10 text-gray-400" aria-hidden="true" />
+            <div className="flex h-full w-full items-center justify-center bg-ink-100">
+              <Car className="h-10 w-10 text-ink-400" aria-hidden="true" />
             </div>
           )}
           <span className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition group-hover:opacity-100 group-focus-visible:opacity-100">
@@ -126,7 +126,7 @@ export function CarPhotoUploader() {
           onChange={handleFile}
         />
         {isSuccess && !isPending && (
-          <p className="text-[11px] font-semibold text-teal-700">Фото обновлено</p>
+          <p className="text-[11px] font-semibold text-brand-700">Фото обновлено</p>
         )}
         {error && (
           <p className="text-[11px] font-semibold text-coral-600">Ошибка загрузки. Попробуйте снова.</p>
@@ -135,7 +135,7 @@ export function CarPhotoUploader() {
 
       {/* Read-only car info from tech passport */}
       <div className="flex flex-col gap-2">
-        <p className="text-[12px] font-bold uppercase tracking-wide text-gray-400">Данные из техпаспорта</p>
+        <p className="text-[12px] font-bold uppercase tracking-wide text-ink-400">Данные из техпаспорта</p>
         <div className="grid grid-cols-2 gap-x-6 gap-y-1.5">
           {[
             { label: "Марка", value: car.make },
@@ -146,12 +146,12 @@ export function CarPhotoUploader() {
             { label: "Мест", value: String(car.seats) },
           ].map(({ label, value }) => (
             <div key={label}>
-              <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400">{label}</p>
-              <p className="text-[14px] font-bold text-gray-900">{value}</p>
+              <p className="text-[10px] font-semibold uppercase tracking-wide text-ink-400">{label}</p>
+              <p className="text-[14px] font-bold text-ink-900">{value}</p>
             </div>
           ))}
         </div>
-        <p className="mt-1 text-[11px] font-semibold text-gray-400">
+        <p className="mt-1 text-[11px] font-semibold text-ink-400">
           Данные автомобиля изменяются только через повторную верификацию.
         </p>
       </div>

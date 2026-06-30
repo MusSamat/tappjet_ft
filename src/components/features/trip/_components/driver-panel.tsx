@@ -108,31 +108,31 @@ export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string
     <div className="flex flex-col gap-3">
       <div className="rounded-2xl border border-ink-200 bg-white p-5">
         <div className="mb-4 flex items-center justify-between">
-          <p className="text-[13px] font-extrabold text-gray-900">{t("trip_control_title")}</p>
+          <p className="text-[13px] font-extrabold text-ink-900">{t("trip_control_title")}</p>
           <span className={cn(
             "rounded-full px-2.5 py-1 text-[11px] font-bold",
             (trip.status as string | undefined) === "active"
-              ? "bg-teal-50 text-teal-700"
-              : "bg-gray-100 text-gray-600",
+              ? "bg-brand-50 text-brand-700"
+              : "bg-ink-100 text-ink-600",
           )}>
             {(trip.status as string | undefined) === "active" ? t("trip_active") : t("trip_completed")}
           </span>
         </div>
 
         <div className="mb-4 grid grid-cols-3 gap-2">
-          <div className="rounded-xl bg-gray-50 p-2.5 text-center">
-            <p className="text-[20px] font-extrabold text-gray-900">
+          <div className="rounded-xl bg-ink-50 p-2.5 text-center">
+            <p className="text-[20px] font-extrabold text-ink-900">
               {(trip.seatsAvailable as number | undefined) ?? 0}
             </p>
-            <p className="text-[10px] font-bold uppercase text-gray-500">{t("seats_free")}</p>
+            <p className="text-[10px] font-bold uppercase text-ink-500">{t("seats_free")}</p>
           </div>
-          <div className="rounded-xl bg-amber-50 p-2.5 text-center">
-            <p className="text-[20px] font-extrabold text-amber-700">{pendingCount}</p>
-            <p className="text-[10px] font-bold uppercase text-amber-600">{t("seats_pending")}</p>
+          <div className="rounded-xl bg-accent-50 p-2.5 text-center">
+            <p className="text-[20px] font-extrabold text-accent-700">{pendingCount}</p>
+            <p className="text-[10px] font-bold uppercase text-accent-600">{t("seats_pending")}</p>
           </div>
-          <div className="rounded-xl bg-teal-50 p-2.5 text-center">
-            <p className="text-[20px] font-extrabold text-teal-700">{acceptedCount}</p>
-            <p className="text-[10px] font-bold uppercase text-teal-600">{t("seats_accepted")}</p>
+          <div className="rounded-xl bg-brand-50 p-2.5 text-center">
+            <p className="text-[20px] font-extrabold text-brand-700">{acceptedCount}</p>
+            <p className="text-[10px] font-bold uppercase text-brand-600">{t("seats_accepted")}</p>
           </div>
         </div>
 
@@ -152,14 +152,14 @@ export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string
         <Link
           key={pr.counterpartId}
           href={`/trips/${tripId}/rate/${pr.counterpartId}`}
-          className="flex items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 hover:bg-amber-100"
+          className="flex items-center gap-3 rounded-2xl border border-accent-200 bg-accent-50 px-4 py-3 hover:bg-accent-100"
         >
-          <Star className="h-5 w-5 flex-shrink-0 fill-amber-400 text-amber-400" />
+          <Star className="h-5 w-5 flex-shrink-0 fill-accent-400 text-accent-400" />
           <div className="flex-1">
-            <p className="text-[13px] font-bold text-gray-900">{t("rate_passenger_title")}</p>
-            <p className="text-[12px] text-gray-600">{pr.counterpartName}</p>
+            <p className="text-[13px] font-bold text-ink-900">{t("rate_passenger_title")}</p>
+            <p className="text-[12px] text-ink-600">{pr.counterpartName}</p>
           </div>
-          <ArrowRight className="h-4 w-4 text-teal-600" />
+          <ArrowRight className="h-4 w-4 text-brand-600" />
         </Link>
       ))}
 
@@ -169,8 +169,8 @@ export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string
         </div>
       ) : bookings.length === 0 ? (
         <div className="rounded-2xl border border-ink-100 bg-white p-6 text-center">
-          <Users className="mx-auto mb-2 h-8 w-8 text-gray-300" />
-          <p className="text-[14px] font-bold text-gray-700">{t("no_requests")}</p>
+          <Users className="mx-auto mb-2 h-8 w-8 text-ink-300" />
+          <p className="text-[14px] font-bold text-ink-700">{t("no_requests")}</p>
         </div>
       ) : (
         bookings.map((b) => {
@@ -204,7 +204,7 @@ export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string
 
       {cancelBookingTarget && (
         <Overlay onClose={() => setCancelBookingTarget(null)}>
-          <h2 className="mb-2 text-[18px] font-extrabold text-gray-900">{t("cancel_booking_title")}</h2>
+          <h2 className="mb-2 text-[18px] font-extrabold text-ink-900">{t("cancel_booking_title")}</h2>
           <div className="mt-2 rounded-2xl border border-coral-200 bg-coral-50 p-4">
             <p className="text-[13px] font-bold text-coral-700">
               {t("cancel_booking_warn")}
@@ -214,7 +214,7 @@ export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string
             <button
               type="button"
               onClick={() => setCancelBookingTarget(null)}
-              className="flex-1 rounded-xl border border-gray-200 py-2.5 text-[13px] font-bold text-gray-700"
+              className="flex-1 rounded-xl border border-ink-200 py-2.5 text-[13px] font-bold text-ink-700"
             >
               {t("back_btn")}
             </button>
@@ -232,7 +232,7 @@ export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string
 
       {cancelTripOpen && (
         <Overlay onClose={() => setCancelTripOpen(false)}>
-          <h2 className="mb-2 text-[18px] font-extrabold text-gray-900">{t("cancel_trip_title")}</h2>
+          <h2 className="mb-2 text-[18px] font-extrabold text-ink-900">{t("cancel_trip_title")}</h2>
           <div className="mt-2 rounded-2xl border border-coral-200 bg-coral-50 p-4">
             <p className="text-[13px] font-bold text-coral-700">
               {t("cancel_trip_warn")}
@@ -243,7 +243,7 @@ export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string
             <button
               type="button"
               onClick={() => setCancelTripOpen(false)}
-              className="flex-1 rounded-xl border border-gray-200 py-2.5 text-[13px] font-bold text-gray-700"
+              className="flex-1 rounded-xl border border-ink-200 py-2.5 text-[13px] font-bold text-ink-700"
             >
               {t("back_btn")}
             </button>

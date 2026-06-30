@@ -52,7 +52,7 @@ export default function AdminLoginPage() {
       <div className="mb-6 text-center">
         <div className="mb-1 flex items-center justify-center gap-2">
           <span className="text-[22px] font-extrabold text-slate-900">Tappjet</span>
-          <span className="rounded bg-amber-500 px-1.5 py-0.5 text-[10px] font-bold text-amber-900">
+          <span className="rounded bg-accent-500 px-1.5 py-0.5 text-[10px] font-bold text-accent-700">
             ADMIN
           </span>
         </div>

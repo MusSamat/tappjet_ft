@@ -18,18 +18,18 @@ export function ToggleCard({
       type="button"
       onClick={onToggle}
       className={cn(
-        "flex w-full items-center justify-between rounded-xl border-2 p-3 text-left transition-colors",
-        on ? "border-teal-200 bg-teal-50" : "border-gray-200 bg-white hover:border-gray-300",
+        "flex w-full items-center justify-between rounded-2xl border-2 p-3 text-left transition-colors",
+        on ? "border-brand-200 bg-brand-50" : "border-ink-200 bg-white hover:border-ink-300",
       )}
     >
       <div>
-        <div className="text-[13px] font-bold text-gray-900">{label}</div>
-        {hint && <div className="text-[11px] text-gray-500">{hint}</div>}
+        <div className="text-[13px] font-bold text-ink-900">{label}</div>
+        {hint && <div className="text-[11px] text-ink-500">{hint}</div>}
       </div>
       <div
         className={cn(
           "relative h-6 w-10 flex-shrink-0 rounded-full transition-colors",
-          on ? "bg-teal-600" : "bg-gray-200",
+          on ? "bg-brand-600" : "bg-ink-200",
         )}
       >
         <span

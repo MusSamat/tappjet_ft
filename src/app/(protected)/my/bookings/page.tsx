@@ -213,15 +213,15 @@ export default function MyBookingsPage() {
 
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-[26px] font-extrabold text-gray-900">{t("title")}</h1>
-          <p className="mt-0.5 text-[12px] font-semibold text-gray-400">
+          <h1 className="text-[26px] font-extrabold text-ink-900">{t("title")}</h1>
+          <p className="mt-0.5 text-[12px] font-semibold text-ink-400">
             {t("subtitle")}
           </p>
         </div>
         <Link href="/trips/create">
           <button
             type="button"
-            className="flex items-center gap-1.5 rounded-xl bg-amber-500 px-4 py-2.5 text-[13px] font-bold text-[#4A2C00] hover:bg-amber-600"
+            className="flex items-center gap-1.5 rounded-2xl bg-accent-500 px-4 py-2.5 text-[13px] font-bold text-[#4A2C00] hover:bg-accent-600"
           >
             <Plus className="h-4 w-4" />
             {t("publish_btn")}

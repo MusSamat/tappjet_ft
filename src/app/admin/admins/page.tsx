@@ -112,7 +112,7 @@ export default function AdminAdminsPage() {
                       className={cn(
                         "rounded px-1.5 py-0.5 text-[10px] font-bold",
                         a.role === "superadmin"
-                          ? "bg-amber-100 text-amber-800"
+                          ? "bg-accent-100 text-accent-700"
                           : "bg-slate-100 text-slate-600",
                       )}
                     >
@@ -199,7 +199,7 @@ export default function AdminAdminsPage() {
                         "flex-1 rounded-xl py-2.5 text-[13px] font-bold transition-colors",
                         role === r
                           ? r === "superadmin"
-                            ? "bg-amber-500 text-amber-900"
+                            ? "bg-accent-500 text-accent-700"
                             : "bg-slate-900 text-white"
                           : "border border-slate-200 text-slate-600 hover:bg-slate-50",
                       )}

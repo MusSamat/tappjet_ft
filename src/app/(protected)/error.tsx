@@ -24,16 +24,16 @@ export default function ProtectedError({
       <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-coral-50">
         <AlertTriangle className="h-7 w-7 text-coral-500" aria-hidden="true" />
       </div>
-      <h1 className="text-[20px] font-extrabold text-gray-900">{t("page_title")}</h1>
-      <p className="mt-2 max-w-sm text-[13px] text-gray-500">{t("page_desc")}</p>
+      <h1 className="text-[20px] font-extrabold text-ink-900">{t("page_title")}</h1>
+      <p className="mt-2 max-w-sm text-[13px] text-ink-500">{t("page_desc")}</p>
       {error.digest && (
-        <p className="mt-1 font-mono text-[11px] text-gray-400">{t("code", { code: error.digest })}</p>
+        <p className="mt-1 font-mono text-[11px] text-ink-400">{t("code", { code: error.digest })}</p>
       )}
       <div className="mt-6 flex flex-wrap justify-center gap-3">
         <button
           type="button"
           onClick={reset}
-          className="flex items-center gap-2 rounded-xl bg-teal-600 px-5 py-2.5 text-[13px] font-bold text-white hover:bg-teal-700"
+          className="flex items-center gap-2 rounded-2xl bg-brand-600 px-5 py-2.5 text-[13px] font-bold text-white hover:bg-brand-700"
         >
           <RefreshCw className="h-4 w-4" aria-hidden="true" />
           {t("repeat")}
@@ -41,7 +41,7 @@ export default function ProtectedError({
         <button
           type="button"
           onClick={() => router.push("/")}
-          className="flex items-center gap-2 rounded-xl border border-gray-200 px-5 py-2.5 text-[13px] font-bold text-gray-700 hover:bg-gray-50"
+          className="flex items-center gap-2 rounded-2xl border border-ink-200 px-5 py-2.5 text-[13px] font-bold text-ink-700 hover:bg-ink-50"
         >
           <Home className="h-4 w-4" aria-hidden="true" />
           {t("home")}

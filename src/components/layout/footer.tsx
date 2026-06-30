@@ -30,13 +30,13 @@ export function Footer() {
   if (pathname.includes("/chat")) return null;
 
   return (
-    <footer className="border-t border-gray-100 bg-white">
+    <footer className="border-t border-ink-100 bg-white">
       <div className="container grid grid-cols-2 gap-8 py-10 md:grid-cols-4">
         <div className="col-span-2 md:col-span-1">
-          <Link href="/" className="text-h2 font-extrabold text-teal-600">
+          <Link href="/" className="text-h2 font-extrabold text-brand-600">
             Tappjet
           </Link>
-          <p className="mt-2 text-caption text-gray-500">
+          <p className="mt-2 text-caption text-ink-500">
             {t("tagline")}
           </p>
         </div>
@@ -45,8 +45,8 @@ export function Footer() {
         <FooterColumn title={t("company")} items={LINKS.company} />
         <FooterColumn title={t("support")} items={LINKS.support} />
       </div>
-      <div className="border-t border-gray-100">
-        <div className="container flex flex-col items-start justify-between gap-2 py-4 text-caption text-gray-500 md:flex-row md:items-center">
+      <div className="border-t border-ink-100">
+        <div className="container flex flex-col items-start justify-between gap-2 py-4 text-caption text-ink-500 md:flex-row md:items-center">
           <span>© {year} Tappjet</span>
           <span>{t("made_in")}</span>
         </div>
@@ -64,7 +64,7 @@ function FooterColumn({
 }) {
   return (
     <div>
-      <h3 className="text-caption font-bold uppercase tracking-wider text-gray-500">{title}</h3>
+      <h3 className="text-caption font-bold uppercase tracking-wider text-ink-500">{title}</h3>
       <ul className="mt-3 flex flex-col gap-2">
         {items.map((item) => (
           <li key={item.href}>
@@ -73,12 +73,12 @@ function FooterColumn({
                 href={item.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-body text-gray-700 hover:text-teal-700"
+                className="text-body text-ink-700 hover:text-brand-700"
               >
                 {item.label}
               </a>
             ) : (
-              <Link href={item.href} className="text-body text-gray-700 hover:text-teal-700">
+              <Link href={item.href} className="text-body text-ink-700 hover:text-brand-700">
                 {item.label}
               </Link>
             )}

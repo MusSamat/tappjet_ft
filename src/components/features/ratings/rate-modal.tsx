@@ -63,14 +63,14 @@ export function RateModal({ rating, onClose }: Props) {
       >
         {/* Drag handle — mobile only */}
         <div className="flex justify-center pb-1 pt-3 sm:hidden">
-          <div className="h-1 w-10 rounded-full bg-gray-200" />
+          <div className="h-1 w-10 rounded-full bg-ink-200" />
         </div>
 
         {!submitted && (
           <button
             type="button"
             onClick={onClose}
-            className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-gray-400 hover:bg-gray-100"
+            className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-ink-400 hover:bg-ink-100"
           >
             <X className="h-4 w-4" />
           </button>
@@ -81,14 +81,14 @@ export function RateModal({ rating, onClose }: Props) {
             <div className="flex flex-col items-center py-8 text-center">
               <div className="relative mx-auto mb-5 flex h-20 w-20 items-center justify-center">
                 <div
-                  className="absolute inset-0 animate-ping rounded-full bg-amber-100 opacity-60"
+                  className="absolute inset-0 animate-ping rounded-full bg-accent-100 opacity-60"
                   style={{ animationDuration: "1.2s" }}
                 />
-                <div className="relative flex h-20 w-20 items-center justify-center rounded-full bg-amber-50">
+                <div className="relative flex h-20 w-20 items-center justify-center rounded-full bg-accent-50">
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
-                      className="absolute h-4 w-4 fill-amber-400 text-amber-400"
+                      className="absolute h-4 w-4 fill-accent-400 text-accent-400"
                       style={{ transform: `rotate(${i * 72}deg) translateY(-30px)` }}
                       aria-hidden="true"
                     />
@@ -96,8 +96,8 @@ export function RateModal({ rating, onClose }: Props) {
                   <span className="text-[28px]">🙌</span>
                 </div>
               </div>
-              <h2 className="text-[22px] font-extrabold text-gray-900">Спасибо!</h2>
-              <p className="mx-auto mt-2 max-w-[280px] text-[14px] text-gray-600">
+              <h2 className="text-[22px] font-extrabold text-ink-900">Спасибо!</h2>
+              <p className="mx-auto mt-2 max-w-[280px] text-[14px] text-ink-600">
                 Ваша оценка поможет другим выбрать хорошего{" "}
                 {rating.direction === "driver" ? "водителя" : "пассажира"}.
               </p>
@@ -106,7 +106,7 @@ export function RateModal({ rating, onClose }: Props) {
             <>
               <div className="mb-6 flex flex-col items-center gap-3 text-center">
                 <DriverAvatar name={rating.counterpartName} size="lg" />
-                <h2 className="text-[20px] font-extrabold text-gray-900">
+                <h2 className="text-[20px] font-extrabold text-ink-900">
                   Как прошла поездка с {rating.counterpartName}?
                 </h2>
               </div>
@@ -132,15 +132,15 @@ export function RateModal({ rating, onClose }: Props) {
                       className={cn(
                         "h-11 w-11 transition-colors",
                         (hover || score) >= s
-                          ? "fill-amber-400 text-amber-400"
-                          : "text-gray-300",
+                          ? "fill-accent-400 text-accent-400"
+                          : "text-ink-300",
                       )}
                       aria-hidden="true"
                     />
                   </button>
                 ))}
               </div>
-              <p className="mb-5 text-center text-[13px] font-semibold text-gray-500">
+              <p className="mb-5 text-center text-[13px] font-semibold text-ink-500">
                 {["Выберите оценку", "Ужасно", "Плохо", "Нормально", "Хорошо", "Отлично"][score]}
               </p>
 
@@ -148,7 +148,7 @@ export function RateModal({ rating, onClose }: Props) {
                 <>
                   {/* Tags */}
                   <div className="mb-4">
-                    <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-gray-500">
+                    <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-ink-500">
                       {score >= 4 ? "Что понравилось?" : "Что не понравилось?"}
                     </p>
                     <div className="flex flex-wrap gap-2">
@@ -160,8 +160,8 @@ export function RateModal({ rating, onClose }: Props) {
                           className={cn(
                             "rounded-full border-2 px-3 py-1 text-[12px] font-bold transition-colors",
                             tags.includes(value)
-                              ? "border-teal-600 bg-teal-50 text-teal-700"
-                              : "border-gray-300 text-gray-700 hover:border-teal-400",
+                              ? "border-brand-600 bg-brand-50 text-brand-700"
+                              : "border-ink-300 text-ink-700 hover:border-brand-400",
                           )}
                         >
                           {label}
@@ -172,7 +172,7 @@ export function RateModal({ rating, onClose }: Props) {
 
                   {/* Comment */}
                   <div className="mb-4">
-                    <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-gray-500">
+                    <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-ink-500">
                       Отзыв (необязательно)
                     </p>
                     <Textarea
@@ -182,21 +182,21 @@ export function RateModal({ rating, onClose }: Props) {
                       value={comment}
                       onChange={(e) => setComment(e.target.value.slice(0, MAX_COMMENT))}
                     />
-                    <p className="mt-1 text-right text-[11px] text-gray-400">
+                    <p className="mt-1 text-right text-[11px] text-ink-400">
                       {comment.length}/{MAX_COMMENT}
                     </p>
                   </div>
 
                   {/* Mutual review notice */}
-                  <div className="mb-4 rounded-2xl bg-gray-50 p-3">
+                  <div className="mb-4 rounded-2xl bg-ink-50 p-3">
                     <div className="mb-1 flex items-center gap-2">
-                      <svg className="h-3.5 w-3.5 flex-shrink-0 text-gray-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <svg className="h-3.5 w-3.5 flex-shrink-0 text-ink-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                         <path d="M20 13c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V5l8-3 8 3v8z" />
                         <path d="m9 12 2 2 4-4" />
                       </svg>
-                      <span className="text-[13px] font-bold text-gray-900">Взаимный отзыв</span>
+                      <span className="text-[13px] font-bold text-ink-900">Взаимный отзыв</span>
                     </div>
-                    <p className="text-[12px] font-semibold text-gray-500">
+                    <p className="text-[12px] font-semibold text-ink-500">
                       Ваша оценка появится, когда {rating.counterpartName.split(" ")[0]} тоже
                       оставит отзыв о вас. Это защищает от мести в рейтингах.
                     </p>
@@ -212,7 +212,7 @@ export function RateModal({ rating, onClose }: Props) {
                     type="button"
                     disabled={score === 0 || isPending}
                     onClick={() => mutate()}
-                    className="w-full rounded-2xl bg-amber-500 py-3.5 text-[15px] font-bold text-[#4A2C00] transition-colors hover:bg-amber-600 disabled:opacity-50"
+                    className="w-full rounded-2xl bg-accent-500 py-3.5 text-[15px] font-bold text-[#4A2C00] transition-colors hover:bg-accent-600 disabled:opacity-50"
                   >
                     {isPending ? <Spinner size={18} /> : "Отправить отзыв"}
                   </button>

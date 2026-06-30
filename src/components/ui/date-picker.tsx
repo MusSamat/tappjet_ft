@@ -145,14 +145,14 @@ export function DatePicker({
               ? cn(
                   "h-9 rounded-xl border bg-white px-3",
                   open
-                    ? "border-teal-500 ring-2 ring-teal-100"
-                    : "border-gray-200 hover:border-gray-300",
+                    ? "border-brand-500 ring-2 ring-brand-100"
+                    : "border-ink-200 hover:border-ink-300",
                 )
               : cn(
                   "h-10 rounded-xl border bg-white px-3",
                   open
-                    ? "border-teal-500 ring-2 ring-teal-100"
-                    : "border-gray-200 hover:border-gray-300",
+                    ? "border-brand-500 ring-2 ring-brand-100"
+                    : "border-ink-200 hover:border-ink-300",
                 ),
         )}
       >
@@ -161,7 +161,7 @@ export function DatePicker({
             className={cn(
               "flex-shrink-0",
               compact ? "h-3.5 w-3.5" : "h-4 w-4",
-              value ? "text-teal-600" : "text-gray-400",
+              value ? "text-brand-600" : "text-ink-400",
             )}
             aria-hidden="true"
           />
@@ -170,7 +170,7 @@ export function DatePicker({
           className={cn(
             "flex-1 truncate font-semibold",
             compact ? "text-[12px]" : "text-[14px]",
-            displayStr ? "text-gray-900" : "text-gray-400",
+            displayStr ? "text-ink-900" : "text-ink-400",
           )}
         >
           {displayStr || (placeholder ?? l.any)}
@@ -180,7 +180,7 @@ export function DatePicker({
             role="button"
             aria-label={l.clear}
             onClick={(e) => { e.stopPropagation(); onChange(""); }}
-            className="flex-shrink-0 cursor-pointer text-gray-300 hover:text-gray-500"
+            className="flex-shrink-0 cursor-pointer text-ink-300 hover:text-ink-500"
           >
             <X className="h-3.5 w-3.5" aria-hidden="true" />
           </span>
@@ -195,26 +195,26 @@ export function DatePicker({
           aria-modal="true"
           aria-label="Выбор даты"
           style={{ position: "fixed", top: pos.top, left: pos.left, width: pos.width, zIndex: 9999 }}
-          className="min-w-[280px] overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-2xl"
+          className="min-w-[280px] overflow-hidden rounded-2xl border border-ink-100 bg-white shadow-2xl"
         >
           {/* Month nav */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-gray-50">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-ink-50">
             <button
               type="button"
               onClick={prevMonth}
               aria-label="Предыдущий месяц"
-              className="flex h-7 w-7 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 transition-colors"
+              className="flex h-7 w-7 items-center justify-center rounded-lg text-ink-500 hover:bg-ink-100 transition-colors"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
-            <span className="text-[14px] font-extrabold text-gray-900">
+            <span className="text-[14px] font-extrabold text-ink-900">
               {l.months[view.month]} {view.year}
             </span>
             <button
               type="button"
               onClick={nextMonth}
               aria-label="Следующий месяц"
-              className="flex h-7 w-7 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 transition-colors"
+              className="flex h-7 w-7 items-center justify-center rounded-lg text-ink-500 hover:bg-ink-100 transition-colors"
             >
               <ChevronRight className="h-4 w-4" />
             </button>
@@ -227,7 +227,7 @@ export function DatePicker({
                 key={d}
                 className={cn(
                   "text-center text-[11px] font-bold",
-                  i >= 5 ? "text-coral-400" : "text-gray-400",
+                  i >= 5 ? "text-coral-400" : "text-ink-400",
                 )}
               >
                 {d}
@@ -253,11 +253,11 @@ export function DatePicker({
                   className={cn(
                     "flex h-8 w-full items-center justify-center rounded-lg text-[13px] font-semibold transition-colors",
                     disabled && "cursor-not-allowed opacity-25",
-                    selected && "bg-teal-600 font-bold text-white",
-                    !selected && !disabled && "hover:bg-gray-100",
-                    !selected && isToday && "ring-1 ring-teal-500 font-extrabold text-teal-600",
+                    selected && "bg-brand-600 font-bold text-white",
+                    !selected && !disabled && "hover:bg-ink-100",
+                    !selected && isToday && "ring-1 ring-brand-500 font-extrabold text-brand-600",
                     !selected && !isToday && !disabled && weekend && "text-coral-500",
-                    !selected && !isToday && !disabled && !weekend && "text-gray-800",
+                    !selected && !isToday && !disabled && !weekend && "text-ink-800",
                   )}
                 >
                   {day}
@@ -268,11 +268,11 @@ export function DatePicker({
 
           {/* Clear */}
           {value && (
-            <div className="border-t border-gray-100 px-4 py-2.5">
+            <div className="border-t border-ink-100 px-4 py-2.5">
               <button
                 type="button"
                 onClick={() => { onChange(""); setOpen(false); }}
-                className="text-[12px] font-bold text-gray-400 transition-colors hover:text-teal-600"
+                className="text-[12px] font-bold text-ink-400 transition-colors hover:text-brand-600"
               >
                 {l.clear}
               </button>

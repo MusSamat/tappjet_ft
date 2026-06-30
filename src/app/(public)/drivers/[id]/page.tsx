@@ -47,15 +47,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 const TIER_COLORS: Record<string, string> = {
   traveler: "bg-sky-50 text-sky-700 border-sky-200",
   expert: "bg-purple-50 text-purple-700 border-purple-200",
-  elite: "bg-amber-50 text-amber-700 border-amber-200",
+  elite: "bg-accent-50 text-accent-700 border-accent-200",
 };
 
 function StatCard({ icon: Icon, label, value }: { icon: React.ElementType; label: string; value: string }) {
   return (
     <div className="flex flex-col items-center gap-1 rounded-2xl border border-ink-100 bg-white p-4 text-center">
-      <Icon className="h-5 w-5 text-teal-500" aria-hidden="true" />
-      <span className="text-[22px] font-extrabold leading-none text-gray-900">{value}</span>
-      <span className="text-[11px] font-semibold text-gray-500">{label}</span>
+      <Icon className="h-5 w-5 text-brand-500" aria-hidden="true" />
+      <span className="text-[22px] font-extrabold leading-none text-ink-900">{value}</span>
+      <span className="text-[11px] font-semibold text-ink-500">{label}</span>
     </div>
   );
 }
@@ -81,7 +81,7 @@ export default async function UserProfilePage({ params }: Props) {
         <DriverAvatar name={user.name ?? "?"} src={user.avatarUrl ?? null} size="lg" />
         <div className="flex-1 text-center sm:text-left">
           <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
-            <h1 className="text-[22px] font-extrabold text-gray-900">{user.name}</h1>
+            <h1 className="text-[22px] font-extrabold text-ink-900">{user.name}</h1>
             {isDriver && <VerifiedBadge />}
             {loyaltyTier && (
               <span className={`flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-[11px] font-bold ${TIER_COLORS[loyaltyTier] ?? ""}`}>
@@ -95,20 +95,20 @@ export default async function UserProfilePage({ params }: Props) {
             {rating !== null && ratingCount >= 3 ? (
               <RatingStars value={rating} size={15} showValue />
             ) : (
-              <span className="text-[13px] text-gray-500">
+              <span className="text-[13px] text-ink-500">
                 {t("new_role", { role: isDriver ? t("driver_role") : t("passenger_role") })}
               </span>
             )}
             {ratingCount > 0 && (
-              <span className="text-[12px] text-gray-500">· {ratingCount} {t("ratings_count")}</span>
+              <span className="text-[12px] text-ink-500">· {ratingCount} {t("ratings_count")}</span>
             )}
             {joinYear && (
-              <span className="text-[12px] text-gray-400">· {t("since", { year: joinYear })}</span>
+              <span className="text-[12px] text-ink-400">· {t("since", { year: joinYear })}</span>
             )}
           </div>
 
           <div className="mt-2 flex flex-wrap justify-center gap-1.5 sm:justify-start">
-            <span className={`rounded-full border px-2.5 py-0.5 text-[11px] font-semibold ${isDriver ? "border-teal-200 bg-teal-50 text-teal-700" : "border-gray-200 bg-gray-50 text-gray-600"}`}>
+            <span className={`rounded-full border px-2.5 py-0.5 text-[11px] font-semibold ${isDriver ? "border-brand-200 bg-brand-50 text-brand-700" : "border-ink-200 bg-ink-50 text-ink-600"}`}>
               {isDriver ? `🚗 ${t("driver_badge")}` : `👤 ${t("passenger_badge")}`}
             </span>
           </div>
@@ -138,43 +138,43 @@ export default async function UserProfilePage({ params }: Props) {
           )}
 
           <div className="p-5">
-            <h2 className="mb-4 flex items-center gap-2 text-[15px] font-extrabold text-gray-900">
-              <Car className="h-4 w-4 text-teal-600" aria-hidden="true" />
+            <h2 className="mb-4 flex items-center gap-2 text-[15px] font-extrabold text-ink-900">
+              <Car className="h-4 w-4 text-brand-600" aria-hidden="true" />
               {t("car_section")}
             </h2>
 
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">{t("car_make_model")}</p>
-                <p className="mt-0.5 text-[14px] font-bold text-gray-900">{car.make} {car.model}</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{t("car_make_model")}</p>
+                <p className="mt-0.5 text-[14px] font-bold text-ink-900">{car.make} {car.model}</p>
               </div>
               <div>
                 <div className="flex items-center gap-1">
-                  <Calendar className="h-3 w-3 text-gray-400" aria-hidden="true" />
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">{t("car_year")}</p>
+                  <Calendar className="h-3 w-3 text-ink-400" aria-hidden="true" />
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{t("car_year")}</p>
                 </div>
-                <p className="mt-0.5 text-[14px] font-bold text-gray-900">{car.year}</p>
+                <p className="mt-0.5 text-[14px] font-bold text-ink-900">{car.year}</p>
               </div>
               <div>
                 <div className="flex items-center gap-1">
-                  <Palette className="h-3 w-3 text-gray-400" aria-hidden="true" />
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">{t("car_color")}</p>
+                  <Palette className="h-3 w-3 text-ink-400" aria-hidden="true" />
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{t("car_color")}</p>
                 </div>
-                <p className="mt-0.5 text-[14px] font-bold text-gray-900">{car.color}</p>
+                <p className="mt-0.5 text-[14px] font-bold text-ink-900">{car.color}</p>
               </div>
               <div>
                 <div className="flex items-center gap-1">
-                  <Hash className="h-3 w-3 text-gray-400" aria-hidden="true" />
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">{t("car_plate")}</p>
+                  <Hash className="h-3 w-3 text-ink-400" aria-hidden="true" />
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{t("car_plate")}</p>
                 </div>
-                <p className="mt-0.5 font-mono text-[15px] font-extrabold tracking-wider text-teal-700">{car.plate}</p>
+                <p className="mt-0.5 font-mono text-[15px] font-extrabold tracking-wider text-brand-700">{car.plate}</p>
               </div>
               <div>
                 <div className="flex items-center gap-1">
-                  <Users className="h-3 w-3 text-gray-400" aria-hidden="true" />
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">{t("car_seats")}</p>
+                  <Users className="h-3 w-3 text-ink-400" aria-hidden="true" />
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{t("car_seats")}</p>
                 </div>
-                <p className="mt-0.5 text-[14px] font-bold text-gray-900">{car.seats}</p>
+                <p className="mt-0.5 text-[14px] font-bold text-ink-900">{car.seats}</p>
               </div>
             </div>
           </div>
@@ -183,12 +183,12 @@ export default async function UserProfilePage({ params }: Props) {
 
       {/* Reviews */}
       <section>
-        <h2 className="mb-3 text-[17px] font-extrabold text-gray-900">
-          {t("reviews_title")} {ratingCount > 0 && <span className="text-gray-400">({ratingCount})</span>}
+        <h2 className="mb-3 text-[17px] font-extrabold text-ink-900">
+          {t("reviews_title")} {ratingCount > 0 && <span className="text-ink-400">({ratingCount})</span>}
         </h2>
         {ratings.length === 0 ? (
           <div className="rounded-2xl border border-ink-100 bg-white p-8 text-center">
-            <p className="text-[14px] font-semibold text-gray-500">{t("no_reviews")}</p>
+            <p className="text-[14px] font-semibold text-ink-500">{t("no_reviews")}</p>
           </div>
         ) : (
           <ul className="flex flex-col gap-3">
@@ -198,17 +198,17 @@ export default async function UserProfilePage({ params }: Props) {
                   <DriverAvatar name={r.rater?.name ?? "?"} src={r.rater?.avatarUrl ?? null} size="sm" />
                   <div className="flex-1">
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-[14px] font-bold text-gray-900">{r.rater?.name}</span>
-                      <span className="inline-flex items-center gap-1 text-[12px] font-bold text-amber-600">
-                        <Star className="h-3.5 w-3.5 fill-amber-500 stroke-amber-500" aria-hidden="true" />
+                      <span className="text-[14px] font-bold text-ink-900">{r.rater?.name}</span>
+                      <span className="inline-flex items-center gap-1 text-[12px] font-bold text-accent-600">
+                        <Star className="h-3.5 w-3.5 fill-accent-500 stroke-accent-500" aria-hidden="true" />
                         {r.score}
                       </span>
                     </div>
-                    {r.comment && <p className="mt-1 text-[13px] leading-relaxed text-gray-700">{r.comment}</p>}
+                    {r.comment && <p className="mt-1 text-[13px] leading-relaxed text-ink-700">{r.comment}</p>}
                     {r.tags && r.tags.length > 0 && (
                       <ul className="mt-2 flex flex-wrap gap-1.5">
                         {r.tags.map((tag) => (
-                          <li key={tag} className="rounded-full bg-teal-50 px-2.5 py-0.5 text-[11px] font-semibold text-teal-800">
+                          <li key={tag} className="rounded-full bg-brand-50 px-2.5 py-0.5 text-[11px] font-semibold text-brand-800">
                             {tag}
                           </li>
                         ))}

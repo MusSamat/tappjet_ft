@@ -11,9 +11,9 @@ export function ProgressBar({ value, max = 100, label, className }: ProgressBarP
   const pct = Math.min(100, Math.max(0, (value / max) * 100));
   return (
     <div className={cn("flex flex-col gap-1", className)}>
-      {label && <span className="text-caption font-semibold text-gray-700">{label}</span>}
+      {label && <span className="text-caption font-semibold text-ink-700">{label}</span>}
       <div
-        className="h-1.5 w-full overflow-hidden rounded-full bg-gray-200"
+        className="h-1.5 w-full overflow-hidden rounded-full bg-ink-200"
         role="progressbar"
         aria-valuenow={value}
         aria-valuemin={0}
@@ -21,7 +21,7 @@ export function ProgressBar({ value, max = 100, label, className }: ProgressBarP
         aria-label={label}
       >
         <div
-          className="h-full rounded-full bg-gradient-to-r from-teal-500 to-teal-400 transition-[width]"
+          className="h-full rounded-full bg-gradient-to-r from-brand-500 to-brand-400 transition-[width]"
           style={{ width: `${pct}%` }}
         />
       </div>

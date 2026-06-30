@@ -17,7 +17,7 @@ export const ModalOverlay = forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      "fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      "fixed inset-0 z-50 bg-ink-900/60 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       className,
     )}
     {...rest}
@@ -45,7 +45,7 @@ export const ModalContent = forwardRef<ElementRef<typeof DialogPrimitive.Content
         {!hideCloseButton && (
           <ModalClose
             aria-label="Закрыть"
-            className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
+            className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-ink-500 transition-colors hover:bg-ink-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
           >
             <X className="h-5 w-5" aria-hidden="true" />
           </ModalClose>
@@ -64,7 +64,7 @@ export const ModalTitle = forwardRef<
   ElementRef<typeof DialogPrimitive.Title>,
   ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
 >(({ className, ...rest }, ref) => (
-  <DialogPrimitive.Title ref={ref} className={cn("text-h1 text-gray-900", className)} {...rest} />
+  <DialogPrimitive.Title ref={ref} className={cn("text-h1 text-ink-900", className)} {...rest} />
 ));
 ModalTitle.displayName = DialogPrimitive.Title.displayName;
 
@@ -74,7 +74,7 @@ export const ModalDescription = forwardRef<
 >(({ className, ...rest }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cn("text-body-lg text-gray-700", className)}
+    className={cn("text-body-lg text-ink-700", className)}
     {...rest}
   />
 ));

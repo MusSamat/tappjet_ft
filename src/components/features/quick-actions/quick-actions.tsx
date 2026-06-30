@@ -142,12 +142,12 @@ export function QuickActions() {
         data-qa-fab
         type="button"
         onClick={handleFabClick}
-        className="qa-fab-bottom fixed right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-teal-600 text-white shadow-xl transition-transform hover:scale-105 hover:bg-teal-700 active:scale-95"
+        className="qa-fab-bottom fixed right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-brand-600 text-white shadow-xl transition-transform hover:scale-105 hover:bg-brand-700 active:scale-95"
         aria-label={t("fab_aria")}
       >
         {open ? <X className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" />}
         {!open && fabBadge > 0 && (
-          <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-amber-500 px-1 text-[10px] font-extrabold text-white">
+          <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-accent-500 px-1 text-[10px] font-extrabold text-white">
             {fabBadge > 9 ? "9+" : fabBadge}
           </span>
         )}
@@ -161,21 +161,21 @@ export function QuickActions() {
           style={{ maxHeight: "60vh" }}
         >
           {/* Header */}
-          <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
-            <h3 className="text-[14px] font-bold text-gray-900">
+          <div className="flex items-center justify-between border-b border-ink-100 px-4 py-3">
+            <h3 className="text-[14px] font-bold text-ink-900">
               {tab === "chats" ? t("tab_chats") : tab === "requests" ? t("tab_requests") : t("tab_notifications")}
             </h3>
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="flex h-7 w-7 items-center justify-center rounded-full hover:bg-gray-100"
+              className="flex h-7 w-7 items-center justify-center rounded-full hover:bg-ink-100"
             >
-              <X className="h-4 w-4 text-gray-500" />
+              <X className="h-4 w-4 text-ink-500" />
             </button>
           </div>
 
           {/* Tabs */}
-          <div className="flex border-b border-gray-100">
+          <div className="flex border-b border-ink-100">
             {tabsForRole.map(({ id, label, badge }) => (
               <button
                 key={id}
@@ -184,13 +184,13 @@ export function QuickActions() {
                 className={cn(
                   "relative flex flex-1 items-center justify-center gap-1.5 py-2.5 text-[12px] font-bold transition-colors",
                   tab === id
-                    ? "border-b-2 border-teal-600 text-teal-700"
-                    : "border-b-2 border-transparent text-gray-500 hover:text-gray-700",
+                    ? "border-b-2 border-brand-600 text-brand-700"
+                    : "border-b-2 border-transparent text-ink-500 hover:text-ink-700",
                 )}
               >
                 {label}
                 {badge !== undefined && badge > 0 && (
-                  <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-amber-500 px-0.5 text-[10px] font-extrabold text-white">
+                  <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-accent-500 px-0.5 text-[10px] font-extrabold text-white">
                     {badge > 9 ? "9+" : badge}
                   </span>
                 )}
@@ -206,11 +206,11 @@ export function QuickActions() {
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-between border-t border-gray-100 px-4 py-2.5">
+          <div className="flex items-center justify-between border-t border-ink-100 px-4 py-2.5">
             <Link
               href={tab === "notifications" ? "/notifications" : "/my/bookings"}
               onClick={() => setOpen(false)}
-              className="text-[12px] font-bold text-teal-600 hover:text-teal-700"
+              className="text-[12px] font-bold text-brand-600 hover:text-brand-700"
             >
               {tab === "notifications" ? t("all_notifications_link") : t("all_bookings_link")}
             </Link>

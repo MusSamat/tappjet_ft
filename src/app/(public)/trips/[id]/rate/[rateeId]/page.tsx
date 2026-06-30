@@ -80,12 +80,12 @@ export default function RatePage({ params }: Props) {
       <div className="container max-w-lg py-16 text-center">
         {/* Animated stars burst */}
         <div className="relative mx-auto mb-6 flex h-24 w-24 items-center justify-center">
-          <div className="absolute inset-0 animate-ping rounded-full bg-amber-100 opacity-60" style={{ animationDuration: "1.2s" }} />
-          <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-amber-50">
+          <div className="absolute inset-0 animate-ping rounded-full bg-accent-100 opacity-60" style={{ animationDuration: "1.2s" }} />
+          <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-accent-50">
             {[...Array(5)].map((_, i) => (
               <Star
                 key={i}
-                className="absolute h-5 w-5 fill-amber-400 text-amber-400"
+                className="absolute h-5 w-5 fill-accent-400 text-accent-400"
                 style={{
                   transform: `rotate(${i * 72}deg) translateY(-36px)`,
                   animation: `cardIn 0.4s ease both`,
@@ -97,12 +97,12 @@ export default function RatePage({ params }: Props) {
             <span className="text-[32px]">🙌</span>
           </div>
         </div>
-        <h1 className="text-[26px] font-extrabold text-gray-900">{t("success_title")}</h1>
-        <p className="mx-auto mt-3 max-w-[320px] text-[15px] leading-relaxed text-gray-600">
+        <h1 className="text-[26px] font-extrabold text-ink-900">{t("success_title")}</h1>
+        <p className="mx-auto mt-3 max-w-[320px] text-[15px] leading-relaxed text-ink-600">
           {t("success_desc")}
         </p>
-        <div className="mx-auto mt-6 h-1 w-20 rounded-full bg-amber-300" />
-        <p className="mt-4 text-[12px] font-semibold text-gray-400">{t("success_redirect")}</p>
+        <div className="mx-auto mt-6 h-1 w-20 rounded-full bg-accent-300" />
+        <p className="mt-4 text-[12px] font-semibold text-ink-400">{t("success_redirect")}</p>
       </div>
     );
   }
@@ -110,8 +110,8 @@ export default function RatePage({ params }: Props) {
   if (!pending) {
     return (
       <div className="container max-w-lg py-20 text-center">
-        <h1 className="text-h1 text-gray-900">{t("unavailable_title")}</h1>
-        <p className="mt-2 text-body-lg text-gray-700">{t("unavailable_desc")}</p>
+        <h1 className="text-h1 text-ink-900">{t("unavailable_title")}</h1>
+        <p className="mt-2 text-body-lg text-ink-700">{t("unavailable_desc")}</p>
         <Button variant="primary" size="md" className="mt-6" onClick={() => router.push("/my/bookings")}>
           {t("my_bookings_link")}
         </Button>
@@ -130,7 +130,7 @@ export default function RatePage({ params }: Props) {
       <button
         type="button"
         onClick={() => router.push("/my/bookings")}
-        className="mb-4 inline-flex items-center gap-1 text-[13px] font-bold text-gray-600 hover:text-gray-900"
+        className="mb-4 inline-flex items-center gap-1 text-[13px] font-bold text-ink-600 hover:text-ink-900"
       >
         {t("back")}
       </button>
@@ -139,7 +139,7 @@ export default function RatePage({ params }: Props) {
         <div className="flex flex-col items-center gap-3 text-center">
           <DriverAvatar name={pending.counterpartName} size="lg" />
           <div>
-            <h1 className="text-[22px] font-extrabold text-gray-900">
+            <h1 className="text-[22px] font-extrabold text-ink-900">
               {t("question", { name: pending.counterpartName })}
             </h1>
           </div>
@@ -166,14 +166,14 @@ export default function RatePage({ params }: Props) {
               <Star
                 className={cn(
                   "h-11 w-11 transition-colors",
-                  (hover || score) >= s ? "fill-amber-400 text-amber-400" : "text-gray-300",
+                  (hover || score) >= s ? "fill-accent-400 text-accent-400" : "text-ink-300",
                 )}
                 aria-hidden="true"
               />
             </button>
           ))}
         </div>
-        <p className="mt-2 text-center text-[13px] font-semibold text-gray-500">
+        <p className="mt-2 text-center text-[13px] font-semibold text-ink-500">
           {[t("label_0"), t("label_1"), t("label_2"), t("label_3"), t("label_4"), t("label_5")][score]}
         </p>
 
@@ -181,7 +181,7 @@ export default function RatePage({ params }: Props) {
           <>
             {/* Tags */}
             <div className="mt-5">
-              <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-gray-500">
+              <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-ink-500">
                 {score >= 4 ? t("liked") : t("disliked")}
               </p>
               <div className="flex flex-wrap gap-2">
@@ -193,8 +193,8 @@ export default function RatePage({ params }: Props) {
                     className={cn(
                       "rounded-full border-2 px-3 py-1 text-[12px] font-bold transition-colors",
                       tags.includes(value)
-                        ? "border-teal-600 bg-teal-50 text-teal-700"
-                        : "border-gray-300 text-gray-700 hover:border-teal-400",
+                        ? "border-brand-600 bg-brand-50 text-brand-700"
+                        : "border-ink-300 text-ink-700 hover:border-brand-400",
                     )}
                   >
                     {label}
@@ -205,7 +205,7 @@ export default function RatePage({ params }: Props) {
 
             {/* Comment */}
             <div className="mt-4">
-              <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-gray-500">{t("comment_label")}</p>
+              <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-ink-500">{t("comment_label")}</p>
               <Textarea
                 rows={3}
                 maxLength={MAX_COMMENT}
@@ -213,16 +213,16 @@ export default function RatePage({ params }: Props) {
                 value={comment}
                 onChange={(e) => setComment(e.target.value.slice(0, MAX_COMMENT))}
               />
-              <p className="mt-1 text-right text-[11px] text-gray-400">{comment.length}/{MAX_COMMENT}</p>
+              <p className="mt-1 text-right text-[11px] text-ink-400">{comment.length}/{MAX_COMMENT}</p>
             </div>
 
             {/* Mutual review notice */}
-            <div className="mt-4 rounded-2xl bg-gray-50 p-3">
+            <div className="mt-4 rounded-2xl bg-ink-50 p-3">
               <div className="flex items-center gap-2 mb-1">
-                <svg className="h-3.5 w-3.5 text-gray-700 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V5l8-3 8 3v8z"/><path d="m9 12 2 2 4-4"/></svg>
-                <span className="text-[13px] font-bold text-gray-900">{t("blind_title")}</span>
+                <svg className="h-3.5 w-3.5 text-ink-700 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V5l8-3 8 3v8z"/><path d="m9 12 2 2 4-4"/></svg>
+                <span className="text-[13px] font-bold text-ink-900">{t("blind_title")}</span>
               </div>
-              <p className="text-[12px] font-semibold text-gray-500">
+              <p className="text-[12px] font-semibold text-ink-500">
                 {t("blind_desc", { name: pending.counterpartName.split(" ")[0] })}
               </p>
             </div>

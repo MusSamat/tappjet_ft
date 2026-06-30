@@ -6,20 +6,20 @@ import { cn } from "@/lib/utils/cn";
 const notifVariants = cva("flex gap-3 rounded-2xl border-l-[4px] p-4", {
   variants: {
     variant: {
-      info: "bg-teal-50 border-l-teal-500 text-gray-900",
-      success: "bg-teal-50 border-l-success text-gray-900",
-      warning: "bg-amber-50 border-l-amber-500 text-gray-900",
-      error: "bg-coral-100/40 border-l-coral-500 text-gray-900",
+      info: "bg-brand-50 border-l-brand-500 text-ink-900",
+      success: "bg-brand-50 border-l-success text-ink-900",
+      warning: "bg-accent-50 border-l-accent-500 text-ink-900",
+      error: "bg-coral-100/40 border-l-coral-500 text-ink-900",
     },
   },
   defaultVariants: { variant: "info" },
 });
 
 const iconColorMap = {
-  info: "text-teal-700",
+  info: "text-brand-700",
   success: "text-success",
-  warning: "text-amber-600",
-  error: "text-error",
+  warning: "text-accent-600",
+  error: "text-coral-500",
 } as const;
 
 const iconMap = {
@@ -52,7 +52,7 @@ export function NotifCard({
       </span>
       <div className="min-w-0 flex-1">
         {title && <p className="text-body font-bold">{title}</p>}
-        <div className="text-body-lg text-gray-700">{children}</div>
+        <div className="text-body-lg text-ink-700">{children}</div>
       </div>
     </div>
   );

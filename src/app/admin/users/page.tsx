@@ -143,7 +143,7 @@ export default function AdminUsersPage() {
                             "rounded px-1.5 py-0.5 text-[10px] font-bold",
                             r === "driver"
                               ? "bg-sky-100 text-sky-700"
-                              : "bg-teal-100 text-teal-700",
+                              : "bg-brand-100 text-brand-700",
                           )}
                         >
                           {r}
@@ -154,7 +154,7 @@ export default function AdminUsersPage() {
                   <td className="hidden px-4 py-3 md:table-cell">
                     {u.rating != null ? (
                       <div className="flex items-center gap-1 text-[13px]">
-                        <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                        <Star className="h-3 w-3 fill-accent-400 text-accent-400" />
                         <span className="font-bold">{u.rating.toFixed(1)}</span>
                         <span className="text-slate-400">({u.ratingCount})</span>
                       </div>
@@ -182,7 +182,7 @@ export default function AdminUsersPage() {
                         Блок
                       </span>
                     ) : (
-                      <span className="rounded-full bg-teal-50 px-2.5 py-1 text-[11px] font-bold text-teal-700">
+                      <span className="rounded-full bg-brand-50 px-2.5 py-1 text-[11px] font-bold text-brand-700">
                         Активен
                       </span>
                     )}

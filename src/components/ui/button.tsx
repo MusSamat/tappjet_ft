@@ -7,17 +7,17 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        submit: "bg-accent-500 text-[#4A2C00] shadow-cta hover:bg-accent-400 focus-visible:ring-accent-500",
-        primary: "bg-brand-600 text-white shadow-brandcta hover:bg-brand-700 focus-visible:ring-brand-600",
+        submit: "bg-accent-500 text-[#4A2C00] shadow-cta hover:bg-accent-400 focus-visible:ring-accent-500 font-black",
+        primary: "bg-brand-600 text-white shadow-brandcta hover:bg-brand-700 focus-visible:ring-brand-600 font-black",
         secondary: "bg-brand-50 text-brand-700 hover:bg-brand-100",
         outline: "bg-white text-ink-700 border-2 border-ink-200 hover:border-brand-400 hover:text-brand-700",
         ghost: "text-brand-700 hover:bg-brand-50",
-        danger: "bg-coral-500 text-white hover:bg-coral-600",
-        pill: "bg-accent-500 text-[#4A2C00] shadow-cta hover:bg-accent-400 rounded-full",
+        danger: "bg-coral-500 text-white hover:bg-coral-600 font-black",
+        pill: "bg-accent-500 text-[#4A2C00] shadow-cta hover:bg-accent-400 rounded-full font-black",
       },
       size: {
         sm: "h-9 px-4 text-caption rounded-xl",
-        md: "h-11 px-5 text-body rounded-2xl",
+        md: "h-12 px-6 text-body-lg rounded-2xl",
         lg: "h-[52px] px-7 text-body-lg rounded-2xl min-w-[44px]",
       },
     },

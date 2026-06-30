@@ -12,7 +12,7 @@ export function RoleSwitcher() {
   if (status !== "authenticated" || !user?.roles?.includes("driver")) return null;
 
   return (
-    <div className="flex rounded-full border border-gray-200 bg-gray-100 p-0.5 text-[12px] font-bold">
+    <div className="flex rounded-full border border-ink-200 bg-ink-100 p-0.5 text-[12px] font-bold">
       <button
         type="button"
         onClick={() => setActiveMode("passenger")}
@@ -20,7 +20,7 @@ export function RoleSwitcher() {
           "rounded-full px-3.5 py-1 transition-all",
           activeMode === "passenger"
             ? "bg-grape-500 text-white shadow-sm"
-            : "text-gray-500 hover:text-gray-700",
+            : "text-ink-500 hover:text-ink-700",
         )}
       >
         Пассажир
@@ -32,7 +32,7 @@ export function RoleSwitcher() {
           "rounded-full px-3.5 py-1 transition-all",
           activeMode === "driver"
             ? "bg-brand-600 text-white shadow-sm"
-            : "text-gray-500 hover:text-gray-700",
+            : "text-ink-500 hover:text-ink-700",
         )}
       >
         Водитель

@@ -25,12 +25,12 @@ interface StepPreviewProps {
 function Row({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
     <div className="flex items-center gap-3 py-2.5">
-      <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-teal-50 text-teal-600">
+      <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-brand-50 text-brand-600">
         {icon}
       </div>
       <div className="min-w-0">
-        <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">{label}</p>
-        <p className="truncate text-[14px] font-bold text-gray-900">{value}</p>
+        <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{label}</p>
+        <p className="truncate text-[14px] font-bold text-ink-900">{value}</p>
       </div>
     </div>
   );
@@ -57,11 +57,11 @@ export function StepPreview({
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h2 className="text-[17px] font-bold text-gray-900">{t("step_preview_title")}</h2>
-        <p className="mt-1 text-[12px] font-semibold text-gray-400">{t("preview_subtitle")}</p>
+        <h2 className="text-[17px] font-bold text-ink-900">{t("step_preview_title")}</h2>
+        <p className="mt-1 text-[12px] font-semibold text-ink-400">{t("preview_subtitle")}</p>
       </div>
 
-      <div className="divide-y divide-gray-100 rounded-2xl border border-ink-100 bg-white px-5 py-2">
+      <div className="divide-y divide-ink-100 rounded-2xl border border-ink-100 bg-white px-5 py-2">
         <Row icon={<MapPin className="h-4 w-4" />} label={t("from_label")} value={originCity} />
         {pickupCities.length > 0 && (
           <Row
@@ -103,14 +103,14 @@ export function StepPreview({
               {prefLabels.map((p) => (
                 <span
                   key={p}
-                  className="rounded-full bg-teal-50 px-3 py-1 text-[12px] font-bold text-teal-700"
+                  className="rounded-full bg-brand-50 px-3 py-1 text-[12px] font-bold text-brand-700"
                 >
                   {p}
                 </span>
               ))}
             </div>
           )}
-          {comment && <p className="text-[13px] font-semibold text-gray-700">{comment}</p>}
+          {comment && <p className="text-[13px] font-semibold text-ink-700">{comment}</p>}
         </div>
       )}
 
@@ -124,7 +124,7 @@ export function StepPreview({
         <button
           type="button"
           onClick={onBack}
-          className="flex h-12 flex-1 items-center justify-center rounded-xl border-2 border-ink-200 text-[14px] font-bold text-gray-700 hover:bg-gray-50"
+          className="flex h-12 flex-1 items-center justify-center rounded-2xl border-2 border-ink-200 text-[14px] font-bold text-ink-700 hover:bg-ink-50"
         >
           {t("back")}
         </button>
@@ -132,7 +132,7 @@ export function StepPreview({
           type="button"
           disabled={isPending}
           onClick={onPublish}
-          className="flex h-12 flex-[2] items-center justify-center gap-2 rounded-xl bg-amber-500 text-[14px] font-bold text-[#4A2C00] transition-colors hover:bg-amber-600 disabled:opacity-40"
+          className="flex h-12 flex-[2] items-center justify-center gap-2 rounded-2xl bg-accent-500 text-[14px] font-bold text-[#4A2C00] transition-colors hover:bg-accent-600 disabled:opacity-40"
         >
           {isPending ? (
             <Spinner size={18} />

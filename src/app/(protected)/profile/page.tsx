@@ -81,15 +81,15 @@ export default function ProfilePage() {
   return (
     <Container className="py-8">
       {!user?.phoneVerified && (
-        <div className="mb-4 flex items-center justify-between rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4">
+        <div className="mb-4 flex items-center justify-between rounded-2xl border border-accent-200 bg-accent-50 px-5 py-4">
           <div>
-            <p className="text-[14px] font-bold text-amber-900">Добавьте номер телефона</p>
-            <p className="text-[12px] font-semibold text-amber-700">Нужен для бронирования и связи с водителями</p>
+            <p className="text-[14px] font-bold text-accent-700">Добавьте номер телефона</p>
+            <p className="text-[12px] font-semibold text-accent-700">Нужен для бронирования и связи с водителями</p>
           </div>
           <button
             type="button"
             onClick={() => setShowAddPhone(true)}
-            className="ml-4 shrink-0 rounded-xl bg-amber-500 px-4 py-2 text-[13px] font-bold text-white hover:bg-amber-600"
+            className="ml-4 shrink-0 rounded-2xl bg-accent-500 px-4 py-2 text-[13px] font-bold text-white hover:bg-accent-600"
           >
             Добавить
           </button>
@@ -107,9 +107,9 @@ export default function ProfilePage() {
 
           <div className="flex flex-1 flex-col items-center gap-2 sm:items-start">
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-[22px] font-extrabold text-gray-900">{user?.name}</h1>
+              <h1 className="text-[22px] font-extrabold text-ink-900">{user?.name}</h1>
               {user?.phoneVerified && (
-                <span className="flex items-center gap-1 rounded-full bg-teal-50 px-2.5 py-0.5 text-[11px] font-bold text-teal-700">
+                <span className="flex items-center gap-1 rounded-full bg-brand-50 px-2.5 py-0.5 text-[11px] font-bold text-brand-700">
                   <Shield className="h-3 w-3" aria-hidden="true" />
                   {t("verified_badge")}
                 </span>
@@ -119,29 +119,29 @@ export default function ProfilePage() {
             {user?.rating != null && (
               <div className="flex items-center gap-2">
                 <RatingStars value={user.rating} />
-                <span className="text-[14px] font-bold text-gray-700">{user.rating.toFixed(1)}</span>
-                <span className="text-[13px] text-gray-400">{t("rating_count", { n: user.ratingCount })}</span>
+                <span className="text-[14px] font-bold text-ink-700">{user.rating.toFixed(1)}</span>
+                <span className="text-[13px] text-ink-400">{t("rating_count", { n: user.ratingCount })}</span>
               </div>
             )}
 
             <div className="flex flex-wrap gap-2">
               {user?.phoneVerified && (
-                <span className="rounded-full border border-gray-200 px-2.5 py-0.5 text-[11px] font-semibold text-gray-600">
+                <span className="rounded-full border border-ink-200 px-2.5 py-0.5 text-[11px] font-semibold text-ink-600">
                   {t("badge_phone")}
                 </span>
               )}
               {isDriver && (
-                <span className="rounded-full border border-gray-200 px-2.5 py-0.5 text-[11px] font-semibold text-gray-600">
+                <span className="rounded-full border border-ink-200 px-2.5 py-0.5 text-[11px] font-semibold text-ink-600">
                   {t("badge_driver")}
                 </span>
               )}
               {user?.telegramLinked && (
-                <span className="rounded-full border border-gray-200 px-2.5 py-0.5 text-[11px] font-semibold text-gray-600">
+                <span className="rounded-full border border-ink-200 px-2.5 py-0.5 text-[11px] font-semibold text-ink-600">
                   {t("badge_telegram")}
                 </span>
               )}
               {joinYear && (
-                <span className="rounded-full border border-gray-200 px-2.5 py-0.5 text-[11px] font-semibold text-gray-600">
+                <span className="rounded-full border border-ink-200 px-2.5 py-0.5 text-[11px] font-semibold text-ink-600">
                   {t("badge_since", { year: joinYear })}
                 </span>
               )}
@@ -154,7 +154,7 @@ export default function ProfilePage() {
           <button
             type="button"
             onClick={() => setTab("settings")}
-            className="flex items-center gap-1.5 self-start rounded-xl border border-gray-200 px-3 py-2 text-[13px] font-semibold text-gray-700 hover:bg-gray-50"
+            className="flex items-center gap-1.5 self-start rounded-2xl border border-ink-200 px-3 py-2 text-[13px] font-semibold text-ink-700 hover:bg-ink-50"
           >
             <Settings className="h-4 w-4" aria-hidden="true" />
             {t("settings_btn")}
@@ -164,12 +164,12 @@ export default function ProfilePage() {
 
       {isDriver && (
         <div className="mb-4 flex items-center justify-between rounded-2xl border border-ink-100 bg-white px-5 py-3 md:hidden">
-          <span className="text-[13px] font-semibold text-gray-600">{t("mode_label")}</span>
+          <span className="text-[13px] font-semibold text-ink-600">{t("mode_label")}</span>
           <RoleSwitcher />
         </div>
       )}
 
-      <div className="tabs-scroll mb-4 flex overflow-x-auto border-b border-gray-200">
+      <div className="tabs-scroll mb-4 flex overflow-x-auto border-b border-ink-200">
         {(["about", "reviews", "history", "settings"] as Tab[]).map((tabKey) => {
           const labels: Record<Tab, string> = {
             about: t("tab_about"),
@@ -185,8 +185,8 @@ export default function ProfilePage() {
               className={cn(
                 "flex-shrink-0 border-b-2 px-4 py-2.5 text-[13px] font-bold transition-colors",
                 tab === tabKey
-                  ? "border-teal-600 text-teal-700"
-                  : "border-transparent text-gray-500 hover:text-gray-700",
+                  ? "border-brand-600 text-brand-700"
+                  : "border-transparent text-ink-500 hover:text-ink-700",
               )}
             >
               {labels[tabKey]}
@@ -199,7 +199,7 @@ export default function ProfilePage() {
         <div className="flex flex-col gap-4">
           <ProfileCompletion user={user} isDriver={!!isDriver} />
           <div className="rounded-2xl border border-ink-100 bg-white p-5">
-            <h2 className="mb-4 text-[15px] font-extrabold text-gray-900">{t("stats_title")}</h2>
+            <h2 className="mb-4 text-[15px] font-extrabold text-ink-900">{t("stats_title")}</h2>
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
               <StatBlock value={user?.rating != null ? user.rating.toFixed(1) : "—"} label={t("stat_rating")} />
               <StatBlock value={String(user?.ratingCount ?? 0)} label={t("stat_reviews")} />
@@ -208,7 +208,7 @@ export default function ProfilePage() {
             </div>
             <Link
               href="/loyalty"
-              className="mt-4 flex items-center justify-center gap-1 text-[12px] font-bold text-teal-600 hover:text-teal-700"
+              className="mt-4 flex items-center justify-center gap-1 text-[12px] font-bold text-brand-600 hover:text-brand-700"
             >
               <Award className="h-3.5 w-3.5" aria-hidden="true" />
               {t("loyalty_link")}
@@ -218,7 +218,7 @@ export default function ProfilePage() {
 
           {isDriver && driverStats && (
             <div className="rounded-2xl border border-sky-200 bg-sky-50 p-5">
-              <h2 className="mb-4 text-[15px] font-extrabold text-gray-900">{t("driver_stats_title")}</h2>
+              <h2 className="mb-4 text-[15px] font-extrabold text-ink-900">{t("driver_stats_title")}</h2>
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
                 <StatBlock value={String(driverStats.totalTrips)} label={t("driver_stat_trips")} />
                 <StatBlock
@@ -232,8 +232,8 @@ export default function ProfilePage() {
           )}
 
           <div className="rounded-2xl border border-ink-100 bg-white p-5">
-            <h2 className="mb-3 text-[15px] font-extrabold text-gray-900">{t("bio_title")}</h2>
-            <p className="text-[14px] leading-relaxed text-gray-700">
+            <h2 className="mb-3 text-[15px] font-extrabold text-ink-900">{t("bio_title")}</h2>
+            <p className="text-[14px] leading-relaxed text-ink-700">
               {(user as { bio?: string | null } | null)?.bio || t("bio_placeholder")}
             </p>
           </div>
@@ -246,8 +246,8 @@ export default function ProfilePage() {
             Array.from({ length: 3 }).map((_, i) => <ReviewCardSkeleton key={i} />)
           ) : ratingsData?.data.length === 0 ? (
             <div className="rounded-2xl border border-ink-100 bg-white p-10 text-center">
-              <p className="text-[17px] font-bold text-gray-900">{t("no_reviews")}</p>
-              <p className="mt-2 text-[13px] text-gray-500">{t("no_reviews_hint")}</p>
+              <p className="text-[17px] font-bold text-ink-900">{t("no_reviews")}</p>
+              <p className="mt-2 text-[13px] text-ink-500">{t("no_reviews_hint")}</p>
             </div>
           ) : (
             ratingsData?.data.map((r) => <ReviewCard key={r.id} review={r} />)
@@ -257,7 +257,7 @@ export default function ProfilePage() {
 
       {tab === "history" && (
         <div className="rounded-2xl border border-ink-100 bg-white p-10 text-center">
-          <p className="text-[13px] font-semibold text-gray-500">
+          <p className="text-[13px] font-semibold text-ink-500">
             {t("history_hint")}
           </p>
         </div>

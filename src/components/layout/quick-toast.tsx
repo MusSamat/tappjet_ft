@@ -33,27 +33,27 @@ const ICONS = {
 } satisfies Record<ToastItem["type"], React.ElementType>;
 
 const COLORS = {
-  booking_request: "border-teal-200 bg-teal-50",
-  booking_accepted: "border-teal-200 bg-teal-50",
+  booking_request: "border-brand-200 bg-brand-50",
+  booking_accepted: "border-brand-200 bg-brand-50",
   booking_rejected: "border-red-200 bg-red-50",
   booking_cancelled: "border-red-200 bg-red-50",
-  booking_expired: "border-amber-200 bg-amber-50",
-  chat_message: "border-gray-200 bg-white",
+  booking_expired: "border-accent-200 bg-accent-50",
+  chat_message: "border-ink-200 bg-white",
   error: "border-red-200 bg-red-50",
-  warning: "border-amber-200 bg-amber-50",
-  info: "border-teal-200 bg-teal-50",
+  warning: "border-accent-200 bg-accent-50",
+  info: "border-brand-200 bg-brand-50",
 } satisfies Record<ToastItem["type"], string>;
 
 const ICON_COLORS = {
-  booking_request: "text-teal-600",
-  booking_accepted: "text-teal-600",
+  booking_request: "text-brand-600",
+  booking_accepted: "text-brand-600",
   booking_rejected: "text-red-500",
   booking_cancelled: "text-red-500",
-  booking_expired: "text-amber-500",
-  chat_message: "text-teal-600",
+  booking_expired: "text-accent-500",
+  chat_message: "text-brand-600",
   error: "text-red-500",
-  warning: "text-amber-500",
-  info: "text-teal-600",
+  warning: "text-accent-500",
+  info: "text-brand-600",
 } satisfies Record<ToastItem["type"], string>;
 
 const AUTO_DISMISS_MS = 6000;
@@ -79,14 +79,14 @@ function Toast({ item, onDismiss }: { item: ToastItem; onDismiss: () => void }) 
         <Icon className={cn("h-5 w-5", ICON_COLORS[item.type])} aria-hidden="true" />
       </span>
       <div className="min-w-0 flex-1">
-        <p className="text-[13px] font-bold text-gray-900">{item.title}</p>
-        <p className="mt-0.5 text-[12px] text-gray-700">{item.body}</p>
+        <p className="text-[13px] font-bold text-ink-900">{item.title}</p>
+        <p className="mt-0.5 text-[12px] text-ink-700">{item.body}</p>
       </div>
       <button
         type="button"
         onClick={onDismiss}
         aria-label="Закрыть"
-        className="flex-shrink-0 text-gray-400 hover:text-gray-600"
+        className="flex-shrink-0 text-ink-400 hover:text-ink-600"
       >
         <X className="h-4 w-4" aria-hidden="true" />
       </button>

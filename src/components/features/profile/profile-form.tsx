@@ -36,7 +36,7 @@ export function ProfileForm() {
       <div>
         <Label htmlFor="name">Имя</Label>
         <Input id="name" {...register("name")} className="mt-1" />
-        {errors.name && <p className="mt-1 text-caption text-error">{errors.name.message}</p>}
+        {errors.name && <p className="mt-1 text-caption text-coral-500">{errors.name.message}</p>}
       </div>
 
       <div>
@@ -44,7 +44,7 @@ export function ProfileForm() {
         <select
           id="language"
           {...register("language")}
-          className="mt-1 h-11 w-full rounded-xl border-2 border-ink-300 bg-white px-4 text-body text-gray-900 outline-none focus:border-teal-500"
+          className="mt-1 h-12 w-full rounded-2xl border-2 border-ink-200 bg-white px-4 text-body-lg text-ink-900 outline-none focus:border-brand-500"
         >
           <option value="ru">Русский</option>
           <option value="kg">Кыргызча</option>
@@ -52,10 +52,10 @@ export function ProfileForm() {
       </div>
 
       {error && (
-        <p className="text-caption text-error">Не удалось сохранить. Попробуйте снова.</p>
+        <p className="text-caption text-coral-500">Не удалось сохранить. Попробуйте снова.</p>
       )}
       {isSuccess && (
-        <p className="text-caption text-teal-700">Изменения сохранены.</p>
+        <p className="text-caption text-brand-700">Изменения сохранены.</p>
       )}
 
       <Button type="submit" variant="primary" size="md" disabled={!isDirty || isPending}>

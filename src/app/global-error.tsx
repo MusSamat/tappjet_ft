@@ -46,15 +46,15 @@ export default function GlobalError({
         <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-red-50">
           <AlertTriangle className="h-8 w-8 text-red-500" aria-hidden="true" />
         </div>
-        <h1 className="text-[22px] font-extrabold text-gray-900">{msg.title}</h1>
-        <p className="mt-2 max-w-sm text-[14px] text-gray-500">{msg.desc}</p>
+        <h1 className="text-[22px] font-extrabold text-ink-900">{msg.title}</h1>
+        <p className="mt-2 max-w-sm text-[14px] text-ink-500">{msg.desc}</p>
         {error.digest && (
-          <p className="mt-1 font-mono text-[11px] text-gray-400">{msg.code}{error.digest}</p>
+          <p className="mt-1 font-mono text-[11px] text-ink-400">{msg.code}{error.digest}</p>
         )}
         <button
           type="button"
           onClick={reset}
-          className="mt-6 flex items-center gap-2 rounded-xl bg-teal-600 px-6 py-2.5 text-[14px] font-bold text-white hover:bg-teal-700"
+          className="mt-6 flex items-center gap-2 rounded-2xl bg-brand-600 px-6 py-2.5 text-[14px] font-bold text-white hover:bg-brand-700"
         >
           <RefreshCw className="h-4 w-4" aria-hidden="true" />
           {msg.retry}

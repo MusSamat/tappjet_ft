@@ -72,26 +72,26 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
   if (step === "waiting") {
     return (
       <div className="rounded-3xl border border-ink-100 bg-white p-8 text-center shadow-sm">
-        <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-amber-50">
-          <Clock className="h-9 w-9 text-amber-500" aria-hidden="true" />
+        <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-accent-50">
+          <Clock className="h-9 w-9 text-accent-500" aria-hidden="true" />
         </div>
-        <h2 className="text-[22px] font-extrabold text-gray-900">Запрос отправлен</h2>
-        <p className="mx-auto mt-2 max-w-[340px] text-[14px] leading-relaxed text-gray-500">
+        <h2 className="text-[22px] font-extrabold text-ink-900">Запрос отправлен</h2>
+        <p className="mx-auto mt-2 max-w-[340px] text-[14px] leading-relaxed text-ink-500">
           Водитель уведомлён. Пока ждёте ответ, можете задать уточняющие вопросы в чате.
         </p>
 
         {/* Progress bar */}
-        <div className="mx-auto mt-5 h-1 w-full max-w-[320px] overflow-hidden rounded-full bg-gray-100">
-          <div className="h-full w-2/5 rounded-full bg-amber-500" />
+        <div className="mx-auto mt-5 h-1 w-full max-w-[320px] overflow-hidden rounded-full bg-ink-100">
+          <div className="h-full w-2/5 rounded-full bg-accent-500" />
         </div>
 
         {/* Pre-booking chat notice */}
-        <div className="mx-auto mt-5 max-w-[400px] rounded-2xl border border-teal-100 bg-teal-50 px-4 py-3 text-left">
+        <div className="mx-auto mt-5 max-w-[400px] rounded-2xl border border-brand-100 bg-brand-50 px-4 py-3 text-left">
           <div className="flex items-center gap-2 mb-1">
-            <MessageCircle className="h-3.5 w-3.5 text-teal-700 flex-shrink-0" aria-hidden="true" />
-            <span className="text-[13px] font-extrabold text-teal-800">Чат до бронирования</span>
+            <MessageCircle className="h-3.5 w-3.5 text-brand-700 flex-shrink-0" aria-hidden="true" />
+            <span className="text-[13px] font-extrabold text-brand-800">Чат до бронирования</span>
           </div>
-          <p className="text-[12px] leading-relaxed text-teal-700">
+          <p className="text-[12px] leading-relaxed text-brand-700">
             Вы можете задать вопросы водителю. После принятия запроса лимит снимется и история сохранится.
           </p>
         </div>
@@ -112,7 +112,7 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
           )}
         </div>
 
-        <p className="mt-4 flex items-center justify-center gap-1.5 text-[12px] text-gray-400">
+        <p className="mt-4 flex items-center justify-center gap-1.5 text-[12px] text-ink-400">
           <Bell className="h-3.5 w-3.5" aria-hidden="true" />
           Уведомление придёт в Telegram и в приложение
         </p>
@@ -141,8 +141,8 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
       <div className="rounded-2xl border border-ink-200 bg-white p-4">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-[15px] font-bold text-gray-900">Количество мест</p>
-            <p className="mt-0.5 text-[12px] font-semibold text-gray-500">Свободно: {seatsAvailable}</p>
+            <p className="text-[15px] font-bold text-ink-900">Количество мест</p>
+            <p className="mt-0.5 text-[12px] font-semibold text-ink-500">Свободно: {seatsAvailable}</p>
           </div>
           <div className="flex items-center gap-3">
             <button
@@ -150,17 +150,17 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
               onClick={() => setSeats((s) => Math.max(1, s - 1))}
               aria-label="Меньше мест"
               disabled={seats <= 1 || disabled}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-300 text-[20px] font-bold text-gray-900 hover:bg-gray-100 disabled:opacity-40"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-ink-300 text-[20px] font-bold text-ink-900 hover:bg-ink-100 disabled:opacity-40"
             >
               −
             </button>
-            <span className="min-w-[28px] text-center text-[24px] font-extrabold text-gray-900">{seats}</span>
+            <span className="min-w-[28px] text-center text-[24px] font-extrabold text-ink-900">{seats}</span>
             <button
               type="button"
               onClick={() => setSeats((s) => Math.min(max, s + 1))}
               aria-label="Больше мест"
               disabled={seats >= max || disabled}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-300 text-[20px] font-bold text-gray-900 hover:bg-gray-100 disabled:opacity-40"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-ink-300 text-[20px] font-bold text-ink-900 hover:bg-ink-100 disabled:opacity-40"
             >
               +
             </button>
@@ -177,7 +177,7 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
               key={chip}
               type="button"
               onClick={() => setComment((prev) => prev ? `${prev}, ${chip.toLowerCase()}` : chip)}
-              className="rounded-full border border-gray-200 bg-gray-50 px-2.5 py-1 text-[11px] font-semibold text-gray-600 transition-colors hover:border-teal-300 hover:bg-teal-50 hover:text-teal-700"
+              className="rounded-full border border-ink-200 bg-ink-50 px-2.5 py-1 text-[11px] font-semibold text-ink-600 transition-colors hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700"
             >
               {chip}
             </button>
@@ -190,27 +190,27 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
           placeholder="Например: Большой багаж, еду один, готов к ранней встрече..."
           rows={3}
         />
-        <span className="text-caption text-gray-500">{comment.length} / 300 · номера телефонов автоматически скрываются</span>
+        <span className="text-caption text-ink-500">{comment.length} / 300 · номера телефонов автоматически скрываются</span>
       </div>
 
       {/* Price summary */}
-      <div className="rounded-2xl border border-teal-100 bg-teal-50 p-4">
+      <div className="rounded-2xl border border-brand-100 bg-brand-50 p-4">
         <div className="flex items-center justify-between">
-          <span className="text-[15px] font-extrabold text-gray-900">К оплате водителю</span>
-          <span className="text-[24px] font-extrabold text-teal-700">{formatPrice(total)}</span>
+          <span className="text-[15px] font-extrabold text-ink-900">К оплате водителю</span>
+          <span className="text-[24px] font-extrabold text-brand-700">{formatPrice(total)}</span>
         </div>
-        <p className="mt-1 text-[12px] font-semibold text-gray-500">
+        <p className="mt-1 text-[12px] font-semibold text-ink-500">
           {pricePerSeat} сом × {seats} {seats === 1 ? "место" : "места"} · Наличными при встрече
         </p>
       </div>
 
       {/* Warning */}
-      <div className="rounded-2xl border border-amber-100 bg-amber-50 px-3 py-2.5">
+      <div className="rounded-2xl border border-accent-100 bg-accent-50 px-3 py-2.5">
         <div className="flex items-center gap-2">
-          <AlertTriangle className="h-3.5 w-3.5 flex-shrink-0 text-amber-600" aria-hidden="true" />
-          <span className="text-[13px] font-bold text-gray-900">Водитель может отклонить запрос</span>
+          <AlertTriangle className="h-3.5 w-3.5 flex-shrink-0 text-accent-600" aria-hidden="true" />
+          <span className="text-[13px] font-bold text-ink-900">Водитель может отклонить запрос</span>
         </div>
-        <p className="mt-1 text-[12px] font-semibold text-gray-500">
+        <p className="mt-1 text-[12px] font-semibold text-ink-500">
           Вы получите ответ в течение часа. Номер водителя станет виден после принятия.
         </p>
       </div>

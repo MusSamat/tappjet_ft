@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils/cn";
 function UnreadBadge({ count }: { count: number }) {
   if (count === 0) return null;
   return (
-    <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full border-2 border-white bg-amber-500 px-0.5 text-[10px] font-extrabold leading-none text-white">
+    <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full border-2 border-white bg-accent-500 px-0.5 text-[10px] font-extrabold leading-none text-white">
       {count > 99 ? "99+" : count}
     </span>
   );
@@ -47,16 +47,16 @@ function UserDropdown({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="absolute right-0 top-[calc(100%+8px)] z-50 w-56 overflow-hidden rounded-2xl border border-ink-100 bg-white shadow-xl">
-      <div className="border-b border-gray-100 px-4 py-3">
-        <p className="truncate text-[14px] font-bold text-gray-900">{user?.name}</p>
-        <p className="truncate text-[11px] text-gray-400">{user?.phone}</p>
+      <div className="border-b border-ink-100 px-4 py-3">
+        <p className="truncate text-[14px] font-bold text-ink-900">{user?.name}</p>
+        <p className="truncate text-[11px] text-ink-400">{user?.phone}</p>
         <p className={cn("mt-0.5 text-[11px] font-medium", colors.navActive)}>
           {activeMode === "driver" ? t("driver_label") : t("passenger_label")}
         </p>
       </div>
 
       {user?.roles?.includes("driver") && (
-        <div className="flex justify-center border-b border-gray-100 px-4 py-2.5">
+        <div className="flex justify-center border-b border-ink-100 px-4 py-2.5">
           <RoleSwitcher />
         </div>
       )}
@@ -67,15 +67,15 @@ function UserDropdown({ onClose }: { onClose: () => void }) {
             key={href + label}
             href={href}
             onClick={onClose}
-            className="flex items-center gap-3 px-4 py-2.5 text-[13px] font-semibold text-gray-700 hover:bg-gray-50"
+            className="flex items-center gap-3 px-4 py-2.5 text-[13px] font-semibold text-ink-700 hover:bg-ink-50"
           >
-            <Icon className="h-4 w-4 text-gray-400" aria-hidden="true" />
+            <Icon className="h-4 w-4 text-ink-400" aria-hidden="true" />
             {label}
           </Link>
         ))}
       </div>
 
-      <div className="border-t border-gray-100 py-1">
+      <div className="border-t border-ink-100 py-1">
         <button
           type="button"
           onClick={() => logoutMut.mutate()}
@@ -136,16 +136,16 @@ export function TopNav() {
 
   return (
     <header
-      className="sticky top-0 z-40 hidden border-b border-gray-200 bg-white md:block"
+      className="sticky top-0 z-40 hidden border-b border-ink-200 bg-white md:block"
       style={{ height: 64 }}
     >
       <div className="mx-auto flex h-full max-w-[1600px] items-center gap-6 px-6">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-teal-600 to-teal-500">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-brand-600 to-brand-500">
             <span className="text-[14px] font-black text-white">Tj</span>
           </div>
-          <span className="text-[18px] font-black tracking-tight text-gray-900">Tappjet</span>
+          <span className="text-[18px] font-black tracking-tight text-ink-900">Tappjet</span>
         </Link>
 
         {/* Nav links */}
@@ -158,7 +158,7 @@ export function TopNav() {
                 href={href}
                 className={cn(
                   "rounded-xl px-3.5 py-2 text-[14px] font-bold transition-colors",
-                  active ? colors.navActivePill : "text-gray-700 hover:bg-gray-100",
+                  active ? colors.navActivePill : "text-ink-700 hover:bg-ink-100",
                 )}
               >
                 {label}
@@ -182,7 +182,7 @@ export function TopNav() {
               ) : (
                 <Link
                   href="/requests/create"
-                  className="flex items-center gap-1.5 rounded-xl bg-amber-500 px-3.5 py-2 text-[14px] font-bold text-[#4A2C00] hover:bg-amber-600"
+                  className="flex items-center gap-1.5 rounded-xl bg-accent-500 px-3.5 py-2 text-[14px] font-bold text-[#4A2C00] hover:bg-accent-600"
                 >
                   <Plus className="h-4 w-4" aria-hidden="true" />
                   {t("create_request_btn")}
@@ -192,9 +192,9 @@ export function TopNav() {
               <Link
                 href="/notifications"
                 aria-label={t("notifications_aria")}
-                className="relative flex h-10 w-10 items-center justify-center rounded-full hover:bg-gray-100"
+                className="relative flex h-10 w-10 items-center justify-center rounded-full hover:bg-ink-100"
               >
-                <Bell className="h-5 w-5 text-gray-700" aria-hidden="true" />
+                <Bell className="h-5 w-5 text-ink-700" aria-hidden="true" />
                 <UnreadBadge count={unread} />
               </Link>
 
@@ -233,7 +233,7 @@ export function TopNav() {
           ) : (
             <Link
               href="/auth/login"
-              className="rounded-xl bg-teal-600 px-5 py-2 text-[14px] font-bold text-white hover:bg-teal-700"
+              className="rounded-xl bg-brand-600 px-5 py-2 text-[14px] font-bold text-white hover:bg-brand-700"
             >
               {t("sign_in_btn")}
             </Link>

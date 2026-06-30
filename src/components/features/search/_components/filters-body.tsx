@@ -13,7 +13,7 @@ function isCustomDate(v: string) { return /^\d{4}-\d{2}-\d{2}$/.test(v); }
 
 function Label({ children }: { children: React.ReactNode }) {
   return (
-    <p className="mb-1.5 text-[10px] font-bold uppercase tracking-widest text-gray-400">
+    <p className="mb-1.5 text-[10px] font-bold uppercase tracking-widest text-ink-400">
       {children}
     </p>
   );
@@ -35,8 +35,8 @@ function Chip({
       className={cn(
         "rounded-full border px-2.5 py-1 text-[12px] font-semibold transition-colors",
         active
-          ? "border-teal-600 bg-teal-50 text-teal-700"
-          : "border-gray-200 text-gray-600 hover:border-teal-300 hover:text-teal-700",
+          ? "border-brand-600 bg-brand-50 text-brand-700"
+          : "border-ink-200 text-ink-600 hover:border-brand-300 hover:text-brand-700",
       )}
     >
       {children}
@@ -110,11 +110,11 @@ export function FiltersBody() {
         <div className="flex flex-col gap-1">
           <CityAutocomplete compact value={fromCity} onChange={(v) => update({ from: v || null })} placeholder={t("from_placeholder")} />
           <div className="flex items-center gap-2">
-            <div className="h-px flex-1 bg-gray-100" />
-            <button type="button" onClick={() => update({ from: toCity || null, to: fromCity || null })} disabled={!fromCity && !toCity} className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border border-gray-200 text-gray-400 transition-colors hover:border-teal-400 hover:text-teal-600 disabled:opacity-30" aria-label={t("swap_aria")}>
+            <div className="h-px flex-1 bg-ink-100" />
+            <button type="button" onClick={() => update({ from: toCity || null, to: fromCity || null })} disabled={!fromCity && !toCity} className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border border-ink-200 text-ink-400 transition-colors hover:border-brand-400 hover:text-brand-600 disabled:opacity-30" aria-label={t("swap_aria")}>
               <ArrowLeftRight className="h-2.5 w-2.5" />
             </button>
-            <div className="h-px flex-1 bg-gray-100" />
+            <div className="h-px flex-1 bg-ink-100" />
           </div>
           <CityAutocomplete compact value={toCity} onChange={(v) => update({ to: v || null })} placeholder={t("to_placeholder")} />
         </div>
@@ -168,9 +168,9 @@ export function FiltersBody() {
       <div>
         <Label>{t("price_label")}</Label>
         <div className="flex items-center gap-2">
-          <input type="number" inputMode="numeric" min={50} placeholder={t("price_from")} defaultValue={minPrice} onBlur={(e) => update({ min_price: e.target.value || null })} className="h-9 w-full rounded-lg border border-gray-200 bg-white px-2.5 text-[12px] font-semibold outline-none focus:border-teal-500" />
-          <span className="text-[12px] text-gray-400">—</span>
-          <input type="number" inputMode="numeric" min={50} placeholder={t("price_to")} defaultValue={maxPrice} onBlur={(e) => update({ max_price: e.target.value || null })} className="h-9 w-full rounded-lg border border-gray-200 bg-white px-2.5 text-[12px] font-semibold outline-none focus:border-teal-500" />
+          <input type="number" inputMode="numeric" min={50} placeholder={t("price_from")} defaultValue={minPrice} onBlur={(e) => update({ min_price: e.target.value || null })} className="h-9 w-full rounded-lg border border-ink-200 bg-white px-2.5 text-[12px] font-semibold outline-none focus:border-brand-500" />
+          <span className="text-[12px] text-ink-400">—</span>
+          <input type="number" inputMode="numeric" min={50} placeholder={t("price_to")} defaultValue={maxPrice} onBlur={(e) => update({ max_price: e.target.value || null })} className="h-9 w-full rounded-lg border border-ink-200 bg-white px-2.5 text-[12px] font-semibold outline-none focus:border-brand-500" />
         </div>
       </div>
 
@@ -183,10 +183,10 @@ export function FiltersBody() {
             { key: "no_smoking", active: noSmoking,   icon: CigaretteOff, label: t("pref_no_smoking") },
             { key: "pets",       active: petsAllowed, icon: PawPrint,     label: t("pref_pets") },
           ] as const).map(({ key, active, icon: Icon, label }) => (
-            <button key={key} type="button" role="switch" aria-checked={active} onClick={() => update({ [key]: active ? null : "true" })} className={cn("flex w-full items-center gap-2.5 rounded-xl border px-3 py-2 text-left transition-colors", active ? "border-teal-500 bg-teal-50" : "border-gray-200 bg-white hover:border-gray-300")}>
-              <Icon className={cn("h-4 w-4 flex-shrink-0", active ? "text-teal-600" : "text-gray-400")} />
-              <span className={cn("flex-1 text-[12px] font-bold", active ? "text-teal-700" : "text-gray-700")}>{label}</span>
-              <div className={cn("relative h-5 w-9 flex-shrink-0 rounded-full transition-colors", active ? "bg-teal-500" : "bg-gray-200")}>
+            <button key={key} type="button" role="switch" aria-checked={active} onClick={() => update({ [key]: active ? null : "true" })} className={cn("flex w-full items-center gap-2.5 rounded-xl border px-3 py-2 text-left transition-colors", active ? "border-brand-500 bg-brand-50" : "border-ink-200 bg-white hover:border-ink-300")}>
+              <Icon className={cn("h-4 w-4 flex-shrink-0", active ? "text-brand-600" : "text-ink-400")} />
+              <span className={cn("flex-1 text-[12px] font-bold", active ? "text-brand-700" : "text-ink-700")}>{label}</span>
+              <div className={cn("relative h-5 w-9 flex-shrink-0 rounded-full transition-colors", active ? "bg-brand-500" : "bg-ink-200")}>
                 <span className={cn("absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform", active ? "translate-x-4" : "translate-x-0.5")} />
               </div>
             </button>
@@ -195,12 +195,12 @@ export function FiltersBody() {
       </div>
 
       {/* Verified */}
-      <button type="button" role="switch" aria-checked={onlyVerified} onClick={() => update({ only_verified: onlyVerified ? null : "true" })} className={cn("flex w-full items-center gap-2.5 rounded-xl border px-3 py-2.5 text-left transition-colors", onlyVerified ? "border-teal-500 bg-teal-50" : "border-gray-200 bg-white hover:border-gray-300")}>
-        <ShieldCheck className={cn("h-4 w-4 flex-shrink-0", onlyVerified ? "text-teal-600" : "text-gray-400")} />
+      <button type="button" role="switch" aria-checked={onlyVerified} onClick={() => update({ only_verified: onlyVerified ? null : "true" })} className={cn("flex w-full items-center gap-2.5 rounded-xl border px-3 py-2.5 text-left transition-colors", onlyVerified ? "border-brand-500 bg-brand-50" : "border-ink-200 bg-white hover:border-ink-300")}>
+        <ShieldCheck className={cn("h-4 w-4 flex-shrink-0", onlyVerified ? "text-brand-600" : "text-ink-400")} />
         <div className="min-w-0 flex-1">
-          <p className={cn("text-[12px] font-bold", onlyVerified ? "text-teal-700" : "text-gray-700")}>{t("only_verified")}</p>
+          <p className={cn("text-[12px] font-bold", onlyVerified ? "text-brand-700" : "text-ink-700")}>{t("only_verified")}</p>
         </div>
-        <div className={cn("relative h-5 w-9 flex-shrink-0 rounded-full transition-colors", onlyVerified ? "bg-teal-500" : "bg-gray-200")}>
+        <div className={cn("relative h-5 w-9 flex-shrink-0 rounded-full transition-colors", onlyVerified ? "bg-brand-500" : "bg-ink-200")}>
           <span className={cn("absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform", onlyVerified ? "translate-x-4" : "translate-x-0.5")} />
         </div>
       </button>

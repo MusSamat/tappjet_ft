@@ -30,14 +30,14 @@ export function PasswordStep({
   return (
     <>
       <div className="mb-6 text-center">
-        <p className="text-[14px] text-gray-600">{tl("password_step_label")}</p>
-        <p className="mt-1 text-[17px] font-bold text-gray-900">+996 {displayPhone}</p>
+        <p className="text-[14px] text-ink-600">{tl("password_step_label")}</p>
+        <p className="mt-1 text-[17px] font-bold text-ink-900">+996 {displayPhone}</p>
       </div>
 
       {hasPassword ? (
         <>
           <div className="mb-4 flex flex-col gap-1.5">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-ink-400">
               {tl("password_label")}
             </span>
             <div className="relative">
@@ -49,16 +49,16 @@ export function PasswordStep({
                 onKeyDown={(e) => { if (e.key === "Enter" && password) passwordMutation.mutate(); }}
                 placeholder={tl("password_placeholder")}
                 className={cn(
-                  "h-11 w-full rounded-xl border-2 bg-gray-50 px-3 pr-10 text-[14px] font-semibold outline-none transition-colors",
+                  "h-12 w-full rounded-2xl border-2 bg-ink-50 px-3 pr-10 text-[14px] font-semibold outline-none transition-colors",
                   serverError
                     ? "border-coral-400 text-coral-700"
-                    : "border-gray-200 text-gray-900 focus:border-teal-500",
+                    : "border-ink-200 text-ink-900 focus:border-brand-500",
                 )}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword((v) => !v)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-400 hover:text-ink-600"
                 aria-label={showPassword ? tl("password_hide") : tl("password_show")}
               >
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -70,20 +70,20 @@ export function PasswordStep({
             type="button"
             disabled={!password || passwordMutation.isPending}
             onClick={() => passwordMutation.mutate()}
-            className="flex h-12 w-full items-center justify-center rounded-xl bg-amber-500 text-[14px] font-bold text-[#4A2C00] transition-colors hover:bg-amber-600 disabled:opacity-40"
+            className="flex h-12 w-full items-center justify-center rounded-2xl bg-accent-500 text-[14px] font-bold text-[#4A2C00] transition-colors hover:bg-accent-600 disabled:opacity-40"
           >
             {passwordMutation.isPending ? tl("logging_in") : tl("login_btn")}
           </button>
 
           <div className="mt-4 flex flex-col items-center gap-3">
-            <button type="button" onClick={onBack} className="text-[13px] font-bold text-gray-600 hover:text-gray-900">
+            <button type="button" onClick={onBack} className="text-[13px] font-bold text-ink-600 hover:text-ink-900">
               {tl("change_number")}
             </button>
             <button
               type="button"
               disabled={sendMutation.isPending}
               onClick={onOtp}
-              className="text-[12px] font-semibold text-gray-500 hover:text-gray-700 disabled:opacity-50"
+              className="text-[12px] font-semibold text-ink-500 hover:text-ink-700 disabled:opacity-50"
             >
               {sendMutation.isPending ? tl("sending") : tl("forgot_password")}
             </button>
@@ -91,21 +91,21 @@ export function PasswordStep({
         </>
       ) : (
         <>
-          <div className="mb-5 rounded-xl bg-amber-50 px-4 py-3 text-center">
-            <p className="text-[13px] font-semibold text-amber-800">{tl("no_password_hint")}</p>
+          <div className="mb-5 rounded-2xl bg-accent-50 px-4 py-3 text-center">
+            <p className="text-[13px] font-semibold text-accent-700">{tl("no_password_hint")}</p>
           </div>
 
           <button
             type="button"
             disabled={sendMutation.isPending}
             onClick={onOtp}
-            className="flex h-12 w-full items-center justify-center rounded-xl bg-amber-500 text-[14px] font-bold text-[#4A2C00] transition-colors hover:bg-amber-600 disabled:opacity-40"
+            className="flex h-12 w-full items-center justify-center rounded-2xl bg-accent-500 text-[14px] font-bold text-[#4A2C00] transition-colors hover:bg-accent-600 disabled:opacity-40"
           >
             {sendMutation.isPending ? tl("sending") : tl("set_password_btn")}
           </button>
 
           <div className="mt-4 flex justify-center">
-            <button type="button" onClick={onBack} className="text-[13px] font-bold text-gray-600 hover:text-gray-900">
+            <button type="button" onClick={onBack} className="text-[13px] font-bold text-ink-600 hover:text-ink-900">
               {tl("change_number")}
             </button>
           </div>

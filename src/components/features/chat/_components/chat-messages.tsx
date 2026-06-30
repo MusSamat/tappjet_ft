@@ -43,11 +43,11 @@ export function ChatMessages({
 
   return (
     <>
-      <div className="flex-1 overflow-y-auto bg-gray-50 px-5 py-5">
+      <div className="flex-1 overflow-y-auto bg-ink-50 px-5 py-5">
         {messages.length === 0 ? (
           <div className="flex h-full items-center justify-center">
             {historyLoaded ? (
-              <p className="text-[13px] font-semibold text-gray-400">{t("start")}</p>
+              <p className="text-[13px] font-semibold text-ink-400">{t("start")}</p>
             ) : (
               <Spinner size={24} />
             )}
@@ -70,14 +70,14 @@ export function ChatMessages({
           </div>
         )}
         {typingUserId && typingUserId !== myId && (
-          <div className="mt-1 text-[12px] font-semibold text-gray-400">
+          <div className="mt-1 text-[12px] font-semibold text-ink-400">
             {otherName} {t("typing")}
           </div>
         )}
       </div>
 
       {isReadOnly ? (
-        <div className="border-t border-gray-200 bg-gray-50 px-5 py-3 text-center text-[12px] font-semibold text-gray-400">
+        <div className="border-t border-ink-200 bg-ink-50 px-5 py-3 text-center text-[12px] font-semibold text-ink-400">
           {t("read_only")}
         </div>
       ) : (
@@ -88,7 +88,7 @@ export function ChatMessages({
             </div>
           )}
           <MessageComposer onSend={onSend} onTyping={onTyping} />
-          <p className="bg-white px-5 pb-3 text-center text-[11px] font-semibold text-gray-400">
+          <p className="bg-white px-5 pb-3 text-center text-[11px] font-semibold text-ink-400">
             🔒 {t("safety_note")}
           </p>
         </>

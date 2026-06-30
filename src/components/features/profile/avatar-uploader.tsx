@@ -93,7 +93,7 @@ export function AvatarUploader() {
         onClick={() => inputRef.current?.click()}
         disabled={isPending}
         className={cn(
-          "group relative h-32 w-32 overflow-hidden rounded-full ring-2 ring-teal-500/30 transition hover:ring-teal-500",
+          "group relative h-32 w-32 overflow-hidden rounded-full ring-2 ring-brand-500/30 transition hover:ring-brand-500",
           isPending && "opacity-70",
         )}
         aria-label="Загрузить фото профиля"
@@ -111,7 +111,7 @@ export function AvatarUploader() {
             }}
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-teal-100 text-[30px] font-extrabold text-teal-700">
+          <div className="flex h-full w-full items-center justify-center bg-brand-100 text-[30px] font-extrabold text-brand-700">
             {avatarInitials(user?.name)}
           </div>
         )}
@@ -133,7 +133,7 @@ export function AvatarUploader() {
         onChange={handleFile}
       />
       {error && (
-        <p className="text-caption text-error">Ошибка загрузки. Попробуйте другой файл.</p>
+        <p className="text-caption text-coral-500">Ошибка загрузки. Попробуйте другой файл.</p>
       )}
     </div>
   );

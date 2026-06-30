@@ -34,16 +34,16 @@ export function RatingStars({
             height={size}
             className={cn(
               i < filled
-                ? "fill-amber-500 stroke-amber-500"
+                ? "fill-accent-500 stroke-accent-500"
                 : i === filled && half
-                  ? "fill-amber-500/50 stroke-amber-500"
-                  : "fill-transparent stroke-gray-300",
+                  ? "fill-accent-500/50 stroke-accent-500"
+                  : "fill-transparent stroke-ink-300",
             )}
             aria-hidden="true"
           />
         ))}
       </span>
-      {showValue && <span className="text-caption font-bold text-gray-900">{value.toFixed(1)}</span>}
+      {showValue && <span className="text-caption font-bold text-ink-900">{value.toFixed(1)}</span>}
     </span>
   );
 }

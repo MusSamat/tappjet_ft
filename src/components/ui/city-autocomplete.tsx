@@ -184,7 +184,7 @@ export function CityAutocomplete({
       {label && (
         <label
           htmlFor={inputId}
-          className="mb-1 block text-[11px] font-bold uppercase tracking-wide text-gray-500"
+          className="mb-1 block text-[11px] font-bold uppercase tracking-wide text-ink-500"
         >
           {label}
         </label>
@@ -192,7 +192,7 @@ export function CityAutocomplete({
       <div className="relative">
         {!borderless && (
           <MapPin
-            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400"
+            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-400"
             aria-hidden="true"
           />
         )}
@@ -237,16 +237,16 @@ export function CityAutocomplete({
           aria-controls={`${inputId}-list`}
           aria-activedescendant={activeIdx >= 0 ? `${inputId}-opt-${activeIdx}` : undefined}
           className={cn(
-            "w-full bg-transparent font-semibold text-gray-900 outline-none",
+            "w-full bg-transparent font-semibold text-ink-900 outline-none",
             compact ? "py-1.5 text-[12px]" : "py-2 text-[14px]",
-            borderless ? "pr-3" : "rounded-xl border border-gray-200 bg-white pl-9 pr-3 focus:border-teal-500",
-            "placeholder:text-gray-400",
+            borderless ? "pr-3" : "rounded-2xl border border-ink-200 bg-white pl-9 pr-3 focus:border-brand-500",
+            "placeholder:text-ink-400",
             "disabled:cursor-not-allowed disabled:opacity-50",
           )}
         />
         {loading && (
           <span
-            className="absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 animate-spin rounded-full border-2 border-gray-200 border-t-teal-500"
+            className="absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 animate-spin rounded-full border-2 border-ink-200 border-t-brand-500"
             aria-hidden="true"
           />
         )}
@@ -261,8 +261,8 @@ export function CityAutocomplete({
           className="overflow-hidden rounded-2xl border border-ink-100 bg-white shadow-soft"
         >
           {showingPopular && (
-            <li className="border-b border-gray-100 px-4 py-2">
-              <span className="text-[10px] font-bold uppercase tracking-wide text-gray-400">
+            <li className="border-b border-ink-100 px-4 py-2">
+              <span className="text-[10px] font-bold uppercase tracking-wide text-ink-400">
                 Популярные города
               </span>
             </li>
@@ -280,13 +280,13 @@ export function CityAutocomplete({
               className={cn(
                 "flex cursor-pointer items-center gap-2 transition-colors",
                 compact ? "px-3 py-1.5" : "px-4 py-2.5",
-                idx === activeIdx ? "bg-teal-50" : "hover:bg-gray-50",
+                idx === activeIdx ? "bg-brand-50" : "hover:bg-ink-50",
               )}
             >
-              <MapPin className="h-3 w-3 flex-shrink-0 text-gray-400" aria-hidden="true" />
+              <MapPin className="h-3 w-3 flex-shrink-0 text-ink-400" aria-hidden="true" />
               <div className="min-w-0">
-                <p className={cn("font-bold text-gray-900", compact ? "text-[12px]" : "text-[13px]")}>{city.nameRu}</p>
-                <p className="text-[10px] font-semibold text-gray-400">{getSubtitle(city)}</p>
+                <p className={cn("font-bold text-ink-900", compact ? "text-[12px]" : "text-[13px]")}>{city.nameRu}</p>
+                <p className="text-[10px] font-semibold text-ink-400">{getSubtitle(city)}</p>
               </div>
             </li>
           ))}

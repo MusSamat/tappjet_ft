@@ -40,13 +40,13 @@ function BookView({ trip }: { trip: TripDetail }) {
   return (
     <div className="rounded-2xl border border-ink-200 bg-white p-5">
       <div className="mb-4 flex items-baseline justify-between">
-        <span className="text-display font-extrabold text-teal-700">
+        <span className="text-display font-extrabold text-brand-700">
           {formatPrice((trip.pricePerSeat as number | undefined) ?? 0)}
         </span>
-        <span className="text-caption text-gray-500">{t("per_seat")}</span>
+        <span className="text-caption text-ink-500">{t("per_seat")}</span>
       </div>
       {trip.priceNegotiable && (
-        <p className="mb-4 rounded-xl bg-amber-50 p-3 text-caption text-amber-900">
+        <p className="mb-4 rounded-xl bg-accent-50 p-3 text-caption text-accent-700">
           {t("price_negotiable_hint")}
         </p>
       )}
@@ -64,13 +64,13 @@ export function PassengerPanel({ trip, tripId }: { trip: TripDetail; tripId: str
   const qc = useQueryClient();
 
   const STATUS_CFG: Record<string, { label: string; color: string; bg: string; dot: string }> = {
-    pending:                { label: t("status_pending"),             color: "text-amber-800", bg: "bg-amber-50",  dot: "bg-amber-500" },
-    accepted:               { label: t("status_accepted"),            color: "text-teal-800",  bg: "bg-teal-50",   dot: "bg-teal-500" },
+    pending:                { label: t("status_pending"),             color: "text-accent-700", bg: "bg-accent-50",  dot: "bg-accent-500" },
+    accepted:               { label: t("status_accepted"),            color: "text-brand-800",  bg: "bg-brand-50",   dot: "bg-brand-500" },
     completed:              { label: t("status_completed"),           color: "text-sky-700",  bg: "bg-sky-50",   dot: "bg-sky-400" },
     rejected:               { label: t("status_rejected"),            color: "text-coral-700",   bg: "bg-coral-50",    dot: "bg-coral-500"  },
-    cancelled_by_passenger: { label: t("status_cancelled_by_you"),   color: "text-gray-600",  bg: "bg-gray-100",  dot: "bg-gray-400" },
-    cancelled_by_driver:    { label: t("status_cancelled_by_driver"), color: "text-gray-600",  bg: "bg-gray-100",  dot: "bg-gray-400" },
-    expired:                { label: t("status_expired"),             color: "text-gray-500",  bg: "bg-gray-50",   dot: "bg-gray-300" },
+    cancelled_by_passenger: { label: t("status_cancelled_by_you"),   color: "text-ink-600",  bg: "bg-ink-100",  dot: "bg-ink-400" },
+    cancelled_by_driver:    { label: t("status_cancelled_by_driver"), color: "text-ink-600",  bg: "bg-ink-100",  dot: "bg-ink-400" },
+    expired:                { label: t("status_expired"),             color: "text-ink-500",  bg: "bg-ink-50",   dot: "bg-ink-300" },
   };
 
   const { data: bookingsData, isLoading } = useQuery({
@@ -114,7 +114,7 @@ export function PassengerPanel({ trip, tripId }: { trip: TripDetail; tripId: str
   if (!myBooking) return <BookView trip={trip} />;
 
   const status = myBooking.status as string;
-  const cfg = STATUS_CFG[status] ?? { label: status, color: "text-gray-700", bg: "bg-gray-50", dot: "bg-gray-400" };
+  const cfg = STATUS_CFG[status] ?? { label: status, color: "text-ink-700", bg: "bg-ink-50", dot: "bg-ink-400" };
   const driverPhone = (myBooking as BookingExt).trip?.driver?.phone;
   const canCancel = status === "pending" || status === "accepted";
   const canChat = status === "pending" || status === "accepted" || status === "completed";
@@ -123,7 +123,7 @@ export function PassengerPanel({ trip, tripId }: { trip: TripDetail; tripId: str
     <div className="flex flex-col gap-3">
       <div className="rounded-2xl border border-ink-200 bg-white p-5">
         <div className="mb-4 flex items-center justify-between">
-          <p className="text-[11px] font-bold uppercase tracking-widest text-gray-400">
+          <p className="text-[11px] font-bold uppercase tracking-widest text-ink-400">
             {t("your_booking")}
           </p>
           <span className={cn("flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold", cfg.bg, cfg.color)}>
@@ -134,12 +134,12 @@ export function PassengerPanel({ trip, tripId }: { trip: TripDetail; tripId: str
 
         <div className="mb-4 flex gap-5">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">{t("seats_label")}</p>
-            <p className="text-[16px] font-bold text-gray-900">{myBooking.seatsCount}</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{t("seats_label")}</p>
+            <p className="text-[16px] font-bold text-ink-900">{myBooking.seatsCount}</p>
           </div>
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">{t("sum_label")}</p>
-            <p className="text-[16px] font-bold text-teal-700">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{t("sum_label")}</p>
+            <p className="text-[16px] font-bold text-brand-700">
               {(myBooking as BookingExt).totalPrice ?? "—"} {t("som")}
             </p>
           </div>
@@ -148,7 +148,7 @@ export function PassengerPanel({ trip, tripId }: { trip: TripDetail; tripId: str
         {status === "accepted" && driverPhone && (
           <a
             href={`tel:${driverPhone}`}
-            className="mb-4 flex items-center gap-2 rounded-xl bg-teal-50 px-3 py-2.5 text-[13px] font-bold text-teal-700 hover:bg-teal-100"
+            className="mb-4 flex items-center gap-2 rounded-xl bg-brand-50 px-3 py-2.5 text-[13px] font-bold text-brand-700 hover:bg-brand-100"
           >
             <Phone className="h-4 w-4" />
             {driverPhone}
@@ -160,7 +160,7 @@ export function PassengerPanel({ trip, tripId }: { trip: TripDetail; tripId: str
             <Link href={`/trips/${tripId}/rate/${pendingRating.counterpartId}`}>
               <button
                 type="button"
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-amber-500 py-2.5 text-[13px] font-bold text-[#4A2C00] hover:bg-amber-600"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-accent-500 py-2.5 text-[13px] font-bold text-[#4A2C00] hover:bg-accent-600"
               >
                 <Star className="h-4 w-4" />
                 {t("rate_trip_btn")}
@@ -171,7 +171,7 @@ export function PassengerPanel({ trip, tripId }: { trip: TripDetail; tripId: str
             <Link href={`/my/bookings/${myBooking.id}/chat`}>
               <button
                 type="button"
-                className="flex w-full items-center justify-center gap-2 rounded-xl border border-teal-200 bg-teal-50 py-2.5 text-[13px] font-bold text-teal-700 hover:bg-teal-100"
+                className="flex w-full items-center justify-center gap-2 rounded-xl border border-brand-200 bg-brand-50 py-2.5 text-[13px] font-bold text-brand-700 hover:bg-brand-100"
               >
                 <MessageCircle className="h-4 w-4" />
                 {t("open_chat_btn")}
@@ -182,7 +182,7 @@ export function PassengerPanel({ trip, tripId }: { trip: TripDetail; tripId: str
             <button
               type="button"
               onClick={() => setCancelOpen(true)}
-              className="flex w-full items-center justify-center gap-2 rounded-xl border border-gray-200 py-2.5 text-[13px] font-bold text-gray-600 hover:bg-gray-50"
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-ink-200 py-2.5 text-[13px] font-bold text-ink-600 hover:bg-ink-50"
             >
               <X className="h-4 w-4" />
               {t("cancel_booking_btn")}

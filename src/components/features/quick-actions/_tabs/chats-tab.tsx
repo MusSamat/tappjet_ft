@@ -27,8 +27,8 @@ export function ChatsTab({ chats, onClose }: ChatsTabProps) {
   if (chats.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center gap-2 px-4 py-8 text-center">
-        <MessageCircle className="h-8 w-8 text-gray-200" />
-        <p className="text-[12px] font-semibold text-gray-400">
+        <MessageCircle className="h-8 w-8 text-ink-200" />
+        <p className="text-[12px] font-semibold text-ink-400">
           {t("no_chats")}<br />
           {t("no_chats_hint")}
         </p>
@@ -44,14 +44,14 @@ export function ChatsTab({ chats, onClose }: ChatsTabProps) {
           href={`/my/bookings/${c.bookingId}/chat`}
           onClick={onClose}
           className={cn(
-            "flex items-center gap-3 border-b border-gray-50 px-4 py-3 last:border-0 hover:bg-gray-50",
-            c.unreadCount > 0 && "bg-teal-50/40 hover:bg-teal-50",
+            "flex items-center gap-3 border-b border-ink-50 px-4 py-3 last:border-0 hover:bg-ink-50",
+            c.unreadCount > 0 && "bg-brand-50/40 hover:bg-brand-50",
           )}
         >
           <div className="relative">
             <DriverAvatar name={c.otherName} src={c.otherAvatarUrl} size="md" />
             {c.unreadCount > 0 && (
-              <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-teal-600 px-1 text-[10px] font-extrabold text-white ring-2 ring-white">
+              <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-brand-600 px-1 text-[10px] font-extrabold text-white ring-2 ring-white">
                 {c.unreadCount > 99 ? "99+" : c.unreadCount}
               </span>
             )}
@@ -61,21 +61,21 @@ export function ChatsTab({ chats, onClose }: ChatsTabProps) {
             <div className="flex items-center justify-between gap-1">
               <p className={cn(
                 "truncate text-[13px]",
-                c.unreadCount > 0 ? "font-extrabold text-gray-900" : "font-bold text-gray-800",
+                c.unreadCount > 0 ? "font-extrabold text-ink-900" : "font-bold text-ink-800",
               )}>
                 {c.otherName}
               </p>
               {c.lastMessageAt && (
-                <span className="flex-shrink-0 text-[10px] text-gray-400">
+                <span className="flex-shrink-0 text-[10px] text-ink-400">
                   {relTime(c.lastMessageAt)}
                 </span>
               )}
             </div>
             <div className="flex items-center justify-between gap-1 mt-0.5">
-              <p className="truncate text-[11px] text-gray-500">{c.route}</p>
+              <p className="truncate text-[11px] text-ink-500">{c.route}</p>
               <span className={cn(
                 "flex-shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-extrabold",
-                c.role === "driver" ? "bg-teal-100 text-teal-700" : "bg-gray-100 text-gray-600",
+                c.role === "driver" ? "bg-brand-100 text-brand-700" : "bg-ink-100 text-ink-600",
               )}>
                 {c.role === "driver" ? t("role_driver") : t("role_passenger")}
               </span>

@@ -29,10 +29,10 @@ export default function ProfileDeletePage() {
     <div className="container max-w-lg py-10">
       <div className="rounded-2xl border border-coral-200 bg-white p-6">
         <div className="flex items-start gap-3">
-          <AlertTriangle className="mt-0.5 h-6 w-6 flex-shrink-0 text-error" aria-hidden="true" />
+          <AlertTriangle className="mt-0.5 h-6 w-6 flex-shrink-0 text-coral-500" aria-hidden="true" />
           <div>
-            <h1 className="text-h1 text-gray-900">{t("title")}</h1>
-            <p className="mt-2 text-body-lg text-gray-700">
+            <h1 className="text-h1 text-ink-900">{t("title")}</h1>
+            <p className="mt-2 text-body-lg text-ink-700">
               {t("warning")}
             </p>
           </div>
@@ -54,7 +54,7 @@ export default function ProfileDeletePage() {
           </div>
 
           {error && (
-            <p className="text-caption text-error">
+            <p className="text-caption text-coral-500">
               {t("error")}
             </p>
           )}

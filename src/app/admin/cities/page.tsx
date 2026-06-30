@@ -24,13 +24,13 @@ function EditRow({
   const [isActive, setIsActive] = useState(city.isActive ?? true);
 
   return (
-    <tr className="bg-amber-50">
+    <tr className="bg-accent-50">
       <td className="px-4 py-2">
         <input
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Название (рус)"
-          className="w-full rounded-lg border border-amber-200 px-3 py-1.5 text-[13px] outline-none focus:border-amber-400"
+          className="w-full rounded-lg border border-accent-200 px-3 py-1.5 text-[13px] outline-none focus:border-accent-400"
         />
       </td>
       <td className="px-4 py-2">
@@ -38,7 +38,7 @@ function EditRow({
           value={nameKg}
           onChange={(e) => setNameKy(e.target.value)}
           placeholder="Название (кырг)"
-          className="w-full rounded-lg border border-amber-200 px-3 py-1.5 text-[13px] outline-none focus:border-amber-400"
+          className="w-full rounded-lg border border-accent-200 px-3 py-1.5 text-[13px] outline-none focus:border-accent-400"
         />
       </td>
       <td className="px-4 py-2">
@@ -46,7 +46,7 @@ function EditRow({
           value={region}
           onChange={(e) => setRegion(e.target.value)}
           placeholder="Регион"
-          className="w-full rounded-lg border border-amber-200 px-3 py-1.5 text-[13px] outline-none focus:border-amber-400"
+          className="w-full rounded-lg border border-accent-200 px-3 py-1.5 text-[13px] outline-none focus:border-accent-400"
         />
       </td>
       <td className="px-4 py-2 text-center">
@@ -63,7 +63,7 @@ function EditRow({
             type="button"
             onClick={() => onSave({ name, nameKg, region, isActive })}
             disabled={!name.trim() || !nameKg.trim() || saving}
-            className="rounded-lg bg-teal-600 p-1.5 text-white hover:bg-teal-700 disabled:opacity-50"
+            className="rounded-lg bg-brand-600 p-1.5 text-white hover:bg-brand-700 disabled:opacity-50"
           >
             <Check className="h-4 w-4" />
           </button>
@@ -174,7 +174,7 @@ export default function AdminCitiesPage() {
                     <td className="px-4 py-3 text-center">
                       <span className={cn(
                         "inline-block h-2 w-2 rounded-full",
-                        c.isActive ? "bg-teal-500" : "bg-slate-300",
+                        c.isActive ? "bg-brand-500" : "bg-slate-300",
                       )} />
                     </td>
                     <td className="px-4 py-3">

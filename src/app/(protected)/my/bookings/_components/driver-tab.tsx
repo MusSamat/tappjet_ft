@@ -49,12 +49,12 @@ export function DriverTab({
         <div className="rounded-2xl border border-ink-100 bg-white p-8 text-center">
           {driverSubTab === "active" ? (
             <>
-              <p className="text-[17px] font-bold text-gray-900">{t("no_published_trips")}</p>
-              <p className="mt-2 text-[13px] text-gray-500">{t("no_published_hint")}</p>
+              <p className="text-[17px] font-bold text-ink-900">{t("no_published_trips")}</p>
+              <p className="mt-2 text-[13px] text-ink-500">{t("no_published_hint")}</p>
               <Link href="/trips/create">
                 <button
                   type="button"
-                  className="mt-4 mx-auto flex items-center gap-2 rounded-xl bg-amber-500 px-6 py-2.5 text-[13px] font-bold text-[#4A2C00] hover:bg-amber-600"
+                  className="mt-4 mx-auto flex items-center gap-2 rounded-2xl bg-accent-500 px-6 py-2.5 text-[13px] font-bold text-[#4A2C00] hover:bg-accent-600"
                 >
                   <Plus className="h-4 w-4" />
                   {t("publish_btn")}
@@ -63,8 +63,8 @@ export function DriverTab({
             </>
           ) : (
             <>
-              <p className="text-[17px] font-bold text-gray-900">{t("no_trip_history")}</p>
-              <p className="mt-2 text-[13px] text-gray-500">{t("history_hint")}</p>
+              <p className="text-[17px] font-bold text-ink-900">{t("no_trip_history")}</p>
+              <p className="mt-2 text-[13px] text-ink-500">{t("history_hint")}</p>
             </>
           )}
         </div>

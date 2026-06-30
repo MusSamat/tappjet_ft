@@ -4,16 +4,16 @@ import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils/cn";
 
 const STATUS_CONFIG_STYLE = {
-  pending:                { bg: "bg-amber-50",  text: "text-amber-800", dot: "bg-amber-500" },
+  pending:                { bg: "bg-accent-50",  text: "text-accent-700", dot: "bg-accent-500" },
   viewed:                 { bg: "bg-sky-50",   text: "text-sky-700",  dot: "bg-sky-400" },
-  accepted:               { bg: "bg-teal-50",   text: "text-teal-800",  dot: "bg-teal-500" },
+  accepted:               { bg: "bg-brand-50",   text: "text-brand-800",  dot: "bg-brand-500" },
   completed:              { bg: "bg-sky-50",   text: "text-sky-700",  dot: "bg-sky-400" },
   rejected:               { bg: "bg-coral-50",    text: "text-coral-700",   dot: "bg-coral-500"  },
-  cancelled_by_passenger: { bg: "bg-gray-100",  text: "text-gray-600",  dot: "bg-gray-400" },
-  cancelled_by_driver:    { bg: "bg-gray-100",  text: "text-gray-600",  dot: "bg-gray-400" },
+  cancelled_by_passenger: { bg: "bg-ink-100",  text: "text-ink-600",  dot: "bg-ink-400" },
+  cancelled_by_driver:    { bg: "bg-ink-100",  text: "text-ink-600",  dot: "bg-ink-400" },
   cancelled_late:         { bg: "bg-coral-50",    text: "text-coral-700",   dot: "bg-coral-400"  },
   no_show:                { bg: "bg-coral-50",    text: "text-coral-700",   dot: "bg-coral-400"  },
-  expired:                { bg: "bg-gray-100",  text: "text-gray-500",  dot: "bg-gray-300" },
+  expired:                { bg: "bg-ink-100",  text: "text-ink-500",  dot: "bg-ink-300" },
 } as const;
 
 export function StatusBadge({ status }: { status: string }) {

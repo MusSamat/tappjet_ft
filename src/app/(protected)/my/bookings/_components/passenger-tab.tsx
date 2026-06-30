@@ -56,12 +56,12 @@ export function PassengerTab({
             <div className="rounded-2xl border border-ink-100 bg-white p-8 text-center">
               {passengerSubTab === "active" ? (
                 <>
-                  <p className="text-[17px] font-bold text-gray-900">{t("no_active_trips")}</p>
-                  <p className="mt-2 text-[13px] text-gray-500">{t("no_active_hint")}</p>
+                  <p className="text-[17px] font-bold text-ink-900">{t("no_active_trips")}</p>
+                  <p className="mt-2 text-[13px] text-ink-500">{t("no_active_hint")}</p>
                   <Link href="/trips">
                     <button
                       type="button"
-                      className="mt-4 rounded-xl bg-teal-600 px-6 py-2.5 text-[13px] font-bold text-white hover:bg-teal-700"
+                      className="mt-4 rounded-2xl bg-brand-600 px-6 py-2.5 text-[13px] font-bold text-white hover:bg-brand-700"
                     >
                       {t("find_trip_btn")}
                     </button>
@@ -69,8 +69,8 @@ export function PassengerTab({
                 </>
               ) : (
                 <>
-                  <p className="text-[17px] font-bold text-gray-900">{t("empty_history")}</p>
-                  <p className="mt-2 text-[13px] text-gray-500">{t("history_hint")}</p>
+                  <p className="text-[17px] font-bold text-ink-900">{t("empty_history")}</p>
+                  <p className="mt-2 text-[13px] text-ink-500">{t("history_hint")}</p>
                 </>
               )}
             </div>

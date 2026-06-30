@@ -90,12 +90,12 @@ export default function VerificationDetailPage() {
           className={cn(
             "rounded-full px-3 py-1.5 text-[12px] font-bold",
             item.verificationStatus === "verified"
-              ? "bg-teal-50 text-teal-800"
+              ? "bg-brand-50 text-brand-800"
               : item.verificationStatus === "rejected"
                 ? "bg-red-50 text-red-700"
                 : item.verificationStatus === "docs_requested"
                   ? "bg-blue-50 text-blue-700"
-                  : "bg-amber-50 text-amber-800",
+                  : "bg-accent-50 text-accent-700",
           )}
         >
           {STATUS_LABEL[item.verificationStatus] ?? item.verificationStatus}
@@ -174,7 +174,7 @@ export default function VerificationDetailPage() {
             type="button"
             onClick={() => approveMut.mutate()}
             disabled={approveMut.isPending}
-            className="flex items-center gap-2 rounded-xl bg-teal-600 px-6 py-3 text-[14px] font-bold text-white hover:bg-teal-700 disabled:opacity-50"
+            className="flex items-center gap-2 rounded-xl bg-brand-600 px-6 py-3 text-[14px] font-bold text-white hover:bg-brand-700 disabled:opacity-50"
           >
             <CheckCircle2 className="h-5 w-5" />
             {approveMut.isPending ? "Одобряем…" : "Одобрить"}

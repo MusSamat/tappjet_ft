@@ -143,11 +143,11 @@ export function AddPhoneModal({ open, onClose, onDone }: Props) {
       <ModalContent>
         <ModalHeader>
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-teal-50">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-50">
               {step === "otp" ? (
-                <Shield className="h-5 w-5 text-teal-700" aria-hidden />
+                <Shield className="h-5 w-5 text-brand-700" aria-hidden />
               ) : (
-                <Phone className="h-5 w-5 text-teal-700" aria-hidden />
+                <Phone className="h-5 w-5 text-brand-700" aria-hidden />
               )}
             </div>
             <ModalTitle>{title}</ModalTitle>
@@ -162,7 +162,7 @@ export function AddPhoneModal({ open, onClose, onDone }: Props) {
 
         {step === "phone" && (
           <div className="space-y-4">
-            <p className="text-[13px] font-semibold text-gray-500">
+            <p className="text-[13px] font-semibold text-ink-500">
               {user?.telegramLinked
                 ? "Код подтверждения придёт через Telegram-бот"
                 : "Код подтверждения придёт по SMS"}
@@ -184,7 +184,7 @@ export function AddPhoneModal({ open, onClose, onDone }: Props) {
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-3 rounded-xl bg-[#0088cc]/10 px-4 py-3">
               <Spinner size={16} className="shrink-0 text-[#0088cc]" />
-              <p className="text-[13px] font-semibold text-gray-800">
+              <p className="text-[13px] font-semibold text-ink-800">
                 Ожидаем подтверждения в Telegram...
               </p>
             </div>
@@ -192,14 +192,14 @@ export function AddPhoneModal({ open, onClose, onDone }: Props) {
               href={deepLink}
               target="_blank"
               rel="noreferrer"
-              className="flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#0088cc] text-[15px] font-bold text-white hover:bg-[#0088cc]/90"
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#0088cc] text-[15px] font-bold text-white hover:bg-[#0088cc]/90"
             >
               Открыть Telegram
             </a>
             <button
               type="button"
               onClick={() => { stopPoll(); setStep("phone"); }}
-              className="text-center text-[13px] font-semibold text-gray-500 hover:text-gray-700"
+              className="text-center text-[13px] font-semibold text-ink-500 hover:text-ink-700"
             >
               ← Изменить номер
             </button>
@@ -208,9 +208,9 @@ export function AddPhoneModal({ open, onClose, onDone }: Props) {
 
         {step === "otp" && (
           <div className="space-y-4">
-            <p className="text-[13px] font-semibold text-gray-500">
+            <p className="text-[13px] font-semibold text-ink-500">
               Код отправлен на{" "}
-              <span className="font-bold text-gray-900">{phone}</span>
+              <span className="font-bold text-ink-900">{phone}</span>
             </p>
             <input
               type="text"
@@ -220,7 +220,7 @@ export function AddPhoneModal({ open, onClose, onDone }: Props) {
               onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
               onKeyDown={(e) => e.key === "Enter" && handleOtpSubmit()}
               placeholder="— — — — — —"
-              className="w-full rounded-xl border-2 border-ink-200 bg-gray-50 px-4 py-3 text-center text-[22px] font-extrabold tracking-[0.3em] text-gray-900 outline-none focus:border-teal-500"
+              className="w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 py-3 text-center text-[22px] font-extrabold tracking-[0.3em] text-ink-900 outline-none focus:border-brand-500"
             />
             <Button
               variant="submit"
@@ -234,7 +234,7 @@ export function AddPhoneModal({ open, onClose, onDone }: Props) {
             <button
               type="button"
               onClick={() => { setStep("phone"); setOtp(""); setError(null); }}
-              className="w-full text-center text-[13px] font-semibold text-gray-500 hover:text-gray-700"
+              className="w-full text-center text-[13px] font-semibold text-ink-500 hover:text-ink-700"
             >
               ← Изменить номер
             </button>

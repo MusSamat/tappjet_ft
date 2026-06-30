@@ -59,12 +59,12 @@ export function TripCard({ trip, href, className, active, onClick, showBookButto
 
       {/* Route + meta */}
       <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-1 text-[14px] font-extrabold text-gray-900">
+        <div className="flex items-center gap-1 text-[14px] font-extrabold text-ink-900">
           <span className="truncate">{trip.originCity ?? ""}</span>
-          <ArrowRight className="h-3.5 w-3.5 flex-shrink-0 text-gray-400" aria-hidden="true" />
+          <ArrowRight className="h-3.5 w-3.5 flex-shrink-0 text-ink-400" aria-hidden="true" />
           <span className="truncate">{trip.destinationCity ?? ""}</span>
         </div>
-        <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-gray-500">
+        <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-ink-500">
           <span className="font-semibold">
             {trip.departureAt ? formatDepartureLabel(trip.departureAt) : ""}
           </span>
@@ -82,7 +82,7 @@ export function TripCard({ trip, href, className, active, onClick, showBookButto
             </span>
           )}
           {trip.priceNegotiable && (
-            <span className="font-semibold text-amber-700">Торг</span>
+            <span className="font-semibold text-accent-700">Торг</span>
           )}
         </div>
         <RouteStops pickup={trip.pickupCities} dropoff={trip.dropoffCities} className="mt-1" />
@@ -94,28 +94,28 @@ export function TripCard({ trip, href, className, active, onClick, showBookButto
         {trip.id && (
           <LikeButton targetType="trip" id={trip.id} liked={!!trip.liked} size="sm" className="-mr-1.5 -mt-1" />
         )}
-        <span className="text-[16px] font-extrabold text-teal-700">{price} сом</span>
+        <span className="text-[16px] font-extrabold text-brand-700">{price} сом</span>
         <div className="flex items-center gap-1.5">
           <DriverAvatar name={driverName} src={driver.avatarUrl ?? null} size="sm" />
           <div className="flex flex-col items-end">
             <div className="flex items-center gap-0.5">
-              <span className="text-[11px] font-bold text-gray-700">{driverName.split(" ")[0]}</span>
+              <span className="text-[11px] font-bold text-ink-700">{driverName.split(" ")[0]}</span>
               {driver.verified && (
-                <Shield className="h-3 w-3 text-teal-600" aria-label="Верифицирован" />
+                <Shield className="h-3 w-3 text-brand-600" aria-label="Верифицирован" />
               )}
             </div>
             {rating !== null && ratingCount >= 3 ? (
               <div className="flex items-center gap-0.5">
-                <Star className="h-2.5 w-2.5 fill-amber-400 text-amber-400" aria-hidden="true" />
-                <span className="text-[10px] font-bold text-gray-600">{rating.toFixed(1)}</span>
+                <Star className="h-2.5 w-2.5 fill-accent-400 text-accent-400" aria-hidden="true" />
+                <span className="text-[10px] font-bold text-ink-600">{rating.toFixed(1)}</span>
               </div>
             ) : (
-              <span className="text-[10px] text-teal-600">Новый</span>
+              <span className="text-[10px] text-brand-600">Новый</span>
             )}
           </div>
         </div>
         {trip.departureAt && (
-          <span className="text-[10px] font-semibold text-gray-400">
+          <span className="text-[10px] font-semibold text-ink-400">
             {new Date(trip.departureAt).toLocaleDateString("ru-RU", { day: "numeric", month: "short" })}
           </span>
         )}
@@ -123,7 +123,7 @@ export function TripCard({ trip, href, className, active, onClick, showBookButto
           <Link
             href={`/trips/${trip.id}/book`}
             onClick={(e) => e.stopPropagation()}
-            className="mt-1 inline-flex items-center gap-1 rounded-lg bg-amber-500 px-2.5 py-1 text-[11px] font-bold text-[#4A2C00] transition-colors hover:bg-amber-600 active:bg-amber-700"
+            className="mt-1 inline-flex items-center gap-1 rounded-lg bg-accent-500 px-2.5 py-1 text-[11px] font-bold text-[#4A2C00] transition-colors hover:bg-accent-600 active:bg-accent-700"
           >
             <Send className="h-2.5 w-2.5" aria-hidden="true" />
             Забронировать

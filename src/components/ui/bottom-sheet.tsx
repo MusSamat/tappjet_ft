@@ -25,7 +25,7 @@ export const BottomSheetContent = forwardRef<
     >
       <span
         aria-hidden="true"
-        className="mx-auto mb-4 block h-1 w-10 rounded-full bg-gray-300"
+        className="mx-auto mb-4 block h-1 w-10 rounded-full bg-ink-300"
       />
       {children}
     </DialogPrimitive.Content>
@@ -37,7 +37,7 @@ export const BottomSheetTitle = forwardRef<
   ElementRef<typeof DialogPrimitive.Title>,
   ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
 >(({ className, ...rest }, ref) => (
-  <DialogPrimitive.Title ref={ref} className={cn("text-h1 text-gray-900", className)} {...rest} />
+  <DialogPrimitive.Title ref={ref} className={cn("text-h1 text-ink-900", className)} {...rest} />
 ));
 BottomSheetTitle.displayName = DialogPrimitive.Title.displayName;
 

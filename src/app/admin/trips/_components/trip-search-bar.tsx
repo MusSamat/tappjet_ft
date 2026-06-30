@@ -4,7 +4,7 @@ import { Search, X } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
 const STATUS_TABS = [
-  { value: "active",    label: "Активные",     dot: "bg-teal-500" },
+  { value: "active",    label: "Активные",     dot: "bg-brand-500" },
   { value: "completed", label: "Завершённые",   dot: "bg-blue-500" },
   { value: "cancelled", label: "Отменённые",    dot: "bg-slate-400" },
   { value: "all",       label: "Все",           dot: "bg-slate-300" },

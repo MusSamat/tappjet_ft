@@ -47,9 +47,9 @@ export function PhoneChangeForm() {
   if (step === "otp") {
     return (
       <div className="space-y-4">
-        <p className="text-body-lg text-gray-700">
+        <p className="text-body-lg text-ink-700">
           Введите код из SMS на номер{" "}
-          <span className="font-semibold text-gray-900">{newPhone}</span>
+          <span className="font-semibold text-ink-900">{newPhone}</span>
         </p>
         <div>
           <Label>Код из SMS</Label>
@@ -61,7 +61,7 @@ export function PhoneChangeForm() {
           />
         </div>
         {confirmMutation.error && (
-          <p className="text-caption text-error">Неверный код. Попробуйте ещё раз.</p>
+          <p className="text-caption text-coral-500">Неверный код. Попробуйте ещё раз.</p>
         )}
         <div className="flex items-center gap-3">
           <Button
@@ -86,7 +86,7 @@ export function PhoneChangeForm() {
         </div>
         <button
           type="button"
-          className="text-caption text-gray-500 underline"
+          className="text-caption text-ink-500 underline"
           onClick={() => setStep("idle")}
         >
           Изменить номер
@@ -112,7 +112,7 @@ export function PhoneChangeForm() {
         />
       </div>
       {sendMutation.error && (
-        <p className="text-caption text-error">Неверный пароль или номер уже занят.</p>
+        <p className="text-caption text-coral-500">Неверный пароль или номер уже занят.</p>
       )}
       <Button
         variant="primary"

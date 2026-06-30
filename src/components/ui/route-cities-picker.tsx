@@ -84,11 +84,11 @@ export function RouteCitiesPicker({
   const remove = (name: string) => onChange(value.filter((n) => n !== name));
 
   return (
-    <div className="flex flex-col gap-1.5 border-t border-dashed border-gray-200 pt-2.5">
+    <div className="flex flex-col gap-1.5 border-t border-dashed border-ink-200 pt-2.5">
       <div className="flex items-center justify-between">
-        <span className="text-[11px] font-bold text-gray-500">{label}</span>
+        <span className="text-[11px] font-bold text-ink-500">{label}</span>
         {value.length > 0 && (
-          <span className="text-[10px] font-bold text-teal-600">
+          <span className="text-[10px] font-bold text-brand-600">
             {value.length}/{max}
           </span>
         )}
@@ -99,14 +99,14 @@ export function RouteCitiesPicker({
           {value.map((name) => (
             <span
               key={name}
-              className="inline-flex items-center gap-1 rounded-full border border-teal-400 bg-teal-50 py-0.5 pl-2.5 pr-1 text-[11px] font-bold text-teal-700"
+              className="inline-flex items-center gap-1 rounded-full border border-brand-400 bg-brand-50 py-0.5 pl-2.5 pr-1 text-[11px] font-bold text-brand-700"
             >
               {name}
               <button
                 type="button"
                 onClick={() => remove(name)}
                 aria-label={`Убрать ${name}`}
-                className="rounded-full p-0.5 hover:bg-teal-100"
+                className="rounded-full p-0.5 hover:bg-brand-100"
               >
                 <X className="h-2.5 w-2.5" aria-hidden="true" />
               </button>
@@ -118,7 +118,7 @@ export function RouteCitiesPicker({
       {!atMax && (
         <div className="relative">
           <MapPin
-            className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400"
+            className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-ink-400"
             aria-hidden="true"
           />
           <input
@@ -133,7 +133,7 @@ export function RouteCitiesPicker({
             }}
             onFocus={() => setOpen(true)}
             onBlur={() => setTimeout(() => setOpen(false), 150)}
-            className="w-full rounded-lg border border-gray-200 bg-white py-1.5 pl-8 pr-7 text-[12px] font-semibold text-gray-900 outline-none placeholder:text-gray-400 focus:border-teal-500"
+            className="w-full rounded-lg border border-ink-200 bg-white py-1.5 pl-8 pr-7 text-[12px] font-semibold text-ink-900 outline-none placeholder:text-ink-400 focus:border-brand-500"
           />
           {isFetching && (
             <span className="absolute right-2.5 top-1/2 -translate-y-1/2">
@@ -149,7 +149,7 @@ export function RouteCitiesPicker({
           className="max-h-60 overflow-auto rounded-2xl border border-ink-100 bg-white shadow-soft"
         >
           {available.length === 0 ? (
-            <li className="px-3 py-2 text-[12px] font-semibold text-gray-400">{emptyHint}</li>
+            <li className="px-3 py-2 text-[12px] font-semibold text-ink-400">{emptyHint}</li>
           ) : (
             available.map((c) => (
               <li
@@ -158,12 +158,12 @@ export function RouteCitiesPicker({
                   e.preventDefault();
                   add(c.nameRu);
                 }}
-                className="flex cursor-pointer items-center gap-2 px-3 py-2 transition-colors hover:bg-teal-50"
+                className="flex cursor-pointer items-center gap-2 px-3 py-2 transition-colors hover:bg-brand-50"
               >
-                <MapPin className="h-3 w-3 flex-shrink-0 text-gray-400" aria-hidden="true" />
+                <MapPin className="h-3 w-3 flex-shrink-0 text-ink-400" aria-hidden="true" />
                 <div className="min-w-0">
-                  <p className="text-[12px] font-bold text-gray-900">{c.nameRu}</p>
-                  <p className="text-[10px] font-semibold text-gray-400">{c.regionNameRu}</p>
+                  <p className="text-[12px] font-bold text-ink-900">{c.nameRu}</p>
+                  <p className="text-[10px] font-semibold text-ink-400">{c.regionNameRu}</p>
                 </div>
               </li>
             ))

@@ -99,7 +99,7 @@ export default function OnboardingPage() {
         <button
           type="button"
           onClick={done}
-          className="text-[13px] font-bold text-gray-400 hover:text-gray-600"
+          className="text-[13px] font-bold text-ink-400 hover:text-ink-600"
         >
           {t("skip")}
         </button>
@@ -113,10 +113,10 @@ export default function OnboardingPage() {
 
         {/* Text */}
         <div className="mt-8 text-center">
-          <h1 className="text-[24px] font-extrabold leading-tight text-gray-900">
+          <h1 className="text-[24px] font-extrabold leading-tight text-ink-900">
             {currentText.title}
           </h1>
-          <p className="mt-3 text-[15px] leading-relaxed text-gray-500">
+          <p className="mt-3 text-[15px] leading-relaxed text-ink-500">
             {currentText.subtitle}
           </p>
         </div>
@@ -134,8 +134,8 @@ export default function OnboardingPage() {
               aria-label={t("slide_aria", { n: i + 1 })}
               className={`transition-all duration-200 ${
                 i === slide
-                  ? "h-2.5 w-7 rounded-full bg-teal-600"
-                  : "h-2.5 w-2.5 rounded-full bg-gray-200 hover:bg-gray-300"
+                  ? "h-2.5 w-7 rounded-full bg-brand-600"
+                  : "h-2.5 w-2.5 rounded-full bg-ink-200 hover:bg-ink-300"
               }`}
             />
           ))}
@@ -145,7 +145,7 @@ export default function OnboardingPage() {
         <button
           type="button"
           onClick={next}
-          className="h-14 w-full rounded-2xl bg-amber-500 text-[16px] font-extrabold text-[#4A2C00] shadow-md shadow-amber-200 transition-transform active:scale-[0.98] hover:bg-amber-400"
+          className="h-14 w-full rounded-2xl bg-accent-500 text-[16px] font-extrabold text-[#4A2C00] shadow-md shadow-accent-200 transition-transform active:scale-[0.98] hover:bg-accent-400"
         >
           {isLast ? t("start") : t("next")}
         </button>
@@ -153,7 +153,7 @@ export default function OnboardingPage() {
         {/* Login link */}
         <Link
           href="/auth/login"
-          className="text-[13px] font-bold text-gray-400 hover:text-teal-700"
+          className="text-[13px] font-bold text-ink-400 hover:text-brand-700"
         >
           {t("have_account")}
         </Link>

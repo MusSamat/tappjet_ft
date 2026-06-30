@@ -53,7 +53,7 @@ export function ProfileStep({ onSaved, onError }: Props) {
           placeholder="Асан"
           aria-invalid={Boolean(nameErr) || undefined}
         />
-        {nameErr && <span className="text-caption text-error">{nameErr}</span>}
+        {nameErr && <span className="text-caption text-coral-500">{nameErr}</span>}
       </div>
 
       <div className="flex flex-col gap-1.5">
@@ -62,7 +62,7 @@ export function ProfileStep({ onSaved, onError }: Props) {
           id="language"
           value={language}
           onChange={(e) => setLanguage(languageSchema.parse(e.target.value))}
-          className="flex h-12 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 text-body font-bold text-ink-900 outline-none focus:border-brand-500 focus:bg-white"
+          className="flex h-12 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 text-body-lg font-bold text-ink-900 outline-none focus:border-brand-500 focus:bg-white"
         >
           <option value="ru">{tLocale("ru")}</option>
           <option value="kg">{tLocale("kg")}</option>
@@ -71,13 +71,13 @@ export function ProfileStep({ onSaved, onError }: Props) {
 
       <label className="flex items-start gap-2">
         <Checkbox id="terms" checked={terms} onCheckedChange={(v) => setTerms(v === true)} />
-        <span className="text-body-lg text-gray-700">
+        <span className="text-body-lg text-ink-700">
           {t("terms_prefix")}{" "}
-          <Link href="/terms" className="font-bold text-teal-700 hover:text-teal-800">
+          <Link href="/terms" className="font-bold text-brand-700 hover:text-brand-800">
             {t("terms_link")}
           </Link>{" "}
           {t("terms_and")}{" "}
-          <Link href="/privacy" className="font-bold text-teal-700 hover:text-teal-800">
+          <Link href="/privacy" className="font-bold text-brand-700 hover:text-brand-800">
             {t("privacy_link")}
           </Link>
         </span>

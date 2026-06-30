@@ -58,7 +58,7 @@ export function PasswordStep({ onDone, onSkip, onError }: Props) {
           autoComplete="new-password"
           invalid={Boolean(errMsg)}
         />
-        {errMsg && <span className="text-caption text-error">{errMsg}</span>}
+        {errMsg && <span className="text-caption text-coral-500">{errMsg}</span>}
       </div>
 
       <div className="flex flex-col gap-1.5">
@@ -71,7 +71,7 @@ export function PasswordStep({ onDone, onSkip, onError }: Props) {
           autoComplete="new-password"
           invalid={mismatch}
         />
-        {mismatch && <span className="text-caption text-error">{t("passwords_mismatch")}</span>}
+        {mismatch && <span className="text-caption text-coral-500">{t("passwords_mismatch")}</span>}
       </div>
 
       <div className="flex flex-col gap-2">

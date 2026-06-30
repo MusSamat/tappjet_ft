@@ -32,7 +32,7 @@ export function DriverAvatar({ name, src, size = "sm", className }: DriverAvatar
   useEffect(() => { setFailed(false); }, [src]);
 
   const base = cn(
-    "inline-flex shrink-0 items-center justify-center rounded-full bg-teal-100 font-bold text-teal-700",
+    "inline-flex shrink-0 items-center justify-center rounded-full bg-brand-100 font-bold text-brand-700",
     sizeClasses[size],
     className,
   );

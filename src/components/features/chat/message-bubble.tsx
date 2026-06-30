@@ -31,14 +31,14 @@ export function MessageBubble({ message, isMine, senderName, senderAvatarUrl }: 
       <div
         className={cn(
           "max-w-[75%] rounded-2xl px-4 py-2.5",
-          isMine ? "rounded-br-sm bg-teal-600 text-white" : "rounded-bl-sm bg-gray-100 text-gray-900",
+          isMine ? "rounded-br-sm bg-brand-600 text-white" : "rounded-bl-sm bg-ink-100 text-ink-900",
         )}
       >
         <p className="whitespace-pre-wrap break-words text-body-lg">{message.text}</p>
         <div
           className={cn(
             "mt-1 flex items-center justify-end gap-1 text-caption",
-            isMine ? "text-teal-50/80" : "text-gray-500",
+            isMine ? "text-brand-50/80" : "text-ink-500",
           )}
         >
           <span>{formatTime(message.createdAt)}</span>
@@ -46,7 +46,7 @@ export function MessageBubble({ message, isMine, senderName, senderAvatarUrl }: 
             <Clock className="h-3.5 w-3.5 opacity-70" aria-label={t("sending")} />
           )}
           {isMine && message.failed && (
-            <span className="font-bold text-amber-200" aria-label={t("failed")}>!</span>
+            <span className="font-bold text-accent-200" aria-label={t("failed")}>!</span>
           )}
           {isMine && !message.pending && !message.failed && (
             message.isRead

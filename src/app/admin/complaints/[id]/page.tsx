@@ -10,7 +10,7 @@ import { ArrowLeft, AlertTriangle } from "lucide-react";
 const PRIORITY_CFG: Record<string, string> = {
   P0: "bg-red-600 text-white",
   P1: "bg-orange-500 text-white",
-  P2: "bg-amber-400 text-amber-900",
+  P2: "bg-accent-400 text-accent-700",
   P3: "bg-slate-200 text-slate-600",
 };
 
@@ -82,8 +82,8 @@ export default function ComplaintDetailPage() {
           <span className={cn(
             "rounded-full px-3 py-1.5 text-[12px] font-bold",
             complaint.status === "new" ? "bg-red-50 text-red-700" :
-            complaint.status === "in_review" ? "bg-amber-50 text-amber-800" :
-            complaint.status === "resolved" ? "bg-teal-50 text-teal-800" :
+            complaint.status === "in_review" ? "bg-accent-50 text-accent-700" :
+            complaint.status === "resolved" ? "bg-brand-50 text-brand-800" :
             "bg-slate-100 text-slate-600",
           )}>
             {complaint.status === "new" ? "Новая" :
@@ -163,7 +163,7 @@ export default function ComplaintDetailPage() {
                 className={cn(
                   "rounded-xl px-5 py-2.5 text-[13px] font-bold transition-colors",
                   resolveStatus === s
-                    ? s === "resolved" ? "bg-teal-600 text-white" : "bg-slate-700 text-white"
+                    ? s === "resolved" ? "bg-brand-600 text-white" : "bg-slate-700 text-white"
                     : "border border-slate-200 text-slate-600 hover:bg-slate-50",
                 )}
               >
@@ -187,7 +187,7 @@ export default function ComplaintDetailPage() {
             disabled={!resolution.trim() || resolveMut.isPending}
             className={cn(
               "rounded-xl px-8 py-3 text-[14px] font-bold text-white disabled:opacity-50",
-              resolveStatus === "resolved" ? "bg-teal-600 hover:bg-teal-700" : "bg-slate-800 hover:bg-slate-900",
+              resolveStatus === "resolved" ? "bg-brand-600 hover:bg-brand-700" : "bg-slate-800 hover:bg-slate-900",
             )}
           >
             {resolveMut.isPending ? "Сохраняем…" : "Сохранить решение"}

@@ -41,11 +41,11 @@ function ExpiresCountdown({ expiresAt }: { expiresAt: string }) {
     return () => clearInterval(id);
   }, []);
   const diff = new Date(expiresAt).getTime() - now;
-  if (diff <= 0) return <span className="text-caption text-amber-700">Истекло</span>;
+  if (diff <= 0) return <span className="text-caption text-accent-700">Истекло</span>;
   const min = Math.floor(diff / 60000);
   const sec = Math.floor((diff % 60000) / 1000);
   return (
-    <span className="text-caption text-amber-700">
+    <span className="text-caption text-accent-700">
       Истекает через {min > 0 ? `${min} мин ` : ""}{sec}с
     </span>
   );
@@ -83,14 +83,14 @@ export function BookingCard({ booking, role }: Props) {
       <div className="flex items-start justify-between gap-3">
         <div className="flex flex-col gap-1">
           {trip?.departureAt && (
-            <div className="flex items-center gap-2 text-caption font-semibold text-gray-700">
-              <Clock className="h-3.5 w-3.5 text-gray-500" aria-hidden="true" />
+            <div className="flex items-center gap-2 text-caption font-semibold text-ink-700">
+              <Clock className="h-3.5 w-3.5 text-ink-500" aria-hidden="true" />
               {formatDepartureLabel(trip.departureAt)}
             </div>
           )}
-          <div className="flex items-center gap-2 text-h2 text-gray-900">
+          <div className="flex items-center gap-2 text-h2 text-ink-900">
             <span className="truncate">{trip?.originCity}</span>
-            <ArrowRight className="h-4 w-4 flex-shrink-0 text-gray-500" aria-hidden="true" />
+            <ArrowRight className="h-4 w-4 flex-shrink-0 text-ink-500" aria-hidden="true" />
             <span className="truncate">{trip?.destinationCity}</span>
           </div>
         </div>
@@ -98,33 +98,33 @@ export function BookingCard({ booking, role }: Props) {
       </div>
 
       {role === "driver" && passenger && (
-        <div className="flex items-center gap-2 border-t-[0.5px] border-gray-100 pt-3">
+        <div className="flex items-center gap-2 border-t-[0.5px] border-ink-100 pt-3">
           <DriverAvatar name={passenger.name ?? "?"} src={passenger.avatarUrl ?? null} size="sm" />
           <div className="flex min-w-0 flex-1 flex-col">
-            <span className="text-body text-gray-900">{passenger.name}</span>
+            <span className="text-body text-ink-900">{passenger.name}</span>
             {isAccepted && passenger.phone && (
               <a
                 href={`tel:${passenger.phone}`}
-                className="flex items-center gap-1 text-caption text-teal-700 hover:underline"
+                className="flex items-center gap-1 text-caption text-brand-700 hover:underline"
               >
                 <Phone className="h-3 w-3" aria-hidden="true" />
                 {passenger.phone}
               </a>
             )}
           </div>
-          <span className="text-caption text-gray-500">{booking.seatsCount} мест</span>
+          <span className="text-caption text-ink-500">{booking.seatsCount} мест</span>
         </div>
       )}
 
       {role === "passenger" && driver && (
-        <div className="flex items-center gap-2 border-t-[0.5px] border-gray-100 pt-3">
+        <div className="flex items-center gap-2 border-t-[0.5px] border-ink-100 pt-3">
           <DriverAvatar name={driver.name ?? "?"} src={driver.avatarUrl ?? null} size="sm" />
           <div className="flex min-w-0 flex-1 flex-col">
-            <span className="text-body text-gray-900">{driver.name}</span>
+            <span className="text-body text-ink-900">{driver.name}</span>
             {isAccepted && driver.phone && (
               <a
                 href={`tel:${driver.phone}`}
-                className="flex items-center gap-1 text-caption text-teal-700 hover:underline"
+                className="flex items-center gap-1 text-caption text-brand-700 hover:underline"
               >
                 <Phone className="h-3 w-3" aria-hidden="true" />
                 {driver.phone}
@@ -135,7 +135,7 @@ export function BookingCard({ booking, role }: Props) {
       )}
 
       {booking.comment && (
-        <p className="rounded-xl bg-gray-50 px-3 py-2 text-body-lg text-gray-700">
+        <p className="rounded-xl bg-ink-50 px-3 py-2 text-body-lg text-ink-700">
           «{booking.comment}»
         </p>
       )}
@@ -145,7 +145,7 @@ export function BookingCard({ booking, role }: Props) {
       )}
 
       {(acceptMut.isError || rejectMut.isError || cancelMut.isError) && (
-        <p className="text-caption text-error">Не удалось выполнить действие. Попробуйте ещё раз.</p>
+        <p className="text-caption text-coral-500">Не удалось выполнить действие. Попробуйте ещё раз.</p>
       )}
 
       <div className="flex flex-wrap gap-2">

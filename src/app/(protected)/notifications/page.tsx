@@ -135,8 +135,8 @@ export default function NotificationsPage() {
       {/* Header */}
       <div className="mb-5 flex items-start justify-between">
         <div>
-          <h1 className="text-[26px] font-extrabold text-gray-900">{t("title")}</h1>
-          <p className="mt-0.5 text-[12px] font-semibold text-gray-400">
+          <h1 className="text-[26px] font-extrabold text-ink-900">{t("title")}</h1>
+          <p className="mt-0.5 text-[12px] font-semibold text-ink-400">
             {unreadCount > 0 ? t("unread_count", { n: unreadCount }) : t("all_read")}
           </p>
         </div>
@@ -145,7 +145,7 @@ export default function NotificationsPage() {
             type="button"
             onClick={() => markAllRead()}
             disabled={markingAll}
-            className="flex items-center gap-1.5 rounded-xl border border-gray-200 px-3 py-2 text-[12px] font-bold text-teal-700 hover:bg-teal-50 disabled:opacity-50"
+            className="flex items-center gap-1.5 rounded-2xl border border-ink-200 px-3 py-2 text-[12px] font-bold text-brand-700 hover:bg-brand-50 disabled:opacity-50"
           >
             <CheckCheck className="h-4 w-4" aria-hidden="true" />
             {t("mark_all_read_btn")}
@@ -165,8 +165,8 @@ export default function NotificationsPage() {
           </div>
         ) : notifications.length === 0 ? (
           <div className="rounded-2xl border border-ink-100 bg-white p-10 text-center">
-            <p className="text-[17px] font-bold text-gray-900">{t("empty_title")}</p>
-            <p className="mt-2 text-[13px] text-gray-500">{t("empty_hint")}</p>
+            <p className="text-[17px] font-bold text-ink-900">{t("empty_title")}</p>
+            <p className="mt-2 text-[13px] text-ink-500">{t("empty_hint")}</p>
           </div>
         ) : (
           notifications.map((n, idx) => (
@@ -185,9 +185,9 @@ export default function NotificationsPage() {
       {/* Notification settings */}
       <div className="mt-6 rounded-3xl border border-ink-100 bg-white p-5">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-[16px] font-extrabold text-gray-900">{t("settings_title")}</h2>
+          <h2 className="text-[16px] font-extrabold text-ink-900">{t("settings_title")}</h2>
           {prefsLoaded && (
-            <span className="text-[11px] font-semibold text-gray-400">{t("settings_saved")}</span>
+            <span className="text-[11px] font-semibold text-ink-400">{t("settings_saved")}</span>
           )}
         </div>
         <div className="flex flex-col gap-4">
@@ -195,7 +195,7 @@ export default function NotificationsPage() {
             const on = prefs[key] ?? true;
             return (
               <div key={key} className="flex items-center justify-between">
-                <span className="text-[14px] font-semibold text-gray-900">{label}</span>
+                <span className="text-[14px] font-semibold text-ink-900">{label}</span>
                 <button
                   type="button"
                   onClick={() => togglePref(key)}
@@ -204,7 +204,7 @@ export default function NotificationsPage() {
                   aria-label={label}
                   className={cn(
                     "relative h-6 w-11 flex-shrink-0 rounded-full transition-colors",
-                    on ? "bg-teal-500" : "bg-gray-200",
+                    on ? "bg-brand-500" : "bg-ink-200",
                   )}
                 >
                   <span

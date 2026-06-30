@@ -35,7 +35,7 @@ export function MobileRouteBar() {
         type="button"
         onClick={() => update({ from: to || null, to: from || null })}
         disabled={!from && !to}
-        className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 transition-colors hover:border-teal-400 hover:text-teal-600 disabled:opacity-30"
+        className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border border-ink-200 bg-white text-ink-500 transition-colors hover:border-brand-400 hover:text-brand-600 disabled:opacity-30"
         aria-label="Поменять местами"
       >
         <ArrowLeftRight className="h-3 w-3" aria-hidden="true" />

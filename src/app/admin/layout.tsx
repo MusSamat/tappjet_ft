@@ -109,7 +109,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           {!collapsed && (
             <div className="flex items-center gap-2">
               <span className="text-[18px] font-extrabold text-white">Tappjet</span>
-              <span className="rounded bg-amber-500 px-1.5 py-0.5 text-[10px] font-bold text-amber-900">
+              <span className="rounded bg-accent-500 px-1.5 py-0.5 text-[10px] font-bold text-accent-700">
                 ADMIN
               </span>
             </div>
@@ -158,7 +158,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                 className={cn(
                   "mt-1 inline-block rounded px-1.5 py-0.5 text-[9px] font-bold uppercase",
                   admin?.role === "superadmin"
-                    ? "bg-amber-500 text-amber-900"
+                    ? "bg-accent-500 text-accent-700"
                     : "bg-slate-700 text-slate-300",
                 )}
               >

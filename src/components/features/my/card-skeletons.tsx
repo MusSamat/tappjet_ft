@@ -14,7 +14,7 @@ export function BookingCardSkeleton() {
         </div>
         <Skeleton className="h-6 w-20 rounded-full" />
       </div>
-      <div className="mb-3 h-px bg-gray-100" />
+      <div className="mb-3 h-px bg-ink-100" />
       <div className="flex gap-6">
         <Skeleton className="h-4 w-10" />
         <Skeleton className="h-4 w-16" />
@@ -34,7 +34,7 @@ export function DriverTripCardSkeleton() {
         </div>
         <Skeleton className="h-6 w-16 rounded-full" />
       </div>
-      <div className="mb-3 h-px bg-gray-100" />
+      <div className="mb-3 h-px bg-ink-100" />
       <div className="flex gap-6">
         <Skeleton className="h-4 w-10" />
         <Skeleton className="h-4 w-16" />
