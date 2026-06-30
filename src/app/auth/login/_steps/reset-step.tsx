@@ -45,7 +45,7 @@ export function ResetStep({
             value={newPassword}
             onChange={(e) => { setNewPassword(e.target.value); setServerError(null); }}
             placeholder={tl("new_password_placeholder")}
-            className="h-11 w-full rounded-xl border-2 border-ink-200 bg-gray-50 px-3 pr-10 text-[14px] font-semibold text-gray-900 outline-none focus:border-teal-500"
+            className="h-12 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 pr-10 text-[14px] font-semibold text-gray-900 outline-none focus:border-teal-500"
           />
           <button
             type="button"
@@ -69,7 +69,7 @@ export function ResetStep({
           onKeyDown={(e) => { if (e.key === "Enter" && canReset) resetMutation.mutate(); }}
           placeholder={tl("confirm_password_placeholder")}
           className={cn(
-            "h-11 w-full rounded-xl border-2 bg-gray-50 px-3 text-[14px] font-semibold outline-none",
+            "h-12 w-full rounded-2xl border-2 bg-ink-50 px-3 text-[14px] font-semibold outline-none",
             confirmPassword && confirmPassword !== newPassword
               ? "border-coral-300 text-coral-700"
               : "border-gray-200 text-gray-900 focus:border-teal-500",
@@ -84,7 +84,7 @@ export function ResetStep({
         type="button"
         disabled={!canReset || resetMutation.isPending}
         onClick={() => resetMutation.mutate()}
-        className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-amber-500 text-[14px] font-bold text-[#4A2C00] transition-colors hover:bg-amber-600 disabled:opacity-40"
+        className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-amber-500 text-[14px] font-bold text-[#4A2C00] shadow-cta transition-colors hover:bg-amber-400 disabled:opacity-40"
       >
         {resetMutation.isPending ? tl("saving") : tl("save_password")}
       </button>

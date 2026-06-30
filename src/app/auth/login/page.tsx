@@ -277,7 +277,7 @@ export default function LoginPage() {
               type="button"
               disabled={!canSubmitLogin || loginMutation.isPending}
               onClick={() => loginMutation.mutate()}
-              className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-amber-500 text-[14px] font-bold text-[#4A2C00] transition-colors hover:bg-amber-600 disabled:opacity-40"
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-amber-500 text-[14px] font-bold text-[#4A2C00] shadow-cta transition-colors hover:bg-amber-400 disabled:opacity-40"
             >
               {loginMutation.isPending ? <><Spinner size={16} />{tl("logging_in")}</> : tl("login_btn")}
             </button>

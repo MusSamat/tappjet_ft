@@ -53,7 +53,7 @@ export function OtpStep({
               onKeyDown={(e) => onDigitKeyDown(idx, e)}
               onFocus={(e) => e.target.select()}
               className={cn(
-                "h-14 w-12 rounded-xl border-2 bg-gray-50 text-center text-[24px] font-extrabold outline-none transition-colors",
+                "h-14 w-12 rounded-2xl border-2 bg-ink-50 text-center text-[24px] font-extrabold outline-none transition-colors",
                 serverError
                   ? "border-coral-400 text-coral-700"
                   : d
@@ -70,7 +70,7 @@ export function OtpStep({
         type="button"
         disabled={digits.some((d) => !d) || otp.length < 6 || verifyMutation.isPending || resendSeconds > 0}
         onClick={() => verifyMutation.mutate()}
-        className="flex h-12 w-full items-center justify-center rounded-xl bg-amber-500 text-[14px] font-bold text-[#4A2C00] transition-colors hover:bg-amber-600 disabled:opacity-40"
+        className="flex h-12 w-full items-center justify-center rounded-2xl bg-amber-500 text-[14px] font-bold text-[#4A2C00] shadow-cta transition-colors hover:bg-amber-400 disabled:opacity-40"
       >
         {verifyMutation.isPending
           ? tl("verifying")
