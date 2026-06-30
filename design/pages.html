@@ -68,6 +68,7 @@
       <a href="#rate" class="rounded-full bg-ink-100 px-3 py-1 hover:bg-brand-50 hover:text-brand-700">Оценка</a>
       <a href="#settings" class="rounded-full bg-ink-100 px-3 py-1 hover:bg-brand-50 hover:text-brand-700">Настройки</a>
       <a href="#roles" class="rounded-full bg-brand-600 px-3 py-1 text-white">Роли (гость/пассажир/водитель)</a>
+      <a href="#states" class="rounded-full bg-brand-600 px-3 py-1 text-white">Состояния и кейсы</a>
     </nav>
   </header>
 
@@ -539,6 +540,76 @@
           <div class="flex-1 space-y-3 px-4 py-3">
             <article class="overflow-hidden rounded-3xl border-l-[5px] border-grape-500 bg-white shadow-card"><div class="flex items-center justify-between px-4 pt-3"><span class="inline-flex items-center gap-1 rounded-full bg-grape-100 px-2.5 py-1 text-[11px] font-900 text-grape-600"><i data-lucide="hand" class="h-3.5 w-3.5"></i>Заявка</span><span class="text-[12px] font-800 text-ink-500">завтра</span></div><div class="px-4 pb-3 pt-2"><div class="flex items-center justify-between"><div><p class="font-900 text-ink-900">Бишкек → Ош</p><p class="text-[12px] font-700 text-ink-400">Нурлан · ищет</p></div><p class="text-[15px] font-900 text-grape-600">до 1 500</p></div><div class="mt-2 flex items-center gap-2"><span class="relative" style="z-index:20"><i data-lucide="user" class="seat h-6 w-6 text-grape-500"></i></span><span class="relative -ml-3" style="z-index:10"><i data-lucide="user" class="seat h-6 w-6 text-grape-500"></i></span><span class="text-[12px] font-900 text-grape-600">нужно 2</span></div></div><div class="border-t border-ink-100 px-4 py-2.5"><button class="w-full rounded-xl bg-grape-500 py-2 text-[13px] font-900 text-white">Откликнуться</button></div></article>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ STATES & CASES ══════════ -->
+    <section id="states">
+      <h2 class="mb-1 text-[20px] font-900 text-ink-900">Состояния и кейсы</h2>
+      <p class="mb-5 text-[13px] font-700 text-ink-400">Все нестандартные состояния каждой страницы: ошибки, загрузка, пусто, тосты, и кейсы деталей (мест нет / своя поездка / гость).</p>
+
+      <!-- form errors -->
+      <h3 class="mb-3 text-[15px] font-900 text-ink-800">Ошибки формы</h3>
+      <div class="mb-8 grid gap-5 md:grid-cols-3">
+        <div class="rounded-3xl bg-white p-5 shadow-card">
+          <p class="mb-3 text-[11px] font-900 uppercase tracking-wider text-ink-400">Баннер ошибки</p>
+          <div class="flex items-start gap-2.5 rounded-2xl bg-coral-50 px-4 py-3"><i data-lucide="alert-triangle" class="mt-0.5 h-4 w-4 shrink-0 text-coral-500"></i><p class="text-[13px] font-800 text-coral-600">Неверный номер или пароль</p></div>
+        </div>
+        <div class="rounded-3xl bg-white p-5 shadow-card">
+          <p class="mb-3 text-[11px] font-900 uppercase tracking-wider text-ink-400">Поле с ошибкой</p>
+          <input value="неверно" class="w-full rounded-2xl border-2 border-coral-400 bg-coral-100/30 px-4 py-3 text-[15px] font-800 text-ink-900 outline-none"/>
+          <p class="mt-1 text-[12px] font-800 text-coral-600">Проверьте значение</p>
+        </div>
+        <div class="rounded-3xl bg-white p-5 shadow-card">
+          <p class="mb-3 text-[11px] font-900 uppercase tracking-wider text-ink-400">OTP — ошибка</p>
+          <div class="flex gap-2"><input value="4" class="h-12 w-10 rounded-2xl border-2 border-coral-400 bg-coral-100/30 text-center text-[20px] font-900 text-coral-600 outline-none"/><input value="2" class="h-12 w-10 rounded-2xl border-2 border-coral-400 bg-coral-100/30 text-center text-[20px] font-900 text-coral-600 outline-none"/><input value="7" class="h-12 w-10 rounded-2xl border-2 border-coral-400 bg-coral-100/30 text-center text-[20px] font-900 text-coral-600 outline-none"/></div>
+          <p class="mt-1 text-[12px] font-800 text-coral-600">Неверный код · попыток осталось: 2</p>
+        </div>
+      </div>
+
+      <!-- loading -->
+      <h3 class="mb-3 text-[15px] font-900 text-ink-800">Загрузка (skeleton)</h3>
+      <div class="mb-8 grid gap-3 md:grid-cols-2">
+        <div class="animate-pulse rounded-3xl border-l-[5px] border-ink-200 bg-white p-4 shadow-card"><div class="mb-3 flex justify-between"><div class="h-4 w-20 rounded-full bg-ink-200"></div><div class="h-4 w-16 rounded-full bg-ink-200"></div></div><div class="mb-2 h-5 w-32 rounded-full bg-ink-200"></div><div class="h-3 w-24 rounded-full bg-ink-200"></div></div>
+        <div class="animate-pulse rounded-3xl border-l-[5px] border-ink-200 bg-white p-4 shadow-card"><div class="mb-3 flex justify-between"><div class="h-4 w-20 rounded-full bg-ink-200"></div><div class="h-4 w-16 rounded-full bg-ink-200"></div></div><div class="mb-2 h-5 w-28 rounded-full bg-ink-200"></div><div class="h-3 w-20 rounded-full bg-ink-200"></div></div>
+      </div>
+
+      <!-- empty states -->
+      <h3 class="mb-3 text-[15px] font-900 text-ink-800">Пустые экраны</h3>
+      <div class="mb-8 grid gap-5 md:grid-cols-3">
+        <div class="flex flex-col items-center gap-3 rounded-3xl bg-white px-4 py-8 text-center shadow-card"><div class="flex h-16 w-16 items-center justify-center rounded-full bg-brand-100 text-brand-600"><i data-lucide="route" class="h-8 w-8"></i></div><p class="text-[15px] font-900 text-ink-900">Поездок не найдено</p><p class="text-[12px] font-700 text-ink-400">Измените маршрут или оставьте заявку</p><button class="mt-1 flex items-center gap-1.5 rounded-2xl bg-grape-500 px-5 py-2.5 text-[13px] font-900 text-white"><i data-lucide="hand" class="h-4 w-4"></i>Оставить заявку</button></div>
+        <div class="flex flex-col items-center gap-3 rounded-3xl bg-white px-4 py-8 text-center shadow-card"><div class="flex h-16 w-16 items-center justify-center rounded-full bg-ink-100 text-ink-400"><i data-lucide="bell" class="h-8 w-8"></i></div><p class="text-[15px] font-900 text-ink-900">Нет уведомлений</p><p class="text-[12px] font-700 text-ink-400">Здесь появятся брони и сообщения</p></div>
+        <div class="flex flex-col items-center gap-3 rounded-3xl bg-white px-4 py-8 text-center shadow-card"><div class="flex h-16 w-16 items-center justify-center rounded-full bg-ink-100 text-ink-400"><i data-lucide="ticket" class="h-8 w-8"></i></div><p class="text-[15px] font-900 text-ink-900">Пока нет броней</p><p class="text-[12px] font-700 text-ink-400">Найдите поездку и забронируйте место</p><button class="mt-1 flex items-center gap-1.5 rounded-2xl bg-brand-600 px-5 py-2.5 text-[13px] font-900 text-white shadow-brandcta"><i data-lucide="search" class="h-4 w-4"></i>Найти поездку</button></div>
+      </div>
+
+      <!-- toasts -->
+      <h3 class="mb-3 text-[15px] font-900 text-ink-800">Тосты</h3>
+      <div class="mb-8 grid gap-3 md:grid-cols-3">
+        <div class="flex items-center gap-3 rounded-2xl bg-brand-600 px-4 py-3 text-white shadow-brandcta"><i data-lucide="check-circle" class="h-5 w-5"></i><span class="text-[13px] font-800">Бронь отправлена</span></div>
+        <div class="flex items-center gap-3 rounded-2xl bg-coral-500 px-4 py-3 text-white"><i data-lucide="alert-circle" class="h-5 w-5"></i><span class="text-[13px] font-800">Мест больше нет</span></div>
+        <div class="flex items-center gap-3 rounded-2xl bg-ink-800 px-4 py-3 text-white"><i data-lucide="info" class="h-5 w-5"></i><span class="text-[13px] font-800">Код отправлен в Telegram</span></div>
+      </div>
+
+      <!-- detail cases -->
+      <h3 class="mb-3 text-[15px] font-900 text-ink-800">Кейсы детали поездки</h3>
+      <div class="grid gap-5 md:grid-cols-3">
+        <!-- no seats -->
+        <div class="rounded-3xl border border-ink-100 bg-white p-5 shadow-card">
+          <p class="mb-3 text-[11px] font-900 uppercase tracking-wider text-ink-400">Мест нет</p>
+          <div class="mb-3 flex"><span class="relative" style="z-index:30"><i data-lucide="user" class="seat h-7 w-7 text-ink-400"></i></span><span class="relative -ml-3" style="z-index:20"><i data-lucide="user" class="seat h-7 w-7 text-ink-400"></i></span><span class="relative -ml-3" style="z-index:10"><i data-lucide="user" class="seat h-7 w-7 text-ink-400"></i></span></div>
+          <button class="h-11 w-full rounded-2xl bg-ink-100 text-[14px] font-900 text-ink-500" disabled>Мест нет · оставить заявку</button>
+        </div>
+        <!-- own trip -->
+        <div class="rounded-3xl border border-ink-100 bg-white p-5 shadow-card">
+          <p class="mb-3 text-[11px] font-900 uppercase tracking-wider text-ink-400">Своя поездка</p>
+          <div class="rounded-2xl border border-brand-200 bg-brand-50 p-4 text-center"><p class="text-[14px] font-900 text-brand-700">Это ваша поездка</p><p class="mt-0.5 text-[12px] font-700 text-brand-600">Управляйте бронями в «Мои»</p></div>
+        </div>
+        <!-- guest -->
+        <div class="rounded-3xl border border-ink-100 bg-white p-5 shadow-card">
+          <p class="mb-3 text-[11px] font-900 uppercase tracking-wider text-ink-400">Гость</p>
+          <div class="mb-3 flex items-center gap-2 rounded-2xl bg-accent-50 px-3 py-2.5 ring-1 ring-accent-200"><i data-lucide="lock" class="h-4 w-4 text-accent-600"></i><p class="text-[12px] font-800 text-accent-700">Войдите, чтобы забронировать</p></div>
+          <button class="flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 text-[14px] font-900 text-[#4A2C00] shadow-cta"><i data-lucide="log-in" class="h-4 w-4"></i>Войти</button>
         </div>
       </div>
     </section>
