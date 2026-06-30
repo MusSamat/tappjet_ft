@@ -18,7 +18,7 @@ export const BottomSheetContent = forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed inset-x-0 bottom-0 z-50 max-h-[90dvh] overflow-y-auto rounded-t-3xl bg-white p-6 pb-[calc(24px+env(safe-area-inset-bottom))] shadow-lg focus:outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
+        "fixed inset-x-0 bottom-0 z-50 max-h-[90dvh] overflow-y-auto rounded-t-4xl bg-white p-6 pb-[calc(24px+env(safe-area-inset-bottom))] shadow-soft focus:outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
         className,
       )}
       {...rest}

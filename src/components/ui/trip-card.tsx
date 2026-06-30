@@ -35,9 +35,9 @@ export function TripCard({ trip, href, className, active, onClick, showBookButto
   const content = (
     <div
       className={cn(
-        "flex cursor-pointer items-center gap-3 overflow-hidden rounded-2xl border-[0.5px] border-gray-200 bg-white px-4 py-3 transition-all",
-        "hover:border-teal-300 hover:shadow-sm",
-        active && "border-teal-500 shadow-[0_0_0_2px_#CCFBF1]",
+        "flex cursor-pointer items-center gap-3 overflow-hidden rounded-3xl border-l-[5px] border-brand-500 bg-white px-4 py-3 shadow-card ring-1 ring-ink-100 transition-all",
+        "hover:ring-brand-300",
+        active && "ring-2 ring-brand-500",
         className,
       )}
       onClick={onClick}

@@ -3,7 +3,7 @@ import { CheckCircle, AlertTriangle, XCircle, Info } from "lucide-react";
 import type { HTMLAttributes, ReactNode } from "react";
 import { cn } from "@/lib/utils/cn";
 
-const notifVariants = cva("flex gap-3 rounded-xl border-l-[3px] p-4", {
+const notifVariants = cva("flex gap-3 rounded-2xl border-l-[4px] p-4", {
   variants: {
     variant: {
       info: "bg-teal-50 border-l-teal-500 text-gray-900",

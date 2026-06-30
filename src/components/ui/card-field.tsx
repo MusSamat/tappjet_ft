@@ -12,16 +12,16 @@ export interface CardFieldProps extends Omit<InputHTMLAttributes<HTMLInputElemen
 }
 
 export const CardField = forwardRef<HTMLInputElement, CardFieldProps>(
-  ({ icon, label, value, iconBg = "bg-teal-50", className, placeholder, readOnly, ...rest }, ref) => (
+  ({ icon, label, value, iconBg = "bg-brand-50", className, placeholder, readOnly, ...rest }, ref) => (
     <label
       className={cn(
-        "group flex cursor-pointer items-center gap-3 bg-white px-4 py-3 transition-colors focus-within:bg-teal-50/40",
+        "group flex cursor-pointer items-center gap-3 bg-white px-4 py-3 transition-colors focus-within:bg-brand-50/40",
         className,
       )}
     >
       <span
         className={cn(
-          "flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg text-base",
+          "flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl text-base",
           iconBg,
         )}
         aria-hidden="true"
