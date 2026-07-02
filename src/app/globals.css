@@ -7,13 +7,20 @@
     -webkit-text-size-adjust: 100%;
   }
   body {
-    @apply bg-gray-50 text-gray-900 antialiased;
+    @apply bg-ink-50 text-ink-900 antialiased dark:bg-ink-950 dark:text-ink-100;
+    letter-spacing: -0.01em;
+  }
+  h1,
+  h2,
+  .font-disp {
+    font-family: theme("fontFamily.disp");
+    letter-spacing: 0;
   }
   /* Non-input interactive elements (buttons, links) get a subtle focus ring */
   :focus-visible:not(input):not(textarea):not(select) {
-    @apply outline-none ring-1 ring-teal-400/70 ring-offset-1;
+    @apply outline-none ring-1 ring-brand-400/70 ring-offset-1 dark:ring-offset-ink-950;
   }
-  /* Inputs declare their own focus style (border-teal-500); suppress browser ring */
+  /* Inputs declare their own focus style (border-brand-500); suppress browser ring */
   input:focus-visible,
   textarea:focus-visible,
   select:focus-visible {
@@ -42,9 +49,9 @@
     padding-bottom: env(safe-area-inset-bottom);
   }
 
-  /* Main content bottom clearance on mobile (below bottom nav) */
+  /* Main content bottom clearance on mobile (below the floating pill nav) */
   .main-mobile-pad {
-    padding-bottom: calc(80px + env(safe-area-inset-bottom));
+    padding-bottom: calc(96px + env(safe-area-inset-bottom));
   }
   @media (min-width: 768px) {
     .main-mobile-pad {
@@ -54,7 +61,7 @@
 
   /* Chat page — cancel main-mobile-pad so chat fills viewport above bottom nav */
   .chat-page-wrapper {
-    margin-bottom: calc(-80px - env(safe-area-inset-bottom));
+    margin-bottom: calc(-96px - env(safe-area-inset-bottom));
   }
   @media (min-width: 768px) {
     .chat-page-wrapper {
@@ -64,10 +71,10 @@
 
   /* QuickActions FAB — clears mobile bottom nav */
   .qa-fab-bottom {
-    bottom: calc(80px + env(safe-area-inset-bottom));
+    bottom: calc(96px + env(safe-area-inset-bottom));
   }
   .qa-panel-bottom {
-    bottom: calc(164px + env(safe-area-inset-bottom));
+    bottom: calc(180px + env(safe-area-inset-bottom));
   }
 
   @media (min-width: 768px) {
@@ -77,6 +84,21 @@
     .qa-panel-bottom {
       bottom: 104px;
     }
+  }
+
+  /* Dotted "grid paper" page background (prototype shell) */
+  .grid-paper {
+    background-image: radial-gradient(rgba(168, 162, 158, 0.16) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  /* Hide scrollbar on horizontal chip rows */
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 
   /* Search bottom sheet */
@@ -119,7 +141,8 @@
     display: none;
   }
 
-  /* Seat people — white halo so overlapping outline icons read cleanly */
+  /* Seat people — white halo so overlapping outline icons read cleanly.
+     Legacy: removed with seat-stack → seat-meter rewrite (Phase B). */
   .seat {
     filter: drop-shadow(1.5px 0 0 #fff) drop-shadow(-1.5px 0 0 #fff)
       drop-shadow(0 1.5px 0 #fff) drop-shadow(0 -1.5px 0 #fff);

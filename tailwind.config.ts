@@ -1,9 +1,9 @@
 import type { Config } from "tailwindcss";
 import animate from "tailwindcss-animate";
 
-// Design tokens — mirror design/design-system.html ("bright & friendly").
-// Legacy names (teal/amber/gray) are aliased onto the new palette so existing
-// pages keep working while components migrate to brand/accent/ink.
+// Design tokens — mirror the Tappjet Prototype (claude.ai/design, tappjet-proto.js).
+// brand = teal (driver accent), grape = indigo (passenger accent), ink = warm stone
+// neutrals, accent = amber CTA (text on amber uses accent-ink #4A2C00).
 const brand = {
   50: "#ECFDF8",
   100: "#D0FBEF",
@@ -25,41 +25,49 @@ const accent = {
   500: "#F59E0B",
   600: "#D97706",
   700: "#B45309",
+  // Text color on amber-filled surfaces (buttons, badges)
+  ink: "#4A2C00",
 };
 const ink = {
-  50: "#F8FAF9",
-  100: "#F1F5F4",
-  200: "#E4EAE8",
-  300: "#CBD5D2",
-  400: "#94A3A0",
-  500: "#64748B",
-  600: "#475569",
-  700: "#334155",
-  800: "#1E293B",
-  900: "#0F172A",
+  50: "#FAFAF9",
+  100: "#F5F5F4",
+  200: "#E7E5E4",
+  300: "#D6D3D1",
+  400: "#A8A29E",
+  500: "#78716C",
+  600: "#57534E",
+  700: "#44403C",
+  800: "#292524",
+  900: "#1C1917",
+  950: "#0C0A09",
 };
 
 const config: Config = {
   content: ["./src/app/**/*.{ts,tsx}", "./src/components/**/*.{ts,tsx}"],
+  darkMode: "class",
   theme: {
     extend: {
       colors: {
         brand,
         accent,
         ink,
-        // legacy aliases → new palette (no breakage for existing classes)
-        teal: brand,
-        amber: accent,
-        gray: ink,
         coral: { 50: "#FFF1F2", 100: "#FFE4E6", 200: "#FECDD3", 300: "#FDA4AF", 400: "#FB7185", 500: "#F43F5E", 600: "#E11D48", 700: "#BE123C" },
+        danger: { 50: "#FEF2F2", 100: "#FEE2E2", 200: "#FECACA", 300: "#FCA5A5", 400: "#F87171", 500: "#EF4444", 600: "#DC2626", 700: "#B91C1C" },
         sky: { 50: "#F0F9FF", 100: "#E0F2FE", 200: "#BAE6FD", 300: "#7DD3FC", 400: "#38BDF8", 500: "#0EA5E9", 600: "#0284C7", 700: "#0369A1" },
-        grape: { 50: "#F5F3FF", 100: "#EDE9FE", 200: "#DDD6FE", 300: "#C4B5FD", 400: "#A78BFA", 500: "#8B5CF6", 600: "#7C3AED", 700: "#6D28D9" },
+        grape: { 50: "#EEF2FF", 100: "#E0E7FF", 200: "#C7D2FE", 300: "#A5B4FC", 400: "#818CF8", 500: "#6366F1", 600: "#4F46E5", 700: "#4338CA" },
         success: "#14B8A6",
         error: "#F43F5E",
         warning: "#F59E0B",
       },
       fontFamily: {
         sans: ["var(--font-nunito)", "system-ui", "sans-serif"],
+        disp: ["var(--font-fredoka)", "var(--font-nunito)", "system-ui", "sans-serif"],
+      },
+      fontWeight: {
+        "600": "600",
+        "700": "700",
+        "800": "800",
+        "900": "900",
       },
       fontSize: {
         display: ["32px", { lineHeight: "1.12", fontWeight: "900" }],
@@ -83,15 +91,19 @@ const config: Config = {
         md: "12px",
         lg: "16px",
         xl: "20px",
-        "2xl": "16px",
-        "3xl": "24px",
-        "4xl": "32px",
+        "2xl": "1rem",
+        "3xl": "1.25rem",
+        "4xl": "1.75rem",
+        "5xl": "2.25rem",
       },
       boxShadow: {
-        soft: "0 2px 12px -2px rgba(13,148,136,0.10), 0 4px 24px -8px rgba(15,23,42,0.08)",
-        card: "0 1px 3px rgba(15,23,42,0.06), 0 8px 24px -12px rgba(15,23,42,0.10)",
-        cta: "0 8px 20px -6px rgba(245,158,11,0.45)",
-        brandcta: "0 8px 20px -6px rgba(13,148,136,0.45)",
+        xs: "0 1px 2px rgba(28,25,23,0.05)",
+        soft: "0 2px 12px -2px rgba(13,148,136,0.12), 0 10px 30px -14px rgba(28,25,23,0.14)",
+        card: "0 1px 3px rgba(28,25,23,0.05), 0 12px 32px -16px rgba(28,25,23,0.16)",
+        lift: "0 2px 6px rgba(28,25,23,0.06), 0 26px 50px -20px rgba(28,25,23,0.26)",
+        cta: "0 10px 24px -8px rgba(245,158,11,0.5)",
+        brandcta: "0 10px 24px -8px rgba(13,148,136,0.5)",
+        indigocta: "0 10px 24px -8px rgba(79,70,229,0.45)",
       },
       screens: {
         sm: "640px",
