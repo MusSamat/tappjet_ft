@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { useRef, useState, useEffect } from "react";
-import { Bell, Plus, LogOut, User, BookOpen, Users, MessageCircle } from "lucide-react";
+import { Bell, Plus, LogOut, User, BookOpen, MessageCircle } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { logout } from "@/lib/api/auth";
@@ -52,7 +52,6 @@ function UserDropdown({ onClose }: { onClose: () => void }) {
   const links = [
     { href: "/profile",     label: t("profile_link"), icon: User },
     { href: "/my/bookings", label: t("my_trips"),      icon: BookOpen },
-    ...(activeMode === "passenger" ? [{ href: "/my/bookings?tab=my_requests", label: t("my_requests"), icon: Users }] : []),
   ];
 
   return (
@@ -138,7 +137,6 @@ export function TopNav() {
         ]
       : [
           { href: "/trips",       label: t("find_trip") },
-          { href: "/my/bookings?tab=my_requests", label: t("my_requests") },
           { href: "/my/bookings", label: t("my_trips") },
         ]
     : [
