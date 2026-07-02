@@ -22,6 +22,8 @@ import { RateModal } from "@/components/features/ratings/rate-modal";
 import { useUiRole } from "@/lib/hooks/use-role-colors";
 import { ROLE_THEME } from "@/lib/role-colors";
 import { Container, QueryError, Segmented } from "@/components/ui";
+import { BackToTop } from "@/components/ui/back-to-top";
+import { useScrollRestoration } from "@/lib/hooks/use-scroll-restoration";
 import { Confetti } from "@/components/ui/confetti";
 import type { Booking } from "@/lib/api/bookings";
 import { completeTrip, cancelTrip } from "@/lib/api/trips";
@@ -91,6 +93,7 @@ export default function MyBookingsPage() {
   })();
 
   const [tab, setTab] = useState<Tab>(initialTab);
+  useScrollRestoration();
   const [rateTarget, setRateTarget] = useState<PendingRating | null>(null);
   const [cancelTarget, setCancelTarget] = useState<BookingExt | null>(null);
   const [cancelTripTarget, setCancelTripTarget] = useState<TripListItem | null>(null);
@@ -334,6 +337,8 @@ export default function MyBookingsPage() {
 
         {tab === "liked" && <LikedTab role={role} />}
       </Container>
+      <BackToTop showOnDesktop />
+
 
       {rateTarget && <RateModal rating={rateTarget} onClose={() => setRateTarget(null)} />}
       {cancelTarget && (

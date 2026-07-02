@@ -9,7 +9,9 @@ import { TripCard } from "@/components/ui/trip-card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { CardSkeletonList } from "@/components/ui/card-skeleton";
 import { QueryError } from "@/components/ui/query-error";
+import { BackToTop } from "@/components/ui/back-to-top";
 import { useInfiniteScroll } from "@/lib/hooks/use-infinite-scroll";
+import { useScrollRestoration } from "@/lib/hooks/use-scroll-restoration";
 import { useUiRole } from "@/lib/hooks/use-role-colors";
 
 import { SearchFilters } from "./search-filters";
@@ -86,6 +88,7 @@ export function SearchLayout({ params, initial }: Props) {
   }, [mobileFiltersOpen, mobileDetailOpen]);
 
   const sentinel = useInfiniteScroll({ hasNextPage, isFetchingNextPage, fetchNextPage });
+  useScrollRestoration();
 
   const heading =
     params.from_city && params.to_city
@@ -168,6 +171,7 @@ export function SearchLayout({ params, initial }: Props) {
 
       {/* ===== MOBILE/TABLET (<1024px): feed header + card list ===== */}
       <div className="lg:hidden">
+        <BackToTop />
         <FeedHeader tab="trips" onOpenFilters={() => setMobileFiltersOpen(true)} />
 
         <div className="px-4 pb-3">

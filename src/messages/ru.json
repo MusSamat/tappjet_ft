@@ -1,7 +1,8 @@
 {
   "common": {
     "loading": "Загрузка…",
-    "optional": "необязательно"
+    "optional": "необязательно",
+    "back_to_top": "Наверх"
   },
   "card": {
     "no_seats": "Мест нет",

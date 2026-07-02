@@ -13,7 +13,9 @@ import { FeedHeader } from "@/components/features/search/feed-header";
 import { EmptyState } from "@/components/ui/empty-state";
 import { CardSkeletonList } from "@/components/ui/card-skeleton";
 import { QueryError } from "@/components/ui/query-error";
+import { BackToTop } from "@/components/ui/back-to-top";
 import { useInfiniteScroll } from "@/lib/hooks/use-infinite-scroll";
+import { useScrollRestoration } from "@/lib/hooks/use-scroll-restoration";
 import { useUiRole } from "@/lib/hooks/use-role-colors";
 
 /** Role-aware empty state for the requests feed (feed.empty_* keys). */
@@ -79,6 +81,7 @@ export default function RequestsPage() {
   }, [mobileFiltersOpen, mobileDetailOpen]);
 
   const sentinel = useInfiniteScroll({ hasNextPage, isFetchingNextPage, fetchNextPage });
+  useScrollRestoration();
 
   const heading =
     filters.from_city && filters.to_city
@@ -157,6 +160,7 @@ export default function RequestsPage() {
 
       {/* ===== MOBILE / TABLET (<1024px): feed header + card list ===== */}
       <div className="lg:hidden">
+        <BackToTop />
         <FeedHeader tab="requests" onOpenFilters={() => setMobileFiltersOpen(true)} />
 
         <div className="px-4 pb-3">
