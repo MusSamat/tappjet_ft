@@ -1208,6 +1208,7 @@
   "my": {
     "title": "Мои",
     "tab_active": "Активные",
+    "tab_my_requests": "Заявки",
     "tab_history": "История",
     "tab_liked": "Избранное",
     "tab_trips": "Поездки",

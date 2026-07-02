@@ -3,6 +3,7 @@
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Plus, Eye, User, CarFront } from "lucide-react";
 import {
@@ -29,12 +30,16 @@ import { PassengerTab } from "./_components/passenger-tab";
 import { DriverTab } from "./_components/driver-tab";
 import { RequestsTab } from "./_components/requests-tab";
 import { LikedTab } from "./_components/liked-tab";
+import { MyRequestsTab } from "./_components/my-requests-tab";
 
 // Role-aware «Мои» hub — design-spec §2.5. Segmented tabs differ by role:
-//   passenger → Активные / История / Избранное
+//   passenger → Активные / Заявки / История / Избранное
 //   driver    → Поездки  / Запросы  / Избранное
 
-type Tab = "active" | "history" | "liked" | "trips" | "requests";
+type Tab = "active" | "my_requests" | "history" | "liked" | "trips" | "requests";
+
+const PASSENGER_TABS: Tab[] = ["active", "my_requests", "history", "liked"];
+const DRIVER_TABS: Tab[] = ["trips", "requests", "liked"];
 
 type BookingExt = Booking & {
   tripId?: string;
@@ -71,8 +76,16 @@ export default function MyBookingsPage() {
   const role = useUiRole();
   const theme = ROLE_THEME[role];
   const isDriver = role === "driver";
+  const searchParams = useSearchParams();
 
-  const [tab, setTab] = useState<Tab>(isDriver ? "trips" : "active");
+  const initialTab = ((): Tab => {
+    const requested = searchParams.get("tab") as Tab | null;
+    const roleTabs = isDriver ? DRIVER_TABS : PASSENGER_TABS;
+    if (requested && roleTabs.includes(requested)) return requested;
+    return isDriver ? "trips" : "active";
+  })();
+
+  const [tab, setTab] = useState<Tab>(initialTab);
   const [rateTarget, setRateTarget] = useState<PendingRating | null>(null);
   const [cancelTarget, setCancelTarget] = useState<BookingExt | null>(null);
   const [cancelTripTarget, setCancelTripTarget] = useState<TripListItem | null>(null);
@@ -80,7 +93,7 @@ export default function MyBookingsPage() {
 
   // Reset the active tab when it isn't valid for the current role (after a switch).
   useEffect(() => {
-    const roleTabs: Tab[] = isDriver ? ["trips", "requests", "liked"] : ["active", "history", "liked"];
+    const roleTabs = isDriver ? DRIVER_TABS : PASSENGER_TABS;
     setTab((prev) => (roleTabs.includes(prev) ? prev : isDriver ? "trips" : "active"));
   }, [isDriver]);
 
@@ -192,6 +205,7 @@ export default function MyBookingsPage() {
       ]
     : [
         { value: "active" as Tab, label: tMy("tab_active") },
+        { value: "my_requests" as Tab, label: tMy("tab_my_requests") },
         { value: "history" as Tab, label: tMy("tab_history") },
         { value: "liked" as Tab, label: tMy("tab_liked") },
       ];
@@ -238,6 +252,8 @@ export default function MyBookingsPage() {
             showSubTabs={false}
           />
         )}
+
+        {tab === "my_requests" && <MyRequestsTab />}
 
         {tab === "history" && (
           <PassengerTab

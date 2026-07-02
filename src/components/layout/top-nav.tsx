@@ -52,7 +52,7 @@ function UserDropdown({ onClose }: { onClose: () => void }) {
   const links = [
     { href: "/profile",     label: t("profile_link"), icon: User },
     { href: "/my/bookings", label: t("my_trips"),      icon: BookOpen },
-    ...(activeMode === "passenger" ? [{ href: "/my/requests", label: t("my_requests"), icon: Users }] : []),
+    ...(activeMode === "passenger" ? [{ href: "/my/bookings?tab=my_requests", label: t("my_requests"), icon: Users }] : []),
   ];
 
   return (
@@ -138,7 +138,7 @@ export function TopNav() {
         ]
       : [
           { href: "/trips",       label: t("find_trip") },
-          { href: "/my/requests", label: t("my_requests") },
+          { href: "/my/bookings?tab=my_requests", label: t("my_requests") },
           { href: "/my/bookings", label: t("my_trips") },
         ]
     : [
