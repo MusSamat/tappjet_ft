@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { searchTrips, type SearchTripsParams } from "@/lib/api/trips";
 import { SearchLayout } from "@/components/features/search/search-layout";
 
@@ -41,17 +42,20 @@ function paramsFromSearch(sp: Props["searchParams"]): SearchTripsParams {
 }
 
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+  const t = await getTranslations("trips_meta");
   const params = paramsFromSearch(searchParams);
   if (!params.from_city || !params.to_city) {
     return {
-      title: "Все поездки",
-      description: "Найди попутчика по Кыргызстану: Бишкек — Ош, Каракол, Нарын, Иссык-Куль.",
+      title: t("all_trips"),
+      description: t("all_trips_desc"),
     };
   }
-  const title = `${params.from_city} → ${params.to_city}${params.date ? ` · ${params.date}` : ""} | Поездки`;
+  const hasDate = params.date ? "yes" : "no";
+  const date = params.date ?? "";
+  const title = t("route_title", { from: params.from_city, to: params.to_city, hasDate, date });
   return {
     title,
-    description: `Поездки ${params.from_city} → ${params.to_city}${params.date ? ` на ${params.date}` : ""}. Цены от 500 сом, верифицированные водители.`,
+    description: t("route_desc", { from: params.from_city, to: params.to_city, hasDate, date }),
     alternates: {
       canonical: `/trips?from=${encodeURIComponent(params.from_city)}&to=${encodeURIComponent(params.to_city)}`,
     },

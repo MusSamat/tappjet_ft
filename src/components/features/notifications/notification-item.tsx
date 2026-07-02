@@ -2,25 +2,30 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
 import { Bell } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { markNotificationRead, type AppNotification } from "@/lib/api/notifications";
+import type { Locale } from "@/i18n.config";
+import { formatShortDate } from "@/lib/utils/date";
 import { cn } from "@/lib/utils/cn";
-import { TYPE_CONFIG, ACTION_TYPES, buildBody, buildDeepLink } from "./_utils/notification-utils";
+import { TYPE_CONFIG, ACTION_TYPES, buildBody, buildDeepLink, typeLabel } from "./_utils/notification-utils";
 import { NotificationActions } from "./_components/notification-actions";
 
-function formatNotifTime(iso: string): string {
+type NotifTranslator = (key: string, values?: Record<string, string | number>) => string;
+
+function formatNotifTime(iso: string, t: NotifTranslator, locale: Locale): string {
   const d = new Date(iso);
   const now = new Date();
   const diffMs = now.getTime() - d.getTime();
   const diffMin = Math.floor(diffMs / 60_000);
-  if (diffMin < 1) return "только что";
-  if (diffMin < 60) return `${diffMin}м`;
+  if (diffMin < 1) return t("time_now");
+  if (diffMin < 60) return t("time_minutes", { n: diffMin });
   const diffH = Math.floor(diffMin / 60);
-  if (diffH < 24) return `${diffH}ч`;
+  if (diffH < 24) return t("time_hours", { n: diffH });
   const diffD = Math.floor(diffH / 24);
-  if (diffD < 7) return `${diffD}д`;
-  return d.toLocaleDateString("ru-RU", { day: "numeric", month: "short" });
+  if (diffD < 7) return t("time_days", { n: diffD });
+  return formatShortDate(iso, locale);
 }
 
 // Icon-medallion tone derived from the type's color (§2.8). Literal maps so the
@@ -70,8 +75,11 @@ interface Props {
 export function NotificationItem({ notification }: Props) {
   const queryClient = useQueryClient();
   const router = useRouter();
+  const t = useTranslations("notif");
+  const locale = useLocale() as Locale;
   const [read, setRead] = useState(!!notification.readAt);
-  const config = TYPE_CONFIG[notification.type] ?? { icon: Bell, label: "Уведомление", color: "text-ink-700" };
+  const config = TYPE_CONFIG[notification.type] ?? { icon: Bell, color: "text-ink-700" };
+  const label = typeLabel(notification.type, t);
   const Icon = config.icon;
   const tone = toneOf(config.color);
   const hasActions = ACTION_TYPES.has(notification.type);
@@ -118,13 +126,13 @@ export function NotificationItem({ notification }: Props) {
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
             <p className={cn("text-[13px] text-ink-900 dark:text-white", read ? "font-800" : "font-900")}>
-              {config.label}
+              {label}
             </p>
             <span className="shrink-0 text-[11px] font-700 text-ink-400">
-              {formatNotifTime(notification.createdAt)}
+              {formatNotifTime(notification.createdAt, t, locale)}
             </span>
           </div>
-          <p className="mt-0.5 text-[12px] font-700 text-ink-500 dark:text-ink-400">{buildBody(notification)}</p>
+          <p className="mt-0.5 text-[12px] font-700 text-ink-500 dark:text-ink-400">{buildBody(notification, t, locale)}</p>
         </div>
         {!read && (
           <span className="mt-2 h-2.5 w-2.5 shrink-0 rounded-full bg-coral-500" aria-hidden="true" />

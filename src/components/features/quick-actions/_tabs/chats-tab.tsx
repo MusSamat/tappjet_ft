@@ -7,15 +7,6 @@ import { type ChatSummary } from "@/lib/api/chat";
 import { DriverAvatar } from "@/components/ui";
 import { cn } from "@/lib/utils/cn";
 
-function relTime(iso: string | null): string {
-  if (!iso) return "";
-  const diff = (Date.now() - new Date(iso).getTime()) / 1000;
-  if (diff < 60) return "сейчас";
-  if (diff < 3600) return `${Math.floor(diff / 60)} мин`;
-  if (diff < 86400) return `${Math.floor(diff / 3600)} ч`;
-  return `${Math.floor(diff / 86400)} д`;
-}
-
 interface ChatsTabProps {
   chats: ChatSummary[];
   onClose: () => void;
@@ -23,6 +14,16 @@ interface ChatsTabProps {
 
 export function ChatsTab({ chats, onClose }: ChatsTabProps) {
   const t = useTranslations("quick_actions");
+  const tRel = useTranslations("chats_tab");
+
+  const relTime = (iso: string | null): string => {
+    if (!iso) return "";
+    const diff = (Date.now() - new Date(iso).getTime()) / 1000;
+    if (diff < 60) return tRel("now");
+    if (diff < 3600) return tRel("minutes", { n: Math.floor(diff / 60) });
+    if (diff < 86400) return tRel("hours", { n: Math.floor(diff / 3600) });
+    return tRel("days", { n: Math.floor(diff / 86400) });
+  };
 
   if (chats.length === 0) {
     return (

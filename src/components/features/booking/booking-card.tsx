@@ -12,7 +12,7 @@ import {
 } from "@/lib/api/bookings";
 import { Button, DriverAvatar, StatusBadge } from "@/components/ui";
 import { formatDepartureLabel } from "@/lib/utils/date";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import type { Locale } from "@/i18n.config";
 
 interface BookingPerson {
@@ -36,23 +36,25 @@ interface Props {
 }
 
 function ExpiresCountdown({ expiresAt }: { expiresAt: string }) {
+  const t = useTranslations("booking_card");
   const [now, setNow] = useState(Date.now());
   useEffect(() => {
     const id = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(id);
   }, []);
   const diff = new Date(expiresAt).getTime() - now;
-  if (diff <= 0) return <span className="text-caption text-accent-700">Истекло</span>;
+  if (diff <= 0) return <span className="text-caption text-accent-700">{t("expired")}</span>;
   const min = Math.floor(diff / 60000);
   const sec = Math.floor((diff % 60000) / 1000);
   return (
     <span className="text-caption text-accent-700">
-      Истекает через {min > 0 ? `${min} мин ` : ""}{sec}с
+      {t("expires_prefix")} {min > 0 ? `${min} ${t("min_short")} ` : ""}{sec}{t("sec_short")}
     </span>
   );
 }
 
 export function BookingCard({ booking, role }: Props) {
+  const t = useTranslations("booking_card");
   const qc = useQueryClient();
   const locale = useLocale() as Locale;
   const trip = booking.trip as BookingTrip | undefined;
@@ -114,7 +116,7 @@ export function BookingCard({ booking, role }: Props) {
               </a>
             )}
           </div>
-          <span className="text-caption text-ink-500">{booking.seatsCount} мест</span>
+          <span className="text-caption text-ink-500">{booking.seatsCount} {t("seats_word")}</span>
         </div>
       )}
 
@@ -147,7 +149,7 @@ export function BookingCard({ booking, role }: Props) {
       )}
 
       {(acceptMut.isError || rejectMut.isError || cancelMut.isError) && (
-        <p className="text-caption text-coral-500">Не удалось выполнить действие. Попробуйте ещё раз.</p>
+        <p className="text-caption text-coral-500">{t("action_failed")}</p>
       )}
 
       <div className="flex flex-wrap gap-2">
@@ -160,7 +162,7 @@ export function BookingCard({ booking, role }: Props) {
               onClick={() => acceptMut.mutate()}
               disabled={acceptMut.isPending || rejectMut.isPending}
             >
-              {acceptMut.isPending ? "Принимаем…" : "Принять"}
+              {acceptMut.isPending ? t("accepting") : t("accept")}
             </Button>
             <Button
               type="button"
@@ -169,7 +171,7 @@ export function BookingCard({ booking, role }: Props) {
               onClick={() => rejectMut.mutate()}
               disabled={acceptMut.isPending || rejectMut.isPending}
             >
-              Отклонить
+              {t("reject")}
             </Button>
           </>
         )}
@@ -177,7 +179,7 @@ export function BookingCard({ booking, role }: Props) {
           <Link href={`/my/bookings/${booking.id}/chat`}>
             <Button type="button" variant="outline" size="md">
               <MessageCircle className="h-4 w-4" aria-hidden="true" />
-              Чат
+              {t("chat")}
             </Button>
           </Link>
         )}
@@ -189,7 +191,7 @@ export function BookingCard({ booking, role }: Props) {
             onClick={() => cancelMut.mutate()}
             disabled={cancelMut.isPending}
           >
-            {cancelMut.isPending ? "Отменяем…" : "Отменить"}
+            {cancelMut.isPending ? t("cancelling") : t("cancel")}
           </Button>
         )}
       </div>

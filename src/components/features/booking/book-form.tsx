@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { AlertTriangle, Bell, Clock, MessageCircle, Send } from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { createBooking } from "@/lib/api/bookings";
 import { extractError } from "@/lib/api/client";
 import { useFriendlyError } from "@/lib/hooks/use-api-error";
@@ -25,6 +26,7 @@ interface Props {
 }
 
 export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 1 }: Props) {
+  const t = useTranslations("book_form");
   const router = useRouter();
   const status = useAuth((s) => s.status);
   const fe = useFriendlyError();
@@ -76,9 +78,9 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
         <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-accent-50">
           <Clock className="h-9 w-9 text-accent-500" aria-hidden="true" />
         </div>
-        <h2 className="text-[22px] font-extrabold text-ink-900">Запрос отправлен</h2>
+        <h2 className="text-[22px] font-extrabold text-ink-900">{t("request_sent")}</h2>
         <p className="mx-auto mt-2 max-w-[340px] text-[14px] leading-relaxed text-ink-500">
-          Водитель уведомлён. Пока ждёте ответ, можете задать уточняющие вопросы в чате.
+          {t("waiting_hint")}
         </p>
 
         {/* Progress bar */}
@@ -90,24 +92,24 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
         <div className="mx-auto mt-5 max-w-[400px] rounded-2xl border border-brand-100 bg-brand-50 px-4 py-3 text-left">
           <div className="flex items-center gap-2 mb-1">
             <MessageCircle className="h-3.5 w-3.5 text-brand-700 flex-shrink-0" aria-hidden="true" />
-            <span className="text-[13px] font-extrabold text-brand-800">Чат до бронирования</span>
+            <span className="text-[13px] font-extrabold text-brand-800">{t("chat_title")}</span>
           </div>
           <p className="text-[12px] leading-relaxed text-brand-700">
-            Вы можете задать вопросы водителю. После принятия запроса лимит снимется и история сохранится.
+            {t("chat_hint")}
           </p>
         </div>
 
         <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:justify-center">
           <Link href="/my/bookings">
             <Button variant="outline" size="md" className="w-full sm:w-auto">
-              Мои поездки
+              {t("my_trips")}
             </Button>
           </Link>
           {createdBookingId && (
             <Link href={`/my/bookings/${createdBookingId}/chat`}>
               <Button variant="primary" size="md" className="w-full sm:w-auto">
                 <MessageCircle className="h-4 w-4" aria-hidden="true" />
-                Открыть чат
+                {t("open_chat")}
               </Button>
             </Link>
           )}
@@ -115,7 +117,7 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
 
         <p className="mt-4 flex items-center justify-center gap-1.5 text-[12px] text-ink-400">
           <Bell className="h-3.5 w-3.5" aria-hidden="true" />
-          Уведомление придёт в Telegram и в приложение
+          {t("notif_hint")}
         </p>
       </div>
     );
@@ -133,7 +135,7 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
       noValidate
     >
       {serverError && (
-        <NotifCard variant="error" title="Не удалось забронировать">
+        <NotifCard variant="error" title={t("error_title")}>
           {serverError}
         </NotifCard>
       )}
@@ -142,14 +144,14 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
       <div className="rounded-2xl border border-ink-200 bg-white p-4">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-[15px] font-bold text-ink-900">Количество мест</p>
-            <p className="mt-0.5 text-[12px] font-semibold text-ink-500">Свободно: {seatsAvailable}</p>
+            <p className="text-[15px] font-bold text-ink-900">{t("seats_label")}</p>
+            <p className="mt-0.5 text-[12px] font-semibold text-ink-500">{t("available", { n: seatsAvailable })}</p>
           </div>
           <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={() => setSeats((s) => Math.max(1, s - 1))}
-              aria-label="Меньше мест"
+              aria-label={t("seat_minus")}
               disabled={seats <= 1 || disabled}
               className="flex h-9 w-9 items-center justify-center rounded-full border border-ink-300 text-[20px] font-bold text-ink-900 hover:bg-ink-100 disabled:opacity-40"
             >
@@ -159,7 +161,7 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
             <button
               type="button"
               onClick={() => setSeats((s) => Math.min(max, s + 1))}
-              aria-label="Больше мест"
+              aria-label={t("seat_plus")}
               disabled={seats >= max || disabled}
               className="flex h-9 w-9 items-center justify-center rounded-full border border-ink-300 text-[20px] font-bold text-ink-900 hover:bg-ink-100 disabled:opacity-40"
             >
@@ -171,9 +173,9 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
 
       {/* Comment */}
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="comment">Комментарий водителю (необязательно)</Label>
+        <Label htmlFor="comment">{t("comment_label")}</Label>
         <div className="flex flex-wrap gap-1.5">
-          {["Буду у автовокзала", "Небольшой багаж", "Еду один", "Могу выехать раньше"].map((chip) => (
+          {[t("chip_bus_station"), t("chip_small_luggage"), t("chip_alone"), t("chip_early")].map((chip) => (
             <button
               key={chip}
               type="button"
@@ -188,20 +190,20 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
           id="comment"
           value={comment}
           onChange={(e) => setComment(e.target.value.slice(0, 300))}
-          placeholder="Например: Большой багаж, еду один, готов к ранней встрече..."
+          placeholder={t("comment_placeholder")}
           rows={3}
         />
-        <span className="text-caption text-ink-500">{comment.length} / 300 · номера телефонов автоматически скрываются</span>
+        <span className="text-caption text-ink-500">{t("comment_counter", { n: comment.length })}</span>
       </div>
 
       {/* Price summary */}
       <div className="rounded-2xl border border-brand-100 bg-brand-50 p-4">
         <div className="flex items-center justify-between">
-          <span className="text-[15px] font-extrabold text-ink-900">К оплате водителю</span>
+          <span className="text-[15px] font-extrabold text-ink-900">{t("pay_to_driver")}</span>
           <span className="text-[24px] font-extrabold text-brand-700">{formatPrice(total)}</span>
         </div>
         <p className="mt-1 text-[12px] font-semibold text-ink-500">
-          {pricePerSeat} сом × {seats} {seats === 1 ? "место" : "места"} · Наличными при встрече
+          {t("price_breakdown", { price: String(pricePerSeat), seats })}
         </p>
       </div>
 
@@ -209,20 +211,20 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
       <div className="rounded-2xl border border-accent-100 bg-accent-50 px-3 py-2.5">
         <div className="flex items-center gap-2">
           <AlertTriangle className="h-3.5 w-3.5 flex-shrink-0 text-accent-600" aria-hidden="true" />
-          <span className="text-[13px] font-bold text-ink-900">Водитель может отклонить запрос</span>
+          <span className="text-[13px] font-bold text-ink-900">{t("warning_title")}</span>
         </div>
         <p className="mt-1 text-[12px] font-semibold text-ink-500">
-          Вы получите ответ в течение часа. Номер водителя станет виден после принятия.
+          {t("warning_hint")}
         </p>
       </div>
 
       <div className="flex gap-2">
         <Button type="button" variant="ghost" size="lg" className="flex-1" onClick={() => router.back()}>
-          Отмена
+          {t("cancel")}
         </Button>
         <Button type="submit" variant="submit" size="lg" disabled={disabled} className="flex-[2]">
           <Send className="h-4 w-4" aria-hidden="true" />
-          {mutation.isPending ? "Отправляем…" : "Отправить запрос"}
+          {mutation.isPending ? t("sending") : t("submit")}
         </Button>
       </div>
     </form>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { MessageCircle, Check, X } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { type AppNotification } from "@/lib/api/notifications";
@@ -14,6 +15,7 @@ const chatLinkClass = "inline-flex items-center gap-1.5 rounded-xl bg-brand-600 
 const softLinkClass = "inline-flex items-center gap-1 text-[12px] font-semibold text-brand-700 hover:underline";
 
 export function NotificationActions({ notification }: { notification: AppNotification }) {
+  const t = useTranslations("notif_actions");
   const queryClient = useQueryClient();
   const p = notification.payload as Record<string, unknown>;
   const [result, setResult] = useState<ActionResult>(null);
@@ -46,17 +48,17 @@ export function NotificationActions({ notification }: { notification: AppNotific
         return (
           <Link href={`/my/bookings/${bookingId}/chat`} className={chatLinkClass}>
             <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" />
-            Открыть чат
+            {t("open_chat")}
           </Link>
         );
       }
       if (result === "rejected") {
-        return <span className="text-[12px] font-semibold text-ink-500">Бронь отклонена</span>;
+        return <span className="text-[12px] font-semibold text-ink-500">{t("booking_rejected")}</span>;
       }
       if (result === "error") {
         return (
           <Link href={`/my/bookings`} className={softLinkClass}>
-            Перейти к бронированиям →
+            {t("go_to_bookings")}
           </Link>
         );
       }
@@ -69,7 +71,7 @@ export function NotificationActions({ notification }: { notification: AppNotific
             className="inline-flex items-center gap-1.5 rounded-xl bg-brand-600 px-3 py-1.5 text-[12px] font-bold text-white hover:bg-brand-700 disabled:opacity-50"
           >
             {accepting ? <Spinner size={12} /> : <Check className="h-3.5 w-3.5" aria-hidden="true" />}
-            Принять
+            {t("accept")}
           </button>
           <button
             type="button"
@@ -78,7 +80,7 @@ export function NotificationActions({ notification }: { notification: AppNotific
             className="inline-flex items-center gap-1.5 rounded-xl border border-coral-200 px-3 py-1.5 text-[12px] font-bold text-coral-600 hover:bg-coral-50 disabled:opacity-50"
           >
             {declining ? <Spinner size={12} /> : <X className="h-3.5 w-3.5" aria-hidden="true" />}
-            Отклонить
+            {t("decline")}
           </button>
         </div>
       );
@@ -89,7 +91,7 @@ export function NotificationActions({ notification }: { notification: AppNotific
       return (
         <Link href={`/my/bookings/${id}/chat`} className={chatLinkClass}>
           <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" />
-          Открыть чат
+          {t("open_chat")}
         </Link>
       );
     }
@@ -99,14 +101,14 @@ export function NotificationActions({ notification }: { notification: AppNotific
       return (
         <Link href={`/my/bookings/${id}/chat`} className={chatLinkClass}>
           <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" />
-          Открыть чат
+          {t("open_chat")}
         </Link>
       );
     }
     case "request_response_received": {
       return (
         <Link href={requestId ? `/my/requests` : "/my/requests"} className={softLinkClass}>
-          Посмотреть предложения →
+          {t("view_offers")}
         </Link>
       );
     }
@@ -115,7 +117,7 @@ export function NotificationActions({ notification }: { notification: AppNotific
       return (
         <Link href={`/my/bookings/${bookingId}/chat`} className={chatLinkClass}>
           <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" />
-          Открыть чат
+          {t("open_chat")}
         </Link>
       );
     }

@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { Camera, Car } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { getDriverStatus, uploadCarPhoto } from "@/lib/api/profile";
 import { Spinner } from "@/components/ui";
 import { cn } from "@/lib/utils/cn";
@@ -39,6 +40,7 @@ async function compressImage(file: File): Promise<File> {
 }
 
 export function CarPhotoUploader() {
+  const t = useTranslations("profile_forms");
   const queryClient = useQueryClient();
   const inputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -96,13 +98,13 @@ export function CarPhotoUploader() {
             "group relative h-32 w-48 overflow-hidden rounded-2xl ring-2 ring-brand-500/30 transition hover:ring-brand-500",
             isPending && "opacity-70",
           )}
-          aria-label="Загрузить фото автомобиля"
+          aria-label={t("car_photo_upload")}
         >
           {currentPhotoUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={currentPhotoUrl}
-              alt="Фото автомобиля"
+              alt={t("car_photo_alt")}
               className="h-full w-full object-cover"
             />
           ) : (
@@ -126,24 +128,24 @@ export function CarPhotoUploader() {
           onChange={handleFile}
         />
         {isSuccess && !isPending && (
-          <p className="text-[11px] font-semibold text-brand-700">Фото обновлено</p>
+          <p className="text-[11px] font-semibold text-brand-700">{t("photo_updated")}</p>
         )}
         {error && (
-          <p className="text-[11px] font-semibold text-coral-600">Ошибка загрузки. Попробуйте снова.</p>
+          <p className="text-[11px] font-semibold text-coral-600">{t("photo_upload_error")}</p>
         )}
       </div>
 
       {/* Read-only car info from tech passport */}
       <div className="flex flex-col gap-2">
-        <p className="text-[12px] font-bold uppercase tracking-wide text-ink-400">Данные из техпаспорта</p>
+        <p className="text-[12px] font-bold uppercase tracking-wide text-ink-400">{t("tech_passport_data")}</p>
         <div className="grid grid-cols-2 gap-x-6 gap-y-1.5">
           {[
-            { label: "Марка", value: car.make },
-            { label: "Модель", value: car.model },
-            { label: "Год", value: String(car.year) },
-            { label: "Цвет", value: car.color },
-            { label: "Госномер", value: car.plate },
-            { label: "Мест", value: String(car.seats) },
+            { label: t("car_make"), value: car.make },
+            { label: t("car_model"), value: car.model },
+            { label: t("car_year"), value: String(car.year) },
+            { label: t("car_color"), value: car.color },
+            { label: t("car_plate"), value: car.plate },
+            { label: t("car_seats"), value: String(car.seats) },
           ].map(({ label, value }) => (
             <div key={label}>
               <p className="text-[10px] font-semibold uppercase tracking-wide text-ink-400">{label}</p>
@@ -152,7 +154,7 @@ export function CarPhotoUploader() {
           ))}
         </div>
         <p className="mt-1 text-[11px] font-semibold text-ink-400">
-          Данные автомобиля изменяются только через повторную верификацию.
+          {t("car_data_notice")}
         </p>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import { ShieldCheck, Users, Clock } from "lucide-react";
+import { useTranslations } from "next-intl";
 import type { HTMLAttributes, ReactNode } from "react";
 import { cn } from "@/lib/utils/cn";
 
@@ -36,25 +37,28 @@ export function Badge({ className, variant, icon, children, ...rest }: BadgeProp
 }
 
 export function VerifiedBadge() {
+  const t = useTranslations("badge");
   return (
     <Badge variant="verified" icon={<ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />}>
-      Верифицирован
+      {t("verified")}
     </Badge>
   );
 }
 
 export function PendingBadge() {
+  const t = useTranslations("badge");
   return (
     <Badge variant="pending" icon={<Clock className="h-3.5 w-3.5" aria-hidden="true" />}>
-      Ожидание
+      {t("pending")}
     </Badge>
   );
 }
 
 export function SeatsBadge({ available, total }: { available: number; total: number }) {
+  const t = useTranslations("badge");
   return (
     <Badge variant="seats" icon={<Users className="h-3.5 w-3.5" aria-hidden="true" />}>
-      {available} из {total}
+      {t("of", { available, total })}
     </Badge>
   );
 }

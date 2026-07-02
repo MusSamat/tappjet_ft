@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { CalendarDays, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import {
@@ -66,12 +67,15 @@ export function DatePicker({
   placeholder,
   min,
   max,
-  locale = "ru",
+  locale,
   compact = false,
   borderless = false,
   className,
 }: DatePickerProps) {
-  const l = LOCALE_DATA[locale];
+  const t = useTranslations("date_picker");
+  const activeLocale = useLocale();
+  const resolvedLocale: Locale = locale ?? (activeLocale === "kg" ? "kg" : "ru");
+  const l = LOCALE_DATA[resolvedLocale];
   const today = toYMD(new Date());
 
   const [open, setOpen] = useState(false);
@@ -126,7 +130,7 @@ export function DatePicker({
   };
 
   const grid = buildGrid(view.year, view.month);
-  const displayStr = formatDisplay(value, locale);
+  const displayStr = formatDisplay(value, resolvedLocale);
 
   return (
     <div className={cn("relative", className)}>
@@ -193,7 +197,7 @@ export function DatePicker({
           ref={popupRef}
           role="dialog"
           aria-modal="true"
-          aria-label="Выбор даты"
+          aria-label={t("select_date")}
           style={{ position: "fixed", top: pos.top, left: pos.left, width: pos.width, zIndex: 9999 }}
           className="min-w-[280px] overflow-hidden rounded-2xl border border-ink-100 bg-white shadow-2xl"
         >
@@ -202,7 +206,7 @@ export function DatePicker({
             <button
               type="button"
               onClick={prevMonth}
-              aria-label="Предыдущий месяц"
+              aria-label={t("prev_month")}
               className="flex h-7 w-7 items-center justify-center rounded-lg text-ink-500 hover:bg-ink-100 transition-colors"
             >
               <ChevronLeft className="h-4 w-4" />
@@ -213,7 +217,7 @@ export function DatePicker({
             <button
               type="button"
               onClick={nextMonth}
-              aria-label="Следующий месяц"
+              aria-label={t("next_month")}
               className="flex h-7 w-7 items-center justify-center rounded-lg text-ink-500 hover:bg-ink-100 transition-colors"
             >
               <ChevronRight className="h-4 w-4" />

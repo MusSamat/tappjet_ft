@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { Star, X } from "lucide-react";
 import { DRIVER_TAGS, PASSENGER_TAGS, submitRating, type PendingRating } from "@/lib/api/ratings";
 import { DriverAvatar, Spinner } from "@/components/ui";
@@ -17,6 +18,8 @@ interface Props {
 
 export function RateModal({ rating, onClose }: Props) {
   const qc = useQueryClient();
+  const t = useTranslations("rate");
+  const tTags = useTranslations("ratings.tags");
   const [score, setScore] = useState<0 | 1 | 2 | 3 | 4 | 5>(0);
   const [hover, setHover] = useState(0);
   const [tags, setTags] = useState<string[]>([]);
@@ -46,8 +49,8 @@ export function RateModal({ rating, onClose }: Props) {
   const errMsg =
     error &&
     ((error as { code?: string }).code === "ALREADY_RATED"
-      ? "Вы уже оценили эту поездку."
-      : "Не удалось отправить оценку. Попробуйте ещё раз.");
+      ? t("already_rated")
+      : t("error"));
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-4">
@@ -96,10 +99,11 @@ export function RateModal({ rating, onClose }: Props) {
                   <span className="text-[28px]">🙌</span>
                 </div>
               </div>
-              <h2 className="text-[22px] font-extrabold text-ink-900">Спасибо!</h2>
+              <h2 className="text-[22px] font-extrabold text-ink-900">{t("success_title")}</h2>
               <p className="mx-auto mt-2 max-w-[280px] text-[14px] text-ink-600">
-                Ваша оценка поможет другим выбрать хорошего{" "}
-                {rating.direction === "driver" ? "водителя" : "пассажира"}.
+                {rating.direction === "driver"
+                  ? t("success_role_driver")
+                  : t("success_role_passenger")}
               </p>
             </div>
           ) : (
@@ -107,7 +111,7 @@ export function RateModal({ rating, onClose }: Props) {
               <div className="mb-6 flex flex-col items-center gap-3 text-center">
                 <DriverAvatar name={rating.counterpartName} size="lg" />
                 <h2 className="text-[20px] font-extrabold text-ink-900">
-                  Как прошла поездка с {rating.counterpartName}?
+                  {t("question", { name: rating.counterpartName })}
                 </h2>
               </div>
 
@@ -115,7 +119,7 @@ export function RateModal({ rating, onClose }: Props) {
               <div
                 className="mb-2 flex items-center justify-center gap-2"
                 role="radiogroup"
-                aria-label="Оценка от 1 до 5"
+                aria-label={t("rating_aria")}
               >
                 {([1, 2, 3, 4, 5] as const).map((s) => (
                   <button
@@ -141,7 +145,7 @@ export function RateModal({ rating, onClose }: Props) {
                 ))}
               </div>
               <p className="mb-5 text-center text-[13px] font-semibold text-ink-500">
-                {["Выберите оценку", "Ужасно", "Плохо", "Нормально", "Хорошо", "Отлично"][score]}
+                {t(`label_${score}`)}
               </p>
 
               {score > 0 && (
@@ -149,10 +153,10 @@ export function RateModal({ rating, onClose }: Props) {
                   {/* Tags */}
                   <div className="mb-4">
                     <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-ink-500">
-                      {score >= 4 ? "Что понравилось?" : "Что не понравилось?"}
+                      {score >= 4 ? t("liked") : t("disliked")}
                     </p>
                     <div className="flex flex-wrap gap-2">
-                      {tagList.map(({ value, label }) => (
+                      {tagList.map(({ value, labelKey }) => (
                         <button
                           key={value}
                           type="button"
@@ -164,7 +168,7 @@ export function RateModal({ rating, onClose }: Props) {
                               : "border-ink-300 text-ink-700 hover:border-brand-400",
                           )}
                         >
-                          {label}
+                          {tTags(labelKey)}
                         </button>
                       ))}
                     </div>
@@ -173,12 +177,12 @@ export function RateModal({ rating, onClose }: Props) {
                   {/* Comment */}
                   <div className="mb-4">
                     <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-ink-500">
-                      Отзыв (необязательно)
+                      {t("comment_label")}
                     </p>
                     <Textarea
                       rows={3}
                       maxLength={MAX_COMMENT}
-                      placeholder="Напишите что-нибудь для других пассажиров…"
+                      placeholder={t("comment_placeholder")}
                       value={comment}
                       onChange={(e) => setComment(e.target.value.slice(0, MAX_COMMENT))}
                     />
@@ -194,11 +198,10 @@ export function RateModal({ rating, onClose }: Props) {
                         <path d="M20 13c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V5l8-3 8 3v8z" />
                         <path d="m9 12 2 2 4-4" />
                       </svg>
-                      <span className="text-[13px] font-bold text-ink-900">Взаимный отзыв</span>
+                      <span className="text-[13px] font-bold text-ink-900">{t("blind_title")}</span>
                     </div>
                     <p className="text-[12px] font-semibold text-ink-500">
-                      Ваша оценка появится, когда {rating.counterpartName.split(" ")[0]} тоже
-                      оставит отзыв о вас. Это защищает от мести в рейтингах.
+                      {t("blind_desc", { name: rating.counterpartName.split(" ")[0] })}
                     </p>
                   </div>
 
@@ -214,7 +217,7 @@ export function RateModal({ rating, onClose }: Props) {
                     onClick={() => mutate()}
                     className="w-full rounded-2xl bg-accent-500 py-3.5 text-[15px] font-bold text-[#4A2C00] transition-colors hover:bg-accent-600 disabled:opacity-50"
                   >
-                    {isPending ? <Spinner size={18} /> : "Отправить отзыв"}
+                    {isPending ? <Spinner size={18} /> : t("submit")}
                   </button>
                 </>
               )}

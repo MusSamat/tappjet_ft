@@ -1,29 +1,34 @@
 import { Star, Car, CheckCircle, AlertCircle, MessageCircle, Users, Clock } from "lucide-react";
 import type { AppNotification } from "@/lib/api/notifications";
+import type { Locale } from "@/i18n.config";
+import { formatShortDate } from "@/lib/utils/date";
 
-export const TYPE_CONFIG: Record<string, { icon: React.ElementType; label: string; color: string }> = {
-  new_booking_request:            { icon: Car,           label: "Новый запрос на бронь",       color: "text-brand-600" },
-  booking_accepted:               { icon: CheckCircle,   label: "Бронь подтверждена",           color: "text-brand-600" },
-  booking_request_confirmed:      { icon: CheckCircle,   label: "Заявка принята",                color: "text-brand-600" },
-  booking_rejected:               { icon: AlertCircle,   label: "Бронь отклонена",              color: "text-coral-500"  },
-  booking_expired:                { icon: AlertCircle,   label: "Бронь истекла",                color: "text-coral-500"  },
-  booking_cancelled_by_passenger: { icon: AlertCircle,   label: "Пассажир отменил бронь",       color: "text-coral-500"  },
-  booking_cancelled_by_driver:    { icon: AlertCircle,   label: "Водитель отменил бронь",       color: "text-coral-500"  },
-  trip_cancelled:                 { icon: Car,           label: "Поездка отменена",             color: "text-coral-500"  },
-  trip_reminder:                  { icon: Clock,         label: "Скоро отправление",            color: "text-sky-600"  },
-  trip_completed_rate:            { icon: Star,          label: "Оцените поездку",              color: "text-accent-500"},
-  request_response_received:      { icon: Users,         label: "Новое предложение",            color: "text-sky-600"  },
-  request_response_accepted:      { icon: CheckCircle,   label: "Предложение принято",          color: "text-brand-600" },
-  request_response_declined:      { icon: AlertCircle,   label: "Предложение отклонено",        color: "text-coral-500"  },
-  new_message:                    { icon: MessageCircle, label: "Новое сообщение",              color: "text-brand-600" },
-  rating_received:                { icon: Star,          label: "Новая оценка",                 color: "text-accent-500"},
-  rating_warning:                 { icon: AlertCircle,   label: "Рейтинг снизился",             color: "text-coral-500"  },
-  verification_approved:          { icon: CheckCircle,   label: "Верификация одобрена",         color: "text-brand-600" },
-  verification_rejected:          { icon: AlertCircle,   label: "Верификация отклонена",        color: "text-coral-500"  },
-  verification_need_docs:         { icon: AlertCircle,   label: "Нужны документы",              color: "text-accent-500"},
-  account_blocked:                { icon: AlertCircle,   label: "Аккаунт заблокирован",         color: "text-coral-500"  },
-  loyalty_tier_changed:           { icon: Star,          label: "Новый уровень лояльности",     color: "text-accent-500"},
-  security_alert_reuse:           { icon: AlertCircle,   label: "Предупреждение безопасности",  color: "text-coral-500"  },
+/** Minimal translator shape (next-intl's `useTranslations` return). */
+type Translator = (key: string, values?: Record<string, string | number>) => string;
+
+export const TYPE_CONFIG: Record<string, { icon: React.ElementType; color: string }> = {
+  new_booking_request:            { icon: Car,           color: "text-brand-600" },
+  booking_accepted:               { icon: CheckCircle,   color: "text-brand-600" },
+  booking_request_confirmed:      { icon: CheckCircle,   color: "text-brand-600" },
+  booking_rejected:               { icon: AlertCircle,   color: "text-coral-500"  },
+  booking_expired:                { icon: AlertCircle,   color: "text-coral-500"  },
+  booking_cancelled_by_passenger: { icon: AlertCircle,   color: "text-coral-500"  },
+  booking_cancelled_by_driver:    { icon: AlertCircle,   color: "text-coral-500"  },
+  trip_cancelled:                 { icon: Car,           color: "text-coral-500"  },
+  trip_reminder:                  { icon: Clock,         color: "text-sky-600"  },
+  trip_completed_rate:            { icon: Star,          color: "text-accent-500"},
+  request_response_received:      { icon: Users,         color: "text-sky-600"  },
+  request_response_accepted:      { icon: CheckCircle,   color: "text-brand-600" },
+  request_response_declined:      { icon: AlertCircle,   color: "text-coral-500"  },
+  new_message:                    { icon: MessageCircle, color: "text-brand-600" },
+  rating_received:                { icon: Star,          color: "text-accent-500"},
+  rating_warning:                 { icon: AlertCircle,   color: "text-coral-500"  },
+  verification_approved:          { icon: CheckCircle,   color: "text-brand-600" },
+  verification_rejected:          { icon: AlertCircle,   color: "text-coral-500"  },
+  verification_need_docs:         { icon: AlertCircle,   color: "text-accent-500"},
+  account_blocked:                { icon: AlertCircle,   color: "text-coral-500"  },
+  loyalty_tier_changed:           { icon: Star,          color: "text-accent-500"},
+  security_alert_reuse:           { icon: AlertCircle,   color: "text-coral-500"  },
 };
 
 export const ACTION_TYPES = new Set([
@@ -34,13 +39,18 @@ export const ACTION_TYPES = new Set([
   "request_response_accepted",
 ]);
 
-function fmtTime(iso: string) {
-  return new Date(iso).toLocaleString("ru-RU", {
-    day: "numeric", month: "short", hour: "2-digit", minute: "2-digit",
-  });
+/** Localized type label; falls back to the generic "notification" label. */
+export function typeLabel(type: string, t: Translator): string {
+  return type in TYPE_CONFIG ? t(`type_${type}`) : t("default_label");
 }
 
-export function buildBody(notif: AppNotification): string {
+function fmtTime(iso: string, locale: Locale): string {
+  const d = new Date(iso);
+  const time = `${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")}`;
+  return `${formatShortDate(iso, locale)}, ${time}`;
+}
+
+export function buildBody(notif: AppNotification, t: Translator, locale: Locale): string {
   const p = notif.payload as Record<string, unknown>;
   const str = (key: string) => (p[key] as string | undefined) ?? "";
 
@@ -51,8 +61,12 @@ export function buildBody(notif: AppNotification): string {
       const to = str("destinationCity");
       const seats = p["seatsCount"] as number | undefined;
       return name
-        ? `${name} хочет поехать с вами${from && to ? ` · ${from} → ${to}` : ""}${seats ? ` · ${seats} мест` : ""}`
-        : "Новый запрос на бронирование";
+        ? t("body_new_booking_request", {
+            name,
+            route: from && to ? ` · ${from} → ${to}` : "",
+            seats: seats ? t("seats_part", { n: seats }) : "",
+          })
+        : t("body_new_booking_request_fallback");
     }
     case "booking_accepted": {
       const booking = p["booking"] as Record<string, unknown> | undefined;
@@ -62,101 +76,127 @@ export function buildBody(notif: AppNotification): string {
       const to = trip?.["destinationCity"] as string | undefined;
       const driverName = driver?.["name"] as string | undefined;
       return driverName
-        ? `${driverName} принял вашу бронь${from && to ? ` · ${from} → ${to}` : ""}`
-        : "Водитель подтвердил вашу бронь";
+        ? t("body_booking_accepted", {
+            name: driverName,
+            route: from && to ? ` · ${from} → ${to}` : "",
+          })
+        : t("body_booking_accepted_fallback");
     }
     case "booking_request_confirmed": {
       const name = str("passengerName");
       return name
-        ? `Вы приняли заявку от ${name} — чат открыт`
-        : "Вы приняли заявку на поездку";
+        ? t("body_booking_request_confirmed", { name })
+        : t("body_booking_request_confirmed_fallback");
     }
     case "booking_rejected": {
       const booking = p["booking"] as Record<string, unknown> | undefined;
       const trip = booking?.["trip"] as Record<string, unknown> | undefined;
       const from = trip?.["originCity"] as string | undefined;
       const to = trip?.["destinationCity"] as string | undefined;
-      return from && to ? `Водитель отклонил бронь · ${from} → ${to}` : "Водитель отклонил вашу бронь";
+      return from && to
+        ? t("body_booking_rejected", { route: ` · ${from} → ${to}` })
+        : t("body_booking_rejected_fallback");
     }
     case "booking_expired":
-      return "Водитель не успел ответить на вашу заявку — попробуйте другую поездку";
+      return t("body_booking_expired");
     case "booking_cancelled_by_passenger": {
       const booking = p["booking"] as Record<string, unknown> | undefined;
       const trip = booking?.["trip"] as Record<string, unknown> | undefined;
       const from = trip?.["originCity"] as string | undefined;
       const to = trip?.["destinationCity"] as string | undefined;
-      return from && to ? `Пассажир отменил бронь · ${from} → ${to}` : "Пассажир отменил бронирование";
+      return from && to
+        ? t("body_booking_cancelled_by_passenger", { route: ` · ${from} → ${to}` })
+        : t("body_booking_cancelled_by_passenger_fallback");
     }
     case "booking_cancelled_by_driver": {
       const booking = p["booking"] as Record<string, unknown> | undefined;
       const trip = booking?.["trip"] as Record<string, unknown> | undefined;
       const from = trip?.["originCity"] as string | undefined;
       const to = trip?.["destinationCity"] as string | undefined;
-      return from && to ? `Водитель отменил бронь · ${from} → ${to}` : "Водитель отменил бронирование";
+      return from && to
+        ? t("body_booking_cancelled_by_driver", { route: ` · ${from} → ${to}` })
+        : t("body_booking_cancelled_by_driver_fallback");
     }
     case "trip_cancelled": {
       const from = str("originCity");
       const to = str("destinationCity");
-      return from && to ? `Поездка ${from} → ${to} отменена водителем` : "Водитель отменил поездку";
+      return from && to
+        ? t("body_trip_cancelled", { route: `${from} → ${to}` })
+        : t("body_trip_cancelled_fallback");
     }
     case "trip_reminder": {
       const from = str("origin_city");
       const to = str("destination_city");
       const dep = str("departure_at");
       return from && to
-        ? `Поездка ${from} → ${to}${dep ? ` · ${fmtTime(dep)}` : ""} — не забудьте!`
-        : "Напоминание о предстоящей поездке";
+        ? t("body_trip_reminder", {
+            route: `${from} → ${to}`,
+            time: dep ? ` · ${fmtTime(dep, locale)}` : "",
+          })
+        : t("body_trip_reminder_fallback");
     }
     case "request_response_received": {
       const name = str("driverName");
       const price = p["price"] as number | undefined;
       const dep = str("departureTime");
       return name
-        ? `${name} предлагает поездку${price ? ` за ${price} сом` : ""}${dep ? ` · ${fmtTime(dep)}` : ""}`
-        : "Водитель откликнулся на вашу заявку";
+        ? t("body_request_response_received", {
+            name,
+            price: price ? t("price_part", { price }) : "",
+            time: dep ? ` · ${fmtTime(dep, locale)}` : "",
+          })
+        : t("body_request_response_received_fallback");
     }
     case "request_response_accepted": {
       const name = str("passengerName");
       return name
-        ? `${name} принял ваше предложение — откройте чат`
-        : "Пассажир принял ваше предложение — откройте чат";
+        ? t("body_request_response_accepted", { name })
+        : t("body_request_response_accepted_fallback");
     }
     case "request_response_declined":
-      return "Пассажир отклонил ваше предложение";
+      return t("body_request_response_declined");
     case "new_message": {
       const preview = str("preview");
-      return preview ? `«${preview}»` : "Новое сообщение в чате";
+      return preview ? t("body_new_message", { preview }) : t("body_new_message_fallback");
     }
     case "rating_received": {
       const rater = str("raterName");
       const score = p["score"] as number | undefined;
       return rater
-        ? `${rater} оставил вам оценку${score ? ` ★ ${score}` : ""}`
-        : "Вы получили новую оценку";
+        ? t("body_rating_received", { rater, score: score ? ` ★ ${score}` : "" })
+        : t("body_rating_received_fallback");
     }
     case "rating_warning":
-      return `Ваш рейтинг опустился до ${(p["rating"] as number | undefined)?.toFixed(1) ?? "< 4.0"} — постарайтесь улучшить его`;
+      return t("body_rating_warning", {
+        rating: (p["rating"] as number | undefined)?.toFixed(1) ?? "< 4.0",
+      });
     case "verification_approved":
-      return "Ваш профиль водителя прошёл верификацию — теперь вы можете публиковать поездки";
+      return t("body_verification_approved");
     case "verification_rejected":
-      return str("reason") || "Документы не прошли проверку — проверьте причину и загрузите повторно";
+      return str("reason") || t("body_verification_rejected");
     case "verification_need_docs": {
       const docs = (p["docs"] as string[] | undefined) ?? [];
-      return docs.length ? `Загрузите недостающие документы: ${docs.join(", ")}` : "Загрузите недостающие документы";
+      return docs.length
+        ? t("body_verification_need_docs", { docs: docs.join(", ") })
+        : t("body_verification_need_docs_fallback");
     }
     case "account_blocked":
-      return str("reason") || "Ваш аккаунт заблокирован — обратитесь в поддержку";
+      return str("reason") || t("body_account_blocked");
     case "loyalty_tier_changed":
-      return str("tier") ? `Ваш уровень лояльности повышен до «${str("tier")}»` : "Ваш уровень лояльности изменён";
+      return str("tier")
+        ? t("body_loyalty_tier_changed", { tier: str("tier") })
+        : t("body_loyalty_tier_changed_fallback");
     case "security_alert_reuse":
-      return "Обнаружена подозрительная активность — все устройства разлогинены для вашей защиты";
+      return t("body_security_alert_reuse");
     case "trip_completed_rate": {
       const from = str("origin_city");
       const to = str("destination_city");
-      return from && to ? `Оцените поездку ${from} → ${to}` : "Оцените завершённую поездку";
+      return from && to
+        ? t("body_trip_completed_rate", { route: `${from} → ${to}` })
+        : t("body_trip_completed_rate_fallback");
     }
     default:
-      return "Уведомление";
+      return t("default_label");
   }
 }
 

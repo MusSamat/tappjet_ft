@@ -8,6 +8,7 @@ import {
   type ClipboardEvent,
   type KeyboardEvent,
 } from "react";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils/cn";
 
 interface OtpInputProps {
@@ -27,6 +28,7 @@ export interface OtpInputHandle {
 
 export const OtpInput = forwardRef<OtpInputHandle, OtpInputProps>(
   ({ length = 6, onComplete, onChange, disabled, autoFocus, invalid, className }, ref) => {
+    const t = useTranslations("otp");
     const [values, setValues] = useState<string[]>(() => Array(length).fill(""));
     const inputs = useRef<(HTMLInputElement | null)[]>([]);
 
@@ -77,7 +79,7 @@ export const OtpInput = forwardRef<OtpInputHandle, OtpInputProps>(
     return (
       <div
         role="group"
-        aria-label="Код из SMS"
+        aria-label={t("sms_code")}
         className={cn("flex items-center gap-2", className)}
       >
         {values.map((v, i) => (
@@ -96,7 +98,7 @@ export const OtpInput = forwardRef<OtpInputHandle, OtpInputProps>(
             onChange={(e) => handleChange(i, e.target.value)}
             onKeyDown={(e) => handleKeyDown(i, e)}
             onPaste={handlePaste}
-            aria-label={`Цифра ${i + 1}`}
+            aria-label={t("digit", { n: i + 1 })}
             aria-invalid={invalid || undefined}
             className={cn(
               "h-14 w-11 rounded-2xl border-2 text-center text-[22px] font-900 text-ink-900 outline-none transition-colors focus:border-brand-500 dark:text-white",

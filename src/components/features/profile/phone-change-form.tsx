@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { useMutation } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { changePhone, confirmPhoneChange } from "@/lib/api/profile";
 import { useAuth } from "@/store/auth";
 import { Button, Label, OtpInput, PasswordInput, PhoneInput, Spinner } from "@/components/ui";
@@ -11,6 +12,7 @@ import { useCountdown } from "@/lib/hooks/use-countdown";
 type Step = "idle" | "otp";
 
 export function PhoneChangeForm() {
+  const t = useTranslations("profile_forms");
   const updateUser = useAuth((s) => s.updateUser);
   const [step, setStep] = useState<Step>("idle");
   const [newPhone, setNewPhone] = useState("");
@@ -48,11 +50,11 @@ export function PhoneChangeForm() {
     return (
       <div className="space-y-4">
         <p className="text-body-lg text-ink-700">
-          Введите код из SMS на номер{" "}
+          {t("otp_sent_to")}{" "}
           <span className="font-semibold text-ink-900">{newPhone}</span>
         </p>
         <div>
-          <Label>Код из SMS</Label>
+          <Label>{t("otp_label")}</Label>
           <OtpInput
             ref={otpRef}
             length={6}
@@ -61,7 +63,7 @@ export function PhoneChangeForm() {
           />
         </div>
         {confirmMutation.error && (
-          <p className="text-caption text-coral-500">Неверный код. Попробуйте ещё раз.</p>
+          <p className="text-caption text-coral-500">{t("otp_invalid")}</p>
         )}
         <div className="flex items-center gap-3">
           <Button
@@ -70,7 +72,7 @@ export function PhoneChangeForm() {
             disabled={otp.length !== 6 || confirmMutation.isPending}
             onClick={() => confirmMutation.mutate()}
           >
-            {confirmMutation.isPending ? <Spinner size={16} /> : "Подтвердить"}
+            {confirmMutation.isPending ? <Spinner size={16} /> : t("confirm")}
           </Button>
           <Button
             variant="ghost"
@@ -81,7 +83,7 @@ export function PhoneChangeForm() {
               startCountdown(60);
             }}
           >
-            {counting ? `Повтор через ${remaining} с` : "Отправить снова"}
+            {counting ? t("resend_in", { seconds: remaining }) : t("resend")}
           </Button>
         </div>
         <button
@@ -89,7 +91,7 @@ export function PhoneChangeForm() {
           className="text-caption text-ink-500 underline"
           onClick={() => setStep("idle")}
         >
-          Изменить номер
+          {t("change_number")}
         </button>
       </div>
     );
@@ -98,11 +100,11 @@ export function PhoneChangeForm() {
   return (
     <div className="space-y-4">
       <div>
-        <Label>Новый номер телефона</Label>
+        <Label>{t("new_phone_label")}</Label>
         <PhoneInput value={newPhone} onValueChange={setNewPhone} className="mt-1" />
       </div>
       <div>
-        <Label htmlFor="phone-change-password">Текущий пароль (для подтверждения)</Label>
+        <Label htmlFor="phone-change-password">{t("current_password_label")}</Label>
         <PasswordInput
           id="phone-change-password"
           value={password}
@@ -112,7 +114,7 @@ export function PhoneChangeForm() {
         />
       </div>
       {sendMutation.error && (
-        <p className="text-caption text-coral-500">Неверный пароль или номер уже занят.</p>
+        <p className="text-caption text-coral-500">{t("send_error")}</p>
       )}
       <Button
         variant="primary"
@@ -120,7 +122,7 @@ export function PhoneChangeForm() {
         disabled={newPhone.length < 10 || !password || sendMutation.isPending}
         onClick={() => sendMutation.mutate()}
       >
-        {sendMutation.isPending ? <Spinner size={16} /> : "Получить SMS"}
+        {sendMutation.isPending ? <Spinner size={16} /> : t("get_sms")}
       </Button>
     </div>
   );

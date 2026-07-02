@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { getSocket } from "@/lib/socket/client";
 import { useAuth } from "@/store/auth";
 import { pushToast } from "@/components/layout/quick-toast";
@@ -11,6 +12,7 @@ export function NotificationListener() {
   const isAuthenticated = useAuth((s) => s.status === "authenticated");
   const queryClient = useQueryClient();
   const pathname = usePathname();
+  const t = useTranslations("notif_toast");
 
   useEffect(() => {
     if (!isAuthenticated) return;
@@ -32,7 +34,7 @@ export function NotificationListener() {
       if (chatPath && !pathname.startsWith(chatPath)) {
         pushToast({
           type: "chat_message",
-          title: "Новое сообщение",
+          title: t("new_message_title"),
           body: data.message?.text?.slice(0, 80) ?? "...",
         });
       }
@@ -49,9 +51,13 @@ export function NotificationListener() {
       const { passengerName, trip } = data;
       pushToast({
         type: "booking_request",
-        title: "Новая заявка на поездку",
+        title: t("new_request_title"),
         body: passengerName
-          ? `${passengerName} хочет поехать с вами (${trip.originCity} → ${trip.destinationCity})`
+          ? t("new_request_body", {
+              name: passengerName,
+              from: trip.originCity,
+              to: trip.destinationCity,
+            })
           : `${trip.originCity} → ${trip.destinationCity}`,
       });
     };
@@ -59,7 +65,7 @@ export function NotificationListener() {
     const onBookingAccepted = () => {
       invalidateBookings();
       invalidateNotifications();
-      pushToast({ type: "booking_accepted", title: "Заявка принята", body: "Водитель принял вашу заявку" });
+      pushToast({ type: "booking_accepted", title: t("accepted_title"), body: t("accepted_body") });
     };
 
     const onBookingRequestConfirmed = (data: { passengerName?: string }) => {
@@ -68,30 +74,30 @@ export function NotificationListener() {
       const name = data?.passengerName;
       pushToast({
         type: "booking_accepted",
-        title: "Заявка принята",
-        body: name ? `Вы приняли заявку от ${name}` : "Вы приняли заявку на поездку",
+        title: t("accepted_title"),
+        body: name ? t("confirmed_body", { name }) : t("confirmed_body_fallback"),
       });
     };
 
     const onBookingRejected = () => {
       invalidateBookings();
       invalidateNotifications();
-      pushToast({ type: "booking_rejected", title: "Заявка отклонена", body: "Водитель отклонил вашу заявку" });
+      pushToast({ type: "booking_rejected", title: t("rejected_title"), body: t("rejected_body") });
     };
 
     const onBookingCancelled = (data: { cancelledBy?: "driver" | "passenger" }) => {
       invalidateBookings();
       invalidateNotifications();
       const body = data?.cancelledBy === "driver"
-        ? "Водитель отменил бронирование"
-        : "Бронирование отменено";
-      pushToast({ type: "booking_cancelled", title: "Бронирование отменено", body });
+        ? t("cancelled_body_driver")
+        : t("cancelled_body");
+      pushToast({ type: "booking_cancelled", title: t("cancelled_title"), body });
     };
 
     const onBookingExpired = () => {
       invalidateBookings();
       invalidateNotifications();
-      pushToast({ type: "booking_expired", title: "Заявка истекла", body: "Время ответа на заявку истекло" });
+      pushToast({ type: "booking_expired", title: t("expired_title"), body: t("expired_body") });
     };
 
     const onTripCancelled = (data: { originCity?: string; destinationCity?: string }) => {
@@ -102,8 +108,8 @@ export function NotificationListener() {
         : null;
       pushToast({
         type: "booking_cancelled",
-        title: "Поездка отменена",
-        body: route ? `Водитель отменил поездку · ${route}` : "Водитель отменил поездку",
+        title: t("trip_cancelled_title"),
+        body: t("trip_cancelled_body", { route: route ? ` · ${route}` : "" }),
       });
     };
 
@@ -114,10 +120,10 @@ export function NotificationListener() {
       const { driverName, price } = data ?? {};
       pushToast({
         type: "booking_request",
-        title: "Новое предложение",
+        title: t("offer_title"),
         body: driverName
-          ? `${driverName} предлагает поездку${price ? ` за ${price} сом` : ""}`
-          : "Водитель откликнулся на вашу заявку",
+          ? t("offer_body", { name: driverName, price: price ? t("offer_price", { price }) : "" })
+          : t("offer_body_fallback"),
       });
     };
 
@@ -128,10 +134,8 @@ export function NotificationListener() {
       const name = data?.passengerName;
       pushToast({
         type: "booking_accepted",
-        title: "Предложение принято",
-        body: name
-          ? `${name} принял ваше предложение — откройте чат`
-          : "Пассажир принял ваше предложение",
+        title: t("offer_accepted_title"),
+        body: name ? t("offer_accepted_body", { name }) : t("offer_accepted_body_fallback"),
       });
     };
 
@@ -140,8 +144,8 @@ export function NotificationListener() {
       invalidateNotifications();
       pushToast({
         type: "booking_rejected",
-        title: "Предложение отклонено",
-        body: "Пассажир отклонил ваше предложение",
+        title: t("offer_declined_title"),
+        body: t("offer_declined_body"),
       });
     };
 
@@ -172,7 +176,7 @@ export function NotificationListener() {
       socket.off("request:response_accepted", onRequestResponseAccepted);
       socket.off("request:response_declined", onRequestResponseDeclined);
     };
-  }, [isAuthenticated, queryClient, pathname]);
+  }, [isAuthenticated, queryClient, pathname, t]);
 
   return null;
 }

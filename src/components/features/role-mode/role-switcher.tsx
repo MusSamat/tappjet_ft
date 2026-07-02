@@ -1,9 +1,11 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useAuth } from "@/store/auth";
 import { cn } from "@/lib/utils/cn";
 
 export function RoleSwitcher() {
+  const t = useTranslations("roles");
   const user = useAuth((s) => s.user);
   const status = useAuth((s) => s.status);
   const activeMode = useAuth((s) => s.activeMode);
@@ -23,7 +25,7 @@ export function RoleSwitcher() {
             : "text-ink-500 hover:text-ink-700",
         )}
       >
-        Пассажир
+        {t("passenger")}
       </button>
       <button
         type="button"
@@ -35,7 +37,7 @@ export function RoleSwitcher() {
             : "text-ink-500 hover:text-ink-700",
         )}
       >
-        Водитель
+        {t("driver")}
       </button>
     </div>
   );

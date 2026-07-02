@@ -27,6 +27,7 @@ export default function RatePage({ params }: Props) {
   const { id: tripId, rateeId } = params;
   const router = useRouter();
   const t = useTranslations("rate");
+  const tTags = useTranslations("ratings.tags");
   const status = useAuth((s) => s.status);
 
   useEffect(() => {
@@ -185,7 +186,7 @@ export default function RatePage({ params }: Props) {
                 {score >= 4 ? t("liked") : t("disliked")}
               </p>
               <div className="flex flex-wrap gap-2">
-                {tagList.map(({ value, label }) => (
+                {tagList.map(({ value, labelKey }) => (
                   <button
                     key={value}
                     type="button"
@@ -197,7 +198,7 @@ export default function RatePage({ params }: Props) {
                         : "border-ink-300 text-ink-700 hover:border-brand-400",
                     )}
                   >
-                    {label}
+                    {tTags(labelKey)}
                   </button>
                 ))}
               </div>

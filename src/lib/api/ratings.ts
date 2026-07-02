@@ -18,26 +18,27 @@ export interface SubmitRatingInput {
   comment?: string;
 }
 
+// `labelKey` resolves against the `ratings.tags.*` message namespace.
 export const DRIVER_TAGS = [
-  { value: "on_time", label: "Пунктуальный" },
-  { value: "safe_driving", label: "Безопасное вождение" },
-  { value: "pleasant_chat", label: "Приятная беседа" },
-  { value: "clean_car", label: "Чистый автомобиль" },
-  { value: "comfortable_ride", label: "Комфортная поездка" },
-  { value: "late", label: "Опоздал" },
-  { value: "dirty_car", label: "Грязная машина" },
-  { value: "dangerous_driving", label: "Опасное вождение" },
-  { value: "rudeness", label: "Грубость" },
+  { value: "on_time", labelKey: "on_time" },
+  { value: "safe_driving", labelKey: "safe_driving" },
+  { value: "pleasant_chat", labelKey: "pleasant_chat" },
+  { value: "clean_car", labelKey: "clean_car" },
+  { value: "comfortable_ride", labelKey: "comfortable_ride" },
+  { value: "late", labelKey: "late" },
+  { value: "dirty_car", labelKey: "dirty_car" },
+  { value: "dangerous_driving", labelKey: "dangerous_driving" },
+  { value: "rudeness", labelKey: "rudeness" },
 ] as const;
 
 export const PASSENGER_TAGS = [
-  { value: "arrived_on_time", label: "Пришёл вовремя" },
-  { value: "polite", label: "Вежливый" },
-  { value: "no_heavy_luggage", label: "Без лишнего багажа" },
-  { value: "pleasant_chat", label: "Приятная компания" },
-  { value: "late", label: "Опоздал" },
-  { value: "too_much_luggage", label: "Много багажа" },
-  { value: "rudeness", label: "Грубость" },
+  { value: "arrived_on_time", labelKey: "arrived_on_time" },
+  { value: "polite", labelKey: "polite" },
+  { value: "no_heavy_luggage", labelKey: "no_heavy_luggage" },
+  { value: "pleasant_chat", labelKey: "pleasant_company" },
+  { value: "late", labelKey: "late" },
+  { value: "too_much_luggage", labelKey: "too_much_luggage" },
+  { value: "rudeness", labelKey: "rudeness" },
 ] as const;
 
 export function getPendingRatings(): Promise<Paginated<PendingRating>> {

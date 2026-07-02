@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useId, useCallback } from "react";
+import { useTranslations } from "next-intl";
 import { MapPin } from "lucide-react";
 import { searchCities, getCities, type City } from "@/lib/api/cities";
 import { cn } from "@/lib/utils/cn";
@@ -57,7 +58,7 @@ export function CityAutocomplete({
   value,
   onChange,
   onInputChange,
-  placeholder = "Введите город",
+  placeholder,
   label,
   className,
   disabled,
@@ -65,6 +66,8 @@ export function CityAutocomplete({
   compact = false,
   borderless = false,
 }: Props) {
+  const t = useTranslations("city_autocomplete");
+  const ph = placeholder ?? t("enter_city");
   const autoId = useId();
   const inputId = externalId ?? autoId;
 
@@ -203,7 +206,7 @@ export function CityAutocomplete({
           autoComplete="off"
           disabled={disabled}
           value={query}
-          placeholder={placeholder}
+          placeholder={ph}
           onChange={(e) => {
             userTypingRef.current = true;
             setShowingPopular(false);
@@ -263,7 +266,7 @@ export function CityAutocomplete({
           {showingPopular && (
             <li className="border-b border-ink-100 px-4 py-2">
               <span className="text-[10px] font-bold uppercase tracking-wide text-ink-400">
-                Популярные города
+                {t("popular_cities")}
               </span>
             </li>
           )}

@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { Camera } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { uploadAvatar } from "@/lib/api/profile";
 import { useAuth } from "@/store/auth";
 import { normalizeMediaUrl } from "@/lib/utils/media-url";
@@ -67,6 +68,7 @@ export function AvatarUploader({
   fabClass = "bg-brand-600",
   fontClass = "text-[30px]",
 }: AvatarUploaderProps = {}) {
+  const t = useTranslations("profile_forms");
   const user = useAuth((s) => s.user);
   const updateUser = useAuth((s) => s.updateUser);
   const queryClient = useQueryClient();
@@ -117,14 +119,14 @@ export function AvatarUploader({
           shapeClass,
           isPending && "opacity-70",
         )}
-        aria-label="Загрузить фото профиля"
+        aria-label={t("avatar_upload")}
       >
         {displaySrc ? (
           // Plain <img> — avoids next/image fill quirks; unoptimized anyway
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={displaySrc}
-            alt="Аватар"
+            alt={t("avatar_alt")}
             className="h-full w-full object-cover"
             onError={() => {
               setImgSrc(null);
@@ -160,7 +162,7 @@ export function AvatarUploader({
         onChange={handleFile}
       />
       {error && (
-        <p className="absolute -bottom-6 left-0 whitespace-nowrap text-caption text-coral-500">Ошибка загрузки</p>
+        <p className="absolute -bottom-6 left-0 whitespace-nowrap text-caption text-coral-500">{t("upload_error")}</p>
       )}
     </div>
   );

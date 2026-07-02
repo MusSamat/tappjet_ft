@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getLocale } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import type { Locale } from "@/i18n.config";
 import { getTrip, type TripDetail } from "@/lib/api/trips";
 import { extractError } from "@/lib/api/client";
@@ -27,9 +27,17 @@ async function fetchTrip(id: string): Promise<TripDetail | null> {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const trip = await fetchTrip(params.id);
   const locale = (await getLocale()) as Locale;
-  if (!trip) return { title: "Поездка не найдена", robots: { index: false } };
+  const t = await getTranslations("trips_meta");
+  if (!trip) return { title: t("not_found"), robots: { index: false } };
   const title = `${trip.originCity} → ${trip.destinationCity} · ${trip.departureAt ? formatDepartureLabel(trip.departureAt, locale) : ""}`;
-  const desc = `Поездка ${trip.originCity} → ${trip.destinationCity}. ${trip.seatsAvailable ?? 0} мест, от ${formatPrice(trip.pricePerSeat ?? 0)}. ${trip.driver?.name ? `Водитель: ${trip.driver.name}` : ""}`;
+  const desc = t("detail_desc", {
+    from: trip.originCity,
+    to: trip.destinationCity,
+    seats: trip.seatsAvailable ?? 0,
+    price: formatPrice(trip.pricePerSeat ?? 0),
+    hasDriver: trip.driver?.name ? "yes" : "no",
+    driver: trip.driver?.name ?? "",
+  });
   return {
     title,
     description: desc,
