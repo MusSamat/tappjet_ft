@@ -6,6 +6,7 @@ import { ArrowDownUp, CarFront, Circle, MapPin, SlidersHorizontal, User } from "
 import { CityAutocomplete } from "@/components/ui/city-autocomplete";
 import { Segmented } from "@/components/ui/segmented";
 import { Chip } from "@/components/ui/chip";
+import { useUiRole } from "@/lib/hooks/use-role-colors";
 
 // Mobile feed header — design-spec §2.2: map hero band + overlaid search
 // card, «Найти поездку / Найти пассажира» segmented, filter chips row.
@@ -49,6 +50,7 @@ export function FeedHeader({ tab, onOpenFilters }: FeedHeaderProps) {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
+  const role = useUiRole();
 
   const from = params.get("from") ?? params.get("from_city") ?? "";
   const to = params.get("to") ?? params.get("to_city") ?? "";
@@ -125,18 +127,22 @@ export function FeedHeader({ tab, onOpenFilters }: FeedHeaderProps) {
         </div>
       </div>
 
-      {/* Segmented: find trip / find passenger */}
-      <div className="px-4 pt-3">
-        <Segmented<FeedTab>
-          value={tab}
-          onChange={switchTab}
-          tone={tab === "requests" ? "grape" : "brand"}
-          options={[
-            { value: "trips", label: t("find_trip"), icon: <CarFront className="h-4 w-4" aria-hidden="true" /> },
-            { value: "requests", label: t("find_passenger"), icon: <User className="h-4 w-4" aria-hidden="true" /> },
-          ]}
-        />
-      </div>
+      {/* Segmented: find trip / find passenger — guests only. Passengers are
+          pinned to the trips feed (booking) and drivers to the requests feed
+          (responding), so the opposite-role browse tab is hidden for them. */}
+      {role === "guest" && (
+        <div className="px-4 pt-3">
+          <Segmented<FeedTab>
+            value={tab}
+            onChange={switchTab}
+            tone={tab === "requests" ? "grape" : "brand"}
+            options={[
+              { value: "trips", label: t("find_trip"), icon: <CarFront className="h-4 w-4" aria-hidden="true" /> },
+              { value: "requests", label: t("find_passenger"), icon: <User className="h-4 w-4" aria-hidden="true" /> },
+            ]}
+          />
+        </div>
+      )}
 
       {/* Chips row */}
       <div className="no-scrollbar flex gap-2 overflow-x-auto px-4 py-3">

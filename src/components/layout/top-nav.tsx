@@ -137,13 +137,18 @@ export function TopNav() {
   const createHref = isDriver ? "/trips/create" : "/requests/create";
 
   const navLinks = isAuthenticated
-    ? [
-        { href: "/trips", label: t("find_trip") },
-        ...(isDriver
-          ? [{ href: "/requests", label: t("passenger_requests") }]
-          : [{ href: "/my/requests", label: t("my_requests") }]),
-        { href: "/my/bookings", label: t("my_trips") },
-      ]
+    ? isDriver
+      ? [
+          // Driver primary tool is browsing passenger requests to respond to;
+          // the passenger-only «Найти поездку» browse is hidden.
+          { href: "/requests",    label: t("passenger_requests") },
+          { href: "/my/bookings", label: t("my_trips") },
+        ]
+      : [
+          { href: "/trips",       label: t("find_trip") },
+          { href: "/my/requests", label: t("my_requests") },
+          { href: "/my/bookings", label: t("my_trips") },
+        ]
     : [
         { href: "/trips",    label: t("trips") },
         { href: "/requests", label: t("requests") },

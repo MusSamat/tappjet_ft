@@ -53,6 +53,7 @@ function FeedEmpty({ params }: { params: SearchTripsParams }) {
 
 export function SearchLayout({ params, initial }: Props) {
   const t = useTranslations("feed");
+  const role = useUiRole();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [mobileDetailOpen, setMobileDetailOpen] = useState(false);
@@ -108,7 +109,7 @@ export function SearchLayout({ params, initial }: Props) {
             trip={trip}
             active={!onCardClick && selectedId === trip.id}
             onClick={onCardClick ? () => onCardClick(trip.id ?? "") : () => setSelectedId(trip.id ?? null)}
-            showBookButton={!!onCardClick}
+            showBookButton={!!onCardClick && role === "passenger"}
           />
         </div>
       ))}
