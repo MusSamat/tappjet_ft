@@ -27,12 +27,14 @@ export default function ProfileDeletePage() {
 
   return (
     <div className="container max-w-lg py-10">
-      <div className="rounded-2xl border border-coral-200 bg-white p-6">
+      <div className="rounded-4xl border border-danger-200 bg-white p-6 shadow-card dark:border-danger-500/30 dark:bg-ink-900">
         <div className="flex items-start gap-3">
-          <AlertTriangle className="mt-0.5 h-6 w-6 flex-shrink-0 text-coral-500" aria-hidden="true" />
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-danger-100 text-danger-600 dark:bg-danger-500/10 dark:text-danger-400">
+            <AlertTriangle className="h-5 w-5" aria-hidden="true" />
+          </span>
           <div>
-            <h1 className="text-h1 text-ink-900">{t("title")}</h1>
-            <p className="mt-2 text-body-lg text-ink-700">
+            <h1 className="font-disp text-h1 text-ink-900 dark:text-white">{t("title")}</h1>
+            <p className="mt-2 text-body-lg text-ink-700 dark:text-ink-300">
               {t("warning")}
             </p>
           </div>
@@ -54,7 +56,7 @@ export default function ProfileDeletePage() {
           </div>
 
           {error && (
-            <p className="text-caption text-coral-500">
+            <p className="text-caption text-danger-600 dark:text-danger-400">
               {t("error")}
             </p>
           )}

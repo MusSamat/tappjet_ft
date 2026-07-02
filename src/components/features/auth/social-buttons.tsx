@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { initTelegramBotLogin, getTelegramBotLoginStatus, claimTelegramBotLogin } from "@/lib/api/auth";
 import { isFullAuthResult } from "@/lib/api/types";
 import { extractError } from "@/lib/api/client";
@@ -13,7 +14,7 @@ import { cn } from "@/lib/utils/cn";
 import "./social-buttons-types";
 
 const baseBtn =
-  "flex h-12 w-full items-center justify-center gap-2 rounded-2xl border-2 border-ink-200 bg-white text-body-lg font-800 text-ink-700 transition-colors hover:bg-ink-50 focus-visible:border-brand-500 focus-visible:outline-none disabled:opacity-50";
+  "flex h-12 w-full items-center justify-center gap-2 rounded-2xl border-2 border-ink-200 bg-white text-body-lg font-800 text-ink-700 transition-colors hover:bg-ink-50 focus-visible:border-brand-500 focus-visible:outline-none disabled:opacity-50 dark:border-ink-700 dark:bg-ink-900 dark:text-ink-200 dark:hover:bg-ink-800";
 
 const tgBtn = "border-[#0088cc] bg-[#0088cc] font-900 text-white hover:bg-[#0088cc]/90";
 
@@ -22,6 +23,7 @@ interface Props {
 }
 
 export function SocialButtons({ onDone }: Props) {
+  const t = useTranslations("auth.social");
   const router = useRouter();
   const { setSession } = useAuth();
   const [loading, setLoading] = useState<"telegram" | null>(null);
@@ -32,7 +34,7 @@ export function SocialButtons({ onDone }: Props) {
   const handleResult = useCallback(
     (result: { kind: string; accessToken?: string; refreshToken?: string; user?: unknown }) => {
       if (!isFullAuthResult(result as Parameters<typeof isFullAuthResult>[0])) {
-        setError("Аккаунт требует верификации телефона. Войдите через телефон.");
+        setError(t("err_phone_verification"));
         return;
       }
       setSession(result as Parameters<typeof setSession>[0]);
@@ -40,7 +42,7 @@ export function SocialButtons({ onDone }: Props) {
       const intent = consumeDeferredAction();
       router.replace(intent ? routeForIntent(intent) : "/");
     },
-    [router, setSession, onDone],
+    [router, setSession, onDone, t],
   );
 
   useEffect(() => {
@@ -72,20 +74,20 @@ export function SocialButtons({ onDone }: Props) {
             pollRef.current = null;
             setTgBotLink(null);
             setLoading(null);
-            setError("Telegram не привязан к аккаунту. Войдите по номеру телефона или зарегистрируйтесь.");
+            setError(t("err_not_linked"));
           } else if (status === "expired") {
             clearInterval(pollRef.current!);
             pollRef.current = null;
             setTgBotLink(null);
             setLoading(null);
-            setError("Время вышло. Попробуйте снова.");
+            setError(t("err_timeout"));
           }
         } catch {
           clearInterval(pollRef.current!);
           pollRef.current = null;
           setTgBotLink(null);
           setLoading(null);
-          setError("Ошибка входа. Попробуйте снова.");
+          setError(t("err_login"));
         }
       }, 2000);
     } catch (e) {
@@ -97,7 +99,7 @@ export function SocialButtons({ onDone }: Props) {
   return (
     <div className="flex flex-col gap-3">
       {error && (
-        <NotifCard variant="error" title="Ошибка входа">
+        <NotifCard variant="error" title={t("error_title")}>
           {error}
         </NotifCard>
       )}
@@ -112,16 +114,16 @@ export function SocialButtons({ onDone }: Props) {
             className={cn(baseBtn, tgBtn)}
           >
             <Spinner size={18} />
-            <span>Ожидание подтверждения...</span>
+            <span>{t("waiting")}</span>
           </a>
           <button
             type="button"
-            className="text-center text-[12px] font-700 text-brand-600 hover:text-brand-700"
+            className="text-center text-[12px] font-700 text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300"
             onClick={() => {
               window.open(tgBotLink.deepLink, "_blank");
             }}
           >
-            Открыть Telegram снова
+            {t("open_again")}
           </button>
         </div>
       ) : (
@@ -130,10 +132,10 @@ export function SocialButtons({ onDone }: Props) {
           className={cn(baseBtn, tgBtn)}
           onClick={handleTelegram}
           disabled={loading !== null}
-          aria-label="Войти через Telegram"
+          aria-label={t("login_telegram")}
         >
           {loading === "telegram" ? <Spinner size={18} /> : <Send className="h-5 w-5 shrink-0" aria-hidden="true" />}
-          <span>Войти через Telegram</span>
+          <span>{t("login_telegram")}</span>
         </button>
       )}
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Phone, Shield } from "lucide-react";
 import {
   initTelegramLink,
@@ -24,6 +25,7 @@ interface Props {
 }
 
 export function AddPhoneModal({ open, onClose, onDone }: Props) {
+  const t = useTranslations("auth.add_phone");
   const user = useAuth((s) => s.user);
   const setSession = useAuth((s) => s.setSession);
 
@@ -74,12 +76,12 @@ export function AddPhoneModal({ open, onClose, onDone }: Props) {
           setStep("otp");
         } else if (status === "expired") {
           stopPoll();
-          setError("Время вышло. Попробуйте снова.");
+          setError(t("err_timeout"));
           setStep("phone");
         }
       } catch {
         stopPoll();
-        setError("Ошибка соединения. Попробуйте снова.");
+        setError(t("err_connection"));
         setStep("phone");
       }
     }, 2000);
@@ -134,48 +136,46 @@ export function AddPhoneModal({ open, onClose, onDone }: Props) {
   };
 
   const title =
-    step === "phone" ? "Добавьте номер телефона" :
-    step === "tg-waiting" ? "Откройте Telegram" :
-    "Введите код подтверждения";
+    step === "phone" ? t("title_phone") :
+    step === "tg-waiting" ? t("title_tg_waiting") :
+    t("title_otp");
 
   return (
     <Modal open={open} onOpenChange={(o) => { if (!o) onClose(); }}>
       <ModalContent>
         <ModalHeader>
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-50">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-100 text-brand-600 dark:bg-brand-500/15 dark:text-brand-300">
               {step === "otp" ? (
-                <Shield className="h-5 w-5 text-brand-700" aria-hidden />
+                <Shield className="h-5 w-5" aria-hidden />
               ) : (
-                <Phone className="h-5 w-5 text-brand-700" aria-hidden />
+                <Phone className="h-5 w-5" aria-hidden />
               )}
             </div>
-            <ModalTitle>{title}</ModalTitle>
+            <ModalTitle className="font-disp">{title}</ModalTitle>
           </div>
         </ModalHeader>
 
         {error && (
-          <div className="mb-4 rounded-xl bg-coral-50 px-3 py-2 text-[13px] font-semibold text-coral-700">
+          <div className="mb-4 rounded-xl bg-danger-50 px-3 py-2 text-[13px] font-700 text-danger-600 dark:bg-danger-500/10 dark:text-danger-400">
             {error}
           </div>
         )}
 
         {step === "phone" && (
           <div className="space-y-4">
-            <p className="text-[13px] font-semibold text-ink-500">
-              {user?.telegramLinked
-                ? "Код подтверждения придёт через Telegram-бот"
-                : "Код подтверждения придёт по SMS"}
+            <p className="text-[13px] font-700 text-ink-500 dark:text-ink-400">
+              {user?.telegramLinked ? t("hint_linked") : t("hint_default")}
             </p>
             <PhoneInput value={phone} onValueChange={setPhone} autoFocus />
             <Button
-              variant="submit"
+              variant="cta"
               size="lg"
               className="w-full"
               disabled={phone.length < 12 || loading}
               onClick={handlePhoneSubmit}
             >
-              {loading ? <Spinner size={16} /> : "Получить код"}
+              {loading ? <Spinner size={16} /> : t("get_code")}
             </Button>
           </div>
         )}
@@ -184,33 +184,33 @@ export function AddPhoneModal({ open, onClose, onDone }: Props) {
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-3 rounded-xl bg-[#0088cc]/10 px-4 py-3">
               <Spinner size={16} className="shrink-0 text-[#0088cc]" />
-              <p className="text-[13px] font-semibold text-ink-800">
-                Ожидаем подтверждения в Telegram...
+              <p className="text-[13px] font-700 text-ink-800 dark:text-ink-200">
+                {t("waiting")}
               </p>
             </div>
             <a
               href={deepLink}
               target="_blank"
               rel="noreferrer"
-              className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#0088cc] text-[15px] font-bold text-white hover:bg-[#0088cc]/90"
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#0088cc] text-[15px] font-800 text-white hover:bg-[#0088cc]/90"
             >
-              Открыть Telegram
+              {t("open_telegram")}
             </a>
             <button
               type="button"
               onClick={() => { stopPoll(); setStep("phone"); }}
-              className="text-center text-[13px] font-semibold text-ink-500 hover:text-ink-700"
+              className="text-center text-[13px] font-700 text-ink-500 hover:text-ink-700 dark:text-ink-400 dark:hover:text-ink-200"
             >
-              ← Изменить номер
+              {t("change_number")}
             </button>
           </div>
         )}
 
         {step === "otp" && (
           <div className="space-y-4">
-            <p className="text-[13px] font-semibold text-ink-500">
-              Код отправлен на{" "}
-              <span className="font-bold text-ink-900">{phone}</span>
+            <p className="text-[13px] font-700 text-ink-500 dark:text-ink-400">
+              {t("otp_sent_to")}{" "}
+              <span className="font-800 text-ink-900 dark:text-white">{phone}</span>
             </p>
             <input
               type="text"
@@ -220,23 +220,23 @@ export function AddPhoneModal({ open, onClose, onDone }: Props) {
               onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
               onKeyDown={(e) => e.key === "Enter" && handleOtpSubmit()}
               placeholder="— — — — — —"
-              className="w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 py-3 text-center text-[22px] font-extrabold tracking-[0.3em] text-ink-900 outline-none focus:border-brand-500"
+              className="w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 py-3 text-center text-[22px] font-900 tracking-[0.3em] text-ink-900 outline-none focus:border-brand-500 dark:border-ink-700 dark:bg-ink-800 dark:text-white"
             />
             <Button
-              variant="submit"
+              variant="cta"
               size="lg"
               className="w-full"
               disabled={otp.length < 6 || loading}
               onClick={handleOtpSubmit}
             >
-              {loading ? <Spinner size={16} /> : "Подтвердить"}
+              {loading ? <Spinner size={16} /> : t("confirm")}
             </Button>
             <button
               type="button"
               onClick={() => { setStep("phone"); setOtp(""); setError(null); }}
-              className="w-full text-center text-[13px] font-semibold text-ink-500 hover:text-ink-700"
+              className="w-full text-center text-[13px] font-700 text-ink-500 hover:text-ink-700 dark:text-ink-400 dark:hover:text-ink-200"
             >
-              ← Изменить номер
+              {t("change_number")}
             </button>
           </div>
         )}

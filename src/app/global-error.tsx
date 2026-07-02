@@ -42,19 +42,19 @@ export default function GlobalError({
 
   return (
     <html>
-      <body className="flex min-h-screen flex-col items-center justify-center bg-white px-5 py-12 text-center font-sans">
-        <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-red-50">
-          <AlertTriangle className="h-8 w-8 text-red-500" aria-hidden="true" />
+      <body className="flex min-h-screen flex-col items-center justify-center bg-ink-50 px-5 py-12 text-center font-sans">
+        <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-danger-100 text-danger-600">
+          <AlertTriangle className="h-8 w-8" aria-hidden="true" />
         </div>
-        <h1 className="text-[22px] font-extrabold text-ink-900">{msg.title}</h1>
-        <p className="mt-2 max-w-sm text-[14px] text-ink-500">{msg.desc}</p>
+        <h1 className="font-disp text-[22px] font-900 text-ink-900">{msg.title}</h1>
+        <p className="mt-2 max-w-sm text-[14px] font-600 text-ink-500">{msg.desc}</p>
         {error.digest && (
           <p className="mt-1 font-mono text-[11px] text-ink-400">{msg.code}{error.digest}</p>
         )}
         <button
           type="button"
           onClick={reset}
-          className="mt-6 flex items-center gap-2 rounded-2xl bg-brand-600 px-6 py-2.5 text-[14px] font-bold text-white hover:bg-brand-700"
+          className="mt-6 flex h-12 items-center gap-2 rounded-2xl bg-brand-600 px-6 text-[14px] font-900 text-white shadow-brandcta transition-colors hover:bg-brand-700"
         >
           <RefreshCw className="h-4 w-4" aria-hidden="true" />
           {msg.retry}
