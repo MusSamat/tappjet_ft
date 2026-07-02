@@ -874,7 +874,13 @@
     "status_rejected": "Четке кагылды",
     "status_cancelled": "Жокко чыгарылды",
     "status_no_show": "Келген жок",
-    "status_expired": "Мөөнөтү бүттү"
+    "status_expired": "Мөөнөтү бүттү",
+    "hub_title": "Билдирүүлөр",
+    "hub_empty_hint": "Чат сапар брондолгондон кийин ачылат",
+    "hub_placeholder_title": "Чат тандаңыз",
+    "hub_placeholder_body": "Жолугушуу жери жана сапар тууралуу сүйлөшүңүз.",
+    "booking_confirmed": "бронь ырасталды",
+    "call": "Чалуу"
   },
   "password_form": {
     "min_length": "Минимум 8 белги",
