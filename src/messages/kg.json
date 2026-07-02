@@ -249,6 +249,8 @@
       "otp_sent": "Telegram аркылуу код жиберилди",
       "otp_reset_sent": "Купуя сөздү калыбына келтирүү коду Telegram аркылуу жиберилди",
       "otp_telegram_hint": "Telegramdan @tappjet_bot ачып, кодду киргизиңиз.",
+      "otp_dm_hint": "Код @tappjet_bot менен чатка келет.",
+      "otp_open_bot": "Telegram'да ботту ачуу",
       "otp_reset_hint": "Тастыктагандан кийин жаңы купуя сөз коё аласыз.",
       "otp_label": "Тастыктоо коду",
       "otp_digit": "{n} сан",

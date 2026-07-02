@@ -37,6 +37,7 @@ export default function LoginPage() {
   const fe = useFriendlyError();
   const router = useRouter();
   const setSession = useAuth((s) => s.setSession);
+  const status = useAuth((s) => s.status);
 
   const [step, setStep] = useState<Step>("login");
   const [phone, setPhone] = useState("");
@@ -46,6 +47,8 @@ export default function LoginPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [otp, setOtp] = useState("");
+  const [otpChannel, setOtpChannel] = useState<"dm" | "deeplink">("dm");
+  const [deepLink, setDeepLink] = useState("");
   const [serverError, setServerError] = useState<string | null>(null);
   const [resendSeconds, setResendSeconds] = useState(0);
 
@@ -63,6 +66,15 @@ export default function LoginPage() {
     return () => clearInterval(t);
   }, [resendSeconds]);
 
+  // Already authenticated (e.g. Telegram Mini App silent login) → no OTP needed.
+  // Only fires on the untouched login step, never mid password-reset flow.
+  useEffect(() => {
+    if (status === "authenticated" && step === "login") {
+      const intent = consumeDeferredAction();
+      router.replace(intent ? routeForIntent(intent) : "/");
+    }
+  }, [status, step, router]);
+
   // ── Login with password ────────────────────────────────────────────────
   const loginMutation = useMutation({
     mutationFn: () => loginWithPassword(phone, password),
@@ -77,10 +89,12 @@ export default function LoginPage() {
   // ── Forgot password: initTelegramLink works for ALL users ─────────────
   const forgotMutation = useMutation({
     mutationFn: () => initTelegramLink(phone),
-    onSuccess: ({ deepLink }) => {
+    onSuccess: ({ deepLink: dl }) => {
       setServerError(null);
+      setOtpChannel("deeplink");
+      setDeepLink(dl);
       // Opening the deep-link triggers the bot's /start → auto-sends the OTP.
-      window.open(deepLink, "_blank", "noopener,noreferrer");
+      window.open(dl, "_blank", "noopener,noreferrer");
       setResendSeconds(60);
       setOtp("");
       setStep("otp");
@@ -95,6 +109,7 @@ export default function LoginPage() {
     mutationFn: () => sendTelegramOtp(phone),
     onSuccess: () => {
       setServerError(null);
+      setOtpChannel("dm");
       setResendSeconds(60);
       setOtp("");
       setStep("otp");
@@ -262,6 +277,8 @@ export default function LoginPage() {
             verifyMutation={verifyMutation}
             sendMutation={forgotMutation}
             resendSeconds={resendSeconds}
+            channel={otpChannel}
+            deepLink={deepLink}
             onChange={(code) => { setOtp(code); setServerError(null); }}
             onComplete={() => verifyMutation.mutate()}
             onBack={() => { setStep("login"); setOtp(""); otpRef.current?.clear(); setServerError(null); }}

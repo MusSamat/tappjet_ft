@@ -249,6 +249,8 @@
       "otp_sent": "Код отправлен в Telegram",
       "otp_reset_sent": "Код для сброса пароля отправлен в Telegram",
       "otp_telegram_hint": "Откройте @tappjet_bot в Telegram и введите код.",
+      "otp_dm_hint": "Код придёт в чат с @tappjet_bot.",
+      "otp_open_bot": "Открыть бот в Telegram",
       "otp_reset_hint": "После подтверждения вы сможете установить новый пароль.",
       "otp_label": "Код подтверждения",
       "otp_digit": "Цифра {n}",

@@ -38,7 +38,7 @@ import { MyRequestsTab } from "./_components/my-requests-tab";
 
 type Tab = "active" | "my_requests" | "history" | "liked" | "trips" | "requests";
 
-const PASSENGER_TABS: Tab[] = ["active", "my_requests", "history", "liked"];
+const PASSENGER_TABS: Tab[] = ["active", "my_requests", "liked", "history"];
 const DRIVER_TABS: Tab[] = ["trips", "requests", "liked"];
 
 type BookingExt = Booking & {
@@ -206,8 +206,8 @@ export default function MyBookingsPage() {
     : [
         { value: "active" as Tab, label: tMy("tab_active") },
         { value: "my_requests" as Tab, label: tMy("tab_my_requests") },
-        { value: "history" as Tab, label: tMy("tab_history") },
         { value: "liked" as Tab, label: tMy("tab_liked") },
+        { value: "history" as Tab, label: tMy("tab_history") },
       ];
 
   return (

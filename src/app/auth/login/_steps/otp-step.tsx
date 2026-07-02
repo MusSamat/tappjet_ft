@@ -11,6 +11,10 @@ interface Props {
   verifyMutation: { isPending: boolean; mutate: () => void };
   sendMutation: { isPending: boolean };
   resendSeconds: number;
+  /** How the code was delivered: DM straight to Telegram vs deep-link "Start". */
+  channel: "dm" | "deeplink";
+  /** Bot deep-link — offered as a manual fallback when the popup was blocked. */
+  deepLink: string;
   onChange: (code: string) => void;
   onComplete: () => void;
   onBack: () => void;
@@ -19,7 +23,7 @@ interface Props {
 
 export function OtpStep({
   tl, displayPhone, otp, otpRef, serverError, verifyMutation,
-  sendMutation, resendSeconds, onChange, onComplete, onBack, onResend,
+  sendMutation, resendSeconds, channel, deepLink, onChange, onComplete, onBack, onResend,
 }: Props) {
   return (
     <>
@@ -28,9 +32,22 @@ export function OtpStep({
       </div>
       <div className="mb-2 text-center">
         <p className="text-[17px] font-700 text-ink-600 dark:text-ink-300">{tl("otp_reset_sent")}</p>
-        <p className="mt-1 text-[13px] font-600 text-brand-700 dark:text-brand-300">{tl("otp_telegram_hint")}</p>
+        <p className="mt-1 text-[13px] font-600 text-brand-700 dark:text-brand-300">
+          {channel === "deeplink" ? tl("otp_telegram_hint") : tl("otp_dm_hint")}
+        </p>
         <p className="mt-1 text-[17px] font-700 text-ink-900 dark:text-white">+996 {displayPhone}</p>
       </div>
+
+      {channel === "deeplink" && deepLink && (
+        <a
+          href={deepLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mb-3 block text-center text-[13px] font-800 text-brand-700 dark:text-brand-300"
+        >
+          {tl("otp_open_bot")}
+        </a>
+      )}
 
       <p className="mb-4 text-center text-[12px] font-600 text-accent-700">{tl("otp_reset_hint")}</p>
 
