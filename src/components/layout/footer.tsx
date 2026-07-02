@@ -3,88 +3,135 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { Send, MapPin } from "lucide-react";
+import { LogoMark, Wordmark, LocaleSwitcher } from "@/components/ui";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { cn } from "@/lib/utils/cn";
 
 export function Footer() {
   const t = useTranslations("footer");
   const pathname = usePathname();
   const year = new Date().getFullYear();
 
-  const LINKS = {
-    product: [
-      { href: "/trips",           label: t("find_trip") },
-      { href: "/trips/create",    label: t("publish_trip") },
-      { href: "/profile/driver",  label: t("become_driver") },
-    ],
-    company: [
-      { href: "/about",    label: t("about") },
-      { href: "/privacy",  label: t("privacy") },
-      { href: "/terms",    label: t("terms") },
-    ],
-    support: [
-      { href: "https://t.me/tappjet_support", label: t("telegram_support"), external: true },
-      { href: "/complaint", label: t("complaint") },
-    ],
-  };
+  // App-like / chromeless areas never show the marketing footer.
+  const hidden =
+    pathname.includes("/chat") ||
+    pathname.startsWith("/admin") ||
+    pathname.startsWith("/auth") ||
+    pathname.startsWith("/onboarding");
+  if (hidden) return null;
 
-  if (pathname.startsWith("/trips")) return null;
-  if (pathname.includes("/chat")) return null;
+  // Mobile has a floating bottom-nav as its chrome, so the footer is desktop-only
+  // there — except on the home/landing page, where it reads as marketing content.
+  const desktopOnly = pathname !== "/";
+
+  const COLUMNS = [
+    {
+      title: t("product"),
+      items: [
+        { href: "/trips", label: t("find_trip") },
+        { href: "/trips/create", label: t("publish_trip") },
+        { href: "/profile/driver", label: t("become_driver") },
+      ],
+    },
+    {
+      title: t("company"),
+      items: [
+        { href: "/about", label: t("about") },
+        { href: "/privacy", label: t("privacy") },
+        { href: "/terms", label: t("terms") },
+      ],
+    },
+    {
+      title: t("support"),
+      items: [
+        { href: "https://t.me/tappjet_support", label: t("telegram_support"), external: true },
+        { href: "/complaint", label: t("complaint") },
+      ],
+    },
+  ];
 
   return (
-    <footer className="border-t border-ink-100 bg-white">
-      <div className="container grid grid-cols-2 gap-8 py-10 md:grid-cols-4">
-        <div className="col-span-2 md:col-span-1">
-          <Link href="/" className="text-h2 font-extrabold text-brand-600">
-            Tappjet
-          </Link>
-          <p className="mt-2 text-caption text-ink-500">
-            {t("tagline")}
-          </p>
-        </div>
+    <footer
+      className={cn(
+        "border-t border-ink-100 bg-white dark:border-ink-800 dark:bg-ink-950",
+        // clear the floating bottom-nav when shown on mobile (home only)
+        "pb-[calc(88px+env(safe-area-inset-bottom))] md:pb-0",
+        desktopOnly && "hidden md:block",
+      )}
+    >
+      <div className="container py-10 md:py-12">
+        <div className="grid grid-cols-2 gap-8 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+          {/* Brand */}
+          <div className="col-span-2 md:col-span-1">
+            <Link href="/" className="flex items-center gap-2">
+              <LogoMark className="h-8 w-8" />
+              <Wordmark className="text-[16px]" />
+            </Link>
+            <p className="mt-3 max-w-[240px] text-[13px] font-500 leading-relaxed text-ink-500 dark:text-ink-400">
+              {t("tagline")}
+            </p>
+            <a
+              href="https://t.me/tappjet_support"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 inline-flex items-center gap-2 rounded-full bg-brand-50 px-3.5 py-2 text-[12px] font-800 text-brand-700 transition-colors hover:bg-brand-100 dark:bg-brand-500/15 dark:text-brand-300 dark:hover:bg-brand-500/25"
+            >
+              <Send className="h-3.5 w-3.5" aria-hidden="true" />
+              {t("telegram_support")}
+            </a>
+          </div>
 
-        <FooterColumn title={t("product")} items={LINKS.product} />
-        <FooterColumn title={t("company")} items={LINKS.company} />
-        <FooterColumn title={t("support")} items={LINKS.support} />
+          {COLUMNS.map((col) => (
+            <nav key={col.title} aria-label={col.title}>
+              <h3 className="text-[11px] font-800 uppercase tracking-wider text-ink-400">
+                {col.title}
+              </h3>
+              <ul className="mt-3 flex flex-col gap-2.5">
+                {col.items.map((item) => (
+                  <li key={item.href}>
+                    {item.external ? (
+                      <a
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[13px] font-600 text-ink-600 transition-colors hover:text-brand-700 dark:text-ink-300 dark:hover:text-brand-300"
+                      >
+                        {item.label}
+                      </a>
+                    ) : (
+                      <Link
+                        href={item.href}
+                        className="text-[13px] font-600 text-ink-600 transition-colors hover:text-brand-700 dark:text-ink-300 dark:hover:text-brand-300"
+                      >
+                        {item.label}
+                      </Link>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          ))}
+        </div>
       </div>
-      <div className="border-t border-ink-100">
-        <div className="container flex flex-col items-start justify-between gap-2 py-4 text-caption text-ink-500 md:flex-row md:items-center">
-          <span>© {year} Tappjet</span>
-          <span>{t("made_in")}</span>
+
+      {/* Bottom bar */}
+      <div className="border-t border-ink-100 dark:border-ink-800">
+        <div className="container flex flex-col items-center gap-3 py-5 md:flex-row md:justify-between">
+          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[12px] font-600 text-ink-400">
+            <span>© {year} Tappjet</span>
+            <span className="hidden md:inline text-ink-300 dark:text-ink-700">·</span>
+            <span className="inline-flex items-center gap-1">
+              <MapPin className="h-3 w-3" aria-hidden="true" />
+              {t("made_in")}
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <LocaleSwitcher />
+            <ThemeToggle />
+          </div>
         </div>
       </div>
     </footer>
-  );
-}
-
-function FooterColumn({
-  title,
-  items,
-}: {
-  title: string;
-  items: Array<{ href: string; label: string; external?: boolean }>;
-}) {
-  return (
-    <div>
-      <h3 className="text-caption font-bold uppercase tracking-wider text-ink-500">{title}</h3>
-      <ul className="mt-3 flex flex-col gap-2">
-        {items.map((item) => (
-          <li key={item.href}>
-            {item.external ? (
-              <a
-                href={item.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-body text-ink-700 hover:text-brand-700"
-              >
-                {item.label}
-              </a>
-            ) : (
-              <Link href={item.href} className="text-body text-ink-700 hover:text-brand-700">
-                {item.label}
-              </Link>
-            )}
-          </li>
-        ))}
-      </ul>
-    </div>
   );
 }
