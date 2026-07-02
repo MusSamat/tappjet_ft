@@ -38,29 +38,79 @@ describe("Button", () => {
     expect(onClick).not.toHaveBeenCalled();
   });
 
-  it("applies submit variant class (amber)", () => {
-    render(<Button variant="submit">x</Button>);
-    expect(screen.getByRole("button")).toHaveClass("bg-amber-500");
+  describe("variants", () => {
+    it("brand is the default variant (teal)", () => {
+      render(<Button>x</Button>);
+      expect(screen.getByRole("button")).toHaveClass("bg-brand-600");
+    });
+
+    it.each([
+      ["cta", "bg-accent-500"],
+      ["brand", "bg-brand-600"],
+      ["grape", "bg-grape-500"],
+      ["ghost", "bg-ink-100"],
+      ["textGhost", "bg-transparent"],
+      ["invert", "bg-ink-900"],
+      ["dangerSoft", "bg-danger-50"],
+      ["lock", "bg-ink-100"],
+    ] as const)("%s variant applies %s", (variant, cls) => {
+      render(<Button variant={variant}>x</Button>);
+      expect(screen.getByRole("button")).toHaveClass(cls);
+    });
+
+    it("outline variant applies border classes", () => {
+      render(<Button variant="outline">x</Button>);
+      expect(screen.getByRole("button")).toHaveClass("border-2", "border-ink-200");
+    });
   });
 
-  it("applies primary variant class (teal) by default", () => {
-    render(<Button>x</Button>);
-    expect(screen.getByRole("button")).toHaveClass("bg-teal-600");
+  describe("deprecated aliases", () => {
+    it("submit aliases cta (amber)", () => {
+      render(<Button variant="submit">x</Button>);
+      expect(screen.getByRole("button")).toHaveClass("bg-accent-500");
+    });
+
+    it("primary aliases brand (teal)", () => {
+      render(<Button variant="primary">x</Button>);
+      expect(screen.getByRole("button")).toHaveClass("bg-brand-600");
+    });
+
+    it("secondary stays brand-tinted", () => {
+      render(<Button variant="secondary">x</Button>);
+      expect(screen.getByRole("button")).toHaveClass("bg-brand-50");
+    });
+
+    it("danger stays solid destructive", () => {
+      render(<Button variant="danger">x</Button>);
+      expect(screen.getByRole("button")).toHaveClass("bg-danger-500");
+    });
+
+    it("pill variant is rounded-full", () => {
+      render(<Button variant="pill">x</Button>);
+      expect(screen.getByRole("button")).toHaveClass("rounded-full", "bg-accent-500");
+    });
   });
 
-  it("applies danger variant class", () => {
-    render(<Button variant="danger">x</Button>);
-    expect(screen.getByRole("button")).toHaveClass("bg-red-50");
+  describe("sizes", () => {
+    it("applies sm size class", () => {
+      render(<Button size="sm">x</Button>);
+      expect(screen.getByRole("button")).toHaveClass("h-9");
+    });
+
+    it("applies lg size class", () => {
+      render(<Button size="lg">x</Button>);
+      expect(screen.getByRole("button")).toHaveClass("h-12");
+    });
+
+    it("applies xl size class", () => {
+      render(<Button size="xl">x</Button>);
+      expect(screen.getByRole("button")).toHaveClass("h-14");
+    });
   });
 
-  it("applies sm size class", () => {
-    render(<Button size="sm">x</Button>);
-    expect(screen.getByRole("button")).toHaveClass("h-9");
-  });
-
-  it("applies lg size class", () => {
-    render(<Button size="lg">x</Button>);
-    expect(screen.getByRole("button")).toHaveClass("h-[52px]");
+  it("pill prop makes any variant rounded-full", () => {
+    render(<Button variant="brand" pill>x</Button>);
+    expect(screen.getByRole("button")).toHaveClass("rounded-full");
   });
 
   it("merges custom className", () => {

@@ -2,7 +2,22 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { AddPhoneModal } from "@/components/features/auth/add-phone-modal";
 import { useAuth } from "@/store/auth";
-import { sendOtp, confirmPhoneAdd } from "@/lib/api/auth";
+import { sendOtp, sendPhoneOtpTelegram, confirmPhoneAdd } from "@/lib/api/auth";
+import ru from "@/messages/ru.json";
+
+const t = ru.auth.add_phone;
+
+vi.mock("next-intl", async () => {
+  const messages = (await import("@/messages/ru.json")).default as Record<string, unknown>;
+  const resolve = (path: string): unknown =>
+    path.split(".").reduce<unknown>((acc, part) => (acc as Record<string, unknown>)?.[part], messages);
+  return {
+    useTranslations: (ns: string) => (key: string) => {
+      const v = resolve(`${ns}.${key}`);
+      return typeof v === "string" ? v : `${ns}.${key}`;
+    },
+  };
+});
 
 vi.mock("@/store/auth", () => ({
   useAuth: vi.fn(),
@@ -12,6 +27,7 @@ vi.mock("@/lib/api/auth", () => ({
   initTelegramLink: vi.fn(),
   getTelegramLinkStatus: vi.fn(),
   sendOtp: vi.fn(),
+  sendPhoneOtpTelegram: vi.fn(),
   confirmPhoneAdd: vi.fn(),
 }));
 
@@ -19,13 +35,12 @@ vi.mock("@/lib/api/client", () => ({
   extractError: vi.fn((e: unknown) => e),
 }));
 
-vi.mock("@/lib/utils/api-error", () => ({
-  friendlyError: vi.fn((e: unknown) => String((e as any)?.message ?? e)),
+vi.mock("@/lib/hooks/use-api-error", () => ({
+  useFriendlyError: () => (e: unknown) => String((e as any)?.message ?? e),
 }));
 
 const setSession = vi.fn();
 
-// Non-telegram user → SMS-OTP path (the branch that lost coverage in BookButton).
 function mockAuth(telegramLinked = false) {
   const store = { user: { id: "user-1", telegramLinked }, setSession };
   vi.mocked(useAuth).mockImplementation((selector: any) => selector(store));
@@ -35,14 +50,15 @@ async function fillPhoneAndRequestCode() {
   fireEvent.change(screen.getByPlaceholderText("XXX XX XX XX"), {
     target: { value: "700000000" },
   });
-  fireEvent.click(screen.getByText("Получить код"));
-  await waitFor(() => screen.getByText("Введите код подтверждения"));
+  fireEvent.click(screen.getByText(t.get_code));
+  await waitFor(() => screen.getByText(t.title_otp));
 }
 
 beforeEach(() => {
   vi.clearAllMocks();
   mockAuth(false);
   vi.mocked(sendOtp).mockResolvedValue({ expiresInSec: 120 } as any);
+  vi.mocked(sendPhoneOtpTelegram).mockResolvedValue({ expiresInSec: 120 } as any);
   vi.mocked(confirmPhoneAdd).mockResolvedValue({
     accessToken: "tok",
     user: { id: "user-1" },
@@ -52,13 +68,33 @@ beforeEach(() => {
 describe("AddPhoneModal", () => {
   it("renders the phone step when open", () => {
     render(<AddPhoneModal open onClose={vi.fn()} />);
-    expect(screen.getByText("Добавьте номер телефона")).toBeInTheDocument();
+    expect(screen.getByText(t.title_phone)).toBeInTheDocument();
   });
 
-  it("sends OTP and advances to the code step", async () => {
+  it("shows the default Telegram hint for a non-linked user", () => {
+    render(<AddPhoneModal open onClose={vi.fn()} />);
+    expect(screen.getByText(t.hint_default)).toBeInTheDocument();
+  });
+
+  it("shows the linked-bot hint for a Telegram-linked user", () => {
+    mockAuth(true);
+    render(<AddPhoneModal open onClose={vi.fn()} />);
+    expect(screen.getByText(t.hint_linked)).toBeInTheDocument();
+  });
+
+  it("sends OTP via SMS path and advances to the code step (non-linked user)", async () => {
     render(<AddPhoneModal open onClose={vi.fn()} />);
     await fillPhoneAndRequestCode();
     expect(vi.mocked(sendOtp)).toHaveBeenCalledWith("+996700000000");
+    expect(vi.mocked(sendPhoneOtpTelegram)).not.toHaveBeenCalled();
+  });
+
+  it("prefers the Telegram DM path for a linked user", async () => {
+    mockAuth(true);
+    render(<AddPhoneModal open onClose={vi.fn()} />);
+    await fillPhoneAndRequestCode();
+    expect(vi.mocked(sendPhoneOtpTelegram)).toHaveBeenCalledWith("+996700000000");
+    expect(vi.mocked(sendOtp)).not.toHaveBeenCalled();
   });
 
   it("keeps Подтвердить disabled below 6 digits and enables it at 6", async () => {
@@ -66,9 +102,9 @@ describe("AddPhoneModal", () => {
     await fillPhoneAndRequestCode();
     const otp = screen.getByPlaceholderText("— — — — — —");
     fireEvent.change(otp, { target: { value: "1234" } });
-    expect(screen.getByText("Подтвердить").closest("button")).toBeDisabled();
+    expect(screen.getByText(t.confirm).closest("button")).toBeDisabled();
     fireEvent.change(otp, { target: { value: "123456" } });
-    expect(screen.getByText("Подтвердить").closest("button")).not.toBeDisabled();
+    expect(screen.getByText(t.confirm).closest("button")).not.toBeDisabled();
   });
 
   it("confirms the code, updates the session and fires onDone/onClose", async () => {
@@ -79,7 +115,7 @@ describe("AddPhoneModal", () => {
     fireEvent.change(screen.getByPlaceholderText("— — — — — —"), {
       target: { value: "123456" },
     });
-    fireEvent.click(screen.getByText("Подтвердить"));
+    fireEvent.click(screen.getByText(t.confirm));
     await waitFor(() => {
       expect(vi.mocked(confirmPhoneAdd)).toHaveBeenCalledWith("+996700000000", "123456");
       expect(setSession).toHaveBeenCalledWith({ accessToken: "tok", user: { id: "user-1" } });
@@ -94,7 +130,7 @@ describe("AddPhoneModal", () => {
     fireEvent.change(screen.getByPlaceholderText("XXX XX XX XX"), {
       target: { value: "700000000" },
     });
-    fireEvent.click(screen.getByText("Получить код"));
+    fireEvent.click(screen.getByText(t.get_code));
     await waitFor(() => {
       expect(screen.getByText("Слишком много запросов")).toBeInTheDocument();
     });

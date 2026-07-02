@@ -50,12 +50,12 @@ describe("LikeButton", () => {
 
   it("renders filled icon when liked", () => {
     const { container } = render(<LikeButton targetType="trip" id="t1" liked />, { wrapper });
-    expect(container.querySelector("svg")).toHaveClass("fill-rose-500");
+    expect(container.querySelector("svg")).toHaveClass("fill-coral-500");
   });
 
   it("renders outline icon when not liked", () => {
     const { container } = render(<LikeButton targetType="trip" id="t1" liked={false} />, { wrapper });
-    expect(container.querySelector("svg")).not.toHaveClass("fill-rose-500");
+    expect(container.querySelector("svg")).not.toHaveClass("fill-coral-500");
   });
 
   it("toggles aria-pressed and calls likeTrip on click when not liked", async () => {

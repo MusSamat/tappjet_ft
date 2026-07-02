@@ -1,6 +1,22 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { Badge, VerifiedBadge, PendingBadge, SeatsBadge } from "@/components/ui/badge";
+
+vi.mock("next-intl", async () => {
+  const messages = (await import("@/messages/ru.json")).default as unknown as Record<
+    string,
+    Record<string, string>
+  >;
+  return {
+    useTranslations:
+      (ns: string) =>
+      (key: string, params?: Record<string, unknown>): string => {
+        let s = messages[ns]?.[key] ?? `${ns}.${key}`;
+        for (const [k, v] of Object.entries(params ?? {})) s = s.replace(`{${k}}`, String(v));
+        return s;
+      },
+  };
+});
 
 describe("Badge", () => {
   it("renders children", () => {
@@ -14,19 +30,19 @@ describe("Badge", () => {
     expect(screen.getByText("Label")).toBeInTheDocument();
   });
 
-  it("applies danger variant classes", () => {
+  it("applies danger variant classes (coral tokens)", () => {
     const { container } = render(<Badge variant="danger">Error</Badge>);
-    expect(container.firstChild).toHaveClass("bg-red-100");
+    expect(container.firstChild).toHaveClass("bg-coral-100", "text-coral-600");
   });
 
-  it("applies success variant classes", () => {
+  it("applies success variant classes (brand tokens)", () => {
     const { container } = render(<Badge variant="success">OK</Badge>);
-    expect(container.firstChild).toHaveClass("bg-teal-100");
+    expect(container.firstChild).toHaveClass("bg-brand-50", "text-brand-700");
   });
 
-  it("applies neutral variant by default", () => {
+  it("applies neutral variant by default (ink tokens)", () => {
     const { container } = render(<Badge>Neutral</Badge>);
-    expect(container.firstChild).toHaveClass("bg-gray-100");
+    expect(container.firstChild).toHaveClass("bg-ink-100", "text-ink-600");
   });
 
   it("merges custom className", () => {
@@ -41,9 +57,9 @@ describe("VerifiedBadge", () => {
     expect(screen.getByText("Верифицирован")).toBeInTheDocument();
   });
 
-  it("uses verified (teal) variant", () => {
+  it("uses verified (brand) variant", () => {
     const { container } = render(<VerifiedBadge />);
-    expect(container.firstChild).toHaveClass("bg-teal-100");
+    expect(container.firstChild).toHaveClass("bg-brand-50", "text-brand-700");
   });
 });
 
@@ -53,9 +69,9 @@ describe("PendingBadge", () => {
     expect(screen.getByText("Ожидание")).toBeInTheDocument();
   });
 
-  it("uses pending (amber) variant", () => {
+  it("uses pending (accent) variant", () => {
     const { container } = render(<PendingBadge />);
-    expect(container.firstChild).toHaveClass("bg-amber-100");
+    expect(container.firstChild).toHaveClass("bg-accent-100", "text-accent-700");
   });
 });
 
@@ -68,5 +84,10 @@ describe("SeatsBadge", () => {
   it("renders zero available", () => {
     render(<SeatsBadge available={0} total={4} />);
     expect(screen.getByText(/0 из 4/)).toBeInTheDocument();
+  });
+
+  it("uses seats (ink) variant", () => {
+    const { container } = render(<SeatsBadge available={2} total={4} />);
+    expect(container.firstChild).toHaveClass("bg-ink-100", "text-ink-600");
   });
 });

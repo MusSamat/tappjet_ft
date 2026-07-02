@@ -35,9 +35,11 @@ describe("PasswordInput", () => {
     expect(screen.getByRole("button", { name: "Скрыть пароль" })).toBeInTheDocument();
   });
 
-  it("invalid=true applies error border class", () => {
+  it("invalid=true marks the input invalid and applies the error ring", () => {
     const { container } = render(<PasswordInput invalid={true} />);
-    expect(container.firstChild).toHaveClass("border-error");
+    const input = document.querySelector("input") as HTMLInputElement;
+    expect(input).toHaveAttribute("aria-invalid", "true");
+    expect(container.firstChild).toHaveClass("ring-danger-400");
   });
 
   it("forwards ref to the input element", () => {

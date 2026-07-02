@@ -70,10 +70,11 @@ describe("PhoneInput", () => {
     expect(screen.getByText("Введите номер")).toBeInTheDocument();
   });
 
-  it("hint has error color when invalid", () => {
+  it("hint has error color and input is marked invalid when invalid", () => {
     render(<PhoneInput hint="Неверный номер" invalid />);
     const hint = screen.getByText("Неверный номер");
-    expect(hint).toHaveClass("text-error");
+    expect(hint).toHaveClass("text-danger-500");
+    expect(screen.getByPlaceholderText("XXX XX XX XX")).toHaveAttribute("aria-invalid", "true");
   });
 
   it("does not render hint when not provided", () => {
