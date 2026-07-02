@@ -11,7 +11,7 @@ import { Segmented } from "@/components/ui/segmented";
 import { SearchFilters } from "./search-filters";
 import { TripDetailPane } from "./trip-detail-pane";
 import { PopularRoutes } from "./popular-routes";
-import { TripCardSkeletonList } from "./trip-card-skeleton";
+import { CardSkeletonList } from "@/components/ui/card-skeleton";
 import { MobileRouteBar } from "./_components/mobile-route-bar";
 import { SlidersHorizontal, X, Bell, SearchX, CarFront, Hand } from "lucide-react";
 
@@ -111,7 +111,7 @@ export function SearchLayout({ params, initial }: Props) {
           />
         </div>
       ))}
-      {isFetchingNextPage && <TripCardSkeletonList count={3} />}
+      {isFetchingNextPage && <CardSkeletonList variant="trip" count={3} />}
       <div ref={sentinel} className="flex h-8 items-center justify-center">
         {!hasNextPage && trips.length > 0 && (
           <span className="text-[12px] font-semibold text-ink-400">Больше поездок нет</span>

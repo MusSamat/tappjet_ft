@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { BookingCardSkeletonList } from "@/components/features/my/card-skeletons";
+import { CardSkeletonList } from "@/components/ui/card-skeleton";
 import { SubTabBar } from "./sub-tab-bar";
 import { PassengerCard } from "./passenger-card";
 import type { Booking } from "@/lib/api/bookings";
@@ -43,7 +43,7 @@ export function PassengerTab({
   return (
     <div className="flex flex-col gap-3">
       {isLoading ? (
-        <BookingCardSkeletonList />
+        <CardSkeletonList variant="booking" count={4} />
       ) : (
         <>
           <SubTabBar

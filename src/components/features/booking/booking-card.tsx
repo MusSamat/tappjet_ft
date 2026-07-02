@@ -10,9 +10,8 @@ import {
   rejectBooking,
   type Booking,
 } from "@/lib/api/bookings";
-import { Button, DriverAvatar } from "@/components/ui";
+import { Button, DriverAvatar, StatusBadge } from "@/components/ui";
 import { formatDepartureLabel } from "@/lib/utils/date";
-import { BookingStatusDot } from "./booking-status-dot";
 
 interface BookingPerson {
   id?: string;
@@ -94,7 +93,7 @@ export function BookingCard({ booking, role }: Props) {
             <span className="truncate">{trip?.destinationCity}</span>
           </div>
         </div>
-        <BookingStatusDot status={status} />
+        {status && <StatusBadge status={status} />}
       </div>
 
       {role === "driver" && passenger && (

@@ -1,6 +1,23 @@
 {
   "common": {
+    "loading": "Жүктөлүүдө…",
     "optional": "милдеттүү эмес"
+  },
+  "status": {
+    "active": "Активдүү",
+    "open": "Ачык",
+    "accepted": "Ырасталды",
+    "pending": "Жооп күтүүдө",
+    "viewed": "Каралды",
+    "rejected": "Четке кагылды",
+    "cancelled": "Жокко чыгарылды",
+    "cancelled_by_passenger": "Жүргүнчү жокко чыгарды",
+    "cancelled_by_driver": "Айдоочу жокко чыгарды",
+    "cancelled_late": "Кеч жокко чыгарылды",
+    "no_show": "Келген жок",
+    "completed": "Аякталды",
+    "expired": "Мөөнөтү өттү",
+    "closed": "Жабык"
   },
   "nav": {
     "home": "Башкы",

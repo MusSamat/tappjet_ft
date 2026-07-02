@@ -38,7 +38,8 @@ import {
   Switch,
   Skeleton,
   Spinner,
-  StatusDot,
+  StatusBadge,
+  CardSkeleton,
   Textarea,
   TripCard,
   VerifiedBadge,
@@ -281,16 +282,40 @@ export function DesignSystemShowcase() {
         </div>
       </Section>
 
-      <Section title="Badge · StatusDot">
+      <Section title="StatusBadge">
+        <Dual>
+          <div className="flex flex-wrap gap-2">
+            <StatusBadge status="active" />
+            <StatusBadge status="open" />
+            <StatusBadge status="accepted" />
+            <StatusBadge status="pending" />
+            <StatusBadge status="viewed" />
+            <StatusBadge status="rejected" />
+            <StatusBadge status="cancelled" />
+            <StatusBadge status="no_show" />
+            <StatusBadge status="completed" />
+            <StatusBadge status="expired" />
+            <StatusBadge status="closed" />
+          </div>
+        </Dual>
+      </Section>
+
+      <Section title="Badge (legacy)">
         <VerifiedBadge />
         <PendingBadge />
         <SeatsBadge available={2} total={4} />
         <Badge variant="success">Принято</Badge>
         <Badge variant="danger">Отклонено</Badge>
-        <StatusDot status="accepted" label="Принято" />
-        <StatusDot status="pending" label="Ожидание" />
-        <StatusDot status="rejected" label="Отклонено" />
-        <StatusDot status="cancelled" label="Отменено" />
+      </Section>
+
+      <Section title="CardSkeleton">
+        <Dual>
+          <div className="space-y-2.5">
+            <CardSkeleton variant="trip" />
+            <CardSkeleton variant="request" />
+            <CardSkeleton variant="booking" />
+          </div>
+        </Dual>
       </Section>
 
       <Section title="SeatMeter">

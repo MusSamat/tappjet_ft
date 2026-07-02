@@ -1,6 +1,23 @@
 {
   "common": {
+    "loading": "Загрузка…",
     "optional": "необязательно"
+  },
+  "status": {
+    "active": "Активна",
+    "open": "Открыта",
+    "accepted": "Подтверждена",
+    "pending": "Ждёт ответа",
+    "viewed": "Просмотрена",
+    "rejected": "Отклонена",
+    "cancelled": "Отменена",
+    "cancelled_by_passenger": "Отменена пассажиром",
+    "cancelled_by_driver": "Отменена водителем",
+    "cancelled_late": "Отменена поздно",
+    "no_show": "Не явился",
+    "completed": "Завершена",
+    "expired": "Истекла",
+    "closed": "Закрыта"
   },
   "nav": {
     "home": "Главная",

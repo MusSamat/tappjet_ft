@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Plus } from "lucide-react";
-import { DriverTripCardSkeletonList } from "@/components/features/my/card-skeletons";
+import { CardSkeletonList } from "@/components/ui/card-skeleton";
 import { SubTabBar } from "./sub-tab-bar";
 import { DriverTripCard } from "./driver-trip-card";
 import type { TripListItem } from "@/lib/api/trips";
@@ -44,7 +44,7 @@ export function DriverTab({
         historyCount={historyCount}
       />
       {isLoading ? (
-        <DriverTripCardSkeletonList />
+        <CardSkeletonList variant="trip" />
       ) : displayedTrips.length === 0 ? (
         <div className="rounded-2xl border border-ink-100 bg-white p-8 text-center">
           {driverSubTab === "active" ? (

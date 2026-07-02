@@ -11,7 +11,7 @@ import { RequestCard } from "@/components/features/passenger-requests/request-ca
 import { RequestDetailPane } from "@/components/features/passenger-requests/request-detail-pane";
 import { RequestFilters } from "@/components/features/passenger-requests/request-filters";
 import { Spinner } from "@/components/ui/spinner";
-import { RequestCardSkeletonList } from "@/components/features/passenger-requests/request-card-skeleton";
+import { CardSkeletonList } from "@/components/ui/card-skeleton";
 import { CityAutocomplete } from "@/components/ui/city-autocomplete";
 
 // ── Mobile route bar (mirrors trips layout) ──────────────────────────────────
@@ -153,7 +153,7 @@ export default function RequestsPage() {
           />
         </div>
       ))}
-      {isFetchingNextPage && <RequestCardSkeletonList count={3} />}
+      {isFetchingNextPage && <CardSkeletonList variant="request" count={3} />}
       <div ref={sentinel} className="flex h-8 items-center justify-center">
         {false && <Spinner size={20} />}
         {!hasNextPage && requests.length > 5 && (
@@ -185,7 +185,7 @@ export default function RequestsPage() {
               </p>
             </div>
             {isLoading ? (
-              <RequestCardSkeletonList />
+              <CardSkeletonList variant="request" />
             ) : requests.length === 0 ? empty : list()}
           </div>
 
@@ -244,7 +244,7 @@ export default function RequestsPage() {
         {/* List */}
         <div className="mx-auto max-w-[1100px] px-4 py-4">
           {isLoading ? (
-            <RequestCardSkeletonList />
+            <CardSkeletonList variant="request" />
           ) : requests.length === 0 ? empty : list((id) => {
             setSelectedId(id);
             setMobileDetailOpen(true);

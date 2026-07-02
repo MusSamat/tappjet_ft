@@ -20,7 +20,7 @@ import { friendlyError } from "@/lib/utils/api-error";
 import { RequestCard } from "@/components/features/passenger-requests/request-card";
 import { DriverAvatar } from "@/components/ui/driver-avatar";
 import { Container, Spinner } from "@/components/ui";
-import { RequestCardSkeletonList } from "@/components/features/passenger-requests/request-card-skeleton";
+import { CardSkeletonList } from "@/components/ui/card-skeleton";
 
 // ── Response offer card ────────────────────────────────────────────────
 function OfferCard({
@@ -237,7 +237,7 @@ export default function MyRequestsPage() {
       </div>
 
       {isLoading ? (
-        <RequestCardSkeletonList count={4} />
+        <CardSkeletonList variant="request" count={4} />
       ) : requests.length === 0 ? (
         <div className="flex flex-col items-center rounded-2xl border border-dashed border-sky-300 bg-sky-50 py-16 text-center">
           <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-sky-100">

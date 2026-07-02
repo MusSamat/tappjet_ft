@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Star, ArrowRight, X } from "lucide-react";
 import { DriverAvatar } from "@/components/ui";
-import { StatusBadge } from "./status-badge";
+import { StatusBadge } from "@/components/ui";
 import type { Booking } from "@/lib/api/bookings";
 import type { PendingRating } from "@/lib/api/ratings";
 

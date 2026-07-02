@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { IncomingRequestSkeletonList } from "@/components/features/my/card-skeletons";
+import { CardSkeletonList } from "@/components/ui/card-skeleton";
 import { RequestCard } from "./request-card";
 import type { Booking } from "@/lib/api/bookings";
 
@@ -35,7 +35,7 @@ export function RequestsTab({ isLoading, bookings, onAccept, onReject }: Props) 
   return (
     <div className="flex flex-col gap-3">
       {isLoading ? (
-        <IncomingRequestSkeletonList />
+        <CardSkeletonList variant="request" />
       ) : bookings.length === 0 ? (
         <div className="rounded-2xl border border-ink-100 bg-white p-8 text-center">
           <p className="text-[17px] font-bold text-ink-900">{t("no_requests_label")}</p>

@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import { Star, CheckCircle, XCircle, MessageCircle, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { DriverAvatar } from "@/components/ui";
-import { StatusBadge } from "./status-badge";
+import { StatusBadge } from "@/components/ui";
 import type { Booking } from "@/lib/api/bookings";
 
 type BookingExt = Booking & {
