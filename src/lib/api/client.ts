@@ -116,6 +116,17 @@ api.interceptors.response.use(
 );
 
 export function extractError(e: unknown): ApiError["error"] {
-  if (axios.isAxiosError<ApiError>(e) && e.response?.data?.error) return e.response.data.error;
+  if (axios.isAxiosError<ApiError>(e)) {
+    if (e.response?.data?.error) return e.response.data.error;
+    // Network failure (no response) while the browser knows it is offline —
+    // resolved to api_errors.network_offline by friendlyError.
+    if (!e.response && typeof navigator !== "undefined" && !navigator.onLine) {
+      return {
+        code: "NETWORK_OFFLINE",
+        message: "Нет соединения с интернетом. Проверьте сеть и попробуйте снова.",
+        details: { reason: "network_offline" },
+      };
+    }
+  }
   return { code: "INTERNAL_ERROR", message: "Что-то пошло не так" };
 }

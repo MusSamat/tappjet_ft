@@ -13,6 +13,7 @@ import { FloatingBell } from "@/components/layout/floating-bell";
 import { Footer } from "@/components/layout/footer";
 import { QuickActions } from "@/components/features/quick-actions/quick-actions";
 import { QuickToastContainer } from "@/components/layout/quick-toast";
+import { OfflineBanner } from "@/components/layout/offline-banner";
 import { ThemeProvider, THEME_INIT_SCRIPT } from "@/components/theme-provider";
 import "./globals.css";
 
@@ -84,6 +85,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <FloatingBell />
               <QuickActions />
               <QuickToastContainer />
+              <OfflineBanner />
             </Providers>
           </ThemeProvider>
         </NextIntlClientProvider>

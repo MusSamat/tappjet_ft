@@ -66,7 +66,10 @@ export type ErrorCode =
   | "OTP_WRONG"
   | "OTP_TOO_MANY_ATTEMPTS"
   | "INTERNAL_ERROR"
-  | "SERVICE_UNAVAILABLE";
+  | "SERVICE_UNAVAILABLE"
+  // Client-side synthetic code: request failed without a response while
+  // navigator.onLine === false (never sent by the backend).
+  | "NETWORK_OFFLINE";
 
 export interface ApiError {
   error: {
