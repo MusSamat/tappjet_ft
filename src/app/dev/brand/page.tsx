@@ -6,23 +6,19 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-/** Paper-plane logo mark on a teal tile — sized by px. */
+/** Primary Tappjet mark: teal-gradient tile with white «Tj» wordmark — sized by px. */
 function LogoTile({ px, radius }: { px: number; radius: number }) {
   return (
     <span
-      className="flex shrink-0 items-center justify-center"
-      style={{
-        width: px,
-        height: px,
-        borderRadius: radius,
-        background: "linear-gradient(150deg,#2CC9B4,#0C8478)",
-      }}
+      className="flex shrink-0 items-center justify-center bg-gradient-to-br from-brand-600 to-brand-500"
+      style={{ width: px, height: px, borderRadius: radius }}
     >
-      <svg viewBox="0 0 48 48" width={px * 0.68} height={px * 0.68} aria-hidden="true">
-        <path d="M9 27 L39 13 L28 39 L23.5 29 Z" fill="#fff" />
-        <path d="M23.5 29 L39 13 L26.5 28 Z" fill="#fff" opacity="0.82" />
-        <circle cx="39" cy="11.5" r="4.2" fill="#FBB924" stroke="#fff" strokeWidth="1.4" />
-      </svg>
+      <span
+        className="font-black leading-none text-white"
+        style={{ fontSize: px * 0.44 }}
+      >
+        Tj
+      </span>
     </span>
   );
 }

@@ -27,18 +27,11 @@ type Step = "login" | "otp" | "reset";
 
 const FULL_PHONE_RE = /^\+996\d{9}$/;
 
-/** Teal-gradient tile with white paper-plane + amber dot (spec §2.10 logo tile). */
+/** Original Tappjet mark: teal-gradient rounded tile with white «Tj» wordmark. */
 function AuthLogo() {
   return (
-    <span
-      className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-3xl shadow-brandcta"
-      style={{ background: "linear-gradient(135deg,#14B8A6,#0D9488)" }}
-    >
-      <svg viewBox="0 0 48 48" className="h-11 w-11" aria-hidden="true">
-        <path d="M11 27 L37 15 L27 37 L23.5 28.5 Z" fill="#fff" />
-        <path d="M23.5 28.5 L37 15 L26 27.5 Z" fill="#fff" opacity="0.62" />
-        <circle cx="37.5" cy="13.5" r="4" fill="#FBB924" stroke="#fff" strokeWidth="1.5" />
-      </svg>
+    <span className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-to-br from-brand-600 to-brand-500 shadow-brandcta">
+      <span className="text-[28px] font-black text-white">Tj</span>
     </span>
   );
 }

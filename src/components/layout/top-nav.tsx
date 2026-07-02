@@ -17,21 +17,12 @@ import { cn } from "@/lib/utils/cn";
 
 // Desktop top navbar — design-spec §1.3.
 
-/** Teal-gradient rounded tile with white paper-plane + amber dot (spec §1.3/§2.9). */
+/** Original Tappjet mark: teal-gradient rounded tile with white «Tj» wordmark. */
 function LogoMark() {
   return (
-    <svg viewBox="0 0 48 48" className="h-7 w-7 shrink-0" aria-hidden="true">
-      <defs>
-        <linearGradient id="tj-logo-tile" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#2CC9B4" />
-          <stop offset="100%" stopColor="#0C8478" />
-        </linearGradient>
-      </defs>
-      <rect width="48" height="48" rx="14" fill="url(#tj-logo-tile)" />
-      <path d="M11 27 L37 15 L27 37 L23.5 28.5 Z" fill="#fff" />
-      <path d="M23.5 28.5 L37 15 L26 27.5 Z" fill="#fff" opacity="0.62" />
-      <circle cx="37.5" cy="13.5" r="4" fill="#FBB924" stroke="#fff" strokeWidth="1.5" />
-    </svg>
+    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-600 to-brand-500">
+      <span className="text-[14px] font-black text-white">Tj</span>
+    </div>
   );
 }
 

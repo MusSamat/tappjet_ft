@@ -18,15 +18,9 @@ export function WelcomeScreen({ onLogin, onGuest }: WelcomeScreenProps) {
       style={{ background: "linear-gradient(160deg,#2CC9B4 0%,#0D9488 45%,#0C6F65 100%)" }}
     >
       <div className="mx-auto flex w-full max-w-[460px] flex-1 flex-col items-center justify-center px-7 text-center">
-        {/* Logo tile with paper-plane mark */}
-        <span className="mb-5 flex h-24 w-24 items-center justify-center rounded-[2rem] bg-white/15 shadow-lift ring-1 ring-white/25">
-          <svg viewBox="0 0 48 48" className="h-16 w-16" aria-hidden="true">
-            <path d="M9 27 L39 13 L28 39 L23.5 29 Z" fill="#fff" />
-            <path d="M23.5 29 L39 13 L26.5 28 Z" fill="#fff" opacity="0.82" />
-            <circle cx="39" cy="11.5" r="4.2" fill="#FBB924" stroke="#fff" strokeWidth="1.4" />
-            <circle cx="12" cy="34" r="1.6" fill="#fff" opacity="0.8" />
-            <circle cx="17" cy="39" r="1.3" fill="#fff" opacity="0.7" />
-          </svg>
+        {/* Original Tappjet «Tj» mark — white tile for contrast on the teal gradient. */}
+        <span className="mb-5 flex h-24 w-24 items-center justify-center rounded-[2rem] bg-white shadow-lift ring-1 ring-white/25">
+          <span className="text-[44px] font-black leading-none text-brand-600">Tj</span>
         </span>
 
         <p className="text-[15px] font-900 text-accent-300">{t("title")}</p>
