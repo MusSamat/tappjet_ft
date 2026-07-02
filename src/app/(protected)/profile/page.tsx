@@ -145,7 +145,7 @@ export default function ProfilePage() {
           </span>
           <span className="min-w-0 flex-1">
             <span className="block text-[14px] font-900">{t("become_driver_title")}</span>
-            <span className="block text-[11px] font-700 text-white/80">{t("become_driver_sub")}</span>
+            <span className="block text-[11px] font-600 text-white/80">{t("become_driver_sub")}</span>
           </span>
           <ChevronRight className="h-5 w-5 shrink-0" aria-hidden="true" />
         </Link>
@@ -170,7 +170,7 @@ export default function ProfilePage() {
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent-100 text-accent-600 dark:bg-accent-500/15">
             <Gift className="h-4 w-4" aria-hidden="true" />
           </span>
-          <span className="flex-1 text-[14px] font-800 text-ink-800 dark:text-ink-100">{t("quick_bonuses")}</span>
+          <span className="flex-1 text-[14px] font-700 text-ink-800 dark:text-ink-100">{t("quick_bonuses")}</span>
           <span className="rounded-full bg-accent-100 px-2 py-0.5 text-[11px] font-900 text-accent-700 dark:bg-accent-500/15">
             {points}
           </span>
@@ -187,7 +187,7 @@ export default function ProfilePage() {
       ) : ratingsData?.data.length === 0 ? (
         <div className="rounded-3xl bg-white p-10 text-center shadow-card dark:bg-ink-900">
           <p className="text-[17px] font-900 text-ink-900 dark:text-white">{t("no_reviews")}</p>
-          <p className="mt-2 text-[13px] font-700 text-ink-500">{t("no_reviews_hint")}</p>
+          <p className="mt-2 text-[13px] font-medium text-ink-500">{t("no_reviews_hint")}</p>
         </div>
       ) : (
         ratingsData?.data.map((r) => <ReviewCard key={r.id} review={r} />)
@@ -197,7 +197,7 @@ export default function ProfilePage() {
 
   const historyContent = (
     <div className="rounded-3xl bg-white p-10 text-center shadow-card dark:bg-ink-900">
-      <p className="text-[13px] font-700 text-ink-500">{t("history_hint")}</p>
+      <p className="text-[13px] font-medium text-ink-500">{t("history_hint")}</p>
     </div>
   );
 
@@ -221,19 +221,19 @@ export default function ProfilePage() {
     <div className="mt-3 flex items-stretch rounded-2xl bg-ink-50 py-2.5 dark:bg-ink-800/60">
       <div className="flex flex-1 flex-col items-center">
         <span className="text-[16px] font-900 leading-none text-ink-900 dark:text-white">{user?.ratingCount ?? 0}</span>
-        <span className="mt-1 text-[10px] font-700 text-ink-400">{t("stat_reviews")}</span>
+        <span className="mt-1 text-[10px] font-medium text-ink-400">{t("stat_reviews")}</span>
       </div>
       <span className="w-px bg-ink-200 dark:bg-ink-700" />
       <div className="flex flex-1 flex-col items-center">
         <span className="text-[16px] font-900 leading-none text-accent-600">
           {user?.rating != null ? user.rating.toFixed(1) : "—"}
         </span>
-        <span className="mt-1 text-[10px] font-700 text-ink-400">{t("stat_rating")}</span>
+        <span className="mt-1 text-[10px] font-medium text-ink-400">{t("stat_rating")}</span>
       </div>
       <span className="w-px bg-ink-200 dark:bg-ink-700" />
       <div className="flex flex-1 flex-col items-center">
         <span className="text-[16px] font-900 leading-none text-coral-500">{points}</span>
-        <span className="mt-1 text-[10px] font-700 text-ink-400">{t("stat_points")}</span>
+        <span className="mt-1 text-[10px] font-medium text-ink-400">{t("stat_points")}</span>
       </div>
     </div>
   );
@@ -275,7 +275,7 @@ export default function ProfilePage() {
           >
             <span>
               <span className="block text-[13px] font-900 text-accent-700">{t("add_phone_title")}</span>
-              <span className="block text-[11px] font-700 text-accent-700/80">{t("add_phone_sub")}</span>
+              <span className="block text-[11px] font-600 text-accent-700/80">{t("add_phone_sub")}</span>
             </span>
             <span className="rounded-full bg-accent-500 px-3 py-1.5 text-[12px] font-900 text-accent-ink shadow-cta">
               {t("add_phone_cta")}
@@ -298,7 +298,7 @@ export default function ProfilePage() {
                 <h1 className="truncate text-[17px] font-900 text-ink-900 dark:text-white">{user?.name}</h1>
                 {isDriver && <BadgeCheck className="h-[18px] w-[18px] shrink-0 text-brand-600" aria-hidden="true" />}
               </div>
-              <p className="mt-0.5 text-[12px] font-700 text-ink-400">
+              <p className="mt-0.5 text-[12px] font-600 text-ink-400">
                 <span className="text-accent-600">
                   ★ {user?.rating != null ? user.rating.toFixed(1) : "—"}
                 </span>

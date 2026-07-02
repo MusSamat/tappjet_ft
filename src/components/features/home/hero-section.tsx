@@ -30,7 +30,7 @@ function SearchHero() {
         <h1 className="font-disp text-[26px] font-900 leading-[1.12] tracking-tight text-ink-900 dark:text-white sm:text-[36px] lg:text-[42px]">
           {t("hero_title1")} <span className="text-brand-700 dark:text-brand-300">{t("hero_title2")}</span> {t("hero_subtitle")}
         </h1>
-        <p className="mx-auto mt-2 max-w-[460px] text-[14px] font-700 text-ink-500 dark:text-ink-400 sm:text-[16px]">
+        <p className="mx-auto mt-2 max-w-[460px] text-[14px] font-600 text-ink-500 dark:text-ink-400 sm:text-[16px]">
           {t("hero_desc")}
         </p>
       </div>
@@ -61,7 +61,7 @@ function DriverHero() {
         <h1 className="font-disp text-[24px] font-900 leading-tight text-white sm:text-[32px]">
           {t("driver_hero_title")}
         </h1>
-        <p className="mx-auto mt-2 max-w-[420px] text-[14px] font-700 text-white/90 sm:text-[15px]">
+        <p className="mx-auto mt-2 max-w-[420px] text-[14px] font-600 text-white/90 sm:text-[15px]">
           {t("driver_hero_desc")}
         </p>
         <Link

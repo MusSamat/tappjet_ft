@@ -236,7 +236,7 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
             <h1 className="text-[20px] font-900 text-ink-900 dark:text-white">
               {pending ? t("gate_pending_title") : t("gate_unverified_title")}
             </h1>
-            <p className="max-w-[380px] text-[13px] font-700 text-ink-500 dark:text-ink-400">
+            <p className="max-w-[380px] text-[13px] font-600 text-ink-500 dark:text-ink-400">
               {pending ? t("gate_pending_text") : t("gate_unverified_text")}
             </p>
             <Button variant="brand" size="lg" className="mt-2 w-full max-w-[320px]" onClick={() => router.push("/profile/driver")}>
@@ -273,7 +273,7 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
 
   const form = (
     <div className="space-y-3.5">
-      <p className="text-[13px] font-700 text-ink-500 dark:text-ink-400">
+      <p className="text-[13px] font-600 text-ink-500 dark:text-ink-400">
         {isDriver ? t("intro_driver") : t("intro_passenger")}
       </p>
       <RouteCard
@@ -328,13 +328,13 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           </button>
           <h1 className="text-[15px] font-900">{isDriver ? t("title_driver") : t("title_passenger")}</h1>
-          <p className="text-[11px] font-700 text-white/80">{isDriver ? t("subtitle_driver") : t("subtitle_passenger")}</p>
+          <p className="text-[11px] font-600 text-white/80">{isDriver ? t("subtitle_driver") : t("subtitle_passenger")}</p>
         </div>
         <div className="flex-1 space-y-3.5 px-4 py-4">{form}</div>
         <div className="space-y-3.5 px-4 pb-4">
           <PrefsCollapsible role={role} prefs={draft.prefs} onToggle={(k) => patch({ prefs: { ...draft.prefs, [k]: !draft.prefs[k] } })} />
           <div className="rounded-2xl bg-white p-4 shadow-card dark:bg-ink-900">
-            <p className="mb-3 text-center text-[11px] font-700 text-ink-400">{isDriver ? t("note_driver") : t("note_passenger")}</p>
+            <p className="mb-3 text-center text-[11px] font-medium text-ink-400">{isDriver ? t("note_driver") : t("note_passenger")}</p>
             {createError && <p className="mb-3 rounded-xl bg-coral-50 px-4 py-2 text-[13px] font-700 text-coral-700 dark:bg-coral-500/10">{createError}</p>}
             {submitBtn}
           </div>
@@ -345,9 +345,9 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
       <div className="mx-auto hidden max-w-[1080px] gap-8 bg-ink-50 p-8 lg:grid lg:grid-cols-[330px_1fr] dark:bg-ink-950">
         <aside className="space-y-4">
           <h2 className="text-[26px] font-900 text-ink-900 dark:text-white">{isDriver ? t("web_title_driver") : t("web_title_passenger")}</h2>
-          <p className="text-[14px] font-700 text-ink-500 dark:text-ink-400">{isDriver ? t("web_sub_driver") : t("web_sub_passenger")}</p>
+          <p className="text-[14px] font-600 text-ink-500 dark:text-ink-400">{isDriver ? t("web_sub_driver") : t("web_sub_passenger")}</p>
           <div className="rounded-3xl bg-brand-50 p-4 dark:bg-brand-500/10">
-            <div className="flex items-start gap-2.5 text-[12px] font-700 text-ink-600 dark:text-ink-300">
+            <div className="flex items-start gap-2.5 text-[12px] font-600 text-ink-600 dark:text-ink-300">
               <ShieldCheck className="h-4 w-4 shrink-0 text-brand-600" aria-hidden="true" />
               {t("web_trust")}
             </div>

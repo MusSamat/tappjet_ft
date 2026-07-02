@@ -118,7 +118,7 @@ function InfoTiles({ model }: { model: Model }) {
           <div key={i} className="rounded-2xl bg-ink-50 p-3 text-center dark:bg-ink-800">
             <Icon className="mx-auto mb-1 h-4 w-4 text-brand-600" aria-hidden="true" />
             <div className="truncate text-[12px] font-900 text-ink-900 dark:text-white">{tile.value}</div>
-            <div className="text-[10px] font-700 text-ink-400">{tile.sub}</div>
+            <div className="text-[10px] font-medium text-ink-400">{tile.sub}</div>
           </div>
         );
       })}
@@ -141,7 +141,7 @@ function DriverCard({ model, showMessage, onMessage }: { model: Model; showMessa
           <span className="truncate">{driver.name}</span>
           {driver.verified && <ShieldCheck className="h-4 w-4 shrink-0 text-brand-600" aria-hidden="true" />}
         </span>
-        <span className="truncate text-[11px] font-700 text-ink-400">{meta}</span>
+        <span className="truncate text-[11px] font-600 text-ink-400">{meta}</span>
       </div>
       {showMessage && (
         <button
@@ -288,7 +288,7 @@ export function TripDetailView({ trip, variant = "page", autoOpenBook = false }:
         <div className="min-w-0 flex-1">
           <div className="text-[20px] font-900 leading-tight">{trip.originCity}</div>
           {model.stops.length > 0 && (
-            <div className="truncate text-[11px] font-700 text-white/70">{model.stops.join(" · ")}</div>
+            <div className="truncate text-[11px] font-600 text-white/70">{model.stops.join(" · ")}</div>
           )}
           <div className="mt-2 text-[20px] font-900 leading-tight">{trip.destinationCity}</div>
         </div>
@@ -297,7 +297,7 @@ export function TripDetailView({ trip, variant = "page", autoOpenBook = false }:
             {price}
             <span className="text-[13px]"> {t("som_short")}</span>
           </div>
-          <div className="mt-1 text-[11px] font-700 text-white/70">{t("per_seat")}</div>
+          <div className="mt-1 text-[11px] font-medium text-white/70">{t("per_seat")}</div>
         </div>
       </div>
     </div>
@@ -309,7 +309,7 @@ export function TripDetailView({ trip, variant = "page", autoOpenBook = false }:
       <DriverCard model={model} showMessage={showMessage} onMessage={handleBook} />
       {model.seatsTotal > 0 && <SeatsCard model={model} />}
       {trip.comment && (
-        <div className="rounded-2xl bg-accent-50 p-3.5 text-[13px] font-700 text-ink-700 dark:bg-accent-500/10 dark:text-accent-200">
+        <div className="rounded-2xl bg-accent-50 p-3.5 text-[13px] font-600 text-ink-700 dark:bg-accent-500/10 dark:text-accent-200">
           {trip.comment}
         </div>
       )}
@@ -358,7 +358,7 @@ export function TripDetailView({ trip, variant = "page", autoOpenBook = false }:
       {/* Desktop webDetail 2-col */}
       <div className="mx-auto hidden max-w-[1080px] gap-0 lg:grid lg:grid-cols-[1fr_380px]">
         <div className="space-y-5 p-8">
-          <Link href="/trips" className="inline-flex items-center gap-1.5 text-[13px] font-800 text-ink-500 hover:text-ink-800 dark:text-ink-400">
+          <Link href="/trips" className="inline-flex items-center gap-1.5 text-[13px] font-700 text-ink-500 hover:text-ink-800 dark:text-ink-400">
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
             {t("back_to_feed")}
           </Link>
@@ -373,7 +373,7 @@ export function TripDetailView({ trip, variant = "page", autoOpenBook = false }:
                 <div>
                   <div className="text-[22px] font-900 text-ink-900 dark:text-white">{trip.originCity}</div>
                   {model.stops.length > 0 && (
-                    <div className="mt-0.5 text-[12px] font-700 text-ink-400">{model.stops.join(" · ")}</div>
+                    <div className="mt-0.5 text-[12px] font-600 text-ink-400">{model.stops.join(" · ")}</div>
                   )}
                 </div>
                 <div className="text-[22px] font-900 text-ink-900 dark:text-white">{trip.destinationCity}</div>
@@ -383,7 +383,7 @@ export function TripDetailView({ trip, variant = "page", autoOpenBook = false }:
                   {price}
                   <span className="text-[15px]"> {t("som_short")}</span>
                 </div>
-                <div className="text-[12px] font-700 text-ink-400">{t("per_seat")}</div>
+                <div className="text-[12px] font-medium text-ink-400">{t("per_seat")}</div>
               </div>
             </div>
           </div>
@@ -392,7 +392,7 @@ export function TripDetailView({ trip, variant = "page", autoOpenBook = false }:
           {trip.comment && (
             <div className="flex gap-3 rounded-3xl bg-accent-50 p-5 dark:bg-accent-500/10">
               <Quote className="h-5 w-5 shrink-0 text-accent-600" aria-hidden="true" />
-              <p className="text-[14px] font-700 text-ink-700 dark:text-accent-200">{trip.comment}</p>
+              <p className="text-[14px] font-600 text-ink-700 dark:text-accent-200">{trip.comment}</p>
             </div>
           )}
         </div>
@@ -405,13 +405,13 @@ export function TripDetailView({ trip, variant = "page", autoOpenBook = false }:
               {driver.verified && <ShieldCheck className="h-4 w-4 text-brand-600" aria-hidden="true" />}
             </div>
             {model.rating !== null && model.ratingCount >= 3 && (
-              <div className="mt-0.5 flex items-center justify-center gap-1 text-[12px] font-700 text-ink-400">
+              <div className="mt-0.5 flex items-center justify-center gap-1 text-[12px] font-600 text-ink-400">
                 <Star className="h-3 w-3 fill-accent-400 text-accent-400" aria-hidden="true" />
                 {model.rating.toFixed(1)} · {t("reviews_count", { n: model.ratingCount })}
               </div>
             )}
           </div>
-          <div className="rounded-2xl bg-ink-50 p-4 text-[12px] font-700 text-ink-500 dark:bg-ink-800 dark:text-ink-400">
+          <div className="rounded-2xl bg-ink-50 p-4 text-[12px] font-600 text-ink-500 dark:bg-ink-800 dark:text-ink-400">
             <div className="flex items-center gap-2">
               <Wallet className="h-4 w-4 text-brand-600" aria-hidden="true" />
               {t("trust_pay")}
