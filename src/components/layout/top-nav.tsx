@@ -11,6 +11,7 @@ import { useAuth } from "@/store/auth";
 import { useUnreadCount } from "@/lib/hooks/use-unread-count";
 import { useUnreadMessages } from "@/lib/hooks/use-unread-messages";
 import { useRoleTheme } from "@/lib/hooks/use-role-colors";
+import { normalizeMediaUrl } from "@/lib/utils/media-url";
 import { RoleSwitcher } from "@/components/features/role-mode/role-switcher";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { cn } from "@/lib/utils/cn";
@@ -149,9 +150,10 @@ export function TopNav() {
       ];
 
   const initial = user?.name?.trim()?.[0]?.toUpperCase() ?? "?";
+  const avatarSrc = normalizeMediaUrl(user?.avatarUrl);
   const [avatarFailed, setAvatarFailed] = useState(false);
 
-  useEffect(() => { setAvatarFailed(false); }, [user?.avatarUrl]);
+  useEffect(() => { setAvatarFailed(false); }, [avatarSrc]);
 
   return (
     <header className="sticky top-0 z-40 hidden border-b border-ink-100 bg-white/85 backdrop-blur md:block dark:border-ink-800 dark:bg-ink-950/85">
@@ -219,11 +221,11 @@ export function TopNav() {
                     theme.badge,
                   )}
                 >
-                  {user?.avatarUrl && !avatarFailed ? (
+                  {avatarSrc && !avatarFailed ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
-                      src={user.avatarUrl}
-                      alt={user.name ?? t("avatar_alt")}
+                      src={avatarSrc}
+                      alt={user?.name ?? t("avatar_alt")}
                       className="h-full w-full object-cover"
                       onError={() => setAvatarFailed(true)}
                     />
