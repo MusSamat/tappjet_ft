@@ -46,8 +46,8 @@ export function ChatHeader({
         <p
           className={
             isConfirmed
-              ? "text-[11px] font-700 text-brand-600 dark:text-brand-300"
-              : "text-[11px] font-700 text-ink-500 dark:text-ink-400"
+              ? "text-[12px] font-700 text-brand-600 dark:text-brand-300"
+              : "text-[12px] font-700 text-ink-500 dark:text-ink-400"
           }
         >
           {subtitle}

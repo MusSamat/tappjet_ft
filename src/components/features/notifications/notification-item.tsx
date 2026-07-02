@@ -128,7 +128,7 @@ export function NotificationItem({ notification }: Props) {
             <p className={cn("text-[13px] text-ink-900 dark:text-white", read ? "font-800" : "font-900")}>
               {label}
             </p>
-            <span className="shrink-0 text-[11px] font-medium text-ink-400">
+            <span className="shrink-0 text-[12px] font-medium text-ink-400">
               {formatNotifTime(notification.createdAt, t, locale)}
             </span>
           </div>

@@ -60,7 +60,7 @@ export function ChatRow({ s, isActive }: { s: ChatSummary; isActive: boolean }) 
             </span>
           ) : s.lastMessageAt ? (
             <span className={cn(
-              "flex-shrink-0 text-[11px] font-semibold",
+              "flex-shrink-0 text-[12px] font-semibold",
               hasUnread ? "text-brand-600" : "text-ink-400",
             )}>
               {formatTime(s.lastMessageAt)}

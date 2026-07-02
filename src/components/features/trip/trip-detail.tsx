@@ -118,7 +118,7 @@ function InfoTiles({ model }: { model: Model }) {
           <div key={i} className="rounded-2xl bg-ink-50 p-3 text-center dark:bg-ink-800">
             <Icon className="mx-auto mb-1 h-4 w-4 text-brand-600" aria-hidden="true" />
             <div className="truncate text-[12px] font-900 text-ink-900 dark:text-white">{tile.value}</div>
-            <div className="text-[10px] font-medium text-ink-400">{tile.sub}</div>
+            <div className="text-[11px] font-600 text-ink-400">{tile.sub}</div>
           </div>
         );
       })}
@@ -141,7 +141,7 @@ function DriverCard({ model, showMessage, onMessage }: { model: Model; showMessa
           <span className="truncate">{driver.name}</span>
           {driver.verified && <ShieldCheck className="h-4 w-4 shrink-0 text-brand-600" aria-hidden="true" />}
         </span>
-        <span className="truncate text-[11px] font-600 text-ink-400">{meta}</span>
+        <span className="truncate text-[12px] font-600 text-ink-400">{meta}</span>
       </div>
       {showMessage && (
         <button
@@ -288,7 +288,7 @@ export function TripDetailView({ trip, variant = "page", autoOpenBook = false }:
         <div className="min-w-0 flex-1">
           <div className="text-[20px] font-900 leading-tight">{trip.originCity}</div>
           {model.stops.length > 0 && (
-            <div className="truncate text-[11px] font-600 text-white/70">{model.stops.join(" · ")}</div>
+            <div className="truncate text-[12px] font-600 text-white/70">{model.stops.join(" · ")}</div>
           )}
           <div className="mt-2 text-[20px] font-900 leading-tight">{trip.destinationCity}</div>
         </div>
@@ -297,7 +297,7 @@ export function TripDetailView({ trip, variant = "page", autoOpenBook = false }:
             {price}
             <span className="text-[13px]"> {t("som_short")}</span>
           </div>
-          <div className="mt-1 text-[11px] font-medium text-white/70">{t("per_seat")}</div>
+          <div className="mt-1 text-[11px] font-600 text-white/70">{t("per_seat")}</div>
         </div>
       </div>
     </div>

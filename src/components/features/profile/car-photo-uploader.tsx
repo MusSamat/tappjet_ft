@@ -128,10 +128,10 @@ export function CarPhotoUploader() {
           onChange={handleFile}
         />
         {isSuccess && !isPending && (
-          <p className="text-[11px] font-semibold text-brand-700">{t("photo_updated")}</p>
+          <p className="text-[12px] font-semibold text-brand-700">{t("photo_updated")}</p>
         )}
         {error && (
-          <p className="text-[11px] font-semibold text-coral-600">{t("photo_upload_error")}</p>
+          <p className="text-[12px] font-semibold text-coral-600">{t("photo_upload_error")}</p>
         )}
       </div>
 
@@ -153,7 +153,7 @@ export function CarPhotoUploader() {
             </div>
           ))}
         </div>
-        <p className="mt-1 text-[11px] font-semibold text-ink-400">
+        <p className="mt-1 text-[12px] font-semibold text-ink-400">
           {t("car_data_notice")}
         </p>
       </div>

@@ -58,8 +58,8 @@ function UserDropdown({ onClose }: { onClose: () => void }) {
     <div className="absolute right-0 top-[calc(100%+8px)] z-50 w-56 overflow-hidden rounded-2xl border border-ink-100 bg-white shadow-lift dark:border-ink-800 dark:bg-ink-900">
       <div className="border-b border-ink-100 px-4 py-3 dark:border-ink-800">
         <p className="truncate text-[14px] font-900 text-ink-900 dark:text-white">{user?.name}</p>
-        <p className="truncate text-[11px] font-700 text-ink-400">{user?.phone}</p>
-        <p className={cn("mt-0.5 text-[11px] font-800", theme.textOn)}>
+        <p className="truncate text-[12px] font-700 text-ink-400">{user?.phone}</p>
+        <p className={cn("mt-0.5 text-[12px] font-800", theme.textOn)}>
           {activeMode === "driver" ? t("driver_label") : t("passenger_label")}
         </p>
       </div>

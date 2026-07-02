@@ -46,7 +46,7 @@ export default async function HomePage() {
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-[15px] font-900 leading-tight text-ink-900 dark:text-white">{r.from}</p>
-                  <p className="my-0.5 text-[10px] font-700 text-ink-400">
+                  <p className="my-0.5 text-[11px] font-700 text-ink-400">
                     {r.tripCount > 0 ? t("active_trips", { n: r.tripCount }) : t("no_trips")}
                   </p>
                   <p className="truncate text-[15px] font-900 leading-tight text-ink-900 dark:text-white">{r.to}</p>

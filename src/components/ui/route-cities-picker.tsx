@@ -86,7 +86,7 @@ export function RouteCitiesPicker({
   return (
     <div className="flex flex-col gap-1.5 border-t border-dashed border-ink-200 pt-2.5">
       <div className="flex items-center justify-between">
-        <span className="text-[11px] font-bold text-ink-500">{label}</span>
+        <span className="text-[12px] font-bold text-ink-500">{label}</span>
         {value.length > 0 && (
           <span className="text-[10px] font-bold text-brand-600">
             {value.length}/{max}
@@ -99,7 +99,7 @@ export function RouteCitiesPicker({
           {value.map((name) => (
             <span
               key={name}
-              className="inline-flex items-center gap-1 rounded-full border border-brand-400 bg-brand-50 py-0.5 pl-2.5 pr-1 text-[11px] font-bold text-brand-700"
+              className="inline-flex items-center gap-1 rounded-full border border-brand-400 bg-brand-50 py-0.5 pl-2.5 pr-1 text-[12px] font-bold text-brand-700"
             >
               {name}
               <button
@@ -163,7 +163,7 @@ export function RouteCitiesPicker({
                 <MapPin className="h-3 w-3 flex-shrink-0 text-ink-400" aria-hidden="true" />
                 <div className="min-w-0">
                   <p className="text-[12px] font-bold text-ink-900">{c.nameRu}</p>
-                  <p className="text-[10px] font-semibold text-ink-400">{c.regionNameRu}</p>
+                  <p className="text-[11px] font-semibold text-ink-400">{c.regionNameRu}</p>
                 </div>
               </li>
             ))

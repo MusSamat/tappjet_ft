@@ -63,11 +63,11 @@ export function RequestCard({
             <span className="truncate text-[14px] font-900 text-ink-900 dark:text-white">
               {passenger.name.split(" ")[0]}
             </span>
-            <span className="shrink-0 rounded bg-grape-100 px-1.5 py-0.5 text-[9px] font-900 text-grape-600 dark:bg-grape-500/20 dark:text-grape-300">
+            <span className="shrink-0 rounded bg-grape-100 px-1.5 py-0.5 text-[10px] font-900 text-grape-600 dark:bg-grape-500/20 dark:text-grape-300">
               {t("seeking")}
             </span>
           </div>
-          <div className="mt-0.5 flex items-center gap-1 text-[11px] font-600 text-ink-400">
+          <div className="mt-0.5 flex items-center gap-1 text-[12px] font-600 text-ink-400">
             {showRating ? (
               <>
                 <Star className="h-3 w-3 fill-accent-400 text-accent-400" aria-hidden="true" />
@@ -80,7 +80,7 @@ export function RequestCard({
           </div>
         </div>
         <div className="shrink-0 text-right">
-          <div className="text-[9px] font-medium text-ink-400">{t("needs")}</div>
+          <div className="text-[10px] font-600 text-ink-400">{t("needs")}</div>
           <div className="text-[17px] font-900 leading-none text-grape-600 dark:text-grape-300">
             {request.seatsNeeded}
             <span className="text-[10px]"> {t("seats_unit", { n: request.seatsNeeded })}</span>
@@ -113,7 +113,7 @@ export function RequestCard({
       </div>
 
       {/* Row 3 — meta */}
-      <div className="mt-2.5 flex items-center gap-3 overflow-hidden text-[11px] font-700 text-ink-500 dark:text-ink-400">
+      <div className="mt-2.5 flex items-center gap-3 overflow-hidden text-[12px] font-700 text-ink-500 dark:text-ink-400">
         <span className="flex shrink-0 items-center gap-1">
           <CalendarClock className="h-3.5 w-3.5 text-grape-500" aria-hidden="true" />
           {fmtDate(request.departureDate)}
@@ -130,7 +130,7 @@ export function RequestCard({
           </span>
         )}
         {request.metrics && (
-          <span className="flex shrink-0 items-center gap-1 text-[10px] font-600 text-ink-400">
+          <span className="flex shrink-0 items-center gap-1 text-[11px] font-600 text-ink-400">
             <Eye className="h-3 w-3" aria-hidden="true" />
             {request.metrics.views}
           </span>
@@ -145,7 +145,7 @@ export function RequestCard({
           type="button"
           onClick={(e) => { e.stopPropagation(); onCancel(); }}
           disabled={cancelLoading}
-          className="mt-2.5 w-full rounded-xl bg-danger-50 py-2 text-[12px] font-900 text-danger-600 transition-colors hover:bg-danger-100 disabled:opacity-40 dark:bg-danger-500/10 dark:hover:bg-danger-500/20"
+          className="mt-2.5 w-full rounded-xl bg-danger-50 py-2 text-[13px] font-900 text-danger-600 transition-colors hover:bg-danger-100 disabled:opacity-40 dark:bg-danger-500/10 dark:hover:bg-danger-500/20"
         >
           {cancelLoading ? "…" : t("cancel")}
         </button>

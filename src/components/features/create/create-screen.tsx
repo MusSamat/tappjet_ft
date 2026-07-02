@@ -328,13 +328,13 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           </button>
           <h1 className="text-[15px] font-900">{isDriver ? t("title_driver") : t("title_passenger")}</h1>
-          <p className="text-[11px] font-600 text-white/80">{isDriver ? t("subtitle_driver") : t("subtitle_passenger")}</p>
+          <p className="text-[12px] font-600 text-white/80">{isDriver ? t("subtitle_driver") : t("subtitle_passenger")}</p>
         </div>
         <div className="flex-1 space-y-3.5 px-4 py-4">{form}</div>
         <div className="space-y-3.5 px-4 pb-4">
           <PrefsCollapsible role={role} prefs={draft.prefs} onToggle={(k) => patch({ prefs: { ...draft.prefs, [k]: !draft.prefs[k] } })} />
           <div className="rounded-2xl bg-white p-4 shadow-card dark:bg-ink-900">
-            <p className="mb-3 text-center text-[11px] font-medium text-ink-400">{isDriver ? t("note_driver") : t("note_passenger")}</p>
+            <p className="mb-3 text-center text-[12px] font-medium text-ink-400">{isDriver ? t("note_driver") : t("note_passenger")}</p>
             {createError && <p className="mb-3 rounded-xl bg-coral-50 px-4 py-2 text-[13px] font-700 text-coral-700 dark:bg-coral-500/10">{createError}</p>}
             {submitBtn}
           </div>

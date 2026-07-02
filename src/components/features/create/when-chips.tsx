@@ -95,7 +95,7 @@ export function WhenChips({ date, time, flexible, tomorrow, dayAfter, today, acc
       )}
 
       {flexible && (
-        <div className="flex items-center gap-1.5 rounded-2xl bg-accent-50 px-3 py-2 text-[11px] font-700 text-accent-700 dark:bg-accent-500/10 dark:text-accent-300">
+        <div className="flex items-center gap-1.5 rounded-2xl bg-accent-50 px-3 py-2 text-[12px] font-700 text-accent-700 dark:bg-accent-500/10 dark:text-accent-300">
           <Zap className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
           {t("flexible_hint")}
         </div>

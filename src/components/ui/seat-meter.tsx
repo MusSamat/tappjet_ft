@@ -21,7 +21,7 @@ const GAP: Record<SeatMeterSize, string> = {
 };
 
 const COUNT_TEXT: Record<SeatMeterSize, string> = {
-  sm: "text-[10px]",
+  sm: "text-[11px]",
   md: "text-[12px]",
   lg: "text-[13px]",
 };

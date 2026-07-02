@@ -97,7 +97,7 @@ export function NotificationsTab({ notifications, readMut }: NotificationsTabPro
             </span>
             <div className="min-w-0 flex-1">
               <p className="text-[12px] font-bold text-ink-900">{label}</p>
-              <p className="mt-0.5 truncate text-[11px] text-ink-500">{notifBody(n)}</p>
+              <p className="mt-0.5 truncate text-[12px] text-ink-500">{notifBody(n)}</p>
             </div>
             {!n.readAt && (
               <span className="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-brand-500" />

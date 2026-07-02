@@ -32,7 +32,7 @@ function FiltersHeader() {
         <button
           type="button"
           onClick={reset}
-          className="text-[11px] font-800 text-brand-600 hover:text-brand-700 dark:text-brand-300"
+          className="text-[13px] font-800 text-brand-600 hover:text-brand-700 dark:text-brand-300"
         >
           {t("reset")}
         </button>

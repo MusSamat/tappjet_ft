@@ -119,7 +119,7 @@ export function BottomNav() {
               <span className="flex h-[58px] w-[58px] items-center justify-center rounded-full bg-gradient-to-br from-accent-400 to-accent-600 text-accent-ink shadow-cta ring-4 ring-white dark:ring-ink-900">
                 <Plus className="h-7 w-7" strokeWidth={2.6} aria-hidden="true" />
               </span>
-              <span className="text-[10px] font-900 text-accent-600">{t("publish")}</span>
+              <span className="text-[11px] font-900 text-accent-600">{t("publish")}</span>
             </Link>
 
             <NavTab

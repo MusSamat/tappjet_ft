@@ -130,7 +130,7 @@ export function TripCard({
           <div className="truncate text-[15px] font-900 leading-tight text-ink-900 dark:text-white">
             {trip.originCity ?? ""}
           </div>
-          <div className="my-0.5 flex items-center gap-1 text-[10px] font-600 text-ink-400">
+          <div className="my-0.5 flex items-center gap-1 text-[11px] font-600 text-ink-400">
             <Clock className="h-3 w-3 shrink-0" aria-hidden="true" />
             <span className="truncate">
               {trip.departureAt ? formatDepartureLabel(trip.departureAt, locale) : ""}
@@ -146,7 +146,7 @@ export function TripCard({
             {price.toLocaleString("ru-RU")}
             <span className="text-[10px]">{t("som")}</span>
           </div>
-          <div className="text-[9px] font-medium text-ink-400">{t("per_seat")}</div>
+          <div className="text-[10px] font-600 text-ink-400">{t("per_seat")}</div>
         </div>
       </div>
 
@@ -156,19 +156,19 @@ export function TripCard({
       {/* Row 2 — driver strip */}
       <div className="mt-2.5 flex items-center gap-2 border-t border-ink-100 pt-2.5 dark:border-ink-800">
         <DriverAvatar name={driverName} src={driver.avatarUrl ?? null} size="xs" />
-        <span className="flex min-w-0 items-center gap-0.5 text-[11px] font-700 text-ink-700 dark:text-ink-200">
+        <span className="flex min-w-0 items-center gap-0.5 text-[12px] font-700 text-ink-700 dark:text-ink-200">
           <span className="truncate">{driverName.split(" ")[0]}</span>
           {driver.verified && (
             <ShieldCheck className="h-3 w-3 shrink-0 text-brand-600" aria-hidden="true" />
           )}
         </span>
         {rating !== null && ratingCount >= 3 ? (
-          <span className="flex shrink-0 items-center gap-0.5 text-[11px] font-700 text-ink-500 dark:text-ink-400">
+          <span className="flex shrink-0 items-center gap-0.5 text-[12px] font-700 text-ink-500 dark:text-ink-400">
             <Star className="h-3 w-3 fill-accent-400 text-accent-400" aria-hidden="true" />
             {rating.toFixed(1)}
           </span>
         ) : (
-          <span className="shrink-0 text-[10px] font-800 text-brand-600 dark:text-brand-300">
+          <span className="shrink-0 text-[11px] font-800 text-brand-600 dark:text-brand-300">
             {t("new")}
           </span>
         )}
@@ -177,7 +177,7 @@ export function TripCard({
           {wholeCabin ? <Sofa className="h-3.5 w-3.5 text-sky-500" /> : <Music className="h-3.5 w-3.5" />}
         </span>
         {trip.metrics && (
-          <span className="flex shrink-0 items-center gap-0.5 text-[10px] font-600 text-ink-400">
+          <span className="flex shrink-0 items-center gap-0.5 text-[11px] font-600 text-ink-400">
             <Eye className="h-3 w-3" aria-hidden="true" />
             {trip.metrics.views}
           </span>
@@ -192,7 +192,7 @@ export function TripCard({
         <Link
           href={`/trips/${trip.id}/book`}
           onClick={(e) => e.stopPropagation()}
-          className="mt-2.5 flex w-full items-center justify-center rounded-xl bg-accent-500 py-2 text-[12px] font-900 text-accent-ink transition-colors hover:bg-accent-400"
+          className="mt-2.5 flex w-full items-center justify-center rounded-xl bg-accent-500 py-2 text-[13px] font-900 text-accent-ink transition-colors hover:bg-accent-400"
         >
           {t("book")}
         </Link>

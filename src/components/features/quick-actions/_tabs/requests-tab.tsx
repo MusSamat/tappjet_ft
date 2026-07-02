@@ -45,13 +45,13 @@ export function RequestsTab({ requests, acceptMut, rejectMut }: RequestsTabProps
                 <p className="truncate text-[13px] font-bold text-ink-900">
                   {passenger?.name ?? t("passenger_fallback")}
                 </p>
-                <p className="text-[11px] text-ink-500">
+                <p className="text-[12px] text-ink-500">
                   {trip?.originCity} → {trip?.destinationCity}
                   {" · "}{b.seatsCount} {t("seats_unit")}
                 </p>
               </div>
               {b.status === "viewed" && (
-                <span className="flex-shrink-0 text-[9px] font-bold text-brand-600">{t("viewed_label")}</span>
+                <span className="flex-shrink-0 text-[10px] font-bold text-brand-600">{t("viewed_label")}</span>
               )}
             </div>
             <div className="flex gap-2">
@@ -59,7 +59,7 @@ export function RequestsTab({ requests, acceptMut, rejectMut }: RequestsTabProps
                 type="button"
                 onClick={() => acceptMut.mutate(b.id!)}
                 disabled={busy}
-                className="flex flex-1 items-center justify-center gap-1 rounded-lg bg-brand-600 py-1.5 text-[12px] font-bold text-white hover:bg-brand-700 disabled:opacity-50"
+                className="flex flex-1 items-center justify-center gap-1 rounded-lg bg-brand-600 py-1.5 text-[13px] font-bold text-white hover:bg-brand-700 disabled:opacity-50"
               >
                 <CheckCircle className="h-3.5 w-3.5" />
                 {t("accept_btn")}
@@ -68,7 +68,7 @@ export function RequestsTab({ requests, acceptMut, rejectMut }: RequestsTabProps
                 type="button"
                 onClick={() => rejectMut.mutate(b.id!)}
                 disabled={busy}
-                className="flex flex-1 items-center justify-center gap-1 rounded-lg border border-ink-200 py-1.5 text-[12px] font-bold text-ink-700 hover:bg-ink-50 disabled:opacity-50"
+                className="flex flex-1 items-center justify-center gap-1 rounded-lg border border-ink-200 py-1.5 text-[13px] font-bold text-ink-700 hover:bg-ink-50 disabled:opacity-50"
               >
                 <XCircle className="h-3.5 w-3.5" />
                 {t("reject_btn")}

@@ -95,7 +95,7 @@ function Zone({ isDriver, bg, headerColor, headerIcon, headerLabel, addLabel, po
   const Icon = headerIcon === "flag" ? Flag : UserPlus;
   return (
     <div className={cn("rounded-2xl p-3", bg)}>
-      <div className={cn("mb-2 flex items-center gap-1.5 text-[11px] font-900", headerColor)}>
+      <div className={cn("mb-2 flex items-center gap-1.5 text-[12px] font-900", headerColor)}>
         <Icon className="h-3.5 w-3.5" aria-hidden="true" />
         {headerLabel}
       </div>
@@ -139,7 +139,7 @@ export function PickupZones({ role, pickup, dropoff, onPickup, onDropoff }: Prop
         <SectionLabel>{isDriver ? t("pickup_title_driver") : t("pickup_title_passenger")}</SectionLabel>
         <OptionalTag />
       </div>
-      <p className="mb-3 text-[11px] font-700 text-ink-400">
+      <p className="mb-3 text-[12px] font-700 text-ink-400">
         {isDriver ? t("pickup_hint_driver") : t("pickup_hint_passenger")}
       </p>
       <div className="space-y-2.5">

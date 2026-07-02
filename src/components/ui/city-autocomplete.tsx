@@ -289,7 +289,7 @@ export function CityAutocomplete({
               <MapPin className="h-3 w-3 flex-shrink-0 text-ink-400" aria-hidden="true" />
               <div className="min-w-0">
                 <p className={cn("font-bold text-ink-900", compact ? "text-[12px]" : "text-[13px]")}>{city.nameRu}</p>
-                <p className="text-[10px] font-semibold text-ink-400">{getSubtitle(city)}</p>
+                <p className="text-[11px] font-semibold text-ink-400">{getSubtitle(city)}</p>
               </div>
             </li>
           ))}

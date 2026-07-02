@@ -229,7 +229,7 @@ export function ChatPanel({ bookingId }: Props) {
             <p className="text-[12px] font-extrabold text-accent-700">
               🔒 {t("pre_book_note")}
             </p>
-            <p className="mt-0.5 text-[11px] font-semibold text-accent-700">
+            <p className="mt-0.5 text-[12px] font-semibold text-accent-700">
               {t("pre_book_hint")}
             </p>
           </div>

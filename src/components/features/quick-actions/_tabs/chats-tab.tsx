@@ -67,15 +67,15 @@ export function ChatsTab({ chats, onClose }: ChatsTabProps) {
                 {c.otherName}
               </p>
               {c.lastMessageAt && (
-                <span className="flex-shrink-0 text-[10px] text-ink-400">
+                <span className="flex-shrink-0 text-[12px] text-ink-400">
                   {relTime(c.lastMessageAt)}
                 </span>
               )}
             </div>
             <div className="flex items-center justify-between gap-1 mt-0.5">
-              <p className="truncate text-[11px] text-ink-500">{c.route}</p>
+              <p className="truncate text-[12px] text-ink-500">{c.route}</p>
               <span className={cn(
-                "flex-shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-extrabold",
+                "flex-shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-extrabold",
                 c.role === "driver" ? "bg-brand-100 text-brand-700" : "bg-ink-100 text-ink-600",
               )}>
                 {c.role === "driver" ? t("role_driver") : t("role_passenger")}

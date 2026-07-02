@@ -145,7 +145,7 @@ export default function ProfilePage() {
           </span>
           <span className="min-w-0 flex-1">
             <span className="block text-[14px] font-900">{t("become_driver_title")}</span>
-            <span className="block text-[11px] font-600 text-white/80">{t("become_driver_sub")}</span>
+            <span className="block text-[12px] font-600 text-white/80">{t("become_driver_sub")}</span>
           </span>
           <ChevronRight className="h-5 w-5 shrink-0" aria-hidden="true" />
         </Link>
@@ -221,19 +221,19 @@ export default function ProfilePage() {
     <div className="mt-3 flex items-stretch rounded-2xl bg-ink-50 py-2.5 dark:bg-ink-800/60">
       <div className="flex flex-1 flex-col items-center">
         <span className="text-[16px] font-900 leading-none text-ink-900 dark:text-white">{user?.ratingCount ?? 0}</span>
-        <span className="mt-1 text-[10px] font-medium text-ink-400">{t("stat_reviews")}</span>
+        <span className="mt-1 text-[11px] font-600 text-ink-400">{t("stat_reviews")}</span>
       </div>
       <span className="w-px bg-ink-200 dark:bg-ink-700" />
       <div className="flex flex-1 flex-col items-center">
         <span className="text-[16px] font-900 leading-none text-accent-600">
           {user?.rating != null ? user.rating.toFixed(1) : "—"}
         </span>
-        <span className="mt-1 text-[10px] font-medium text-ink-400">{t("stat_rating")}</span>
+        <span className="mt-1 text-[11px] font-600 text-ink-400">{t("stat_rating")}</span>
       </div>
       <span className="w-px bg-ink-200 dark:bg-ink-700" />
       <div className="flex flex-1 flex-col items-center">
         <span className="text-[16px] font-900 leading-none text-coral-500">{points}</span>
-        <span className="mt-1 text-[10px] font-medium text-ink-400">{t("stat_points")}</span>
+        <span className="mt-1 text-[11px] font-600 text-ink-400">{t("stat_points")}</span>
       </div>
     </div>
   );
@@ -275,7 +275,7 @@ export default function ProfilePage() {
           >
             <span>
               <span className="block text-[13px] font-900 text-accent-700">{t("add_phone_title")}</span>
-              <span className="block text-[11px] font-600 text-accent-700/80">{t("add_phone_sub")}</span>
+              <span className="block text-[12px] font-600 text-accent-700/80">{t("add_phone_sub")}</span>
             </span>
             <span className="rounded-full bg-accent-500 px-3 py-1.5 text-[12px] font-900 text-accent-ink shadow-cta">
               {t("add_phone_cta")}

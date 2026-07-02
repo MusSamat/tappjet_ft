@@ -186,7 +186,7 @@ export function RateModal({ rating, onClose }: Props) {
                       value={comment}
                       onChange={(e) => setComment(e.target.value.slice(0, MAX_COMMENT))}
                     />
-                    <p className="mt-1 text-right text-[11px] text-ink-400">
+                    <p className="mt-1 text-right text-[12px] text-ink-400">
                       {comment.length}/{MAX_COMMENT}
                     </p>
                   </div>

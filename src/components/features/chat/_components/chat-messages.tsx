@@ -88,7 +88,7 @@ export function ChatMessages({
             </div>
           )}
           <MessageComposer onSend={onSend} onTyping={onTyping} />
-          <p className="bg-white px-5 pb-3 text-center text-[11px] font-semibold text-ink-400">
+          <p className="bg-white px-5 pb-3 text-center text-[12px] font-semibold text-ink-400">
             🔒 {t("safety_note")}
           </p>
         </>

@@ -70,7 +70,7 @@ export function ResetStep({
           )}
         />
         {confirmPassword && confirmPassword !== newPassword && (
-          <p className="text-[11px] font-600 text-coral-600">{tl("passwords_mismatch")}</p>
+          <p className="text-[12px] font-600 text-coral-600">{tl("passwords_mismatch")}</p>
         )}
       </div>
 

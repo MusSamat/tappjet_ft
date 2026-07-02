@@ -180,7 +180,7 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
               key={chip}
               type="button"
               onClick={() => setComment((prev) => prev ? `${prev}, ${chip.toLowerCase()}` : chip)}
-              className="rounded-full border border-ink-200 bg-ink-50 px-2.5 py-1 text-[11px] font-semibold text-ink-600 transition-colors hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700"
+              className="rounded-full border border-ink-200 bg-ink-50 px-2.5 py-1 text-[13px] font-semibold text-ink-600 transition-colors hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700"
             >
               {chip}
             </button>

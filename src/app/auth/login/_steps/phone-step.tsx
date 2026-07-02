@@ -47,7 +47,7 @@ export function PhoneStep({ tl, phone, setPhone, setServerError, isPending, onCo
         {isPending ? tl("checking") : tl("continue_btn")}
       </button>
 
-      <p className="mt-5 text-center text-[11px] text-ink-400">
+      <p className="mt-5 text-center text-[12px] text-ink-400">
         {tl("agree_prefix")}{" "}
         <a href="#" className="text-brand-600 underline">{tl("agree_terms")}</a>{" "}
         {tl("agree_and")}{" "}

@@ -47,7 +47,7 @@ export function PrefsCollapsible({ role, prefs, onToggle }: Props) {
       </button>
       {open && (
         <>
-          <p className="mb-3 mt-3 text-[11px] font-700 text-ink-400">
+          <p className="mb-3 mt-3 text-[12px] font-700 text-ink-400">
             {role === "driver" ? t("prefs_hint_driver") : t("prefs_hint_passenger")}
           </p>
           <div className="flex flex-wrap gap-2">
