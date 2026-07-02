@@ -3,6 +3,23 @@
     "loading": "Жүктөлүүдө…",
     "optional": "милдеттүү эмес"
   },
+  "card": {
+    "no_seats": "Орун жок",
+    "last_seat": "Акыркы орун",
+    "instant": "Заматта",
+    "whole_cabin": "Бүт салон",
+    "som": "с",
+    "per_seat": "/орун",
+    "via": "{stops} аркылуу",
+    "book": "Брондоо",
+    "seeking": "издейт",
+    "needs": "керек",
+    "seats_unit": "{n, plural, other {орун}}",
+    "reviews": "{n, plural, other {# пикир}}",
+    "new": "Жаңы",
+    "flexible": "Ийкемдүү",
+    "cancel": "Жокко чыгаруу"
+  },
   "status": {
     "active": "Активдүү",
     "open": "Ачык",

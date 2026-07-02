@@ -3,6 +3,23 @@
     "loading": "Загрузка…",
     "optional": "необязательно"
   },
+  "card": {
+    "no_seats": "Мест нет",
+    "last_seat": "Последнее место",
+    "instant": "Мгновенно",
+    "whole_cabin": "Весь салон",
+    "som": "с",
+    "per_seat": "/место",
+    "via": "через {stops}",
+    "book": "Забронировать",
+    "seeking": "ищет",
+    "needs": "нужно",
+    "seats_unit": "{n, plural, one {место} few {места} many {мест} other {места}}",
+    "reviews": "{n, plural, one {# отзыв} few {# отзыва} many {# отзывов} other {# отзыва}}",
+    "new": "Новый",
+    "flexible": "Гибко",
+    "cancel": "Отменить"
+  },
   "status": {
     "active": "Активна",
     "open": "Открыта",

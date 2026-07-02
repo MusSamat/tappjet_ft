@@ -48,7 +48,31 @@ import {
   TripCard,
   VerifiedBadge,
 } from "@/components/ui";
+import { RequestCard } from "@/components/features/passenger-requests/request-card";
 import type { TripListItem } from "@/lib/api/trips";
+import type { PassengerRequest } from "@/lib/api/passenger-requests";
+
+const DEMO_REQUEST: PassengerRequest = {
+  id: "demo-r1",
+  passengerId: "p1",
+  originCity: "Бишкек",
+  destinationCity: "Ош",
+  seatsNeeded: 2,
+  departureDate: new Date(Date.now() + 24 * 3600 * 1000).toISOString(),
+  flexible: true,
+  comment: "мкр Восток-5, могу подойти к рынку",
+  status: "open",
+  createdAt: new Date().toISOString(),
+  liked: false,
+  metrics: null,
+  passenger: {
+    id: "p1",
+    name: "Нурлан Осмонов",
+    avatarUrl: null,
+    rating: 4.8,
+    ratingCount: 23,
+  },
+};
 
 const DEMO_TRIP: TripListItem = {
   id: "demo",
@@ -407,30 +431,49 @@ export function DesignSystemShowcase() {
         </div>
       </Section>
 
-      <Section title="TripCard">
-        <div className="grid w-full gap-4 md:grid-cols-2">
-          <TripCard trip={DEMO_TRIP} href="/trips/demo" />
-          <TripCard
-            trip={{
-              ...DEMO_TRIP,
-              id: "demo2",
-              originCity: "Бишкек",
-              destinationCity: "Каракол",
-              pricePerSeat: 600,
-              priceNegotiable: false,
-              seatsAvailable: 1,
-              luggage: "no",
-              driver: {
-                id: "d2",
-                name: "Нурия Т.",
-                avatarUrl: null,
-                rating: null,
-                ratingCount: 1,
-                verified: false,
-              },
-            }}
-          />
-        </div>
+      <Section title="TripCard · RequestCard">
+        <Dual>
+          <div className="mx-auto w-full max-w-[380px] space-y-2.5">
+            <TripCard trip={DEMO_TRIP} href="/trips/demo" instant />
+            <TripCard
+              trip={{
+                ...DEMO_TRIP,
+                id: "demo2",
+                originCity: "Бишкек",
+                destinationCity: "Каракол",
+                pricePerSeat: 600,
+                priceNegotiable: false,
+                seatsAvailable: 1,
+                luggage: "no",
+                liked: true,
+                driver: {
+                  id: "d2",
+                  name: "Нурия Т.",
+                  avatarUrl: null,
+                  rating: null,
+                  ratingCount: 1,
+                  verified: false,
+                },
+              }}
+            />
+            <TripCard
+              trip={{ ...DEMO_TRIP, id: "demo3", seatsAvailable: 0, pickupCities: [] }}
+              wholeCabin
+            />
+            <TripCard trip={{ ...DEMO_TRIP, id: "demo4" }} wholeCabin showBookButton />
+            <RequestCard request={DEMO_REQUEST} href="/requests/demo-r1" />
+            <RequestCard
+              request={{
+                ...DEMO_REQUEST,
+                id: "demo-r2",
+                status: "closed",
+                flexible: false,
+                comment: null,
+                passenger: { ...DEMO_REQUEST.passenger, rating: null, ratingCount: 0 },
+              }}
+            />
+          </div>
+        </Dual>
       </Section>
 
       <Section title="Modal · ActionModal · BottomSheet · Toast">
