@@ -15,6 +15,7 @@ export { SeatMeter, SeatStack, type SeatMeterProps, type SeatMeterSize } from ".
 export { StatusBadge, type StatusBadgeStatus, type LifecycleStatus } from "./status-badge";
 export { ListingTypeBadge, type ListingType } from "./listing-type-badge";
 export { Segmented, type SegmentOption } from "./segmented";
+export { LogoMark, Wordmark } from "./logo-mark";
 export { Switch, type SwitchProps } from "./switch";
 export { SectionLabel, OptionalTag, type SectionLabelProps } from "./section-label";
 export { NotifCard } from "./notif-card";

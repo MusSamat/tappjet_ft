@@ -14,18 +14,10 @@ import { useRoleTheme } from "@/lib/hooks/use-role-colors";
 import { normalizeMediaUrl } from "@/lib/utils/media-url";
 import { RoleSwitcher } from "@/components/features/role-mode/role-switcher";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { LogoMark, Wordmark } from "@/components/ui/logo-mark";
 import { cn } from "@/lib/utils/cn";
 
 // Desktop top navbar — design-spec §1.3.
-
-/** Original Tappjet mark: teal-gradient rounded tile with white «Tj» wordmark. */
-function LogoMark() {
-  return (
-    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-600 to-brand-500">
-      <span className="text-[14px] font-black text-white">Tj</span>
-    </div>
-  );
-}
 
 /** Coral unread count badge (spec §1.2 recipe). */
 function UnreadBadge({ count }: { count: number }) {
@@ -165,8 +157,8 @@ export function TopNav() {
       <div className="mx-auto flex h-16 max-w-[1600px] items-center gap-6 px-6">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <LogoMark />
-          <span className="font-disp text-[15px] font-900 text-ink-900 dark:text-white">Tappjet</span>
+          <LogoMark className="h-8 w-8" />
+          <Wordmark className="text-[15px]" />
         </Link>
 
         {/* Nav links */}

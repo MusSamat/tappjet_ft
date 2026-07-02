@@ -17,7 +17,7 @@ import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { consumeDeferredAction, routeForIntent } from "@/lib/auth/deferred-action";
 import { useAuth } from "@/store/auth";
 import { useTranslations } from "next-intl";
-import { PhoneInput, Spinner, type OtpInputHandle } from "@/components/ui";
+import { LogoMark, Wordmark, PhoneInput, Spinner, type OtpInputHandle } from "@/components/ui";
 import { OtpStep } from "./_steps/otp-step";
 import { ResetStep } from "./_steps/reset-step";
 import { cn } from "@/lib/utils/cn";
@@ -27,13 +27,9 @@ type Step = "login" | "otp" | "reset";
 
 const FULL_PHONE_RE = /^\+996\d{9}$/;
 
-/** Original Tappjet mark: teal-gradient rounded tile with white «Tj» wordmark. */
+/** Tappjet brand mark from the prototype (paper-plane + amber dot). */
 function AuthLogo() {
-  return (
-    <span className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-to-br from-brand-600 to-brand-500 shadow-brandcta">
-      <span className="text-[28px] font-black text-white">Tj</span>
-    </span>
-  );
+  return <LogoMark className="mx-auto mb-4 h-16 w-16 rounded-3xl shadow-brandcta" />;
 }
 
 export default function LoginPage() {
@@ -159,7 +155,7 @@ export default function LoginPage() {
       <div className="mx-auto flex w-full max-w-[400px] flex-1 flex-col justify-center px-6 pb-10">
         <div className="mb-7 text-center">
           <AuthLogo />
-          <h1 className="text-[18px] font-900 text-ink-900 dark:text-white">Tappjet</h1>
+          <h1><Wordmark className="text-[18px]" /></h1>
           <p className="mt-1 text-[13px] font-700 text-ink-400">{tl("password_label")}</p>
         </div>
 

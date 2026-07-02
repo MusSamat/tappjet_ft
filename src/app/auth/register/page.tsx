@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl";
 import { extractError } from "@/lib/api/client";
 import { consumeDeferredAction, routeForIntent } from "@/lib/auth/deferred-action";
 import { useAuth } from "@/store/auth";
-import { NotifCard, ProgressBar } from "@/components/ui";
+import { LogoMark, NotifCard, ProgressBar } from "@/components/ui";
 import { PhoneStep } from "./_steps/phone-step";
 import { TelegramStep } from "./_steps/telegram-step";
 import { ProfileStep } from "./_steps/profile-step";
@@ -66,9 +66,7 @@ export default function RegisterPage() {
     <div className="flex min-h-[calc(100vh-64px)] flex-col bg-white dark:bg-ink-950">
       <div className="mx-auto flex w-full max-w-[400px] flex-1 flex-col justify-center px-6 py-10">
         <div className="mb-5 text-center">
-          <span className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-to-br from-brand-600 to-brand-500 shadow-brandcta">
-            <span className="text-[28px] font-black text-white">Tj</span>
-          </span>
+          <LogoMark className="mx-auto mb-4 h-16 w-16 rounded-3xl shadow-brandcta" />
           <h1 className="text-[22px] font-900 text-ink-900 dark:text-white">{t("title")}</h1>
           <p className="mt-1 text-[13px] font-600 text-ink-400">
             {t("have_account")}{" "}

@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { LogIn, MessageCircle, ShieldCheck, Wallet } from "lucide-react";
+import { LogoMark } from "@/components/ui";
 
 interface WelcomeScreenProps {
   onLogin: () => void;
@@ -18,9 +19,9 @@ export function WelcomeScreen({ onLogin, onGuest }: WelcomeScreenProps) {
       style={{ background: "linear-gradient(160deg,#2CC9B4 0%,#0D9488 45%,#0C6F65 100%)" }}
     >
       <div className="mx-auto flex w-full max-w-[460px] flex-1 flex-col items-center justify-center px-7 text-center">
-        {/* Original Tappjet «Tj» mark — white tile for contrast on the teal gradient. */}
-        <span className="mb-5 flex h-24 w-24 items-center justify-center rounded-[2rem] bg-white shadow-lift ring-1 ring-white/25">
-          <span className="text-[44px] font-black leading-none text-brand-600">Tj</span>
+        {/* Tappjet paper-plane mark — frosted white/15 tile on the teal gradient. */}
+        <span className="mb-5 flex h-24 w-24 items-center justify-center rounded-[2rem] bg-white/15 shadow-lift ring-1 ring-white/25">
+          <LogoMark plain className="h-16 w-16" />
         </span>
 
         <p className="text-[15px] font-900 text-accent-300">{t("title")}</p>
