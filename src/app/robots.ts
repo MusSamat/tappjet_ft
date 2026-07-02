@@ -1,15 +1,26 @@
 import type { MetadataRoute } from "next";
+import { SITE_URL } from "@/lib/seo/site";
 
 export default function robots(): MetadataRoute.Robots {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://tappjet.kg";
   return {
     rules: [
       {
         userAgent: "*",
-        allow: ["/", "/trips", "/trips/*", "/drivers/*"],
-        disallow: ["/my/*", "/profile/*", "/auth/*", "/complaint", "/notifications"],
+        allow: ["/", "/trips", "/trips/*", "/route/*", "/drivers/*", "/requests"],
+        disallow: [
+          "/my/*",
+          "/profile/*",
+          "/admin/*",
+          "/auth/*",
+          "/chat",
+          "/notifications",
+          "/loyalty",
+          "/complaint",
+          "/onboarding",
+          "/dev/*",
+        ],
       },
     ],
-    sitemap: `${siteUrl}/sitemap.xml`,
+    sitemap: `${SITE_URL}/sitemap.xml`,
   };
 }
