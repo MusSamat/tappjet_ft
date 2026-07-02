@@ -87,8 +87,11 @@ export default async function TripDetailsPage({ params, searchParams }: Props) {
 
   return (
     <>
+      {/* JSON-LD structured data — safe: JSON.stringify of API values, no user HTML.
+          eslint-disable-next-line react/no-danger */}
       <script
         type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <TripDetailView

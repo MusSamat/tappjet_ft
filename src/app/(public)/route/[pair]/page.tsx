@@ -165,8 +165,10 @@ export default async function RouteLandingPage({ params }: Props) {
 
   return (
     <Container className="py-6 lg:py-10">
+      {/* JSON-LD structured data — safe: JSON.stringify of API values, no user HTML. */}
       <script
         type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
