@@ -11,7 +11,7 @@ import { CardSkeletonList } from "@/components/ui/card-skeleton";
 import { useUiRole } from "@/lib/hooks/use-role-colors";
 
 import { SearchFilters } from "./search-filters";
-import { TripDetailPane } from "./trip-detail-pane";
+import { TripDetailView, type DetailTripData } from "@/components/features/trip/trip-detail";
 import { PopularRoutes } from "./popular-routes";
 import { FeedHeader } from "./feed-header";
 
@@ -156,7 +156,7 @@ export function SearchLayout({ params, initial }: Props) {
           {/* Right rail: detail pane */}
           <div className="overflow-y-auto border-l border-ink-100 bg-white px-6 py-5 dark:border-ink-800 dark:bg-ink-900">
             {selectedTrip ? (
-              <TripDetailPane trip={selectedTrip} />
+              <TripDetailView trip={selectedTrip as DetailTripData} variant="rail" />
             ) : (
               <div className="flex h-full items-center justify-center">
                 <p className="text-[13px] font-800 text-ink-500">{t("select_trip")}</p>
@@ -231,7 +231,7 @@ export function SearchLayout({ params, initial }: Props) {
             </button>
           </div>
           <div className="px-5 py-5">
-            {selectedTrip && <TripDetailPane trip={selectedTrip} />}
+            {selectedTrip && <TripDetailView trip={selectedTrip as DetailTripData} variant="rail" />}
           </div>
         </div>
       </div>

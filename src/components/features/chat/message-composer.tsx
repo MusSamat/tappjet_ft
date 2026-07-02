@@ -39,7 +39,7 @@ export function MessageComposer({ onSend, onTyping, disabled, className }: Props
     <form
       onSubmit={submit}
       className={cn(
-        "flex items-end gap-2 border-t border-ink-100 bg-white p-3 pb-[calc(12px+env(safe-area-inset-bottom))]",
+        "flex items-end gap-2 border-t border-ink-100 bg-white p-3 pb-[calc(12px+env(safe-area-inset-bottom))] dark:border-ink-800 dark:bg-ink-900",
         className,
       )}
     >
@@ -54,13 +54,13 @@ export function MessageComposer({ onSend, onTyping, disabled, className }: Props
         placeholder={t("placeholder")}
         rows={1}
         disabled={disabled}
-        className="flex max-h-28 min-h-[44px] flex-1 resize-none rounded-2xl border-2 border-ink-200 bg-white px-4 py-2.5 text-body-lg font-semibold text-ink-900 outline-none focus:border-brand-500 disabled:opacity-50"
+        className="flex max-h-28 min-h-[44px] flex-1 resize-none rounded-2xl bg-ink-100 px-4 py-2.5 text-[14px] font-600 text-ink-900 outline-none placeholder:text-ink-400 focus:ring-2 focus:ring-brand-500 disabled:opacity-50 dark:bg-ink-800 dark:text-white"
       />
       <button
         type="submit"
         disabled={!text.trim() || disabled}
         aria-label={t("send_aria")}
-        className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-accent-500 text-white hover:bg-accent-600 disabled:opacity-40"
+        className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-brand-600 text-white hover:bg-brand-700 disabled:opacity-40"
       >
         <Send className="h-5 w-5" aria-hidden="true" />
       </button>

@@ -874,7 +874,13 @@
     "status_rejected": "Отклонена",
     "status_cancelled": "Отменена",
     "status_no_show": "Не явился",
-    "status_expired": "Истекла"
+    "status_expired": "Истекла",
+    "hub_title": "Сообщения",
+    "hub_empty_hint": "Чат откроется после бронирования поездки",
+    "hub_placeholder_title": "Выберите чат",
+    "hub_placeholder_body": "Договоритесь о месте встречи и деталях поездки.",
+    "booking_confirmed": "бронь подтверждена",
+    "call": "Позвонить"
   },
   "password_form": {
     "min_length": "Минимум 8 символов",
@@ -1032,5 +1038,31 @@
     "empty_requests_desc_driver": "Опубликуйте поездку — пассажиры сами найдут вас.",
     "empty_requests_cta": "Создать заявку",
     "empty_requests_cta_driver": "Опубликовать поездку"
+  },
+  "detail": {
+    "book_modal_title": "Бронирование",
+    "back": "Назад",
+    "back_to_feed": "Назад к ленте",
+    "share": "Поделиться",
+    "share_copied": "Ссылка скопирована",
+    "som_short": "с",
+    "per_seat": "за место",
+    "seats_label": "Места",
+    "seats_of": "{free} из {total}",
+    "tile_departure": "выезд",
+    "tile_seats_value": "{n} мест",
+    "tile_seats_sub": "свободно",
+    "tile_luggage_title": "Багаж",
+    "luggage_big": "Большой",
+    "luggage_small": "Средний",
+    "luggage_none": "Нет",
+    "new_driver": "Новый водитель",
+    "reviews_count": "{n} отзывов",
+    "message_driver": "Написать водителю",
+    "cta_book": "Забронировать",
+    "cta_signin": "Войдите, чтобы забронировать",
+    "cta_create_similar": "Создать похожую поездку",
+    "trust_pay": "Оплата водителю при встрече",
+    "trust_verified": "Документы водителя проверены"
   }
 }

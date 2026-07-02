@@ -204,7 +204,7 @@ export function TopNav() {
                 {t("create_btn")}
               </Link>
 
-              <Link href="/my/bookings" aria-label={t("messages_aria")} className={ICON_BTN}>
+              <Link href="/chat" aria-label={t("messages_aria")} className={ICON_BTN}>
                 <MessageCircle className="h-[18px] w-[18px]" aria-hidden="true" />
                 <UnreadBadge count={unreadMessages} />
               </Link>

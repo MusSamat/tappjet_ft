@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, Phone } from "lucide-react";
+import { ArrowLeft, Phone, ShieldCheck } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { DriverAvatar } from "@/components/ui";
 
@@ -27,52 +27,62 @@ export function ChatHeader({
   typingUserId,
 }: Props) {
   const t = useTranslations("chat");
+  const isConfirmed = bookingStatus === "accepted";
 
-  const subtitle = tripRoute
-    ? tripRoute
-    : connected
-      ? (typingUserId ? t("typing") : t("online"))
-      : t("connecting");
+  const subtitle = typingUserId
+    ? t("typing")
+    : isConfirmed
+      ? t("booking_confirmed")
+      : tripRoute ?? (connected ? t("online") : t("connecting"));
 
   const nameBlock = (
     <>
-      <DriverAvatar name={otherName} src={otherAvatarUrl} size="sm" />
+      <DriverAvatar name={otherName} src={otherAvatarUrl} size="md" />
       <div className="min-w-0">
-        <p className="text-[15px] font-extrabold text-ink-900">{otherName}</p>
-        <p className="text-[12px] font-semibold text-ink-500">{subtitle}</p>
+        <div className="flex items-center gap-1">
+          <p className="truncate text-[14px] font-900 text-ink-900 dark:text-white">{otherName}</p>
+          <ShieldCheck className="h-3.5 w-3.5 shrink-0 text-brand-600" aria-hidden="true" />
+        </div>
+        <p
+          className={
+            isConfirmed
+              ? "text-[11px] font-700 text-brand-600 dark:text-brand-300"
+              : "text-[11px] font-700 text-ink-500 dark:text-ink-400"
+          }
+        >
+          {subtitle}
+        </p>
       </div>
     </>
   );
 
   return (
-    <div className="flex items-center justify-between border-b border-ink-200 px-5 py-3.5">
-      <div className="flex items-center gap-3">
-        <Link
-          href="/my/bookings"
-          aria-label={t("back")}
-          className="flex h-9 w-9 items-center justify-center rounded-full hover:bg-ink-100 lg:hidden"
-        >
-          <ArrowLeft className="h-5 w-5 text-ink-900" aria-hidden="true" />
+    <div className="flex items-center gap-3 bg-white px-4 pb-3 pt-11 ring-1 ring-ink-100 lg:pt-3.5 dark:bg-ink-900 dark:ring-ink-800">
+      <Link
+        href="/chat"
+        aria-label={t("back")}
+        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-ink-900 hover:bg-ink-100 lg:hidden dark:text-white dark:hover:bg-ink-800"
+      >
+        <ArrowLeft className="h-5 w-5" aria-hidden="true" />
+      </Link>
+
+      {otherUserId ? (
+        <Link href={`/drivers/${otherUserId}`} className="flex min-w-0 flex-1 items-center gap-3 hover:opacity-80">
+          {nameBlock}
         </Link>
-        {otherUserId ? (
-          <Link href={`/drivers/${otherUserId}`} className="flex items-center gap-3 hover:opacity-80">
-            {nameBlock}
-          </Link>
-        ) : (
-          <div className="flex items-center gap-3">{nameBlock}</div>
-        )}
-      </div>
-      <div className="flex items-center gap-2">
-        {otherPhone && bookingStatus === "accepted" && (
-          <a
-            href={`tel:${otherPhone}`}
-            className="flex items-center gap-1.5 rounded-xl border border-ink-200 px-3 py-1.5 text-[12px] font-bold text-ink-700 hover:bg-ink-50"
-          >
-            <Phone className="h-3.5 w-3.5" aria-hidden="true" />
-            {otherPhone}
-          </a>
-        )}
-      </div>
+      ) : (
+        <div className="flex min-w-0 flex-1 items-center gap-3">{nameBlock}</div>
+      )}
+
+      {isConfirmed && otherPhone && (
+        <a
+          href={`tel:${otherPhone}`}
+          aria-label={t("call")}
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-50 text-brand-600 hover:bg-brand-100 dark:bg-brand-500/15 dark:text-brand-300"
+        >
+          <Phone className="h-4 w-4" aria-hidden="true" />
+        </a>
+      )}
     </div>
   );
 }

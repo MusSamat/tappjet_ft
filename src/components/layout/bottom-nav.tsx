@@ -73,7 +73,8 @@ export function BottomNav() {
   const startsWith = (href: string) =>
     pathname === href || pathname.startsWith(`${href}/`);
 
-  const isChat = pathname.startsWith("/my/bookings/") && pathname.endsWith("/chat");
+  const isThread = pathname.startsWith("/my/bookings/") && pathname.endsWith("/chat");
+  const isChat = isThread || startsWith("/chat");
   const feedHref = isDriver ? "/requests" : "/trips";
   const feedActive = startsWith("/trips") || startsWith("/requests");
   const createHref = isDriver ? "/trips/create" : "/requests/create";
@@ -122,7 +123,7 @@ export function BottomNav() {
             </Link>
 
             <NavTab
-              href="/my/bookings"
+              href="/chat"
               label={t("chats")}
               icon={MessageCircle}
               active={isChat}

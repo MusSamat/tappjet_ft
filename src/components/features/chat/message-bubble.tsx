@@ -30,8 +30,10 @@ export function MessageBubble({ message, isMine, senderName, senderAvatarUrl }: 
       )}
       <div
         className={cn(
-          "max-w-[75%] rounded-2xl px-4 py-2.5",
-          isMine ? "rounded-br-sm bg-brand-600 text-white" : "rounded-bl-sm bg-ink-100 text-ink-900",
+          "max-w-[78%] rounded-2xl px-4 py-2.5",
+          isMine
+            ? "rounded-br-md bg-brand-600 text-white"
+            : "rounded-bl-md bg-white text-ink-800 shadow-sm dark:bg-ink-800 dark:text-ink-100",
         )}
       >
         <p className="whitespace-pre-wrap break-words text-body-lg">{message.text}</p>

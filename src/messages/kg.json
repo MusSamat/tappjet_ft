@@ -1032,5 +1032,31 @@
     "empty_requests_desc_driver": "Сапар жарыялаңыз — жүргүнчүлөр өздөрү табышат.",
     "empty_requests_cta": "Арыз түзүү",
     "empty_requests_cta_driver": "Сапар жарыялоо"
+  },
+  "detail": {
+    "book_modal_title": "Брондоо",
+    "back": "Артка",
+    "back_to_feed": "Тасмага кайтуу",
+    "share": "Бөлүшүү",
+    "share_copied": "Шилтеме көчүрүлдү",
+    "som_short": "с",
+    "per_seat": "орун үчүн",
+    "seats_label": "Орундар",
+    "seats_of": "{total} ичинен {free}",
+    "tile_departure": "чыгуу",
+    "tile_seats_value": "{n} орун",
+    "tile_seats_sub": "бош",
+    "tile_luggage_title": "Жүк",
+    "luggage_big": "Чоң",
+    "luggage_small": "Орточо",
+    "luggage_none": "Жок",
+    "new_driver": "Жаңы айдоочу",
+    "reviews_count": "{n} пикир",
+    "message_driver": "Айдоочуга жазуу",
+    "cta_book": "Брондоо",
+    "cta_signin": "Брондоо үчүн кириңиз",
+    "cta_create_similar": "Окшош сапар түзүү",
+    "trust_pay": "Төлөм жолугушууда айдоочуга",
+    "trust_verified": "Айдоочунун документтери текшерилген"
   }
 }
