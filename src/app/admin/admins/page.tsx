@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { listAdmins, createAdmin, type AdminMember } from "@/lib/api/admin";
 import { useAdminAuth } from "@/store/admin-auth";
+import { Button } from "@/components/ui";
 import { cn } from "@/lib/utils/cn";
 import { Plus, X, UserCog, Calendar } from "lucide-react";
 import type { AxiosError } from "axios";
@@ -65,21 +66,21 @@ export default function AdminAdminsPage() {
     <div className="p-6">
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-[24px] font-extrabold text-slate-900">Администраторы</h1>
-          <p className="text-[13px] text-slate-500">Управление командой (только суперадмин)</p>
+          <h1 className="text-[24px] font-disp font-extrabold text-ink-900">Администраторы</h1>
+          <p className="text-[13px] text-ink-500">Управление командой (только суперадмин)</p>
         </div>
         {isSuperadmin && (
-          <button
+          <Button
             type="button"
+            variant="invert"
             onClick={() => {
               setModalOpen(true);
               setFormError("");
             }}
-            className="flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-[13px] font-bold text-white hover:bg-slate-800"
           >
             <Plus className="h-4 w-4" />
             Добавить
-          </button>
+          </Button>
         )}
       </div>
 
@@ -91,43 +92,43 @@ export default function AdminAdminsPage() {
         </div>
       ) : admins.length === 0 ? (
         <div className="rounded-2xl bg-white p-10 text-center">
-          <UserCog className="mx-auto mb-3 h-10 w-10 text-slate-300" />
-          <p className="font-bold text-slate-600">Нет администраторов</p>
+          <UserCog className="mx-auto mb-3 h-10 w-10 text-ink-300" />
+          <p className="font-bold text-ink-600">Нет администраторов</p>
         </div>
       ) : (
         <div className="space-y-2">
           {admins.map((a) => (
             <div
               key={a.id}
-              className="flex items-center justify-between rounded-2xl bg-white p-4 shadow-sm"
+              className="flex items-center justify-between rounded-2xl bg-white p-4 shadow-card"
             >
               <div className="flex items-center gap-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-200 text-[14px] font-bold text-slate-700">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-ink-200 text-[14px] font-bold text-ink-700">
                   {a.name.charAt(0).toUpperCase()}
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <p className="font-bold text-slate-900">{a.name}</p>
+                    <p className="font-bold text-ink-900">{a.name}</p>
                     <span
                       className={cn(
                         "rounded px-1.5 py-0.5 text-[10px] font-bold",
                         a.role === "superadmin"
                           ? "bg-accent-100 text-accent-700"
-                          : "bg-slate-100 text-slate-600",
+                          : "bg-ink-100 text-ink-600",
                       )}
                     >
                       {a.role}
                     </span>
                     {!a.isActive && (
-                      <span className="rounded bg-red-100 px-1.5 py-0.5 text-[10px] font-bold text-red-700">
+                      <span className="rounded bg-danger-100 px-1.5 py-0.5 text-[10px] font-bold text-danger-700">
                         неактивен
                       </span>
                     )}
                   </div>
-                  <p className="text-[12px] text-slate-500">{a.email}</p>
+                  <p className="text-[12px] text-ink-500">{a.email}</p>
                 </div>
               </div>
-              <div className="hidden items-center gap-1.5 text-[12px] text-slate-400 sm:flex">
+              <div className="hidden items-center gap-1.5 text-[12px] text-ink-400 sm:flex">
                 <Calendar className="h-3.5 w-3.5" />
                 Последний вход: {fmt(a.lastLoginAt)}
               </div>
@@ -141,52 +142,52 @@ export default function AdminAdminsPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
           <div className="w-full max-w-[440px] rounded-2xl bg-white p-6">
             <div className="mb-5 flex items-center justify-between">
-              <h2 className="text-[18px] font-extrabold text-slate-900">Новый администратор</h2>
+              <h2 className="text-[18px] font-disp font-extrabold text-ink-900">Новый администратор</h2>
               <button
                 type="button"
                 onClick={() => setModalOpen(false)}
-                className="rounded-full p-1 hover:bg-slate-100"
+                className="rounded-full p-1 hover:bg-ink-100"
               >
-                <X className="h-5 w-5 text-slate-400" />
+                <X className="h-5 w-5 text-ink-400" />
               </button>
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="mb-1 block text-[11px] font-bold uppercase tracking-widest text-slate-500">
+                <label className="mb-1 block text-[11px] font-bold uppercase tracking-widest text-ink-500">
                   Email *
                 </label>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 px-4 py-3 text-[13px] outline-none focus:border-slate-400"
+                  className="w-full rounded-xl border border-ink-200 px-4 py-3 text-[13px] outline-none focus:border-ink-400"
                 />
               </div>
               <div>
-                <label className="mb-1 block text-[11px] font-bold uppercase tracking-widest text-slate-500">
+                <label className="mb-1 block text-[11px] font-bold uppercase tracking-widest text-ink-500">
                   Имя *
                 </label>
                 <input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 px-4 py-3 text-[13px] outline-none focus:border-slate-400"
+                  className="w-full rounded-xl border border-ink-200 px-4 py-3 text-[13px] outline-none focus:border-ink-400"
                 />
               </div>
               <div>
-                <label className="mb-1 block text-[11px] font-bold uppercase tracking-widest text-slate-500">
+                <label className="mb-1 block text-[11px] font-bold uppercase tracking-widest text-ink-500">
                   Пароль *
                 </label>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 px-4 py-3 text-[13px] outline-none focus:border-slate-400"
+                  className="w-full rounded-xl border border-ink-200 px-4 py-3 text-[13px] outline-none focus:border-ink-400"
                   placeholder="Минимум 8 символов"
                 />
               </div>
               <div>
-                <label className="mb-1 block text-[11px] font-bold uppercase tracking-widest text-slate-500">
+                <label className="mb-1 block text-[11px] font-bold uppercase tracking-widest text-ink-500">
                   Роль
                 </label>
                 <div className="flex gap-2">
@@ -199,9 +200,9 @@ export default function AdminAdminsPage() {
                         "flex-1 rounded-xl py-2.5 text-[13px] font-bold transition-colors",
                         role === r
                           ? r === "superadmin"
-                            ? "bg-accent-500 text-accent-700"
-                            : "bg-slate-900 text-white"
-                          : "border border-slate-200 text-slate-600 hover:bg-slate-50",
+                            ? "bg-accent-500 text-accent-ink"
+                            : "bg-ink-900 text-white"
+                          : "border border-ink-200 text-ink-600 hover:bg-ink-50",
                       )}
                     >
                       {r}
@@ -212,27 +213,31 @@ export default function AdminAdminsPage() {
             </div>
 
             {formError && (
-              <p className="mt-3 rounded-xl bg-red-50 px-4 py-3 text-[13px] text-red-700">
+              <p className="mt-3 rounded-xl bg-danger-50 px-4 py-3 text-[13px] text-danger-700">
                 {formError}
               </p>
             )}
 
             <div className="mt-5 flex gap-2">
-              <button
+              <Button
                 type="button"
+                variant="outline"
+                size="lg"
                 onClick={() => setModalOpen(false)}
-                className="flex-1 rounded-xl border border-slate-200 py-3 text-[14px] font-bold text-slate-700 hover:bg-slate-50"
+                className="flex-1"
               >
                 Отмена
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
+                variant="invert"
+                size="lg"
                 onClick={() => createMut.mutate()}
                 disabled={!email.trim() || !name.trim() || !password.trim() || createMut.isPending}
-                className="flex-1 rounded-xl bg-slate-900 py-3 text-[14px] font-bold text-white hover:bg-slate-800 disabled:opacity-50"
+                className="flex-1"
               >
                 {createMut.isPending ? "Создаём…" : "Создать"}
-              </button>
+              </Button>
             </div>
           </div>
         </div>

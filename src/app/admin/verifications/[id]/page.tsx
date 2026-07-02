@@ -8,7 +8,7 @@ import {
   approveVerification,
   type VerificationDetail,
 } from "@/lib/api/admin";
-import { cn } from "@/lib/utils/cn";
+import { Button, StatusBadge, type StatusBadgeStatus } from "@/components/ui";
 import { ArrowLeft, CheckCircle2, XCircle, FileQuestion } from "lucide-react";
 import { PhotoCard } from "./_components/photo-card";
 import { RejectModal } from "./_components/reject-modal";
@@ -26,6 +26,13 @@ const STATUS_LABEL: Record<string, string> = {
   verified: "Одобрен",
   rejected: "Отклонён",
   docs_requested: "Нужны документы",
+};
+
+const STATUS_TONE: Record<string, StatusBadgeStatus> = {
+  pending: "pending",
+  verified: "active",
+  rejected: "rejected",
+  docs_requested: "accepted",
 };
 
 export default function VerificationDetailPage() {
@@ -73,7 +80,7 @@ export default function VerificationDetailPage() {
       <button
         type="button"
         onClick={() => router.back()}
-        className="mb-4 flex items-center gap-1.5 text-[13px] font-bold text-slate-500 hover:text-slate-800"
+        className="mb-4 flex items-center gap-1.5 text-[13px] font-bold text-ink-500 hover:text-ink-800"
       >
         <ArrowLeft className="h-4 w-4" />
         Назад
@@ -81,58 +88,48 @@ export default function VerificationDetailPage() {
 
       <div className="mb-6 flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-[22px] font-extrabold text-slate-900">
+          <h1 className="text-[22px] font-disp font-extrabold text-ink-900">
             Верификация: {item.user.name}
           </h1>
-          <p className="text-[13px] text-slate-500">Подано {fmt(item.submittedAt)}</p>
+          <p className="text-[13px] text-ink-500">Подано {fmt(item.submittedAt)}</p>
         </div>
-        <span
-          className={cn(
-            "rounded-full px-3 py-1.5 text-[12px] font-bold",
-            item.verificationStatus === "verified"
-              ? "bg-brand-50 text-brand-800"
-              : item.verificationStatus === "rejected"
-                ? "bg-red-50 text-red-700"
-                : item.verificationStatus === "docs_requested"
-                  ? "bg-blue-50 text-blue-700"
-                  : "bg-accent-50 text-accent-700",
-          )}
-        >
-          {STATUS_LABEL[item.verificationStatus] ?? item.verificationStatus}
-        </span>
+        <StatusBadge
+          status={STATUS_TONE[item.verificationStatus] ?? "pending"}
+          label={STATUS_LABEL[item.verificationStatus] ?? item.verificationStatus}
+        />
       </div>
 
       {/* Driver info */}
-      <div className="mb-4 rounded-2xl bg-white p-5 shadow-sm">
-        <p className="mb-3 text-[11px] font-bold uppercase tracking-widest text-slate-400">
+      <div className="mb-4 rounded-2xl bg-white p-5 shadow-card">
+        <p className="mb-3 text-[11px] font-bold uppercase tracking-widest text-ink-400">
           Водитель
         </p>
         <div className="flex items-center gap-4">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-slate-200 text-[20px] font-bold text-slate-600">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-ink-200 text-[20px] font-bold text-ink-600">
             {item.user.name.charAt(0).toUpperCase()}
           </div>
           <div>
-            <p className="text-[16px] font-extrabold text-slate-900">{item.user.name}</p>
-            <p className="text-[13px] text-slate-500">{item.user.phone}</p>
+            <p className="text-[16px] font-extrabold text-ink-900">{item.user.name}</p>
+            <p className="text-[13px] text-ink-500">{item.user.phone}</p>
           </div>
         </div>
         {item.rejectionReason && (
-          <div className="mt-3 rounded-xl bg-slate-50 px-4 py-3 text-[13px] text-slate-700">
-            <span className="font-bold text-slate-500">Заметка: </span>
+          <div className="mt-3 rounded-xl bg-ink-50 px-4 py-3 text-[13px] text-ink-700">
+            <span className="font-bold text-ink-500">Заметка: </span>
             {item.rejectionReason}
           </div>
         )}
         {item.requestedDocs.length > 0 && (
-          <div className="mt-3 rounded-xl bg-blue-50 px-4 py-3">
-            <p className="text-[12px] font-bold text-blue-800">Запрошены документы:</p>
-            <p className="text-[12px] text-blue-700">{item.requestedDocs.join(", ")}</p>
+          <div className="mt-3 rounded-xl bg-sky-50 px-4 py-3">
+            <p className="text-[12px] font-bold text-sky-700">Запрошены документы:</p>
+            <p className="text-[12px] text-sky-700">{item.requestedDocs.join(", ")}</p>
           </div>
         )}
       </div>
 
       {/* Car info */}
-      <div className="mb-4 rounded-2xl bg-white p-5 shadow-sm">
-        <p className="mb-3 text-[11px] font-bold uppercase tracking-widest text-slate-400">
+      <div className="mb-4 rounded-2xl bg-white p-5 shadow-card">
+        <p className="mb-3 text-[11px] font-bold uppercase tracking-widest text-ink-400">
           Автомобиль
         </p>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
@@ -145,18 +142,18 @@ export default function VerificationDetailPage() {
             { label: "Мест", value: item.car.seats },
           ].map(({ label, value }) => (
             <div key={label}>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">
                 {label}
               </p>
-              <p className="text-[14px] font-bold text-slate-900">{value}</p>
+              <p className="text-[14px] font-bold text-ink-900">{value}</p>
             </div>
           ))}
         </div>
       </div>
 
       {/* Photos */}
-      <div className="mb-4 rounded-2xl bg-white p-5 shadow-sm">
-        <p className="mb-3 text-[11px] font-bold uppercase tracking-widest text-slate-400">
+      <div className="mb-4 rounded-2xl bg-white p-5 shadow-card">
+        <p className="mb-3 text-[11px] font-bold uppercase tracking-widest text-ink-400">
           Документы и фото
         </p>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -170,31 +167,34 @@ export default function VerificationDetailPage() {
       {/* Actions */}
       {isPending && (
         <div className="flex flex-wrap gap-3">
-          <button
+          <Button
+            variant="brand"
+            size="lg"
             type="button"
             onClick={() => approveMut.mutate()}
             disabled={approveMut.isPending}
-            className="flex items-center gap-2 rounded-xl bg-brand-600 px-6 py-3 text-[14px] font-bold text-white hover:bg-brand-700 disabled:opacity-50"
           >
             <CheckCircle2 className="h-5 w-5" />
             {approveMut.isPending ? "Одобряем…" : "Одобрить"}
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="cta"
+            size="lg"
             type="button"
             onClick={() => setDocsOpen(true)}
-            className="flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-[14px] font-bold text-white hover:bg-blue-700"
           >
             <FileQuestion className="h-5 w-5" />
             Запросить документы
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="danger"
+            size="lg"
             type="button"
             onClick={() => setRejectOpen(true)}
-            className="flex items-center gap-2 rounded-xl bg-red-600 px-6 py-3 text-[14px] font-bold text-white hover:bg-red-700"
           >
             <XCircle className="h-5 w-5" />
             Отклонить
-          </button>
+          </Button>
         </div>
       )}
 

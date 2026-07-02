@@ -28,7 +28,7 @@ export function FunnelChart({ data, loading }: Props) {
           layout="vertical"
           margin={{ top: 0, right: 40, bottom: 0, left: 10 }}
         >
-          <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" horizontal={false} />
+          <CartesianGrid strokeDasharray="3 3" stroke="#F5F5F4" horizontal={false} />
           <XAxis type="number" tick={{ fontSize: 10 }} />
           <YAxis type="category" dataKey="label" tick={{ fontSize: 10 }} width={150} />
           <Tooltip formatter={((v: unknown) => [v, "Пользователей"]) as unknown as undefined} />

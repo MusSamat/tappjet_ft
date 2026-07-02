@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { listAuditLog, type AuditLogItem } from "@/lib/api/admin";
 import { useAdminAuth } from "@/store/admin-auth";
+import { Button } from "@/components/ui";
 import { cn } from "@/lib/utils/cn";
 import { ClipboardList, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -15,20 +16,20 @@ function fmt(iso: string): string {
 
 const ACTION_COLORS: Record<string, string> = {
   approve_verification: "bg-brand-50 text-brand-700",
-  reject_verification:  "bg-red-50 text-red-700",
-  request_docs:         "bg-blue-50 text-blue-700",
-  block_user:           "bg-red-50 text-red-700",
+  reject_verification:  "bg-danger-50 text-danger-700",
+  request_docs:         "bg-sky-50 text-sky-700",
+  block_user:           "bg-danger-50 text-danger-700",
   unblock_user:         "bg-brand-50 text-brand-700",
   force_cancel_trip:    "bg-accent-50 text-accent-700",
   resolve_complaint:    "bg-brand-50 text-brand-700",
-  dismiss_complaint:    "bg-slate-100 text-slate-600",
-  create_city:          "bg-blue-50 text-blue-700",
-  update_city:          "bg-blue-50 text-blue-700",
+  dismiss_complaint:    "bg-ink-100 text-ink-600",
+  create_city:          "bg-sky-50 text-sky-700",
+  update_city:          "bg-sky-50 text-sky-700",
   create_admin:         "bg-accent-50 text-accent-700",
 };
 
 function ActionBadge({ action }: { action: string }) {
-  const cls = ACTION_COLORS[action] ?? "bg-slate-100 text-slate-600";
+  const cls = ACTION_COLORS[action] ?? "bg-ink-100 text-ink-600";
   return (
     <span className={cn("rounded-full px-2.5 py-0.5 text-[11px] font-bold", cls)}>
       {action.replace(/_/g, " ")}
@@ -64,8 +65,8 @@ export default function AdminAuditLogPage() {
   return (
     <div className="p-6">
       <div className="mb-6">
-        <h1 className="text-[24px] font-extrabold text-slate-900">Журнал действий</h1>
-        <p className="text-[13px] text-slate-500">
+        <h1 className="text-[24px] font-disp font-extrabold text-ink-900">Журнал действий</h1>
+        <p className="text-[13px] text-ink-500">
           {isSuperAdmin ? "Все действия администраторов" : "Ваши действия"}
         </p>
       </div>
@@ -78,38 +79,38 @@ export default function AdminAuditLogPage() {
         </div>
       ) : items.length === 0 ? (
         <div className="rounded-2xl bg-white p-10 text-center">
-          <ClipboardList className="mx-auto mb-3 h-10 w-10 text-slate-300" />
-          <p className="font-bold text-slate-600">Нет записей</p>
+          <ClipboardList className="mx-auto mb-3 h-10 w-10 text-ink-300" />
+          <p className="font-bold text-ink-600">Нет записей</p>
         </div>
       ) : (
         <>
-          <div className="overflow-hidden rounded-2xl bg-white shadow-sm">
+          <div className="overflow-hidden rounded-2xl bg-white shadow-card">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-slate-100">
+                <tr className="border-b border-ink-100">
                   {["Время", "Администратор", "Действие", "Объект", "IP"].map((h) => (
-                    <th key={h} className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-widest text-slate-400">
+                    <th key={h} className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-widest text-ink-400">
                       {h}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-50">
+              <tbody className="divide-y divide-ink-50">
                 {items.map((item) => (
-                  <tr key={item.id} className="hover:bg-slate-50">
-                    <td className="whitespace-nowrap px-4 py-3 text-[12px] text-slate-500">
+                  <tr key={item.id} className="hover:bg-ink-50">
+                    <td className="whitespace-nowrap px-4 py-3 text-[12px] text-ink-500">
                       {fmt(item.createdAt)}
                     </td>
                     <td className="px-4 py-3">
-                      <p className="text-[13px] font-bold text-slate-900">{item.admin.name}</p>
-                      <p className="text-[11px] text-slate-400">{item.admin.role}</p>
+                      <p className="text-[13px] font-bold text-ink-900">{item.admin.name}</p>
+                      <p className="text-[11px] text-ink-400">{item.admin.role}</p>
                     </td>
                     <td className="px-4 py-3">
                       <ActionBadge action={item.action} />
                     </td>
-                    <td className="px-4 py-3 text-[12px] text-slate-600">
+                    <td className="px-4 py-3 text-[12px] text-ink-600">
                       {item.targetType && (
-                        <span className="mr-1 rounded bg-slate-100 px-1.5 py-0.5 text-[10px] text-slate-500">
+                        <span className="mr-1 rounded bg-ink-100 px-1.5 py-0.5 text-[10px] text-ink-500">
                           {item.targetType}
                         </span>
                       )}
@@ -119,7 +120,7 @@ export default function AdminAuditLogPage() {
                         </span>
                       ) : "—"}
                     </td>
-                    <td className="px-4 py-3 font-mono text-[11px] text-slate-400">
+                    <td className="px-4 py-3 font-mono text-[11px] text-ink-400">
                       {item.ipAddress ?? "—"}
                     </td>
                   </tr>
@@ -130,28 +131,26 @@ export default function AdminAuditLogPage() {
 
           {/* Pagination */}
           <div className="mt-4 flex items-center justify-between">
-            <p className="text-[13px] text-slate-500">
+            <p className="text-[13px] text-ink-500">
               Показано {items.length} записей
             </p>
             <div className="flex gap-2">
-              <button
-                type="button"
+              <Button
+                variant="outline"
                 onClick={prevPage}
                 disabled={!hasPrev}
-                className="flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-4 py-2 text-[13px] font-bold text-slate-600 hover:bg-slate-50 disabled:opacity-40"
               >
                 <ChevronLeft className="h-4 w-4" />
                 Назад
-              </button>
-              <button
-                type="button"
+              </Button>
+              <Button
+                variant="outline"
                 onClick={nextPage}
                 disabled={!hasNext}
-                className="flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-4 py-2 text-[13px] font-bold text-slate-600 hover:bg-slate-50 disabled:opacity-40"
               >
                 Далее
                 <ChevronRight className="h-4 w-4" />
-              </button>
+              </Button>
             </div>
           </div>
         </>

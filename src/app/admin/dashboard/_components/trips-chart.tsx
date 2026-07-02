@@ -20,7 +20,7 @@ export function TripsChart({ data, loading, days }: Props) {
     <ChartCard title={`Поездки за ${days} дней`} loading={loading}>
       <ResponsiveContainer width="100%" height={200}>
         <AreaChart data={data} margin={{ top: 4, right: 8, bottom: 0, left: -20 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+          <CartesianGrid strokeDasharray="3 3" stroke="#F5F5F4" />
           <XAxis dataKey="date" tickFormatter={fmtShortDate} tick={{ fontSize: 10 }} />
           <YAxis tick={{ fontSize: 10 }} />
           <Tooltip labelFormatter={fmtShortDate as unknown as undefined} />

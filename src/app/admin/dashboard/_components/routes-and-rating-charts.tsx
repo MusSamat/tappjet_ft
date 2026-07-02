@@ -19,7 +19,7 @@ export function RoutesChart({ data, loading, days }: RoutesProps) {
     <ChartCard title={`Топ-10 маршрутов (${days} дней)`} loading={loading}>
       <ResponsiveContainer width="100%" height={240}>
         <BarChart data={data} layout="vertical" margin={{ top: 0, right: 20, bottom: 0, left: 10 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" horizontal={false} />
+          <CartesianGrid strokeDasharray="3 3" stroke="#F5F5F4" horizontal={false} />
           <XAxis type="number" tick={{ fontSize: 10 }} />
           <YAxis type="category" dataKey="route" tick={{ fontSize: 10 }} width={120} />
           <Tooltip formatter={((v: unknown) => [v, "Поездок"]) as unknown as undefined} />
@@ -45,7 +45,7 @@ export function RatingChart({ data, loading, days }: RatingProps) {
     <ChartCard title={`Средний рейтинг по дням (${days} дней)`} loading={loading}>
       <ResponsiveContainer width="100%" height={240}>
         <LineChart data={data} margin={{ top: 4, right: 8, bottom: 0, left: -20 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+          <CartesianGrid strokeDasharray="3 3" stroke="#F5F5F4" />
           <XAxis dataKey="date" tickFormatter={fmtShortDate} tick={{ fontSize: 10 }} />
           <YAxis domain={[1, 5]} tick={{ fontSize: 10 }} />
           <Tooltip

@@ -1,6 +1,7 @@
 "use client";
 
 import { AlertTriangle, X } from "lucide-react";
+import { Button } from "@/components/ui";
 import type { AdminTripItem } from "@/lib/api/admin";
 
 function fmtDate(iso: string): string {
@@ -47,13 +48,13 @@ export function ForceCancelModal({
     <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/50 p-4">
       <div className="w-full max-w-[480px] rounded-2xl bg-white p-6 shadow-2xl">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-[18px] font-extrabold text-slate-900">Отменить поездку</h2>
+          <h2 className="text-[18px] font-disp font-extrabold text-ink-900">Отменить поездку</h2>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-full p-1 hover:bg-slate-100"
+            className="rounded-full p-1 hover:bg-ink-100"
           >
-            <X className="h-5 w-5 text-slate-400" />
+            <X className="h-5 w-5 text-ink-400" />
           </button>
         </div>
 
@@ -67,14 +68,14 @@ export function ForceCancelModal({
           </div>
         </div>
 
-        <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-slate-500">
+        <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-ink-500">
           Причина отмены *
         </p>
         <div className="mb-3 space-y-1.5">
           {CANCEL_REASONS.map((r) => (
             <label
               key={r}
-              className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-100 px-4 py-2.5 hover:bg-slate-50"
+              className="flex cursor-pointer items-center gap-3 rounded-xl border border-ink-100 px-4 py-2.5 hover:bg-ink-50"
             >
               <input
                 type="radio"
@@ -84,7 +85,7 @@ export function ForceCancelModal({
                 onChange={() => onReasonChange(r)}
                 className="h-4 w-4"
               />
-              <span className="text-[13px] font-semibold text-slate-700">{r}</span>
+              <span className="text-[13px] font-semibold text-ink-700">{r}</span>
             </label>
           ))}
         </div>
@@ -94,30 +95,32 @@ export function ForceCancelModal({
             onChange={(e) => onCustomReasonChange(e.target.value)}
             rows={2}
             placeholder="Укажите причину…"
-            className="mb-3 w-full rounded-xl border border-slate-200 p-3 text-[13px] outline-none focus:border-slate-400"
+            className="mb-3 w-full rounded-xl border border-ink-200 p-3 text-[13px] outline-none focus:border-ink-400"
           />
         )}
         {isError && (
-          <p className="mb-3 rounded-xl bg-red-50 px-4 py-2 text-[12px] text-red-700">
+          <p className="mb-3 rounded-xl bg-danger-50 px-4 py-2 text-[12px] text-danger-700">
             Ошибка при отмене. Попробуйте снова.
           </p>
         )}
         <div className="flex gap-2">
-          <button
-            type="button"
+          <Button
+            variant="outline"
+            size="lg"
             onClick={onClose}
-            className="flex-1 rounded-xl border border-slate-200 py-3 text-[14px] font-bold text-slate-700 hover:bg-slate-50"
+            className="flex-1"
           >
             Отмена
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="danger"
+            size="lg"
             onClick={onConfirm}
             disabled={!effectiveReason.trim() || isPending}
-            className="flex-1 rounded-xl bg-red-600 py-3 text-[14px] font-bold text-white hover:bg-red-700 disabled:opacity-50"
+            className="flex-1"
           >
             {isPending ? "Отменяем…" : "Подтвердить"}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

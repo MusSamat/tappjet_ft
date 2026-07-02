@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { requestVerificationDocs } from "@/lib/api/admin";
+import { Button } from "@/components/ui";
 
 const REQUESTABLE_DOCS = [
   { id: "passport", label: "Паспорт" },
@@ -41,14 +42,14 @@ export function RequestDocsModal({ id, open, onClose, onSuccess }: Props) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="w-full max-w-[440px] rounded-2xl bg-white p-6">
-        <h2 className="mb-4 text-[18px] font-extrabold text-slate-900">
+        <h2 className="mb-4 text-[18px] font-disp font-extrabold text-ink-900">
           Запросить документы
         </h2>
         <div className="mb-4 space-y-2">
           {REQUESTABLE_DOCS.map((d) => (
             <label
               key={d.id}
-              className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-100 px-4 py-2.5 hover:bg-slate-50"
+              className="flex cursor-pointer items-center gap-3 rounded-xl border border-ink-100 px-4 py-2.5 hover:bg-ink-50"
             >
               <input
                 type="checkbox"
@@ -56,11 +57,11 @@ export function RequestDocsModal({ id, open, onClose, onSuccess }: Props) {
                 onChange={() => toggle(d.id)}
                 className="h-4 w-4 rounded"
               />
-              <span className="text-[13px] font-semibold text-slate-700">{d.label}</span>
+              <span className="text-[13px] font-semibold text-ink-700">{d.label}</span>
             </label>
           ))}
         </div>
-        <label className="mb-1 block text-[11px] font-bold uppercase tracking-widest text-slate-500">
+        <label className="mb-1 block text-[11px] font-bold uppercase tracking-widest text-ink-500">
           Примечание (необязательно)
         </label>
         <textarea
@@ -68,24 +69,28 @@ export function RequestDocsModal({ id, open, onClose, onSuccess }: Props) {
           onChange={(e) => setNote(e.target.value)}
           rows={2}
           placeholder="Дополнительные инструкции…"
-          className="w-full rounded-xl border border-slate-200 p-3 text-[13px] outline-none focus:border-slate-400"
+          className="w-full rounded-xl border border-ink-200 p-3 text-[13px] outline-none focus:border-ink-400"
         />
         <div className="mt-4 flex gap-2">
-          <button
+          <Button
+            variant="outline"
+            size="lg"
             type="button"
             onClick={onClose}
-            className="flex-1 rounded-xl border border-slate-200 py-3 text-[14px] font-bold text-slate-700 hover:bg-slate-50"
+            className="flex-1"
           >
             Отмена
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="cta"
+            size="lg"
             type="button"
             onClick={() => mutate()}
             disabled={selectedDocs.length === 0 || isPending}
-            className="flex-1 rounded-xl bg-blue-600 py-3 text-[14px] font-bold text-white hover:bg-blue-700 disabled:opacity-50"
+            className="flex-1"
           >
             {isPending ? "Отправляем…" : "Запросить"}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

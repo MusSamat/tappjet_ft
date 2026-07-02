@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { listAdminCities, createCity, updateCity, type CityItem } from "@/lib/api/admin";
 import { useAdminAuth } from "@/store/admin-auth";
+import { Button } from "@/components/ui";
 import { cn } from "@/lib/utils/cn";
 import { Plus, Pencil, Check, X } from "lucide-react";
 
@@ -70,7 +71,7 @@ function EditRow({
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-lg border border-slate-200 p-1.5 text-slate-600 hover:bg-slate-100"
+            className="rounded-lg border border-ink-200 p-1.5 text-ink-600 hover:bg-ink-100"
           >
             <X className="h-4 w-4" />
           </button>
@@ -113,20 +114,20 @@ export default function AdminCitiesPage() {
     <div className="p-6">
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-[24px] font-extrabold text-slate-900">Города</h1>
-          <p className="text-[13px] text-slate-500">
+          <h1 className="text-[24px] font-disp font-extrabold text-ink-900">Города</h1>
+          <p className="text-[13px] text-ink-500">
             {isSuperAdmin ? "Управление списком городов" : "Только просмотр (нет прав суперадмина)"}
           </p>
         </div>
         {isSuperAdmin && !adding && (
-          <button
+          <Button
             type="button"
+            variant="invert"
             onClick={() => setAdding(true)}
-            className="flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-[13px] font-bold text-white hover:bg-slate-800"
           >
             <Plus className="h-4 w-4" />
             Добавить
-          </button>
+          </Button>
         )}
       </div>
 
@@ -137,18 +138,18 @@ export default function AdminCitiesPage() {
           ))}
         </div>
       ) : (
-        <div className="overflow-hidden rounded-2xl bg-white shadow-sm">
+        <div className="overflow-hidden rounded-2xl bg-white shadow-card">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-slate-100">
+              <tr className="border-b border-ink-100">
                 {["Название (рус)", "Название (кырг)", "Регион", "Активен", isSuperAdmin ? "Действия" : ""].map((h) => (
-                  <th key={h} className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-widest text-slate-400">
+                  <th key={h} className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-widest text-ink-400">
                     {h}
                   </th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-50">
+            <tbody className="divide-y divide-ink-50">
               {adding && (
                 <EditRow
                   city={{}}
@@ -167,14 +168,14 @@ export default function AdminCitiesPage() {
                     saving={updateMut.isPending}
                   />
                 ) : (
-                  <tr key={c.id} className="hover:bg-slate-50">
-                    <td className="px-4 py-3 font-bold text-slate-900">{c.name}</td>
-                    <td className="px-4 py-3 text-[13px] text-slate-600">{c.nameKg}</td>
-                    <td className="px-4 py-3 text-[13px] text-slate-500">{c.region ?? "—"}</td>
+                  <tr key={c.id} className="hover:bg-ink-50">
+                    <td className="px-4 py-3 font-bold text-ink-900">{c.name}</td>
+                    <td className="px-4 py-3 text-[13px] text-ink-600">{c.nameKg}</td>
+                    <td className="px-4 py-3 text-[13px] text-ink-500">{c.region ?? "—"}</td>
                     <td className="px-4 py-3 text-center">
                       <span className={cn(
                         "inline-block h-2 w-2 rounded-full",
-                        c.isActive ? "bg-brand-500" : "bg-slate-300",
+                        c.isActive ? "bg-brand-500" : "bg-ink-300",
                       )} />
                     </td>
                     <td className="px-4 py-3">
@@ -182,7 +183,7 @@ export default function AdminCitiesPage() {
                         <button
                           type="button"
                           onClick={() => setEditingId(c.id)}
-                          className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+                          className="rounded-lg p-1.5 text-ink-400 hover:bg-ink-100 hover:text-ink-700"
                         >
                           <Pencil className="h-4 w-4" />
                         </button>

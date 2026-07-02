@@ -24,7 +24,7 @@ export function RegistrationsChart({ data, loading, days }: Props) {
               <stop offset="95%" stopColor="#0D9488" stopOpacity={0} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+          <CartesianGrid strokeDasharray="3 3" stroke="#F5F5F4" />
           <XAxis dataKey="date" tickFormatter={fmtShortDate} tick={{ fontSize: 10 }} />
           <YAxis tick={{ fontSize: 10 }} />
           <Tooltip

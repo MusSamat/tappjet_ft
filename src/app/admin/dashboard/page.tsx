@@ -67,14 +67,14 @@ export default function AdminDashboard() {
     <div className="p-6">
       <div className="mb-6 flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-[24px] font-extrabold text-slate-900">Дашборд</h1>
-          <p className="text-[13px] text-slate-500">
+          <h1 className="text-[24px] font-disp font-extrabold text-ink-900">Дашборд</h1>
+          <p className="text-[13px] text-ink-500">
             {new Date().toLocaleDateString("ru-RU", {
               weekday: "long", day: "numeric", month: "long", year: "numeric",
             })}
           </p>
         </div>
-        <div className="flex items-center gap-1 rounded-xl bg-white p-1 shadow-sm">
+        <div className="flex items-center gap-1 rounded-xl bg-white p-1 shadow-soft">
           {RANGE_OPTIONS.map((opt) => (
             <button
               key={opt.value}
@@ -83,8 +83,8 @@ export default function AdminDashboard() {
               className={cn(
                 "rounded-lg px-3 py-1.5 text-[12px] font-bold transition-colors",
                 days === opt.value
-                  ? "bg-slate-900 text-white"
-                  : "text-slate-500 hover:bg-slate-100 hover:text-slate-800",
+                  ? "bg-ink-900 text-white"
+                  : "text-ink-500 hover:bg-ink-100 hover:text-ink-800",
               )}
             >
               {opt.label}
@@ -103,9 +103,9 @@ export default function AdminDashboard() {
             <KpiCard label="Активные водители" value={k?.activeDrivers7d ?? 0} sub="за последние 7 дней" icon={UserCheck} />
             <KpiCard label="Активные поездки" value={k?.publishedTripsNow ?? 0} sub="прямо сейчас" icon={Car} />
             <KpiCard label="Завершено поездок" value={k?.completedTrips.last_7d ?? 0} sub={`${k?.completedTrips.last_30d ?? 0} за 30 дней`} icon={CheckCircle2} accent="text-brand-600" />
-            <KpiCard label="Принятие брони, %" value={k?.acceptanceRate7d != null ? `${k.acceptanceRate7d}%` : "—"} sub="за 7 дней" icon={TrendingUp} accent="text-blue-600" />
+            <KpiCard label="Принятие брони, %" value={k?.acceptanceRate7d != null ? `${k.acceptanceRate7d}%` : "—"} sub="за 7 дней" icon={TrendingUp} accent="text-sky-600" />
             <KpiCard label="Верификации" value={k?.pendingVerifications ?? 0} sub="ожидают проверки" icon={ShieldAlert} accent={k?.pendingVerifications ? "text-accent-600" : undefined} href="/admin/verifications" />
-            <KpiCard label="Открытые жалобы" value={k?.openComplaints ?? 0} sub="требуют реакции" icon={MessageSquareWarning} accent={k?.openComplaints ? "text-red-600" : undefined} href="/admin/complaints" />
+            <KpiCard label="Открытые жалобы" value={k?.openComplaints ?? 0} sub="требуют реакции" icon={MessageSquareWarning} accent={k?.openComplaints ? "text-danger-600" : undefined} href="/admin/complaints" />
             <KpiCard label="Рейтинг водителей" value={k?.avgDriverRating != null ? k.avgDriverRating.toFixed(2) : "—"} sub="среднее (≥3 отзывов)" icon={Star} accent="text-accent-500" />
           </>
         )}
@@ -143,11 +143,11 @@ export default function AdminDashboard() {
           )}
           {(k?.openComplaints ?? 0) > 0 && (
             <Link href="/admin/complaints">
-              <div className="flex items-center gap-4 rounded-2xl border-2 border-red-200 bg-red-50 p-5 hover:bg-red-100">
-                <AlertCircle className="h-8 w-8 text-red-500" />
+              <div className="flex items-center gap-4 rounded-2xl border-2 border-danger-200 bg-danger-50 p-5 hover:bg-danger-100">
+                <AlertCircle className="h-8 w-8 text-danger-500" />
                 <div>
-                  <p className="font-bold text-red-900">{k!.openComplaints} открытых жалоб</p>
-                  <p className="text-[12px] text-red-700">Перейти к жалобам</p>
+                  <p className="font-bold text-danger-700">{k!.openComplaints} открытых жалоб</p>
+                  <p className="text-[12px] text-danger-700">Перейти к жалобам</p>
                 </div>
               </div>
             </Link>

@@ -8,6 +8,7 @@ import {
   listAdminTrips,
   type AdminTripItem,
 } from "@/lib/api/admin";
+import { Button, StatusBadge, type StatusBadgeStatus } from "@/components/ui";
 import { cn } from "@/lib/utils/cn";
 import { Car, ChevronLeft, ChevronRight } from "lucide-react";
 import { TripDetailPanel } from "./_components/trip-detail-panel";
@@ -22,10 +23,10 @@ function fmtDateShort(iso: string): string {
 
 type StatusTab = "active" | "completed" | "cancelled" | "all";
 
-const STATUS_BADGE: Record<string, string> = {
-  active:    "bg-brand-50 text-brand-700",
-  completed: "bg-blue-50 text-blue-700",
-  cancelled: "bg-slate-100 text-slate-600",
+const STATUS_BADGE: Record<string, { tone: StatusBadgeStatus; label: string }> = {
+  active:    { tone: "active",    label: "Активна" },
+  completed: { tone: "completed", label: "Завершена" },
+  cancelled: { tone: "rejected",  label: "Отменена" },
 };
 
 const LIMIT = 20;
@@ -106,8 +107,8 @@ export default function AdminTripsPage() {
       <div className={cn("flex flex-col overflow-hidden", selectedId ? "flex-1" : "flex-1")}>
         <div className="flex-1 overflow-auto p-6">
           <div className="mb-5">
-            <h1 className="text-[24px] font-extrabold text-slate-900">Поездки</h1>
-            <p className="text-[13px] text-slate-500">
+            <h1 className="text-[24px] font-disp font-extrabold text-ink-900">Поездки</h1>
+            <p className="text-[13px] text-ink-500">
               Просмотр всех поездок, принудительная отмена
             </p>
           </div>
@@ -137,8 +138,8 @@ export default function AdminTripsPage() {
             </div>
           ) : trips.length === 0 ? (
             <div className="rounded-2xl bg-white p-10 text-center">
-              <Car className="mx-auto mb-3 h-10 w-10 text-slate-300" />
-              <p className="font-bold text-slate-500">Поездки не найдены</p>
+              <Car className="mx-auto mb-3 h-10 w-10 text-ink-300" />
+              <p className="font-bold text-ink-500">Поездки не найдены</p>
             </div>
           ) : (
             <div className="space-y-2">
@@ -147,18 +148,18 @@ export default function AdminTripsPage() {
                   key={t.id}
                   onClick={() => setSelectedId(selectedId === t.id ? null : t.id)}
                   className={cn(
-                    "flex cursor-pointer items-center justify-between rounded-2xl bg-white p-4 shadow-sm transition-shadow hover:shadow-md",
-                    selectedId === t.id && "ring-2 ring-slate-900",
+                    "flex cursor-pointer items-center justify-between rounded-2xl bg-white p-4 shadow-card transition-shadow hover:shadow-lift",
+                    selectedId === t.id && "ring-2 ring-ink-900",
                   )}
                 >
                   <div className="min-w-0 flex-1">
-                    <p className="font-bold text-slate-900 truncate">
+                    <p className="font-bold text-ink-900 truncate">
                       {t.originCity} → {t.destinationCity}
                     </p>
-                    <p className="text-[12px] text-slate-500">
+                    <p className="text-[12px] text-ink-500">
                       {fmtDateShort(t.departureAt)}
                       {" · "}
-                      <span className="text-slate-700 font-semibold">{t.driver.name}</span>
+                      <span className="text-ink-700 font-semibold">{t.driver.name}</span>
                       {" · "}
                       {t.seatsAvailable}/{t.seatsTotal} мест
                       {" · "}
@@ -171,25 +172,21 @@ export default function AdminTripsPage() {
                     </p>
                   </div>
                   <div className="ml-3 flex items-center gap-2 flex-shrink-0">
-                    <span
-                      className={cn(
-                        "rounded-full px-2.5 py-1 text-[11px] font-bold",
-                        STATUS_BADGE[t.status] ?? "bg-slate-100 text-slate-600",
-                      )}
-                    >
-                      {t.status}
-                    </span>
+                    <StatusBadge
+                      status={STATUS_BADGE[t.status]?.tone ?? t.status}
+                      label={STATUS_BADGE[t.status]?.label}
+                    />
                     {t.status === "active" && (
-                      <button
-                        type="button"
+                      <Button
+                        variant="danger"
+                        size="sm"
                         onClick={(e) => {
                           e.stopPropagation();
                           openCancelModal(t);
                         }}
-                        className="rounded-xl bg-red-600 px-3 py-1.5 text-[12px] font-bold text-white hover:bg-red-700"
                       >
                         Отменить
-                      </button>
+                      </Button>
                     )}
                   </div>
                 </div>
@@ -199,25 +196,23 @@ export default function AdminTripsPage() {
 
           {(hasPrev || hasNext) && (
             <div className="mt-4 flex items-center justify-between">
-              <button
-                type="button"
+              <Button
+                variant="outline"
                 disabled={!hasPrev}
                 onClick={() => setCursors((p) => p.slice(0, -1))}
-                className="flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-4 py-2 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-40"
               >
                 <ChevronLeft className="h-4 w-4" /> Назад
-              </button>
-              <button
-                type="button"
+              </Button>
+              <Button
+                variant="outline"
                 disabled={!hasNext}
                 onClick={() => {
                   if (tripsQuery.data?.nextCursor)
                     setCursors((p) => [...p, tripsQuery.data.nextCursor!]);
                 }}
-                className="flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-4 py-2 text-[13px] font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-40"
               >
                 Вперёд <ChevronRight className="h-4 w-4" />
-              </button>
+              </Button>
             </div>
           )}
         </div>
@@ -232,11 +227,11 @@ export default function AdminTripsPage() {
             onForceCancel={openCancelModal}
           />
         ) : detailQuery.isLoading ? (
-          <div className="w-[440px] flex-shrink-0 border-l border-slate-200 bg-white flex items-center justify-center">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-slate-700" />
+          <div className="w-[440px] flex-shrink-0 border-l border-ink-200 bg-white flex items-center justify-center">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-ink-200 border-t-ink-700" />
           </div>
         ) : (
-          <div className="w-[440px] flex-shrink-0 border-l border-slate-200 bg-white p-6 text-center text-slate-500">
+          <div className="w-[440px] flex-shrink-0 border-l border-ink-200 bg-white p-6 text-center text-ink-500">
             Не удалось загрузить
           </div>
         )

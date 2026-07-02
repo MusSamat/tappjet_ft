@@ -13,7 +13,7 @@ export function ActivityHeatmap({ data }: Props) {
     <div className="overflow-x-auto">
       <div className="min-w-[560px]">
         <div
-          className="mb-1 ml-8 grid text-[9px] text-slate-400"
+          className="mb-1 ml-8 grid text-[9px] text-ink-400"
           style={{ gridTemplateColumns: "repeat(24, 1fr)" }}
         >
           {Array.from({ length: 24 }).map((_, h) => (
@@ -22,7 +22,7 @@ export function ActivityHeatmap({ data }: Props) {
         </div>
         {DAYS_SHORT.map((day, dow) => (
           <div key={dow} className="mb-0.5 flex items-center gap-1">
-            <span className="w-6 flex-shrink-0 text-right text-[9px] text-slate-400">{day}</span>
+            <span className="w-6 flex-shrink-0 text-right text-[9px] text-ink-400">{day}</span>
             <div
               className="grid flex-1 gap-0.5"
               style={{ gridTemplateColumns: "repeat(24, 1fr)" }}
@@ -38,7 +38,7 @@ export function ActivityHeatmap({ data }: Props) {
                     style={{
                       backgroundColor:
                         count === 0
-                          ? "#f1f5f9"
+                          ? "#F5F5F4"
                           : `hsl(170, ${40 + intensity * 6}%, ${65 - intensity * 5}%)`,
                     }}
                   />

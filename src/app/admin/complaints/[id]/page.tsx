@@ -4,14 +4,15 @@ import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getAdminComplaint, resolveComplaint, type ComplaintItem } from "@/lib/api/admin";
+import { Button, StatusBadge } from "@/components/ui";
 import { cn } from "@/lib/utils/cn";
 import { ArrowLeft, AlertTriangle } from "lucide-react";
 
 const PRIORITY_CFG: Record<string, string> = {
-  P0: "bg-red-600 text-white",
-  P1: "bg-orange-500 text-white",
+  P0: "bg-danger-600 text-white",
+  P1: "bg-accent-500 text-white",
   P2: "bg-accent-400 text-accent-700",
-  P3: "bg-slate-200 text-slate-600",
+  P3: "bg-ink-200 text-ink-600",
 };
 
 function fmt(iso?: string | null): string {
@@ -61,37 +62,39 @@ export default function ComplaintDetailPage() {
 
   return (
     <div className="p-6">
-      <button
-        type="button"
+      <Button
+        variant="textGhost"
+        size="sm"
         onClick={() => router.back()}
-        className="mb-4 flex items-center gap-1.5 text-[13px] font-bold text-slate-500 hover:text-slate-800"
+        className="mb-4"
       >
         <ArrowLeft className="h-4 w-4" />
         Назад
-      </button>
+      </Button>
 
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-[22px] font-extrabold text-slate-900">Жалоба</h1>
-          <p className="text-[13px] text-slate-500">{fmt(complaint.createdAt)}</p>
+          <h1 className="text-[22px] font-disp font-extrabold text-ink-900">Жалоба</h1>
+          <p className="text-[13px] text-ink-500">{fmt(complaint.createdAt)}</p>
         </div>
         <div className="flex items-center gap-2">
           <span className={cn("rounded-full px-2.5 py-1 text-[11px] font-bold", PRIORITY_CFG[complaint.priority] ?? PRIORITY_CFG.P3)}>
             {complaint.priority}
           </span>
-          <span className={cn(
-            "rounded-full px-3 py-1.5 text-[12px] font-bold",
-            complaint.status === "new" ? "bg-red-50 text-red-700" :
-            complaint.status === "in_review" ? "bg-accent-50 text-accent-700" :
-            complaint.status === "resolved" ? "bg-brand-50 text-brand-800" :
-            "bg-slate-100 text-slate-600",
-          )}>
-            {complaint.status === "new" ? "Новая" :
-             complaint.status === "in_review" ? "На рассмотрении" :
-             complaint.status === "resolved" ? "Решена" : "Отклонена"}
-          </span>
+          <StatusBadge
+            status={
+              complaint.status === "new" ? "pending" :
+              complaint.status === "in_review" ? "pending" :
+              complaint.status === "resolved" ? "accepted" : "rejected"
+            }
+            label={
+              complaint.status === "new" ? "Новая" :
+              complaint.status === "in_review" ? "На рассмотрении" :
+              complaint.status === "resolved" ? "Решена" : "Отклонена"
+            }
+          />
           {complaint.slaBreach && (
-            <span className="flex items-center gap-1 rounded-full bg-red-100 px-2.5 py-1 text-[11px] font-bold text-red-700">
+            <span className="flex items-center gap-1 rounded-full bg-danger-100 px-2.5 py-1 text-[11px] font-bold text-danger-700">
               <AlertTriangle className="h-3 w-3" />
               SLA нарушен
             </span>
@@ -100,34 +103,34 @@ export default function ComplaintDetailPage() {
       </div>
 
       {/* Reporter & target */}
-      <div className="mb-4 rounded-2xl bg-white p-5 shadow-sm">
-        <p className="mb-3 text-[11px] font-bold uppercase tracking-widest text-slate-400">Участники</p>
+      <div className="mb-4 rounded-2xl bg-white p-5 shadow-card">
+        <p className="mb-3 text-[11px] font-bold uppercase tracking-widest text-ink-400">Участники</p>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Подал жалобу</p>
-            <p className="mt-1 font-bold text-slate-900">{complaint.reporterName}</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">Подал жалобу</p>
+            <p className="mt-1 font-bold text-ink-900">{complaint.reporterName}</p>
           </div>
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Объект жалобы</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">Объект жалобы</p>
             {complaint.targetUserId ? (
-              <p className="mt-1 font-mono text-[12px] text-slate-600">{complaint.targetUserId.slice(0, 12)}…</p>
+              <p className="mt-1 font-mono text-[12px] text-ink-600">{complaint.targetUserId.slice(0, 12)}…</p>
             ) : complaint.targetTripId ? (
-              <p className="mt-1 font-mono text-[12px] text-slate-600">Поездка: {complaint.targetTripId.slice(0, 12)}…</p>
+              <p className="mt-1 font-mono text-[12px] text-ink-600">Поездка: {complaint.targetTripId.slice(0, 12)}…</p>
             ) : (
-              <p className="mt-1 text-[13px] text-slate-400">—</p>
+              <p className="mt-1 text-[13px] text-ink-400">—</p>
             )}
           </div>
         </div>
       </div>
 
       {/* Content */}
-      <div className="mb-4 rounded-2xl bg-white p-5 shadow-sm">
+      <div className="mb-4 rounded-2xl bg-white p-5 shadow-card">
         <div className="mb-3 flex items-center gap-2">
-          <span className="rounded-full bg-slate-100 px-3 py-1 text-[12px] font-bold text-slate-600">
+          <span className="rounded-full bg-ink-100 px-3 py-1 text-[12px] font-bold text-ink-600">
             {complaint.category}
           </span>
         </div>
-        <p className="text-[14px] leading-relaxed text-slate-800">{complaint.description}</p>
+        <p className="text-[14px] leading-relaxed text-ink-800">{complaint.description}</p>
         {complaint.attachments.length > 0 && (
           <div className="mt-3 grid grid-cols-3 gap-2">
             {complaint.attachments.map((url, i) => (
@@ -141,19 +144,19 @@ export default function ComplaintDetailPage() {
 
       {/* Resolution (already closed) */}
       {!isOpen && complaint.resolution && (
-        <div className="mb-4 rounded-2xl bg-slate-50 p-4">
-          <p className="mb-1 text-[11px] font-bold uppercase tracking-widest text-slate-400">Решение</p>
-          <p className="text-[13px] text-slate-700">{complaint.resolution}</p>
+        <div className="mb-4 rounded-2xl bg-ink-50 p-4">
+          <p className="mb-1 text-[11px] font-bold uppercase tracking-widest text-ink-400">Решение</p>
+          <p className="text-[13px] text-ink-700">{complaint.resolution}</p>
           {complaint.resolvedAt && (
-            <p className="mt-1 text-[11px] text-slate-400">{fmt(complaint.resolvedAt)}</p>
+            <p className="mt-1 text-[11px] text-ink-400">{fmt(complaint.resolvedAt)}</p>
           )}
         </div>
       )}
 
       {/* Resolve form */}
       {isOpen && (
-        <div className="rounded-2xl bg-white p-5 shadow-sm">
-          <p className="mb-3 text-[13px] font-bold text-slate-700">Принять решение</p>
+        <div className="rounded-2xl bg-white p-5 shadow-card">
+          <p className="mb-3 text-[13px] font-bold text-ink-700">Принять решение</p>
           <div className="mb-4 flex gap-2">
             {(["resolved", "dismissed"] as const).map((s) => (
               <button
@@ -163,15 +166,15 @@ export default function ComplaintDetailPage() {
                 className={cn(
                   "rounded-xl px-5 py-2.5 text-[13px] font-bold transition-colors",
                   resolveStatus === s
-                    ? s === "resolved" ? "bg-brand-600 text-white" : "bg-slate-700 text-white"
-                    : "border border-slate-200 text-slate-600 hover:bg-slate-50",
+                    ? s === "resolved" ? "bg-brand-600 text-white" : "bg-ink-700 text-white"
+                    : "border border-ink-200 text-ink-600 hover:bg-ink-50",
                 )}
               >
                 {s === "resolved" ? "Принять жалобу" : "Отклонить жалобу"}
               </button>
             ))}
           </div>
-          <label className="mb-1 block text-[11px] font-bold uppercase tracking-widest text-slate-500">
+          <label className="mb-1 block text-[11px] font-bold uppercase tracking-widest text-ink-500">
             Описание решения *
           </label>
           <textarea
@@ -179,19 +182,16 @@ export default function ComplaintDetailPage() {
             onChange={(e) => setResolution(e.target.value)}
             rows={3}
             placeholder="Опишите принятое решение…"
-            className="mb-4 w-full rounded-xl border border-slate-200 p-3 text-[13px] outline-none focus:border-slate-400"
+            className="mb-4 w-full rounded-xl border border-ink-200 p-3 text-[13px] outline-none focus:border-ink-400"
           />
-          <button
-            type="button"
+          <Button
+            variant={resolveStatus === "resolved" ? "brand" : "invert"}
+            size="lg"
             onClick={() => resolveMut.mutate()}
             disabled={!resolution.trim() || resolveMut.isPending}
-            className={cn(
-              "rounded-xl px-8 py-3 text-[14px] font-bold text-white disabled:opacity-50",
-              resolveStatus === "resolved" ? "bg-brand-600 hover:bg-brand-700" : "bg-slate-800 hover:bg-slate-900",
-            )}
           >
             {resolveMut.isPending ? "Сохраняем…" : "Сохранить решение"}
-          </button>
+          </Button>
         </div>
       )}
     </div>
