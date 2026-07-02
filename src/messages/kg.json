@@ -319,6 +319,8 @@
       "telegram_title": "Код Telegram'га жөнөтүлдү",
       "telegram_hint": "Билдирүүдөгү кодду киргизиңиз:",
       "telegram_open_btn": "Telegram'да ботту ачуу",
+      "telegram_start_title": "Telegram'да ботту ачыңыз",
+      "telegram_start_hint": "Бот менен чатта «Старт» баскычын басыңыз — кодду жиберет",
       "telegram_waiting": "Telegram'дан ырастоону күтүүдөбүз…",
       "telegram_otp_prompt": "Telegram'дан жөнөтүлгөн кодду киргизиңиз",
       "err_telegram_expired": "Шилтеме эскирди. Кайра баштаңыз.",

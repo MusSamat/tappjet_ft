@@ -3,31 +3,44 @@
 import { useEffect, useRef, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { getTelegramLinkStatus, verifyOtp } from "@/lib/api/auth";
+import {
+  getTelegramLinkStatus,
+  initTelegramLink,
+  sendTelegramOtp,
+  verifyOtp,
+} from "@/lib/api/auth";
 import { otpSchema } from "@/lib/validation/auth";
 import { Button, OtpInput, Spinner, type OtpInputHandle } from "@/components/ui";
 import type { AuthResult } from "@/lib/api/types";
 
 interface Props {
   phone: string;
-  token: string;
-  deepLink: string;
   onVerified: (result: AuthResult) => void;
   onBack: () => void;
   onError: (e: unknown) => void;
 }
 
-export function TelegramStep({ phone, token, deepLink, onVerified, onBack, onError }: Props) {
+type Channel = "dm" | "deeplink";
+type SendResult =
+  | { channel: "dm" }
+  | { channel: "deeplink"; token: string; deepLink: string };
+
+export function TelegramStep({ phone, onVerified, onBack, onError }: Props) {
   const t = useTranslations("auth.register");
   const otpRef = useRef<OtpInputHandle>(null);
   const [code, setCode] = useState("");
   const [resendIn, setResendIn] = useState(60);
+  const [channel, setChannel] = useState<Channel | null>(null);
+  const [token, setToken] = useState("");
+  const [deepLink, setDeepLink] = useState("");
+  const started = useRef(false);
 
-  // Background poll only to catch an expired link — the OTP card shows immediately,
-  // because opening the deep-link already triggered the bot to send the code.
+  // Poll the link status only in deep-link mode — catches an expired link while
+  // the user is over in the bot pressing "Start".
   const statusQuery = useQuery({
     queryKey: ["telegram-link-status", token],
     queryFn: () => getTelegramLinkStatus(token),
+    enabled: channel === "deeplink" && token.length > 0,
     refetchInterval: (q) => (q.state.data?.status === "waiting" ? 2000 : false),
   });
 
@@ -36,17 +49,53 @@ export function TelegramStep({ phone, token, deepLink, onVerified, onBack, onErr
   }, [statusQuery.data?.status, onError]);
 
   useEffect(() => {
-    const id = setInterval(() => {
-      setResendIn((s) => (s > 0 ? s - 1 : 0));
-    }, 1000);
+    const id = setInterval(() => setResendIn((s) => (s > 0 ? s - 1 : 0)), 1000);
     return () => clearInterval(id);
   }, []);
 
+  // DM-first delivery: a phone that already has a linked Telegram gets the code
+  // straight as a direct message (zero clicks, no "Start"). A first-time / unlinked
+  // phone falls back to the deep-link so the user presses "Start" once in the bot.
+  const sendMutation = useMutation({
+    mutationFn: async (): Promise<SendResult> => {
+      try {
+        await sendTelegramOtp(phone);
+        return { channel: "dm" };
+      } catch {
+        const link = await initTelegramLink(phone);
+        return { channel: "deeplink", token: link.token, deepLink: link.deepLink };
+      }
+    },
+    onSuccess: (res) => {
+      setChannel(res.channel);
+      setResendIn(60);
+      if (res.channel === "deeplink") {
+        setToken(res.token);
+        setDeepLink(res.deepLink);
+        // Opening the deep-link triggers the bot's /start → auto-sends the OTP.
+        if (res.deepLink) window.open(res.deepLink, "_blank", "noopener,noreferrer");
+      }
+    },
+    onError,
+  });
+
+  // Auto-request the code on step entry — no manual "get code" click.
+  useEffect(() => {
+    if (started.current) return;
+    started.current = true;
+    sendMutation.mutate();
+  }, [sendMutation]);
+
   const handleResend = () => {
-    // Re-open the deep-link → bot re-sends the code.
-    if (deepLink) window.open(deepLink, "_blank", "noopener,noreferrer");
-    statusQuery.refetch();
-    setResendIn(60);
+    if (resendIn > 0) return;
+    if (channel === "deeplink" && deepLink) {
+      // Re-open the deep-link → bot re-sends the code.
+      window.open(deepLink, "_blank", "noopener,noreferrer");
+      statusQuery.refetch();
+      setResendIn(60);
+    } else {
+      sendMutation.mutate();
+    }
   };
 
   const verifyMutation = useMutation({
@@ -54,6 +103,8 @@ export function TelegramStep({ phone, token, deepLink, onVerified, onBack, onErr
     onSuccess: onVerified,
     onError: (e) => { otpRef.current?.clear(); onError(e); },
   });
+
+  const isDeepLink = channel === "deeplink";
 
   return (
     <form
@@ -71,11 +122,29 @@ export function TelegramStep({ phone, token, deepLink, onVerified, onBack, onErr
       </div>
 
       <div>
-        <p className="text-[20px] font-900 text-ink-900">{t("telegram_title")}</p>
+        <p className="text-[20px] font-900 text-ink-900">
+          {channel === null
+            ? t("sending")
+            : isDeepLink
+              ? t("telegram_start_title")
+              : t("telegram_title")}
+        </p>
         <p className="mt-1.5 text-[13px] font-700 leading-relaxed text-ink-500">
-          {t("telegram_hint")} <span className="font-900 text-brand-700">@tappjet_bot</span>
+          {isDeepLink ? t("telegram_start_hint") : t("telegram_hint")}{" "}
+          <span className="font-900 text-brand-700">@tappjet_bot</span>
         </p>
       </div>
+
+      {isDeepLink && deepLink && (
+        <a
+          href={deepLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[13px] font-900 text-brand-700"
+        >
+          {t("telegram_open_btn")}
+        </a>
+      )}
 
       <OtpInput
         ref={otpRef}
@@ -97,15 +166,15 @@ export function TelegramStep({ phone, token, deepLink, onVerified, onBack, onErr
       </Button>
 
       {resendIn > 0 ? (
-        <p className="text-[12px] font-700 text-ink-400">
-          Отправить заново через{" "}
-          <span className="font-900 text-ink-600">
-            {Math.floor(resendIn / 60)}:{String(resendIn % 60).padStart(2, "0")}
-          </span>
-        </p>
+        <p className="text-[12px] font-700 text-ink-400">{t("resend_after", { n: resendIn })}</p>
       ) : (
-        <button type="button" onClick={handleResend} className="text-[12px] font-900 text-brand-700">
-          Отправить заново
+        <button
+          type="button"
+          onClick={handleResend}
+          disabled={sendMutation.isPending}
+          className="text-[12px] font-900 text-brand-700"
+        >
+          {sendMutation.isPending ? t("sending") : t("resend_btn")}
         </button>
       )}
 

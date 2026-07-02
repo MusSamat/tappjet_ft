@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { extractError } from "@/lib/api/client";
 import { consumeDeferredAction, routeForIntent } from "@/lib/auth/deferred-action";
@@ -23,13 +23,21 @@ export default function RegisterPage() {
   const t = useTranslations("auth.register");
   const router = useRouter();
   const { setSession, updateUser } = useAuth();
+  const status = useAuth((s) => s.status);
   const [step, setStep] = useState<Step>("phone");
   const [phone, setPhone] = useState("");
-  const [linkToken, setLinkToken] = useState("");
-  const [deepLink, setDeepLink] = useState("");
   const [serverError, setServerError] = useState<string | null>(null);
 
   const stepIdx = STEP_ORDER.indexOf(step);
+
+  // Already authenticated (e.g. Telegram Mini App silent login) → skip the whole
+  // phone/OTP dance. Only fires on the untouched first step, never mid-flow.
+  useEffect(() => {
+    if (status === "authenticated" && step === "phone") {
+      const intent = consumeDeferredAction();
+      router.replace(intent ? routeForIntent(intent) : "/");
+    }
+  }, [status, step, router]);
 
   const STEP_TITLES: Record<Step, string> = {
     phone: t("step_phone"),
@@ -95,22 +103,15 @@ export default function RegisterPage() {
             <PhoneStep
               phone={phone}
               onPhone={setPhone}
-              onNext={({ token, deepLink: dl }) => {
-                setLinkToken(token);
-                setDeepLink(dl);
+              onNext={() => {
                 setServerError(null);
-                // Opening the deep-link triggers the bot's /start → auto-sends the OTP.
-                if (dl) window.open(dl, "_blank", "noopener,noreferrer");
                 setStep("telegram");
               }}
-              onError={handleError}
             />
           )}
           {step === "telegram" && (
             <TelegramStep
               phone={phone}
-              token={linkToken}
-              deepLink={deepLink}
               onVerified={(result: Awaited<ReturnType<typeof verifyOtp>>) => {
                 setSession(result);
                 setServerError(null);

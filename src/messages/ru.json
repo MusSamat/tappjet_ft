@@ -319,6 +319,8 @@
       "telegram_title": "Код отправлен в Telegram",
       "telegram_hint": "Введите код из сообщения от",
       "telegram_open_btn": "Открыть бот в Telegram",
+      "telegram_start_title": "Откройте бот в Telegram",
+      "telegram_start_hint": "Нажмите «Старт» в чате с ботом — код пришлёт",
       "telegram_waiting": "Ожидаем подтверждения в Telegram…",
       "telegram_otp_prompt": "Введите код из Telegram, отправленный на номер",
       "err_telegram_expired": "Ссылка устарела. Начните заново.",
