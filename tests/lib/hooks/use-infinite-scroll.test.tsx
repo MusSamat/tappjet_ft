@@ -83,6 +83,6 @@ describe("useInfiniteScroll", () => {
     const fetchNextPage = vi.fn();
     render(<SentinelHost hasNextPage={true} isFetchingNextPage={false} fetchNextPage={fetchNextPage} />);
     expect(mockObserve).toHaveBeenCalledOnce();
-    expect(mockObserve.mock.calls[0][0]).toBeInstanceOf(HTMLDivElement);
+    expect(mockObserve.mock.calls[0]![0]).toBeInstanceOf(HTMLDivElement);
   });
 });

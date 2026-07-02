@@ -1,4 +1,4 @@
-import { describe, it, expect, createRef } from "vitest";
+import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { CardField } from "@/components/ui/card-field";
 import { createRef as reactCreateRef } from "react";
