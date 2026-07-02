@@ -6,6 +6,7 @@ export { RouteCitiesPicker } from "./route-cities-picker";
 export { RouteStops } from "./route-stops";
 export { DatePicker, type DatePickerProps } from "./date-picker";
 export { Button, type ButtonProps } from "./button";
+export { Chip, type ChipProps, type ChipKind, type ChipAccent } from "./chip";
 export { CardField, type CardFieldProps } from "./card-field";
 export { DriverAvatar } from "./driver-avatar";
 export { Badge, VerifiedBadge, PendingBadge, SeatsBadge, type BadgeProps } from "./badge";

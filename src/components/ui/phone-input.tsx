@@ -42,13 +42,13 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
       <div className="flex flex-col gap-1.5">
         <div
           className={cn(
-            "flex h-12 items-center gap-2 rounded-2xl border-2 bg-ink-50 px-4 transition-colors focus-within:border-brand-500",
-            invalid ? "border-coral-400 bg-coral-100/40" : "border-ink-200",
+            "flex h-12 items-center gap-2 rounded-2xl bg-ink-50 px-4 transition-shadow focus-within:ring-2 focus-within:ring-brand-500 dark:bg-ink-800",
+            invalid && "ring-2 ring-danger-400",
             disabled && "opacity-50",
             className,
           )}
         >
-          <span className="select-none text-[15px] font-800 text-ink-500">{PREFIX}</span>
+          <span className="select-none text-[15px] font-800 text-ink-500 dark:text-ink-400">{PREFIX}</span>
           <input
             ref={ref}
             type="tel"
@@ -59,12 +59,12 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
             onChange={(e) => handleChange(e.target.value)}
             aria-invalid={invalid || undefined}
             disabled={disabled}
-            className="w-full border-none bg-transparent p-0 text-[15px] font-800 text-ink-900 outline-none placeholder:text-ink-400 placeholder:font-700"
+            className="w-full border-none bg-transparent p-0 text-[15px] font-800 text-ink-900 outline-none placeholder:font-700 placeholder:text-ink-400 dark:text-white"
             {...rest}
           />
         </div>
         {hint && (
-          <span className={cn("text-caption", invalid ? "text-coral-500" : "text-ink-500")}>
+          <span className={cn("text-caption", invalid ? "text-danger-500" : "text-ink-500 dark:text-ink-400")}>
             {hint}
           </span>
         )}

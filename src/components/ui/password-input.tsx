@@ -12,8 +12,8 @@ export const PasswordInput = forwardRef<
   return (
     <div
       className={cn(
-        "flex h-12 items-center rounded-2xl border-2 bg-white pl-4 pr-1 transition-colors focus-within:border-brand-500",
-        invalid ? "border-coral-500" : "border-ink-200",
+        "flex h-12 items-center rounded-2xl bg-ink-50 pl-4 pr-1 transition-shadow focus-within:ring-2 focus-within:ring-brand-500 dark:bg-ink-800",
+        invalid && "ring-2 ring-danger-400",
         className,
       )}
     >
@@ -22,14 +22,14 @@ export const PasswordInput = forwardRef<
         type={visible ? "text" : "password"}
         autoComplete="current-password"
         aria-invalid={invalid || undefined}
-        className="w-full border-none bg-transparent p-0 text-body-lg font-bold text-ink-900 outline-none placeholder:text-ink-500 placeholder:font-semibold"
+        className="w-full border-none bg-transparent p-0 text-body-lg font-bold text-ink-900 outline-none placeholder:font-semibold placeholder:text-ink-400 dark:text-white"
         {...rest}
       />
       <button
         type="button"
         onClick={() => setVisible((v) => !v)}
         aria-label={visible ? "Скрыть пароль" : "Показать пароль"}
-        className="flex h-10 w-10 items-center justify-center rounded-lg text-ink-500 hover:bg-ink-100"
+        className="flex h-10 w-10 items-center justify-center rounded-xl text-ink-500 hover:bg-ink-100 dark:text-ink-400 dark:hover:bg-ink-700"
       >
         {visible ? <EyeOff className="h-5 w-5" aria-hidden="true" /> : <Eye className="h-5 w-5" aria-hidden="true" />}
       </button>

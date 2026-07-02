@@ -7,7 +7,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaHTMLAttributes<H
       ref={ref}
       rows={rows}
       className={cn(
-        "flex w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 py-3 text-body font-bold text-ink-900 outline-none transition-colors placeholder:text-ink-400 focus:border-brand-500 focus:bg-white disabled:cursor-not-allowed disabled:opacity-50 aria-[invalid=true]:border-coral-400",
+        "flex w-full resize-none rounded-2xl bg-ink-50 px-4 py-3 text-[14px] font-600 text-ink-900 outline-none transition-shadow placeholder:text-ink-400 focus:ring-2 focus:ring-brand-500 disabled:cursor-not-allowed disabled:opacity-50 aria-[invalid=true]:ring-2 aria-[invalid=true]:ring-danger-400 dark:bg-ink-800 dark:text-white",
         className,
       )}
       {...rest}

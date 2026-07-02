@@ -1,8 +1,9 @@
 "use client";
 
-import { MapPin, Flag, Clock, Users, Search } from "lucide-react";
+import { MapPin, Flag, Clock, Users, Search, Circle, SlidersHorizontal, Lock, LogOut, Zap } from "lucide-react";
 import {
   Badge,
+  Chip,
   BottomSheet,
   BottomSheetContent,
   BottomSheetHeader,
@@ -22,6 +23,9 @@ import {
   ModalTitle,
   ModalTrigger,
   NotifCard,
+  OtpInput,
+  PasswordInput,
+  PhoneInput,
   PendingBadge,
   ProgressBar,
   RatingStars,
@@ -88,6 +92,16 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
+/** Renders the same demo twice — light panel + `class="dark"` panel. */
+function Dual({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="grid w-full gap-4 lg:grid-cols-2">
+      <div className="rounded-3xl bg-ink-50 p-5 ring-1 ring-ink-100">{children}</div>
+      <div className="dark rounded-3xl bg-ink-950 p-5 ring-1 ring-ink-800">{children}</div>
+    </div>
+  );
+}
+
 export function DesignSystemShowcase() {
   return (
     <div className="container py-10">
@@ -119,49 +133,126 @@ export function DesignSystemShowcase() {
       </Section>
 
       <Section title="Кнопки">
-        <Button variant="submit" size="lg">
-          <Search className="h-5 w-5" /> Найти поездку
-        </Button>
-        <Button variant="primary">Опубликовать</Button>
-        <Button variant="secondary">Отменить</Button>
-        <Button variant="outline">Написать</Button>
-        <Button variant="ghost">Пропустить</Button>
-        <Button variant="danger">Удалить</Button>
-        <Button variant="pill" size="lg">
-          CTA на лендинге
-        </Button>
-        <Button disabled>Disabled</Button>
+        <Dual>
+          <div className="flex flex-wrap items-center gap-3">
+            <Button variant="cta">
+              <Search className="h-4 w-4" /> Забронировать
+            </Button>
+            <Button variant="brand">Опубликовать поездку</Button>
+            <Button variant="grape">Найти попутку</Button>
+            <Button variant="ghost">Отмена</Button>
+            <Button variant="textGhost">Позже</Button>
+            <Button variant="invert">Изменить пароль</Button>
+            <Button variant="dangerSoft">
+              <LogOut className="h-4 w-4" /> Выйти
+            </Button>
+            <Button variant="outline">Написать</Button>
+            <Button variant="lock">
+              <Lock className="h-4 w-4" /> Войдите, чтобы забронировать
+            </Button>
+            <Button variant="cta" pill size="sm">
+              Войти
+            </Button>
+          </div>
+          <div className="mt-4 flex flex-wrap items-center gap-3">
+            <Button variant="cta" size="sm">sm h-9</Button>
+            <Button variant="cta" size="md">md h-11</Button>
+            <Button variant="cta" size="lg">lg h-12</Button>
+            <Button variant="cta" size="xl">xl h-14</Button>
+            <Button variant="brand" disabled>Disabled</Button>
+          </div>
+        </Dual>
+      </Section>
+
+      <Section title="Chips">
+        <Dual>
+          <div className="flex flex-col gap-3">
+            <div className="flex flex-wrap gap-2">
+              <Chip kind="quick" selected icon={<SlidersHorizontal className="h-3.5 w-3.5" />}>
+                Фильтры
+              </Chip>
+              <Chip kind="quick">Сегодня</Chip>
+              <Chip kind="quick">Дешевле</Chip>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Chip kind="filter" selected>Только женщины</Chip>
+              <Chip kind="filter">4.5+</Chip>
+              <Chip kind="filter" selected accent="grape">Все</Chip>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Chip kind="time" selected>09:00</Chip>
+              <Chip kind="time">12:00</Chip>
+              <Chip kind="time">15:00</Chip>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Chip kind="date" selected>Завтра</Chip>
+              <Chip kind="date">Послезавтра</Chip>
+              <Chip kind="date" selected accent="grape">Гибко</Chip>
+              <Chip kind="date" icon={<Zap className="h-3.5 w-3.5" />}>Выбрать дату</Chip>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Chip kind="pref" selected>✨ Чистый салон</Chip>
+              <Chip kind="pref">🎵 Музыка</Chip>
+              <Chip kind="pref" selected>🚭 Без курения</Chip>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Chip kind="removable" onRemove={() => {}}>Кара-Балта</Chip>
+              <Chip kind="removable" onRemove={() => {}}>Токтогул</Chip>
+              <Chip kind="add">город</Chip>
+              <Chip kind="add" accent="sky">точка</Chip>
+              <Chip kind="add" accent="grape">точка</Chip>
+            </div>
+          </div>
+        </Dual>
       </Section>
 
       <Section title="Input · CardField · Textarea · Checkbox">
-        <div className="flex w-full max-w-md flex-col gap-4">
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="name">Имя</Label>
-            <Input id="name" placeholder="Асан Кадыров" />
-          </div>
-          <div className="overflow-hidden rounded-2xl border-2 border-ink-200 bg-white">
-            <CardField
-              icon={<MapPin className="h-4 w-4 text-brand-700" />}
-              label="ОТКУДА"
+        <Dual>
+          <div className="flex w-full max-w-md flex-col gap-4">
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="name">Имя</Label>
+              <Input id="name" placeholder="Асан Кадыров" />
+            </div>
+            <Input
+              icon={<Circle className="h-3.5 w-3.5 text-brand-600" />}
+              placeholder="Откуда"
               defaultValue="Бишкек"
-              iconBg="bg-brand-50"
-              className="border-b-[0.5px] border-ink-100"
             />
-            <CardField
-              icon={<Flag className="h-4 w-4 text-accent-600" />}
-              label="КУДА"
-              placeholder="Куда едете?"
-              iconBg="bg-accent-50"
+            <Input
+              icon={<MapPin className="h-3.5 w-3.5 text-accent-500" />}
+              placeholder="Куда"
             />
+            <div className="grid grid-cols-2 gap-2">
+              <Input variant="bordered" placeholder="от" />
+              <Input variant="bordered" placeholder="до" />
+            </div>
+            <PhoneInput />
+            <PasswordInput placeholder="Пароль" />
+            <OtpInput length={4} />
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="comment">Комментарий</Label>
+              <Textarea id="comment" placeholder="До 300 символов…" />
+            </div>
+            <label className="flex items-center gap-2">
+              <Checkbox id="terms" />
+              <span className="text-body-lg text-ink-700 dark:text-ink-300">Я согласен с условиями</span>
+            </label>
           </div>
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="comment">Комментарий</Label>
-            <Textarea id="comment" placeholder="До 300 символов…" />
-          </div>
-          <label className="flex items-center gap-2">
-            <Checkbox id="terms" />
-            <span className="text-body-lg text-ink-700">Я согласен с условиями</span>
-          </label>
+        </Dual>
+        <div className="w-full max-w-md overflow-hidden rounded-2xl border-2 border-ink-200 bg-white">
+          <CardField
+            icon={<MapPin className="h-4 w-4 text-brand-700" />}
+            label="ОТКУДА"
+            defaultValue="Бишкек"
+            iconBg="bg-brand-50"
+            className="border-b-[0.5px] border-ink-100"
+          />
+          <CardField
+            icon={<Flag className="h-4 w-4 text-accent-600" />}
+            label="КУДА"
+            placeholder="Куда едете?"
+            iconBg="bg-accent-50"
+          />
         </div>
       </Section>
 
