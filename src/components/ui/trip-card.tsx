@@ -13,7 +13,8 @@ import {
   Star,
   Zap,
 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import type { Locale } from "@/i18n.config";
 import type { ReactNode } from "react";
 import type { TripListItem } from "@/lib/api/trips";
 import { formatDepartureLabel } from "@/lib/utils/date";
@@ -53,6 +54,7 @@ export function TripCard({
   wholeCabin,
 }: TripCardProps) {
   const t = useTranslations("card");
+  const locale = useLocale() as Locale;
   const driver = trip.driver ?? {};
   const driverName = driver.name ?? "";
   const rating = driver.rating ?? null;
@@ -131,7 +133,7 @@ export function TripCard({
           <div className="my-0.5 flex items-center gap-1 text-[10px] font-700 text-ink-400">
             <Clock className="h-3 w-3 shrink-0" aria-hidden="true" />
             <span className="truncate">
-              {trip.departureAt ? formatDepartureLabel(trip.departureAt) : ""}
+              {trip.departureAt ? formatDepartureLabel(trip.departureAt, locale) : ""}
               {stops && ` · ${t("via", { stops })}`}
             </span>
           </div>

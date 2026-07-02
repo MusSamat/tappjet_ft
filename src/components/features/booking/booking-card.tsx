@@ -12,6 +12,8 @@ import {
 } from "@/lib/api/bookings";
 import { Button, DriverAvatar, StatusBadge } from "@/components/ui";
 import { formatDepartureLabel } from "@/lib/utils/date";
+import { useLocale } from "next-intl";
+import type { Locale } from "@/i18n.config";
 
 interface BookingPerson {
   id?: string;
@@ -52,6 +54,7 @@ function ExpiresCountdown({ expiresAt }: { expiresAt: string }) {
 
 export function BookingCard({ booking, role }: Props) {
   const qc = useQueryClient();
+  const locale = useLocale() as Locale;
   const trip = booking.trip as BookingTrip | undefined;
   const passenger = booking.passenger as BookingPerson | undefined;
   const driver = trip?.driver;
@@ -84,7 +87,7 @@ export function BookingCard({ booking, role }: Props) {
           {trip?.departureAt && (
             <div className="flex items-center gap-2 text-caption font-semibold text-ink-700">
               <Clock className="h-3.5 w-3.5 text-ink-500" aria-hidden="true" />
-              {formatDepartureLabel(trip.departureAt)}
+              {formatDepartureLabel(trip.departureAt, locale)}
             </div>
           )}
           <div className="flex items-center gap-2 text-h2 text-ink-900">

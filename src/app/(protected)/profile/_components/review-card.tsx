@@ -1,7 +1,9 @@
 "use client";
 
+import { useLocale } from "next-intl";
 import { DriverAvatar, RatingStars } from "@/components/ui";
 import { formatShortDate } from "@/lib/utils/date";
+import type { Locale } from "@/i18n.config";
 
 export function ReviewCardSkeleton() {
   return (
@@ -33,6 +35,7 @@ export function ReviewCard({
     createdAt: string;
   };
 }) {
+  const locale = useLocale() as Locale;
   return (
     <div className="rounded-2xl border border-ink-100 bg-white p-4">
       <div className="flex items-start gap-3">
@@ -41,7 +44,7 @@ export function ReviewCard({
           <div className="flex items-center justify-between">
             <span className="text-[14px] font-bold text-ink-900">{review.rater.name}</span>
             <span className="text-[11px] text-ink-400">
-              {formatShortDate(review.createdAt)}
+              {formatShortDate(review.createdAt, locale)}
             </span>
           </div>
           <div className="mt-0.5">

@@ -11,29 +11,40 @@ const NOW = new Date("2025-06-15T10:00:00.000Z");
 describe("formatDepartureLabel", () => {
   it("returns Сегодня for same day", () => {
     const iso = "2025-06-15T14:30:00.000Z";
-    expect(formatDepartureLabel(iso, NOW)).toMatch(/^Сегодня,/);
+    expect(formatDepartureLabel(iso, "ru", NOW)).toMatch(/^Сегодня,/);
   });
 
   it("returns Завтра for next day", () => {
     const iso = "2025-06-16T09:00:00.000Z";
-    expect(formatDepartureLabel(iso, NOW)).toMatch(/^Завтра,/);
+    expect(formatDepartureLabel(iso, "ru", NOW)).toMatch(/^Завтра,/);
   });
 
   it("returns Вчера for previous day", () => {
     const iso = "2025-06-14T08:00:00.000Z";
-    expect(formatDepartureLabel(iso, NOW)).toMatch(/^Вчера,/);
+    expect(formatDepartureLabel(iso, "ru", NOW)).toMatch(/^Вчера,/);
   });
 
   it("includes time in HH:MM format", () => {
     const iso = "2025-06-15T07:05:00.000Z";
-    const label = formatDepartureLabel(iso, NOW);
+    const label = formatDepartureLabel(iso, "ru", NOW);
     expect(label).toMatch(/\d{2}:\d{2}/);
   });
 
   it("formats distant future date with month name", () => {
     const iso = "2025-07-20T12:00:00.000Z";
-    const label = formatDepartureLabel(iso, NOW);
+    const label = formatDepartureLabel(iso, "ru", NOW);
     expect(label).toMatch(/июля|июл/);
+  });
+
+  it("returns Kyrgyz relative labels for kg locale", () => {
+    const iso = "2025-06-15T14:30:00.000Z";
+    expect(formatDepartureLabel(iso, "kg", NOW)).toMatch(/^Бүгүн,/);
+    expect(formatDepartureLabel("2025-06-16T09:00:00.000Z", "kg", NOW)).toMatch(/^Эртең,/);
+  });
+
+  it("formats distant kg date with hyphenated nominative month", () => {
+    const iso = "2025-07-20T12:00:00.000Z";
+    expect(formatDepartureLabel(iso, "kg", NOW)).toMatch(/20-июль,/);
   });
 });
 
@@ -58,6 +69,10 @@ describe("formatDurationMin", () => {
 
   it("handles zero minutes in hours-only case", () => {
     expect(formatDurationMin(60)).toBe("1 ч");
+  });
+
+  it("formats duration in Kyrgyz", () => {
+    expect(formatDurationMin(90, "kg")).toBe("1 саат 30 мүн");
   });
 });
 

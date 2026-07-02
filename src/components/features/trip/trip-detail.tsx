@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import type { Locale } from "@/i18n.config";
 import {
   ArrowLeft,
   Share2,
@@ -73,13 +74,14 @@ interface Props {
 
 function useDetailModel(trip: DetailTripData) {
   const t = useTranslations("detail");
+  const locale = useLocale() as Locale;
   const driver = trip.driver ?? {};
   const seatsAvailable = trip.seatsAvailable ?? 0;
   const seatsTotal = trip.seatsTotal ?? 0;
   const rating = driver.rating ?? null;
   const ratingCount = driver.ratingCount ?? 0;
   const car = driver.car ? [driver.car.make, driver.car.model].filter(Boolean).join(" ") : null;
-  const departureLabel = trip.departureAt ? formatDepartureLabel(trip.departureAt) : "—";
+  const departureLabel = trip.departureAt ? formatDepartureLabel(trip.departureAt, locale) : "—";
   const luggageLabel =
     trip.luggage === "yes" ? t("luggage_big") : trip.luggage === "small" ? t("luggage_small") : t("luggage_none");
   const stops = (trip.pickupCities ?? []).concat(trip.dropoffCities ?? []).filter(Boolean);
