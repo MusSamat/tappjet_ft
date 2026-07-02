@@ -951,6 +951,12 @@
     "empty_hint": "Уведомлений пока нет.",
     "settings_title": "Настройки уведомлений",
     "settings_saved": "Сохранено",
+    "section_today": "Сегодня",
+    "section_earlier": "Ранее",
+    "filter_all": "Все",
+    "filter_bookings": "Брони",
+    "filter_messages": "Сообщения",
+    "aside_sub": "Отклики, подтверждения и напоминания о ваших поездках.",
     "types": {
       "messages": "Новые сообщения",
       "bookings": "Подтверждение брони",

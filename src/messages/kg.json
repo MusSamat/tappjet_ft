@@ -951,6 +951,12 @@
     "empty_hint": "Азырынча билдирүүлөр жок.",
     "settings_title": "Билдирүүлөрдүн жөндөөлөрү",
     "settings_saved": "Сакталды",
+    "section_today": "Бүгүн",
+    "section_earlier": "Мурда",
+    "filter_all": "Баары",
+    "filter_bookings": "Брондор",
+    "filter_messages": "Билдирүүлөр",
+    "aside_sub": "Сапарларыңыз боюнча жооптор, ырастоолор жана эскертүүлөр.",
     "types": {
       "messages": "Жаңы кабарлар",
       "bookings": "Брондун ырасталышы",

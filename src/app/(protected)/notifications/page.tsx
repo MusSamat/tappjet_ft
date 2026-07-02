@@ -1,19 +1,18 @@
 "use client";
 
-import { useRef, useCallback, useState, useEffect } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
+import { CheckCheck, CheckCircle, Inbox, MessageCircle } from "lucide-react";
 import { getNotifications, markNotificationRead } from "@/lib/api/notifications";
 import { NotificationItem } from "@/components/features/notifications/notification-item";
 import { useAuth } from "@/store/auth";
-import { Container, Spinner } from "@/components/ui";
-import { CheckCheck } from "lucide-react";
+import { SectionLabel, Spinner, Switch } from "@/components/ui";
 import { cn } from "@/lib/utils/cn";
 
 const LIMIT = 20;
 const ADMIN_TYPES = new Set(["verification_sla_breach"]);
 
-// Notification type groups — maps UI setting keys to backend notification types
 const NOTIF_TYPE_GROUPS: Record<string, string[]> = {
   messages:      ["chat_message", "chat_unread"],
   bookings:      ["booking_accepted", "booking_rejected", "booking_cancelled", "booking_cancelled_driver", "booking_cancelled_passenger", "booking_pending", "booking_viewed", "booking_no_show", "booking_completed"],
@@ -36,6 +35,8 @@ const NOTIF_SETTING_KEYS: { key: string; defaultOn: boolean }[] = [
   { key: "marketing", defaultOn: false },
 ];
 
+type Filter = "all" | "bookings" | "messages";
+
 function loadPrefs(userId: string): Record<string, boolean> {
   try {
     const raw = localStorage.getItem(`tappjet_notif_prefs_${userId}`);
@@ -54,10 +55,15 @@ function savePrefs(userId: string, prefs: Record<string, boolean>): void {
   }
 }
 
+function isToday(iso: string): boolean {
+  const d = new Date(iso);
+  const now = new Date();
+  return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth() && d.getDate() === now.getDate();
+}
+
 export default function NotificationsPage() {
   const t = useTranslations("notifications");
   const queryClient = useQueryClient();
-  const _sentinelRef = useRef<HTMLDivElement>(null);
   const userId = useAuth((s) => s.user?.id);
 
   const NOTIF_SETTINGS: NotifSetting[] = NOTIF_SETTING_KEYS.map((s) => ({
@@ -67,8 +73,8 @@ export default function NotificationsPage() {
 
   const [prefs, setPrefs] = useState<Record<string, boolean>>({});
   const [prefsLoaded, setPrefsLoaded] = useState(false);
+  const [filter, setFilter] = useState<Filter>("all");
 
-  // Load prefs from localStorage on mount (client-side only)
   useEffect(() => {
     if (!userId) return;
     const saved = loadPrefs(userId);
@@ -96,7 +102,6 @@ export default function NotificationsPage() {
     staleTime: 30_000,
   });
 
-  // Build set of disabled types based on prefs
   const disabledTypes = prefsLoaded
     ? new Set(
         NOTIF_SETTINGS
@@ -105,20 +110,27 @@ export default function NotificationsPage() {
       )
     : new Set<string>();
 
-  const notifications = (query.data?.pages.flatMap((p) => p.data) ?? [])
+  const allNotifications = (query.data?.pages.flatMap((p) => p.data) ?? [])
     .filter((n) => !ADMIN_TYPES.has(n.type) && !disabledTypes.has(n.type));
 
-  const unreadCount = notifications.filter((n) => !n.readAt).length;
+  const notifications = allNotifications.filter((n) => {
+    if (filter === "bookings") return n.type.includes("booking");
+    if (filter === "messages") return n.type.includes("message");
+    return true;
+  });
+
+  const unreadCount = allNotifications.filter((n) => !n.readAt).length;
+  const today = notifications.filter((n) => isToday(n.createdAt));
+  const earlier = notifications.filter((n) => !isToday(n.createdAt));
 
   const { mutate: markAllRead, isPending: markingAll } = useMutation({
     mutationFn: async () => {
-      const unread = notifications.filter((n) => !n.readAt);
+      const unread = allNotifications.filter((n) => !n.readAt);
       await Promise.all(unread.map((n) => markNotificationRead(n.id)));
     },
     onSuccess: () => void queryClient.invalidateQueries({ queryKey: ["notifications"] }),
   });
 
-  // Infinite scroll
   const lastRef = useCallback(
     (node: HTMLDivElement | null) => {
       if (!node || !query.hasNextPage || query.isFetchingNextPage) return;
@@ -130,95 +142,139 @@ export default function NotificationsPage() {
     [query],
   );
 
-  return (
-    <Container className="py-8">
-      {/* Header */}
-      <div className="mb-5 flex items-start justify-between">
-        <div>
-          <h1 className="text-[26px] font-extrabold text-ink-900">{t("title")}</h1>
-          <p className="mt-0.5 text-[12px] font-semibold text-ink-400">
-            {unreadCount > 0 ? t("unread_count", { n: unreadCount }) : t("all_read")}
-          </p>
-        </div>
-        {unreadCount > 0 && (
-          <button
-            type="button"
-            onClick={() => markAllRead()}
-            disabled={markingAll}
-            className="flex items-center gap-1.5 rounded-2xl border border-ink-200 px-3 py-2 text-[12px] font-bold text-brand-700 hover:bg-brand-50 disabled:opacity-50"
-          >
-            <CheckCheck className="h-4 w-4" aria-hidden="true" />
-            {t("mark_all_read_btn")}
-          </button>
-        )}
-      </div>
+  const markAllBtn = unreadCount > 0 && (
+    <button
+      type="button"
+      onClick={() => markAllRead()}
+      disabled={markingAll}
+      className="flex items-center gap-1.5 text-[12px] font-800 text-brand-600 hover:text-brand-700 disabled:opacity-50 dark:text-brand-300"
+    >
+      <CheckCheck className="h-4 w-4" aria-hidden="true" />
+      {t("mark_all_read_btn")}
+    </button>
+  );
 
-      {/* List */}
-      <div className="flex flex-col gap-2">
-        {query.isLoading ? (
-          <div className="flex justify-center py-12">
-            <Spinner size={24} />
-          </div>
-        ) : query.isError ? (
-          <div className="rounded-2xl border border-coral-200 bg-coral-50 p-5 text-[13px] font-semibold text-coral-600">
-            {t("load_error")}
-          </div>
-        ) : notifications.length === 0 ? (
-          <div className="rounded-2xl border border-ink-100 bg-white p-10 text-center">
-            <p className="text-[17px] font-bold text-ink-900">{t("empty_title")}</p>
-            <p className="mt-2 text-[13px] text-ink-500">{t("empty_hint")}</p>
-          </div>
-        ) : (
-          notifications.map((n, idx) => (
-            <div key={n.id} ref={idx === notifications.length - 1 ? lastRef : undefined}>
+  const renderSection = (label: string, items: typeof notifications) =>
+    items.length > 0 && (
+      <div className="space-y-2.5">
+        <SectionLabel>{label}</SectionLabel>
+        {items.map((n) => {
+          const isLast = n.id === notifications[notifications.length - 1]?.id;
+          return (
+            <div key={n.id} ref={isLast ? lastRef : undefined}>
               <NotificationItem notification={n} />
             </div>
-          ))
-        )}
-        {query.isFetchingNextPage && (
-          <div className="flex justify-center py-4">
-            <Spinner size={20} />
+          );
+        })}
+      </div>
+    );
+
+  const list = (
+    <div className="flex flex-col gap-4">
+      {query.isLoading ? (
+        <div className="flex justify-center py-12">
+          <Spinner size={24} />
+        </div>
+      ) : query.isError ? (
+        <div className="rounded-2xl bg-coral-50 p-5 text-[13px] font-700 text-coral-600 dark:bg-coral-500/10">
+          {t("load_error")}
+        </div>
+      ) : notifications.length === 0 ? (
+        <div className="rounded-3xl bg-white p-10 text-center shadow-card dark:bg-ink-900">
+          <p className="text-[17px] font-900 text-ink-900 dark:text-white">{t("empty_title")}</p>
+          <p className="mt-2 text-[13px] font-700 text-ink-500">{t("empty_hint")}</p>
+        </div>
+      ) : (
+        <>
+          {renderSection(t("section_today"), today)}
+          {renderSection(t("section_earlier"), earlier)}
+        </>
+      )}
+      {query.isFetchingNextPage && (
+        <div className="flex justify-center py-4">
+          <Spinner size={20} />
+        </div>
+      )}
+    </div>
+  );
+
+  const FILTERS: { key: Filter; label: string; icon: typeof Inbox }[] = [
+    { key: "all", label: t("filter_all"), icon: Inbox },
+    { key: "bookings", label: t("filter_bookings"), icon: CheckCircle },
+    { key: "messages", label: t("filter_messages"), icon: MessageCircle },
+  ];
+
+  const settingsCard = (
+    <div className="rounded-3xl bg-white p-5 shadow-card dark:bg-ink-900">
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="text-[15px] font-900 text-ink-900 dark:text-white">{t("settings_title")}</h2>
+        {prefsLoaded && <span className="text-[11px] font-700 text-ink-400">{t("settings_saved")}</span>}
+      </div>
+      <div className="flex flex-col gap-3.5">
+        {NOTIF_SETTINGS.map(({ key, label }) => (
+          <div key={key} className="flex items-center justify-between">
+            <span className="text-[14px] font-800 text-ink-900 dark:text-ink-100">{label}</span>
+            <Switch checked={prefs[key] ?? true} onCheckedChange={() => togglePref(key)} aria-label={label} />
           </div>
-        )}
+        ))}
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-[calc(100vh-64px)] bg-ink-50 dark:bg-ink-950">
+      {/* Mobile */}
+      <div className="mx-auto w-full max-w-[760px] p-3.5 pt-11 md:p-6 lg:hidden">
+        <div className="mb-4 flex items-center justify-between">
+          <h1 className="text-[18px] font-900 text-ink-900 dark:text-white">{t("title")}</h1>
+          {markAllBtn}
+        </div>
+        {list}
+        <div className="mt-6">{settingsCard}</div>
       </div>
 
-      {/* Notification settings */}
-      <div className="mt-6 rounded-3xl border border-ink-100 bg-white p-5">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-[16px] font-extrabold text-ink-900">{t("settings_title")}</h2>
-          {prefsLoaded && (
-            <span className="text-[11px] font-semibold text-ink-400">{t("settings_saved")}</span>
+      {/* Desktop — aside filter list + list (§2.8) */}
+      <div className="mx-auto hidden w-full max-w-[1080px] gap-8 p-8 lg:grid lg:grid-cols-[300px_1fr]">
+        <aside className="space-y-4">
+          <div>
+            <h1 className="text-[26px] font-900 text-ink-900 dark:text-white">{t("title")}</h1>
+            <p className="mt-1 text-[13px] font-700 text-ink-500">{t("aside_sub")}</p>
+          </div>
+          <div className="space-y-1 rounded-3xl bg-white p-2 shadow-soft dark:bg-ink-900">
+            {FILTERS.map(({ key, label, icon: Icon }) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setFilter(key)}
+                className={cn(
+                  "flex w-full items-center gap-2.5 rounded-2xl px-4 py-2.5 text-[13px] font-800 transition-colors",
+                  filter === key
+                    ? "bg-brand-50 text-brand-700 dark:bg-brand-500/15 dark:text-brand-300"
+                    : "text-ink-600 hover:bg-ink-100 dark:text-ink-300 dark:hover:bg-ink-800",
+                )}
+              >
+                <Icon className="h-4 w-4" aria-hidden="true" />
+                <span className="flex-1 text-left">{label}</span>
+                {key === "all" && unreadCount > 0 && (
+                  <span className="rounded-full bg-coral-500 px-1.5 text-[10px] font-900 text-white">{unreadCount}</span>
+                )}
+              </button>
+            ))}
+          </div>
+          {unreadCount > 0 && (
+            <button
+              type="button"
+              onClick={() => markAllRead()}
+              disabled={markingAll}
+              className="w-full rounded-2xl bg-white py-3 text-[13px] font-900 text-brand-600 shadow-soft disabled:opacity-50 dark:bg-ink-900 dark:text-brand-300"
+            >
+              {t("mark_all_read_btn")}
+            </button>
           )}
-        </div>
-        <div className="flex flex-col gap-4">
-          {NOTIF_SETTINGS.map(({ key, label }) => {
-            const on = prefs[key] ?? true;
-            return (
-              <div key={key} className="flex items-center justify-between">
-                <span className="text-[14px] font-semibold text-ink-900">{label}</span>
-                <button
-                  type="button"
-                  onClick={() => togglePref(key)}
-                  role="switch"
-                  aria-checked={on}
-                  aria-label={label}
-                  className={cn(
-                    "relative h-6 w-11 flex-shrink-0 rounded-full transition-colors",
-                    on ? "bg-brand-500" : "bg-ink-200",
-                  )}
-                >
-                  <span
-                    className={cn(
-                      "absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform",
-                      on ? "left-[22px]" : "left-0.5",
-                    )}
-                  />
-                </button>
-              </div>
-            );
-          })}
-        </div>
+          {settingsCard}
+        </aside>
+        <section>{list}</section>
       </div>
-    </Container>
+    </div>
   );
 }
