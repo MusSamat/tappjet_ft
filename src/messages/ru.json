@@ -1160,6 +1160,7 @@
     "dropoff_passenger": "Высадите у",
     "add_city": "город",
     "add_point": "точка",
+    "point_placeholder": "Например: мкр Восток-5",
     "date_tomorrow": "Завтра",
     "date_dayafter": "Послезавтра",
     "date_flexible": "Гибко",
