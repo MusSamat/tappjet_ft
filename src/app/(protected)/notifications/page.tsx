@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useState, useEffect } from "react";
-import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
+import { useInfiniteQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { CheckCheck, CheckCircle, Inbox, MessageCircle } from "lucide-react";
 import { getNotifications, markNotificationRead } from "@/lib/api/notifications";
@@ -11,6 +11,7 @@ import { toastError } from "@/components/layout/quick-toast";
 import { NotificationItem } from "@/components/features/notifications/notification-item";
 import { useAuth } from "@/store/auth";
 import { QueryError, SectionLabel, Spinner, Switch } from "@/components/ui";
+import { useInfiniteScroll } from "@/lib/hooks/use-infinite-scroll";
 import { cn } from "@/lib/utils/cn";
 
 const LIMIT = 20;
@@ -103,7 +104,14 @@ export default function NotificationsPage() {
       getNotifications({ cursor: pageParam as string | undefined, limit: LIMIT }),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (last) => last.next_cursor ?? undefined,
+    placeholderData: keepPreviousData,
     staleTime: 30_000,
+  });
+
+  const sentinel = useInfiniteScroll({
+    hasNextPage: query.hasNextPage,
+    isFetchingNextPage: query.isFetchingNextPage,
+    fetchNextPage: query.fetchNextPage,
   });
 
   const disabledTypes = prefsLoaded
@@ -136,17 +144,6 @@ export default function NotificationsPage() {
     onError: (e) => toastError(fe(extractError(e))),
   });
 
-  const lastRef = useCallback(
-    (node: HTMLDivElement | null) => {
-      if (!node || !query.hasNextPage || query.isFetchingNextPage) return;
-      const io = new IntersectionObserver((entries) => {
-        if (entries[0]?.isIntersecting) query.fetchNextPage();
-      });
-      io.observe(node);
-    },
-    [query],
-  );
-
   const markAllBtn = unreadCount > 0 && (
     <button
       type="button"
@@ -163,14 +160,9 @@ export default function NotificationsPage() {
     items.length > 0 && (
       <div className="space-y-2.5">
         <SectionLabel>{label}</SectionLabel>
-        {items.map((n) => {
-          const isLast = n.id === notifications[notifications.length - 1]?.id;
-          return (
-            <div key={n.id} ref={isLast ? lastRef : undefined}>
-              <NotificationItem notification={n} />
-            </div>
-          );
-        })}
+        {items.map((n) => (
+          <NotificationItem key={n.id} notification={n} />
+        ))}
       </div>
     );
 
@@ -198,6 +190,7 @@ export default function NotificationsPage() {
           <Spinner size={20} />
         </div>
       )}
+      <div ref={sentinel} aria-hidden="true" />
     </div>
   );
 

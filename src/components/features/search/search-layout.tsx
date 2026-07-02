@@ -9,6 +9,7 @@ import { TripCard } from "@/components/ui/trip-card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { CardSkeletonList } from "@/components/ui/card-skeleton";
 import { QueryError } from "@/components/ui/query-error";
+import { useInfiniteScroll } from "@/lib/hooks/use-infinite-scroll";
 import { useUiRole } from "@/lib/hooks/use-role-colors";
 
 import { SearchFilters } from "./search-filters";
@@ -65,7 +66,10 @@ export function SearchLayout({ params, initial }: Props) {
     queryFn: ({ pageParam }) => searchTrips({ ...params, cursor: pageParam }),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (last) => last.nextCursor ?? undefined,
-    placeholderData: { pages: [initial], pageParams: [undefined as string | undefined] },
+    // keepPreviousData behaviour (no list flash/collapse when params change),
+    // falling back to the SSR-seeded first page on the very first mount.
+    placeholderData: (prev) =>
+      prev ?? { pages: [initial], pageParams: [undefined as string | undefined] },
     staleTime: 0,
   });
 
@@ -81,17 +85,7 @@ export function SearchLayout({ params, initial }: Props) {
     return () => { document.body.style.overflow = ""; };
   }, [mobileFiltersOpen, mobileDetailOpen]);
 
-  const sentinel = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = sentinel.current;
-    if (!el || !hasNextPage) return;
-    const io = new IntersectionObserver(
-      (entries) => { if (entries[0]?.isIntersecting && !isFetchingNextPage) fetchNextPage(); },
-      { rootMargin: "400px 0px" },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+  const sentinel = useInfiniteScroll({ hasNextPage, isFetchingNextPage, fetchNextPage });
 
   const heading =
     params.from_city && params.to_city

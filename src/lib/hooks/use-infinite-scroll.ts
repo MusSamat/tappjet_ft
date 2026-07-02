@@ -13,7 +13,7 @@ export function useInfiniteScroll({
   hasNextPage,
   isFetchingNextPage,
   fetchNextPage,
-  rootMargin = "400px 0px",
+  rootMargin = "600px 0px",
 }: Options) {
   const sentinel = useRef<HTMLDivElement>(null);
 

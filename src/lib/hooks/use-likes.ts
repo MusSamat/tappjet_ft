@@ -1,6 +1,6 @@
 "use client";
 
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, keepPreviousData } from "@tanstack/react-query";
 import { listTripLikes, listRequestLikes } from "@/lib/api/likes";
 
 // Cursor-paginated liked-listings hooks (GET /users/me/likes).
@@ -11,6 +11,7 @@ export function useLikedTrips() {
     queryFn: ({ pageParam }) => listTripLikes(pageParam),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (last) => last.nextCursor ?? undefined,
+    placeholderData: keepPreviousData,
     staleTime: 30_000,
   });
 }
@@ -21,6 +22,7 @@ export function useLikedRequests() {
     queryFn: ({ pageParam }) => listRequestLikes(pageParam),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (last) => last.nextCursor ?? undefined,
+    placeholderData: keepPreviousData,
     staleTime: 30_000,
   });
 }

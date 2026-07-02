@@ -1,7 +1,7 @@
 "use client";
 
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { useState, useEffect, useRef } from "react";
+import { useInfiniteQuery, keepPreviousData } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { X } from "lucide-react";
@@ -13,6 +13,7 @@ import { FeedHeader } from "@/components/features/search/feed-header";
 import { EmptyState } from "@/components/ui/empty-state";
 import { CardSkeletonList } from "@/components/ui/card-skeleton";
 import { QueryError } from "@/components/ui/query-error";
+import { useInfiniteScroll } from "@/lib/hooks/use-infinite-scroll";
 import { useUiRole } from "@/lib/hooks/use-role-colors";
 
 /** Role-aware empty state for the requests feed (feed.empty_* keys). */
@@ -60,6 +61,7 @@ export default function RequestsPage() {
       listPassengerRequests({ ...filters, cursor: pageParam as string | undefined, limit: 20 }),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (last) => last.nextCursor ?? undefined,
+    placeholderData: keepPreviousData,
     staleTime: 30_000,
   });
 
@@ -76,17 +78,7 @@ export default function RequestsPage() {
     return () => { document.body.style.overflow = ""; };
   }, [mobileFiltersOpen, mobileDetailOpen]);
 
-  const sentinel = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = sentinel.current;
-    if (!el || !hasNextPage) return;
-    const io = new IntersectionObserver(
-      (entries) => { if (entries[0]?.isIntersecting && !isFetchingNextPage) void fetchNextPage(); },
-      { rootMargin: "400px 0px" },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+  const sentinel = useInfiniteScroll({ hasNextPage, isFetchingNextPage, fetchNextPage });
 
   const heading =
     filters.from_city && filters.to_city

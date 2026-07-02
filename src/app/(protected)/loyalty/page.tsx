@@ -1,6 +1,6 @@
 "use client";
 
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery, keepPreviousData } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { Award } from "lucide-react";
 import { getLoyaltyStatus, getLoyaltyTransactions } from "@/lib/api/loyalty";
@@ -48,6 +48,7 @@ export default function LoyaltyPage() {
     queryFn: ({ pageParam }) => getLoyaltyTransactions(pageParam as string | undefined),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (last) => last.nextCursor ?? undefined,
+    placeholderData: keepPreviousData,
     staleTime: 60_000,
   });
 

@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Heart } from "lucide-react";
 import { useLikedTrips, useLikedRequests } from "@/lib/hooks/use-likes";
+import { useInfiniteScroll } from "@/lib/hooks/use-infinite-scroll";
 import { Chip } from "@/components/ui/chip";
-import { Button } from "@/components/ui/button";
 import { CardSkeletonList } from "@/components/ui/card-skeleton";
 import { QueryError } from "@/components/ui/query-error";
 import { TripCard } from "@/components/ui/trip-card";
@@ -51,13 +51,18 @@ function FilterChips({ value, onChange }: { value: FilterKey; onChange: (v: Filt
 
 export function LikedTab({ role }: { role: UiRole }) {
   const router = useRouter();
-  const t = useTranslations("my");
   const isDriver = role === "driver";
   const [filter, setFilter] = useState<FilterKey>("all");
 
   const trips = useLikedTrips();
   const requests = useLikedRequests();
   const q = isDriver ? requests : trips;
+
+  const sentinel = useInfiniteScroll({
+    hasNextPage: q.hasNextPage,
+    isFetchingNextPage: q.isFetchingNextPage,
+    fetchNextPage: q.fetchNextPage,
+  });
 
   const tripItems = useMemo(() => trips.data?.pages.flatMap((p) => p.data) ?? [], [trips.data]);
   const requestItems = useMemo(() => requests.data?.pages.flatMap((p) => p.data) ?? [], [requests.data]);
@@ -97,12 +102,11 @@ export function LikedTab({ role }: { role: UiRole }) {
           : sortedTrips.map((tr: TripListItem) => (
               <TripCard key={tr.id} trip={tr} onClick={() => router.push(`/trips/${tr.id}`)} />
             ))}
+        {q.isFetchingNextPage && (
+          <CardSkeletonList variant={isDriver ? "request" : "trip"} count={2} className="mt-0.5" />
+        )}
       </div>
-      {q.hasNextPage && (
-        <Button variant="ghost" size="md" className="mt-3 self-center" disabled={q.isFetchingNextPage} onClick={() => q.fetchNextPage()}>
-          {q.isFetchingNextPage ? "…" : t("load_more")}
-        </Button>
-      )}
+      <div ref={sentinel} aria-hidden="true" />
     </div>
   );
 }
