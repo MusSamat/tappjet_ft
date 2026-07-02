@@ -84,7 +84,9 @@
     "logging_out": "Чыгып жатабыз…",
     "user_menu_aria": "Колдонуучу менюсу",
     "notifications_aria": "Билдирүүлөр",
-    "avatar_alt": "Аватар"
+    "avatar_alt": "Аватар",
+    "create_btn": "Түзүү",
+    "messages_aria": "Кабарлар"
   },
   "footer": {
     "product": "Продукт",

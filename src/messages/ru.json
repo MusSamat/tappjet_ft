@@ -84,7 +84,9 @@
     "logging_out": "Выходим…",
     "user_menu_aria": "Меню пользователя",
     "notifications_aria": "Уведомления",
-    "avatar_alt": "Аватар"
+    "avatar_alt": "Аватар",
+    "create_btn": "Создать",
+    "messages_aria": "Сообщения"
   },
   "footer": {
     "product": "Продукт",
