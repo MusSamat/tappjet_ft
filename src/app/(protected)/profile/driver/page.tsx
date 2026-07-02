@@ -16,7 +16,7 @@ import {
   Users,
 } from "lucide-react";
 import { api, extractError } from "@/lib/api/client";
-import { friendlyError } from "@/lib/utils/api-error";
+import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { compressImage, ImageValidationError } from "@/lib/utils/compress-image";
 import { Button, Label, NotifCard, Spinner } from "@/components/ui";
 import { SubmittedScreen } from "./_components/submitted-screen";
@@ -34,6 +34,7 @@ const PHOTO_STEPS: { step: number; key: DocKey; icon: React.ElementType }[] = [
 
 export default function DriverVerifyPage() {
   const t = useTranslations("driver_reg");
+  const fe = useFriendlyError();
   const router = useRouter();
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -79,7 +80,7 @@ export default function DriverVerifyPage() {
       });
     },
     onSuccess: () => setSubmitted(true),
-    onError: (e) => setServerError(friendlyError(extractError(e))),
+    onError: (e) => setServerError(fe(extractError(e))),
   });
 
   const canCarData =

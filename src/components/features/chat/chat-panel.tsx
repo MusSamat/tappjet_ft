@@ -8,7 +8,7 @@ import { useTranslations } from "next-intl";
 import { getBooking } from "@/lib/api/bookings";
 import { getChatHistory, markAllChatRead, sendMessageRest, type ChatMessage } from "@/lib/api/chat";
 import { extractError } from "@/lib/api/client";
-import { friendlyError } from "@/lib/utils/api-error";
+import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { useChatSocket } from "@/lib/hooks/use-chat-socket";
 import { useAuth } from "@/store/auth";
 import { uuid } from "@/lib/utils/uuid";
@@ -89,6 +89,7 @@ export function ChatPanel({ bookingId }: Props) {
   }, []);
 
   const t = useTranslations("chat");
+  const fe = useFriendlyError();
 
   const onChatError = useCallback((code: string) => {
     // Mark every pending message as failed so the clock icon clears.
@@ -167,7 +168,7 @@ export function ChatPanel({ bookingId }: Props) {
           ),
         )
         .catch((e) => {
-          setSendError(friendlyError(extractError(e)));
+          setSendError(fe(extractError(e)));
           setMessages((prev) =>
             prev.map((m) =>
               m.clientMsgId === clientMsgId ? { ...m, pending: false, failed: true } : m,

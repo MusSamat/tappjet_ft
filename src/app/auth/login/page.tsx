@@ -13,7 +13,7 @@ import {
   verifyOtp,
 } from "@/lib/api/auth";
 import { extractError } from "@/lib/api/client";
-import { friendlyError } from "@/lib/utils/api-error";
+import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { consumeDeferredAction, routeForIntent } from "@/lib/auth/deferred-action";
 import { useAuth } from "@/store/auth";
 import { useTranslations } from "next-intl";
@@ -45,6 +45,7 @@ function AuthLogo() {
 
 export default function LoginPage() {
   const tl = useTranslations("auth.login");
+  const fe = useFriendlyError();
   const router = useRouter();
   const setSession = useAuth((s) => s.setSession);
 
@@ -81,7 +82,7 @@ export default function LoginPage() {
       const intent = consumeDeferredAction();
       router.replace(intent ? routeForIntent(intent) : "/");
     },
-    onError: (e) => setServerError(friendlyError(extractError(e))),
+    onError: (e) => setServerError(fe(extractError(e))),
   });
 
   // ── Forgot password: initTelegramLink works for ALL users ─────────────
@@ -96,7 +97,7 @@ export default function LoginPage() {
       setStep("otp");
       setTimeout(() => otpRef.current?.focus(), 100);
     },
-    onError: (e) => setServerError(friendlyError(extractError(e))),
+    onError: (e) => setServerError(fe(extractError(e))),
   });
 
   // Auto-send: DM the code straight to the user's Telegram (no "open bot").
@@ -131,7 +132,7 @@ export default function LoginPage() {
       setTimeout(() => newPasswordRef.current?.focus(), 100);
     },
     onError: (e) => {
-      setServerError(friendlyError(extractError(e)));
+      setServerError(fe(extractError(e)));
       setOtp("");
       otpRef.current?.clear();
     },
@@ -144,7 +145,7 @@ export default function LoginPage() {
       const intent = consumeDeferredAction();
       router.replace(intent ? routeForIntent(intent) : "/");
     },
-    onError: (e) => setServerError(friendlyError(extractError(e))),
+    onError: (e) => setServerError(fe(extractError(e))),
   });
 
   return (

@@ -9,7 +9,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { submitComplaint, type ComplaintCategory } from "@/lib/api/complaints";
 import { extractError } from "@/lib/api/client";
-import { friendlyError } from "@/lib/utils/api-error";
+import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { Button, Label, Spinner, Textarea } from "@/components/ui";
 import { ArrowLeft, Camera, CheckCircle, X } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
@@ -30,6 +30,7 @@ interface PageProps {
 
 export default function ComplaintPage({ searchParams }: PageProps) {
   const t = useTranslations("complaint");
+  const fe = useFriendlyError();
   const params = use(searchParams);
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -90,7 +91,7 @@ export default function ComplaintPage({ searchParams }: PageProps) {
     });
   };
 
-  const errorMessage = error ? friendlyError(extractError(error)) : null;
+  const errorMessage = error ? fe(extractError(error)) : null;
 
   if (isSuccess) {
     return (

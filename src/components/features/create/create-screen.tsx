@@ -9,7 +9,7 @@ import { createTrip, type CreateTripInput } from "@/lib/api/trips-create";
 import { createPassengerRequest, type CreatePassengerRequestInput } from "@/lib/api/passenger-requests";
 import { getDriverStatus } from "@/lib/api/profile";
 import { extractError } from "@/lib/api/client";
-import { friendlyError } from "@/lib/utils/api-error";
+import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { useAuth } from "@/store/auth";
 import { useRoleTheme } from "@/lib/hooks/use-role-colors";
 import { saveDeferredAction } from "@/lib/auth/deferred-action";
@@ -84,6 +84,7 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
   const router = useRouter();
   const qc = useQueryClient();
   const t = useTranslations("create");
+  const fe = useFriendlyError();
   const status = useAuth((s) => s.status);
   const user = useAuth((s) => s.user);
   const { role, theme } = useRoleTheme();
@@ -201,7 +202,7 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
       void qc.invalidateQueries({ queryKey: isDriver ? ["trips"] : ["passenger-requests"] });
       setPublishedId(id);
     },
-    onError: (e) => setCreateError(friendlyError(extractError(e))),
+    onError: (e) => setCreateError(fe(extractError(e))),
   });
 
   const canSubmit =

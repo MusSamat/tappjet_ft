@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl";
 import type { PassengerRequest } from "@/lib/api/passenger-requests";
 import { respondToRequest, type RespondInput } from "@/lib/api/passenger-requests";
 import { extractError } from "@/lib/api/client";
-import { friendlyError } from "@/lib/utils/api-error";
+import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { Spinner } from "@/components/ui/spinner";
 
 interface Props {
@@ -18,6 +18,7 @@ interface Props {
 export function RespondModal({ request, onClose }: Props) {
   const qc = useQueryClient();
   const t = useTranslations("requests");
+  const fe = useFriendlyError();
   const [price, setPrice] = useState("");
   const [date, setDate] = useState(request.departureDate.split("T")[0] ?? "");
   const [time, setTime] = useState("");
@@ -38,7 +39,7 @@ export function RespondModal({ request, onClose }: Props) {
       void qc.invalidateQueries({ queryKey: ["request-responses", request.id] });
       onClose();
     },
-    onError: (e) => setError(friendlyError(extractError(e))),
+    onError: (e) => setError(fe(extractError(e))),
   });
 
   const canSubmit = price && Number(price) > 0 && date && time;

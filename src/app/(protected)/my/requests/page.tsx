@@ -16,7 +16,7 @@ import {
   type RequestResponse,
 } from "@/lib/api/passenger-requests";
 import { extractError } from "@/lib/api/client";
-import { friendlyError } from "@/lib/utils/api-error";
+import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { RequestCard } from "@/components/features/passenger-requests/request-card";
 import { DriverAvatar } from "@/components/ui/driver-avatar";
 import { Container, Spinner } from "@/components/ui";
@@ -34,6 +34,7 @@ function OfferCard({
 }) {
   const qc = useQueryClient();
   const t = useTranslations("requests.my");
+  const fe = useFriendlyError();
   const [error, setError] = useState<string | null>(null);
 
   const acceptMut = useMutation({
@@ -42,13 +43,13 @@ function OfferCard({
       void qc.invalidateQueries({ queryKey: ["passenger-requests", "my"] });
       onAccepted(bookingId);
     },
-    onError: (e) => setError(friendlyError(extractError(e))),
+    onError: (e) => setError(fe(extractError(e))),
   });
 
   const declineMut = useMutation({
     mutationFn: () => declineRequestResponse(requestId, response.id),
     onSuccess: () => void qc.invalidateQueries({ queryKey: ["request-responses", requestId] }),
-    onError: (e) => setError(friendlyError(extractError(e))),
+    onError: (e) => setError(fe(extractError(e))),
   });
 
   const isPending = response.status === "pending";

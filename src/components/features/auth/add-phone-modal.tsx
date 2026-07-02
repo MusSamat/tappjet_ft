@@ -12,7 +12,7 @@ import {
 } from "@/lib/api/auth";
 import { useAuth } from "@/store/auth";
 import { extractError } from "@/lib/api/client";
-import { friendlyError } from "@/lib/utils/api-error";
+import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { Button, PhoneInput, Spinner } from "@/components/ui";
 import { Modal, ModalContent, ModalHeader, ModalTitle } from "@/components/ui/modal";
 
@@ -26,6 +26,7 @@ interface Props {
 
 export function AddPhoneModal({ open, onClose, onDone }: Props) {
   const t = useTranslations("auth.add_phone");
+  const fe = useFriendlyError();
   const user = useAuth((s) => s.user);
   const setSession = useAuth((s) => s.setSession);
 
@@ -112,7 +113,7 @@ export function AddPhoneModal({ open, onClose, onDone }: Props) {
         setStep("otp");
       }
     } catch (e) {
-      setError(friendlyError(extractError(e)));
+      setError(fe(extractError(e)));
     } finally {
       setLoading(false);
     }
@@ -128,7 +129,7 @@ export function AddPhoneModal({ open, onClose, onDone }: Props) {
       onDone?.();
       onClose();
     } catch (e) {
-      setError(friendlyError(extractError(e)));
+      setError(fe(extractError(e)));
       setOtp("");
     } finally {
       setLoading(false);

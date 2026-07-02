@@ -7,7 +7,7 @@ import { AlertTriangle, Bell, Clock, MessageCircle, Send } from "lucide-react";
 import Link from "next/link";
 import { createBooking } from "@/lib/api/bookings";
 import { extractError } from "@/lib/api/client";
-import { friendlyError } from "@/lib/utils/api-error";
+import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { uuid } from "@/lib/utils/uuid";
 import { saveDeferredAction } from "@/lib/auth/deferred-action";
 import { useAuth } from "@/store/auth";
@@ -27,6 +27,7 @@ interface Props {
 export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 1 }: Props) {
   const router = useRouter();
   const status = useAuth((s) => s.status);
+  const fe = useFriendlyError();
 
   const [step, setStep] = useState<Step>("form");
   const [createdBookingId, setCreatedBookingId] = useState<string | null>(null);
@@ -53,7 +54,7 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
       setStep("waiting");
     },
     onError: (e) => {
-      setServerError(friendlyError(extractError(e)));
+      setServerError(fe(extractError(e)));
     },
   });
 
