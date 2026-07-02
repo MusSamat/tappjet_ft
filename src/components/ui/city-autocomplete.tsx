@@ -237,7 +237,7 @@ export function CityAutocomplete({
           aria-controls={`${inputId}-list`}
           aria-activedescendant={activeIdx >= 0 ? `${inputId}-opt-${activeIdx}` : undefined}
           className={cn(
-            "w-full bg-transparent font-semibold text-ink-900 outline-none",
+            "w-full bg-transparent font-semibold text-ink-900 outline-none dark:text-white",
             compact ? "py-1.5 text-[12px]" : "py-2 text-[14px]",
             borderless ? "pr-3" : "rounded-2xl border border-ink-200 bg-white pl-9 pr-3 focus:border-brand-500",
             "placeholder:text-ink-400",

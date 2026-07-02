@@ -1005,5 +1005,32 @@
       "description": "Загляните позже или создайте поездку",
       "cta": "Создать поездку"
     }
+  },
+  "feed": {
+    "from_placeholder": "Откуда",
+    "to_placeholder": "Куда",
+    "swap_aria": "Поменять местами",
+    "find_trip": "Найти поездку",
+    "find_passenger": "Найти пассажира",
+    "filters": "Фильтры",
+    "today": "Сегодня",
+    "cheaper": "Дешевле",
+    "all_trips": "Все поездки",
+    "trips_count": "{n} поездок",
+    "no_more_trips": "Больше поездок нет",
+    "select_trip": "Выберите поездку",
+    "trip_details": "Детали поездки",
+    "show_trips": "Показать поездки ({n})",
+    "empty_trips_title": "Поездок не найдено",
+    "empty_trips_desc": "По этому маршруту сейчас нет поездок. Оставьте заявку — водители увидят её.",
+    "empty_trips_desc_guest": "Попробуйте изменить маршрут или дату. Войдите, чтобы оставить заявку.",
+    "empty_trips_cta": "Оставить заявку",
+    "empty_trips_cta_driver": "Опубликовать поездку",
+    "empty_cta_login": "Войти",
+    "empty_requests_title": "Заявок не найдено",
+    "empty_requests_desc": "Здесь появятся заявки пассажиров по вашему маршруту.",
+    "empty_requests_desc_driver": "Опубликуйте поездку — пассажиры сами найдут вас.",
+    "empty_requests_cta": "Создать заявку",
+    "empty_requests_cta_driver": "Опубликовать поездку"
   }
 }

@@ -1005,5 +1005,32 @@
       "description": "Загляните позже или создайте поездку",
       "cta": "Создать поездку"
     }
+  },
+  "feed": {
+    "from_placeholder": "Кайдан",
+    "to_placeholder": "Кайда",
+    "swap_aria": "Ордун алмаштыруу",
+    "find_trip": "Сапар табуу",
+    "find_passenger": "Жүргүнчү табуу",
+    "filters": "Чыпкалар",
+    "today": "Бүгүн",
+    "cheaper": "Арзаныраак",
+    "all_trips": "Бардык сапарлар",
+    "trips_count": "{n} сапар",
+    "no_more_trips": "Башка сапар жок",
+    "select_trip": "Сапарды тандаңыз",
+    "trip_details": "Сапардын чоо-жайы",
+    "show_trips": "Сапарларды көрсөтүү ({n})",
+    "empty_trips_title": "Сапарлар табылган жок",
+    "empty_trips_desc": "Бул каттамда азырынча сапар жок. Арыз калтырыңыз — айдоочулар көрөт.",
+    "empty_trips_desc_guest": "Каттамды же датаны өзгөртүп көрүңүз. Арыз калтыруу үчүн кириңиз.",
+    "empty_trips_cta": "Арыз калтыруу",
+    "empty_trips_cta_driver": "Сапар жарыялоо",
+    "empty_cta_login": "Кирүү",
+    "empty_requests_title": "Арыздар табылган жок",
+    "empty_requests_desc": "Бул жерде каттамыңыз боюнча жүргүнчүлөрдүн арыздары чыгат.",
+    "empty_requests_desc_driver": "Сапар жарыялаңыз — жүргүнчүлөр өздөрү табышат.",
+    "empty_requests_cta": "Арыз түзүү",
+    "empty_requests_cta_driver": "Сапар жарыялоо"
   }
 }

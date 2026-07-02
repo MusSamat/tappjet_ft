@@ -61,9 +61,9 @@ export function TripDetailPane({ trip }: Props) {
         <DriverAvatar name={driver.name ?? "?"} src={driver.avatarUrl ?? null} size="lg" />
         <div className="flex min-w-0 flex-1 flex-col">
           <div className="flex items-center gap-2">
-            <span className="text-[18px] font-extrabold text-ink-900">{driver.name}</span>
+            <span className="text-[18px] font-extrabold text-ink-900 dark:text-white">{driver.name}</span>
             {driver.verified && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-brand-100 px-2 py-0.5 text-[11px] font-bold text-brand-900">
+              <span className="inline-flex items-center gap-1 rounded-full bg-brand-50 px-2 py-0.5 text-[11px] font-bold text-brand-700 dark:bg-brand-500/15 dark:text-brand-300">
                 <Shield className="h-2.5 w-2.5" aria-hidden="true" /> {t("verified")}
               </span>
             )}
@@ -79,7 +79,7 @@ export function TripDetailPane({ trip }: Props) {
                   />
                 ))}
               </div>
-              <span className="text-[14px] font-bold text-ink-900">{rating.toFixed(1)}</span>
+              <span className="text-[14px] font-bold text-ink-900 dark:text-white">{rating.toFixed(1)}</span>
               <span className="text-[12px] font-semibold text-ink-500">
                 {t("ratings_trips", { ratings: ratingCount, trips: (driver as { tripsCount?: number }).tripsCount ?? 0 })}
               </span>
@@ -92,16 +92,16 @@ export function TripDetailPane({ trip }: Props) {
 
       {/* Car */}
       {(trip as { car?: string }).car && (
-        <div className="flex items-center gap-2 rounded-xl bg-ink-50 px-3 py-2.5">
+        <div className="flex items-center gap-2 rounded-xl bg-ink-50 px-3 py-2.5 dark:bg-ink-800">
           <Car className="h-3.5 w-3.5 text-brand-600 flex-shrink-0" aria-hidden="true" />
-          <span className="text-[14px] font-bold text-ink-900">{(trip as { car?: string }).car}</span>
+          <span className="text-[14px] font-bold text-ink-900 dark:text-white">{(trip as { car?: string }).car}</span>
         </div>
       )}
 
       {/* Route */}
       <div>
         <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.08em] text-ink-500">{t("route_label")}</p>
-        <div className="rounded-2xl border border-ink-200 bg-white p-4">
+        <div className="rounded-3xl bg-white p-4 ring-1 ring-ink-100 dark:bg-ink-800 dark:ring-ink-700">
           <div className="flex items-start gap-3">
             {/* Dots */}
             <div className="flex flex-col items-center pt-1">
@@ -120,14 +120,14 @@ export function TripDetailPane({ trip }: Props) {
             {/* Cities */}
             <div className="flex flex-1 flex-col gap-4">
               <div>
-                <p className="text-[16px] font-extrabold text-ink-900">{trip.originCity}</p>
+                <p className="text-[16px] font-extrabold text-ink-900 dark:text-white">{trip.originCity}</p>
                 <RouteStops pickup={trip.pickupCities} className="mt-1" />
                 <p className="mt-0.5 text-[12px] font-semibold text-ink-500">
                   {trip.departureAt ? formatDepartureLabel(trip.departureAt) : ""}
                 </p>
               </div>
               <div>
-                <p className="text-[16px] font-extrabold text-ink-900">{trip.destinationCity}</p>
+                <p className="text-[16px] font-extrabold text-ink-900 dark:text-white">{trip.destinationCity}</p>
                 <RouteStops dropoff={trip.dropoffCities} className="mt-1" />
                 <p className="mt-0.5 text-[12px] font-semibold text-ink-500">
                   {arrivalTime
@@ -145,13 +145,13 @@ export function TripDetailPane({ trip }: Props) {
 
       {/* Seats — stacked people (free vs taken) */}
       {seatsTotal > 0 && (
-        <div className="flex items-center gap-3 rounded-2xl bg-ink-50 px-4 py-3">
+        <div className="flex items-center gap-3 rounded-2xl bg-ink-50 px-4 py-3 dark:bg-ink-800">
           <SeatStack
             taken={Math.max(0, seatsTotal - seatsAvailable)}
             free={Math.max(0, seatsAvailable)}
             size={26}
           />
-          <span className="text-[13px] font-extrabold text-brand-700">
+          <span className="text-[13px] font-extrabold text-brand-700 dark:text-brand-300">
             {t("seats_free", { free: seatsAvailable, total: seatsTotal })}
           </span>
         </div>
@@ -160,19 +160,19 @@ export function TripDetailPane({ trip }: Props) {
       {/* Badges */}
       <div className="flex flex-wrap gap-2">
         {luggage === "yes" && (
-          <span className="inline-flex items-center gap-1 rounded-full bg-ink-100 px-2.5 py-1 text-[11px] font-bold text-ink-700">
+          <span className="inline-flex items-center gap-1 rounded-full bg-ink-100 px-2.5 py-1 text-[11px] font-bold text-ink-700 dark:bg-ink-800 dark:text-ink-300">
             <Luggage className="h-3 w-3" aria-hidden="true" />
             {t("luggage_big")}
           </span>
         )}
         {luggage === "small" && (
-          <span className="inline-flex items-center gap-1 rounded-full bg-ink-100 px-2.5 py-1 text-[11px] font-bold text-ink-700">
+          <span className="inline-flex items-center gap-1 rounded-full bg-ink-100 px-2.5 py-1 text-[11px] font-bold text-ink-700 dark:bg-ink-800 dark:text-ink-300">
             <Luggage className="h-3 w-3" aria-hidden="true" />
             {t("luggage_small")}
           </span>
         )}
         {trip.priceNegotiable && (
-          <span className="inline-flex items-center rounded-full bg-accent-100 px-2.5 py-1 text-[11px] font-bold text-accent-700">
+          <span className="inline-flex items-center rounded-full bg-accent-100 px-2.5 py-1 text-[11px] font-bold text-accent-700 dark:bg-accent-500/15 dark:text-accent-300">
             {t("price_negotiable")}
           </span>
         )}
@@ -186,7 +186,7 @@ export function TripDetailPane({ trip }: Props) {
             {preferences.map((p) => (
               <span
                 key={p}
-                className="inline-flex items-center gap-1.5 rounded-full border-2 border-brand-600 bg-brand-50 px-3 py-1 text-[12px] font-bold text-brand-700"
+                className="inline-flex items-center gap-1.5 rounded-full border-2 border-brand-500 bg-brand-50 px-3 py-1 text-[12px] font-bold text-brand-700 dark:bg-brand-500/15 dark:text-brand-300"
               >
                 <CheckCircle className="h-3 w-3" aria-hidden="true" />
                 {PREF_LABELS[p] ?? p}
@@ -200,7 +200,7 @@ export function TripDetailPane({ trip }: Props) {
       {(trip as { comment?: string | null }).comment && (
         <div>
           <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.08em] text-ink-500">{t("driver_comment")}</p>
-          <div className="rounded-2xl bg-brand-50 px-3 py-2.5 text-[13px] leading-relaxed text-ink-700">
+          <div className="rounded-2xl bg-brand-50 px-3 py-2.5 text-[13px] leading-relaxed text-ink-700 dark:bg-brand-500/10 dark:text-ink-200">
             «{(trip as { comment?: string | null }).comment}»
           </div>
         </div>
@@ -208,10 +208,10 @@ export function TripDetailPane({ trip }: Props) {
 
       {/* Phone hidden — only for non-drivers */}
       {!isOwnTrip && (
-        <div className="rounded-2xl border border-accent-100 bg-accent-50 px-3 py-2.5">
+        <div className="rounded-2xl bg-accent-50 px-3 py-2.5 ring-1 ring-accent-100 dark:bg-accent-500/10 dark:ring-accent-500/20">
           <div className="flex items-center gap-2">
             <Lock className="h-3.5 w-3.5 text-accent-600 flex-shrink-0" aria-hidden="true" />
-            <span className="text-[13px] font-bold text-ink-900">{t("phone_hidden")}</span>
+            <span className="text-[13px] font-bold text-ink-900 dark:text-white">{t("phone_hidden")}</span>
           </div>
           <p className="mt-1 text-[12px] font-semibold text-ink-500">
             {t("phone_hidden_hint")}
@@ -223,16 +223,16 @@ export function TripDetailPane({ trip }: Props) {
       <div className="flex items-end justify-between">
         <div>
           <p className="text-[12px] font-semibold text-ink-500">{t("price_per_seat")}</p>
-          <p className="text-[28px] font-extrabold text-brand-700">{t("price_som", { price: trip.pricePerSeat ?? 0 })}</p>
+          <p className="text-[28px] font-extrabold text-brand-700 dark:text-brand-300">{t("price_som", { price: trip.pricePerSeat ?? 0 })}</p>
         </div>
         <p className="text-[12px] font-semibold text-ink-500">{t("pay_cash")}</p>
       </div>
 
       {/* CTA — skeleton while auth loads, own-trip notice, or booking buttons */}
       {(authStatus === "idle" || authStatus === "loading") ? (
-        <div className="h-12 animate-pulse rounded-2xl bg-ink-100" />
+        <div className="h-12 animate-pulse rounded-2xl bg-ink-100 dark:bg-ink-800" />
       ) : isOwnTrip ? (
-        <div className="rounded-2xl border border-brand-200 bg-brand-50 p-4 text-center">
+        <div className="rounded-2xl bg-brand-50 p-4 text-center ring-1 ring-brand-200 dark:bg-brand-500/10 dark:ring-brand-500/30">
           <p className="text-[14px] font-bold text-brand-700">{t("own_trip")}</p>
           <p className="mt-0.5 text-[12px] font-semibold text-brand-600">{t("own_trip_hint")}</p>
         </div>

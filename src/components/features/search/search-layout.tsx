@@ -2,29 +2,61 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { searchTrips, type SearchTripsParams, type TripSearchResult, type TripListItem } from "@/lib/api/trips";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { X } from "lucide-react";
 import { TripCard } from "@/components/ui/trip-card";
-import { Segmented } from "@/components/ui/segmented";
+import { EmptyState } from "@/components/ui/empty-state";
+import { CardSkeletonList } from "@/components/ui/card-skeleton";
+import { useUiRole } from "@/lib/hooks/use-role-colors";
 
 import { SearchFilters } from "./search-filters";
 import { TripDetailPane } from "./trip-detail-pane";
 import { PopularRoutes } from "./popular-routes";
-import { CardSkeletonList } from "@/components/ui/card-skeleton";
-import { MobileRouteBar } from "./_components/mobile-route-bar";
-import { SlidersHorizontal, X, Bell, SearchX, CarFront, Hand } from "lucide-react";
+import { FeedHeader } from "./feed-header";
 
 interface Props {
   params: SearchTripsParams;
   initial: TripSearchResult;
 }
 
+/** Role-aware feed empty state (spec §2.2 recommends one; copy in feed.empty_*). */
+function FeedEmpty({ params }: { params: SearchTripsParams }) {
+  const t = useTranslations("feed");
+  const role = useUiRole();
+
+  const requestQs = `${params.from_city ? `?from=${encodeURIComponent(params.from_city)}` : ""}${
+    params.to_city ? `${params.from_city ? "&" : "?"}to=${encodeURIComponent(params.to_city)}` : ""
+  }`;
+
+  const action =
+    role === "guest"
+      ? { label: t("empty_cta_login"), href: "/auth/login" }
+      : role === "driver"
+        ? { label: t("empty_trips_cta_driver"), href: "/trips/create" }
+        : { label: t("empty_trips_cta"), href: `/requests/create${requestQs}` };
+
+  return (
+    <div className="flex flex-col gap-5">
+      <EmptyState
+        icon="route"
+        iconTone="brand"
+        title={t("empty_trips_title")}
+        description={role === "guest" ? t("empty_trips_desc_guest") : t("empty_trips_desc")}
+        action={action}
+        className="bg-white shadow-card ring-1 ring-ink-100 dark:bg-ink-900 dark:ring-ink-800"
+      />
+      <PopularRoutes />
+    </div>
+  );
+}
+
 export function SearchLayout({ params, initial }: Props) {
-  const router = useRouter();
+  const t = useTranslations("feed");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [mobileDetailOpen, setMobileDetailOpen] = useState(false);
+  const listColRef = useRef<HTMLDivElement>(null);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ["trips", params],
@@ -62,41 +94,10 @@ export function SearchLayout({ params, initial }: Props) {
   const heading =
     params.from_city && params.to_city
       ? `${params.from_city} → ${params.to_city}`
-      : "Все поездки";
-
-  const hasDateFilter = !!params.date;
-  const hasRouteFilter = !!(params.from_city || params.to_city);
-
-  const emptyState = (
-    <div className="flex flex-col gap-5">
-      <div className="rounded-3xl bg-white p-8 shadow-card ring-1 ring-ink-100 text-center">
-        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-ink-100">
-          <SearchX className="h-7 w-7 text-ink-400" aria-hidden="true" />
-        </div>
-        <p className="text-[18px] font-extrabold text-ink-900">Поездок не найдено</p>
-        <p className="mt-2 text-[13px] leading-relaxed text-ink-500">
-          {hasDateFilter
-            ? "На эту дату поездок пока нет. Попробуйте другую дату или оставьте заявку — водители сами найдут вас."
-            : hasRouteFilter
-              ? "По этому маршруту сейчас нет поездок. Оставьте заявку и водители увидят её."
-              : "Попробуйте изменить фильтры или выбрать другую дату."}
-        </p>
-        {(hasDateFilter || hasRouteFilter) && (
-          <Link
-            href={`/requests/create${params.from_city ? `?from=${encodeURIComponent(params.from_city)}` : ""}${params.to_city ? `&to=${encodeURIComponent(params.to_city)}` : ""}`}
-            className="mt-5 inline-flex items-center gap-2 rounded-2xl bg-sky-600 px-5 py-2.5 text-[13px] font-bold text-white hover:bg-sky-700"
-          >
-            <Bell className="h-3.5 w-3.5" aria-hidden="true" />
-            Оставить заявку
-          </Link>
-        )}
-      </div>
-      <PopularRoutes />
-    </div>
-  );
+      : t("all_trips");
 
   const tripList = (onCardClick?: (id: string) => void) => (
-    <div className="flex flex-col gap-3">
+    <div className="space-y-2.5">
       {trips.map((trip, i) => (
         <div
           key={trip.id}
@@ -114,7 +115,7 @@ export function SearchLayout({ params, initial }: Props) {
       {isFetchingNextPage && <CardSkeletonList variant="trip" count={3} />}
       <div ref={sentinel} className="flex h-8 items-center justify-center">
         {!hasNextPage && trips.length > 0 && (
-          <span className="text-[12px] font-semibold text-ink-400">Больше поездок нет</span>
+          <span className="text-[12px] font-800 text-ink-400">{t("no_more_trips")}</span>
         )}
       </div>
     </div>
@@ -122,79 +123,56 @@ export function SearchLayout({ params, initial }: Props) {
 
   return (
     <>
-      {/* ===== DESKTOP (≥1024px): 3-column split ===== */}
+      {/* ===== DESKTOP (≥1024px): 3-column master-detail (spec §1.3/§2.2) ===== */}
       <div className="hidden lg:flex lg:justify-center" style={{ height: "calc(100vh - 64px)" }}>
-        <div
-          className="grid w-full max-w-[1500px]"
-          style={{ gridTemplateColumns: "260px 1fr 360px" }}
-        >
-          <div className="overflow-y-auto border-r border-ink-200 bg-white p-5">
-            <SearchFilters />
+        <div className="grid w-full max-w-[1500px] lg:grid-cols-[260px_1fr_380px]">
+          {/* Left: filter sidebar with amber footer CTA */}
+          <div className="flex min-h-0 flex-col border-r border-ink-100 bg-white dark:border-ink-800 dark:bg-ink-900">
+            <div className="min-h-0 flex-1 overflow-y-auto p-4">
+              <SearchFilters />
+            </div>
+            <div className="border-t border-ink-100 p-3 dark:border-ink-800">
+              <button
+                type="button"
+                onClick={() => listColRef.current?.scrollTo({ top: 0, behavior: "smooth" })}
+                className="h-11 w-full rounded-xl bg-accent-500 text-[13px] font-900 text-accent-ink shadow-cta transition-colors hover:bg-accent-400"
+              >
+                {t("show_trips", { n: trips.length })}
+              </button>
+            </div>
           </div>
 
-          <div className="overflow-y-auto bg-ink-50 px-6 py-5">
+          {/* Middle: scrollable card list */}
+          <div ref={listColRef} className="overflow-y-auto bg-ink-50 px-6 py-5 dark:bg-ink-950">
             <div className="mb-4">
-              <h1 className="text-h1 text-ink-900">{heading}</h1>
-              <p className="mt-1 text-[12px] font-semibold text-ink-500">
-                {trips.length} поездок
+              <h1 className="font-disp text-[22px] font-900 text-ink-900 dark:text-white">{heading}</h1>
+              <p className="mt-1 text-[12px] font-800 text-ink-500 dark:text-ink-400">
+                {t("trips_count", { n: trips.length })}
               </p>
             </div>
-            {trips.length === 0 ? emptyState : tripList()}
+            {trips.length === 0 ? <FeedEmpty params={params} /> : tripList()}
           </div>
 
-          <div className="overflow-y-auto border-l border-ink-200 bg-white px-6 py-5">
+          {/* Right rail: detail pane */}
+          <div className="overflow-y-auto border-l border-ink-100 bg-white px-6 py-5 dark:border-ink-800 dark:bg-ink-900">
             {selectedTrip ? (
               <TripDetailPane trip={selectedTrip} />
             ) : (
               <div className="flex h-full items-center justify-center">
-                <p className="text-[13px] font-semibold text-ink-500">Выберите поездку</p>
+                <p className="text-[13px] font-800 text-ink-500">{t("select_trip")}</p>
               </div>
             )}
           </div>
         </div>
       </div>
 
-      {/* ===== MOBILE/TABLET (<1024px): stacked ===== */}
+      {/* ===== MOBILE/TABLET (<1024px): feed header + card list ===== */}
       <div className="lg:hidden">
-        <div className="sticky top-0 z-20 bg-white md:top-16">
-          <div className="border-b border-ink-100 px-4 pt-3">
-            <div className="mx-auto max-w-[1100px]">
-              <Segmented
-                value="trips"
-                onChange={(v) => { if (v === "requests") router.push("/requests"); }}
-                options={[
-                  { value: "trips", label: "Поездки", icon: <CarFront className="h-4 w-4" /> },
-                  { value: "requests", label: "Заявки", icon: <Hand className="h-4 w-4" /> },
-                ]}
-              />
-            </div>
-          </div>
-          <div className="border-b border-ink-100">
-            <div className="mx-auto max-w-[1100px] px-4">
-              <MobileRouteBar />
-            </div>
-          </div>
+        <FeedHeader tab="trips" onOpenFilters={() => setMobileFiltersOpen(true)} />
 
-          <div className="border-b border-ink-100">
-            <div className="mx-auto flex max-w-[1100px] items-center justify-between px-4 py-2">
-              <p className="text-[12px] font-semibold text-ink-400">
-                {trips.length > 0 ? `${trips.length} поездок` : "Поездок не найдено"}
-              </p>
-              <button
-                type="button"
-                onClick={() => setMobileFiltersOpen(true)}
-                className="flex items-center gap-1.5 rounded-xl border border-ink-200 bg-white px-3 py-1.5 text-[12px] font-bold text-ink-700 shadow-sm active:bg-ink-50"
-              >
-                <SlidersHorizontal className="h-3.5 w-3.5 text-brand-600" aria-hidden="true" />
-                Фильтры
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div className="mx-auto max-w-[1100px] px-4 py-4">
+        <div className="px-4 pb-3">
           {trips.length === 0
-            ? emptyState
+            ? <FeedEmpty params={params} />
             : tripList((id) => {
                 setSelectedId(id);
                 setMobileDetailOpen(true);
@@ -208,16 +186,17 @@ export function SearchLayout({ params, initial }: Props) {
           />
         )}
 
+        {/* Filters bottom sheet */}
         <div
-          className={`search-sheet fixed bottom-0 left-0 right-0 z-40 max-h-[85vh] overflow-y-auto rounded-t-4xl bg-white${mobileFiltersOpen ? " open" : ""}`}
+          className={`search-sheet fixed bottom-0 left-0 right-0 z-40 max-h-[85vh] overflow-y-auto rounded-t-4xl bg-white dark:bg-ink-900${mobileFiltersOpen ? " open" : ""}`}
           style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
         >
-          <div className="flex items-center justify-between border-b border-ink-100 px-5 py-4">
-            <h2 className="text-[17px] font-extrabold text-ink-900">Фильтры</h2>
+          <div className="flex items-center justify-between border-b border-ink-100 px-5 py-4 dark:border-ink-800">
+            <h2 className="text-[16px] font-900 text-ink-900 dark:text-white">{t("filters")}</h2>
             <button
               type="button"
               onClick={() => setMobileFiltersOpen(false)}
-              className="flex h-8 w-8 items-center justify-center rounded-full bg-ink-100 text-ink-500 hover:bg-ink-200"
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-ink-100 text-ink-500 hover:bg-ink-200 dark:bg-ink-800 dark:text-ink-300"
             >
               <X className="h-4 w-4" aria-hidden="true" />
             </button>
@@ -225,27 +204,28 @@ export function SearchLayout({ params, initial }: Props) {
           <div className="px-5 py-5">
             <SearchFilters />
           </div>
-          <div className="border-t border-ink-100 px-5 py-4">
+          <div className="border-t border-ink-100 px-5 py-4 dark:border-ink-800">
             <button
               type="button"
               onClick={() => setMobileFiltersOpen(false)}
-              className="h-12 w-full rounded-2xl bg-accent-500 text-[15px] font-bold text-[#4A2C00] hover:bg-accent-600"
+              className="h-12 w-full rounded-2xl bg-accent-500 text-[15px] font-900 text-accent-ink shadow-cta transition-colors hover:bg-accent-400"
             >
-              Показать поездки
+              {t("show_trips", { n: trips.length })}
             </button>
           </div>
         </div>
 
+        {/* Detail bottom sheet */}
         <div
-          className={`search-sheet fixed bottom-0 left-0 right-0 z-40 max-h-[90vh] overflow-y-auto rounded-t-4xl bg-white${mobileDetailOpen ? " open" : ""}`}
+          className={`search-sheet fixed bottom-0 left-0 right-0 z-40 max-h-[90vh] overflow-y-auto rounded-t-4xl bg-white dark:bg-ink-900${mobileDetailOpen ? " open" : ""}`}
           style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
         >
-          <div className="flex items-center justify-between border-b border-ink-100 px-5 py-4">
-            <h2 className="text-[17px] font-extrabold text-ink-900">Детали поездки</h2>
+          <div className="flex items-center justify-between border-b border-ink-100 px-5 py-4 dark:border-ink-800">
+            <h2 className="text-[16px] font-900 text-ink-900 dark:text-white">{t("trip_details")}</h2>
             <button
               type="button"
               onClick={() => setMobileDetailOpen(false)}
-              className="flex h-8 w-8 items-center justify-center rounded-full bg-ink-100 text-ink-500 hover:bg-ink-200"
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-ink-100 text-ink-500 hover:bg-ink-200 dark:bg-ink-800 dark:text-ink-300"
             >
               <X className="h-4 w-4" aria-hidden="true" />
             </button>
