@@ -5,9 +5,10 @@ build
 dist
 .claude
 
-# All env files except the checked-in example template
+# All env files except the checked-in example templates
 .env*
 !.env.example
+!.env.local.example
 
 *.log
 npm-debug.log*

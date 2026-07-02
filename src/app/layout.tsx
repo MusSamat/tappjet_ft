@@ -15,6 +15,7 @@ import { QuickActions } from "@/components/features/quick-actions/quick-actions"
 import { QuickToastContainer } from "@/components/layout/quick-toast";
 import { OfflineBanner } from "@/components/layout/offline-banner";
 import { ThemeProvider, THEME_INIT_SCRIPT } from "@/components/theme-provider";
+import { WebVitals } from "@/components/web-vitals";
 import "./globals.css";
 
 const nunito = Nunito({
@@ -76,6 +77,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ThemeProvider>
             <Providers>
+              <WebVitals />
               <TmaInit />
               <AuthBootstrap />
               <TopNav />
