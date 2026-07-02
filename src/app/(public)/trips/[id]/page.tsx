@@ -28,11 +28,24 @@ const fetchTrip = cache(async (id: string): Promise<TripDetail | null> => {
   }
 });
 
+// Cancelled → gone: 404, don't keep it in the index. Completed or past-departure
+// ("expired") → still viewable but must be noindex so finished rides don't pile
+// up as thin indexable pages.
+function tripSeoState(trip: TripDetail): { cancelled: boolean; noindex: boolean } {
+  const cancelled = trip.status === "cancelled";
+  const past = trip.departureAt ? new Date(trip.departureAt).getTime() < Date.now() : false;
+  const noindex = cancelled || trip.status === "completed" || past;
+  return { cancelled, noindex };
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const trip = await fetchTrip(params.id);
   const locale = (await getLocale()) as Locale;
   const t = await getTranslations("trips_meta");
   if (!trip) return { title: t("not_found"), robots: { index: false } };
+
+  const { cancelled, noindex } = tripSeoState(trip);
+  if (cancelled) return { title: t("not_found"), robots: { index: false } };
 
   const dateLabel = trip.departureAt ? formatDepartureLabel(trip.departureAt, locale) : "";
   const title = dateLabel
@@ -52,6 +65,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description: desc,
+    ...(noindex ? { robots: { index: false, follow: true } } : {}),
     alternates: { canonical: url, languages: hreflangAlternates(path) },
     openGraph: {
       title,
@@ -67,7 +81,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function TripDetailsPage({ params, searchParams }: Props) {
   const trip = await fetchTrip(params.id);
-  if (!trip) notFound();
+  if (!trip || tripSeoState(trip).cancelled) notFound();
 
   const jsonLd = buildTripJsonLd(trip, absoluteUrl(`/trips/${params.id}`));
 
