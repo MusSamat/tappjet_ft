@@ -21,7 +21,7 @@ import { toastSuccess, toastError } from "@/components/layout/quick-toast";
 import { RateModal } from "@/components/features/ratings/rate-modal";
 import { useUiRole } from "@/lib/hooks/use-role-colors";
 import { ROLE_THEME } from "@/lib/role-colors";
-import { Container, Segmented } from "@/components/ui";
+import { Container, QueryError, Segmented } from "@/components/ui";
 import { Confetti } from "@/components/ui/confetti";
 import type { Booking } from "@/lib/api/bookings";
 import { completeTrip, cancelTrip } from "@/lib/api/trips";
@@ -257,7 +257,10 @@ export default function MyBookingsPage() {
           <Segmented options={options} value={tab} onChange={setTab} textOn={theme.textOn} />
         </div>
 
-        {tab === "active" && (
+        {tab === "active" && outgoing.isError && (
+          <QueryError error={outgoing.error} onRetry={() => void outgoing.refetch()} />
+        )}
+        {tab === "active" && !outgoing.isError && (
           <PassengerTab
             isLoading={outgoing.isLoading}
             passengerSubTab="active"
@@ -274,7 +277,10 @@ export default function MyBookingsPage() {
 
         {tab === "my_requests" && <MyRequestsTab />}
 
-        {tab === "history" && (
+        {tab === "history" && outgoing.isError && (
+          <QueryError error={outgoing.error} onRetry={() => void outgoing.refetch()} />
+        )}
+        {tab === "history" && !outgoing.isError && (
           <PassengerTab
             isLoading={outgoing.isLoading}
             passengerSubTab="history"
@@ -289,7 +295,16 @@ export default function MyBookingsPage() {
           />
         )}
 
-        {tab === "trips" && (
+        {tab === "trips" && (myTrips.isError || inTransitTrips.isError) && (
+          <QueryError
+            error={myTrips.error ?? inTransitTrips.error}
+            onRetry={() => {
+              if (myTrips.isError) void myTrips.refetch();
+              if (inTransitTrips.isError) void inTransitTrips.refetch();
+            }}
+          />
+        )}
+        {tab === "trips" && !myTrips.isError && !inTransitTrips.isError && (
           <DriverTab
             isLoading={myTrips.isLoading || inTransitTrips.isLoading}
             driverSubTab="active"
@@ -304,12 +319,16 @@ export default function MyBookingsPage() {
           />
         )}
 
-        {tab === "requests" && (
+        {tab === "requests" && incoming.isError && (
+          <QueryError error={incoming.error} onRetry={() => void incoming.refetch()} />
+        )}
+        {tab === "requests" && !incoming.isError && (
           <RequestsTab
             isLoading={incoming.isLoading}
             bookings={requestBookings}
             onAccept={(id) => acceptMut.mutate(id)}
             onReject={(id) => rejectMut.mutate(id)}
+            actionPending={acceptMut.isPending || rejectMut.isPending}
           />
         )}
 

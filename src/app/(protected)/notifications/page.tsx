@@ -10,7 +10,7 @@ import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { toastError } from "@/components/layout/quick-toast";
 import { NotificationItem } from "@/components/features/notifications/notification-item";
 import { useAuth } from "@/store/auth";
-import { SectionLabel, Spinner, Switch } from "@/components/ui";
+import { QueryError, SectionLabel, Spinner, Switch } from "@/components/ui";
 import { cn } from "@/lib/utils/cn";
 
 const LIMIT = 20;
@@ -181,9 +181,7 @@ export default function NotificationsPage() {
           <Spinner size={24} />
         </div>
       ) : query.isError ? (
-        <div className="rounded-2xl bg-coral-50 p-5 text-[13px] font-700 text-coral-600 dark:bg-coral-500/10">
-          {t("load_error")}
-        </div>
+        <QueryError error={query.error} onRetry={() => void query.refetch()} />
       ) : notifications.length === 0 ? (
         <div className="rounded-3xl bg-white p-10 text-center shadow-card dark:bg-ink-900">
           <p className="text-[17px] font-900 text-ink-900 dark:text-white">{t("empty_title")}</p>

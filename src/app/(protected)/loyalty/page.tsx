@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { Award } from "lucide-react";
 import { getLoyaltyStatus, getLoyaltyTransactions } from "@/lib/api/loyalty";
 import { useInfiniteScroll } from "@/lib/hooks/use-infinite-scroll";
-import { Container, Spinner } from "@/components/ui";
+import { Container, QueryError, Spinner } from "@/components/ui";
 import { cn } from "@/lib/utils/cn";
 
 const TIERS = ["novice", "traveler", "expert", "elite"] as const;
@@ -36,11 +36,12 @@ export default function LoyaltyPage() {
     manual:         t("sources.manual"),
     referral:       t("sources.referral"),
   };
-  const { data: status, isLoading: statusLoading } = useQuery({
+  const statusQuery = useQuery({
     queryKey: ["loyalty", "status"],
     queryFn: getLoyaltyStatus,
     staleTime: 60_000,
   });
+  const { data: status, isLoading: statusLoading } = statusQuery;
 
   const txQuery = useInfiniteQuery({
     queryKey: ["loyalty", "transactions"],
@@ -76,6 +77,8 @@ export default function LoyaltyPage() {
         <div className="flex justify-center py-16">
           <Spinner size={28} />
         </div>
+      ) : statusQuery.isError ? (
+        <QueryError error={statusQuery.error} onRetry={() => void statusQuery.refetch()} />
       ) : (
         <>
           {/* ── Status card ── */}
@@ -191,6 +194,12 @@ export default function LoyaltyPage() {
               <div className="flex justify-center py-10">
                 <Spinner size={20} />
               </div>
+            ) : txQuery.isError ? (
+              <QueryError
+                error={txQuery.error}
+                onRetry={() => void txQuery.refetch()}
+                className="m-4 shadow-none ring-0"
+              />
             ) : transactions.length === 0 ? (
               <div className="py-12 text-center">
                 <p className="text-[14px] font-700 text-ink-600 dark:text-ink-300">{t("empty_title")}</p>

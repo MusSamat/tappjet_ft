@@ -22,6 +22,7 @@ import { getUserRatings } from "@/lib/api/users";
 import { extractError } from "@/lib/api/client";
 import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { toastSuccess, toastError } from "@/components/layout/quick-toast";
+import { QueryError } from "@/components/ui/query-error";
 import { useAuth } from "@/store/auth";
 import { useRoleTheme } from "@/lib/hooks/use-role-colors";
 import { AvatarUploader } from "@/components/features/profile/avatar-uploader";
@@ -57,12 +58,13 @@ export default function ProfilePage() {
   const joinYear = user?.createdAt ? new Date(user.createdAt).getFullYear() : null;
   const fabClass = FAB_TINT[role] ?? FAB_TINT.passenger;
 
-  const { data: ratingsData, isLoading: ratingsLoading } = useQuery({
+  const ratingsQuery = useQuery({
     queryKey: ["ratings", user?.id],
     queryFn: () => getUserRatings(user!.id!, undefined, 20),
     enabled: !!user?.id && (tab === "about" || tab === "reviews"),
     staleTime: 60_000,
   });
+  const { data: ratingsData, isLoading: ratingsLoading } = ratingsQuery;
 
   const logoutMutation = useMutation({
     mutationFn: logout,
@@ -193,6 +195,8 @@ export default function ProfilePage() {
     <div className="flex flex-col gap-3">
       {ratingsLoading ? (
         Array.from({ length: 3 }).map((_, i) => <ReviewCardSkeleton key={i} />)
+      ) : ratingsQuery.isError ? (
+        <QueryError error={ratingsQuery.error} onRetry={() => void ratingsQuery.refetch()} />
       ) : ratingsData?.data.length === 0 ? (
         <div className="rounded-3xl bg-white p-10 text-center shadow-card dark:bg-ink-900">
           <p className="text-[17px] font-900 text-ink-900 dark:text-white">{t("no_reviews")}</p>

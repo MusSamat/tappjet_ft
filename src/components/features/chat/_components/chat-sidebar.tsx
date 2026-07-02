@@ -3,13 +3,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { getChatSummaries } from "@/lib/api/chat";
+import { Spinner } from "@/components/ui/spinner";
+import { QueryError } from "@/components/ui/query-error";
 import { ChatRow } from "./chat-row";
 
 const ACTIVE_CHAT_STATUSES = new Set(["pending", "viewed", "accepted"]);
 
 export function ChatSidebar({ activeBookingId }: { activeBookingId: string }) {
   const t = useTranslations("chat");
-  const { data: summaries = [] } = useQuery({
+  const { data: summaries = [], isLoading, isError, error, refetch } = useQuery({
     queryKey: ["chat", "summaries"],
     queryFn: getChatSummaries,
     staleTime: 15_000,
@@ -28,7 +30,13 @@ export function ChatSidebar({ activeBookingId }: { activeBookingId: string }) {
       </div>
       <div className="h-px bg-ink-100" />
       <div className="flex-1 overflow-y-auto">
-        {summaries.length === 0 && (
+        {isLoading && (
+          <div className="flex justify-center py-8">
+            <Spinner size={20} />
+          </div>
+        )}
+        {isError && <QueryError error={error} onRetry={() => void refetch()} className="m-4" />}
+        {!isLoading && !isError && summaries.length === 0 && (
           <p className="px-4 py-8 text-center text-[13px] font-semibold text-ink-400">{t("no_chats")}</p>
         )}
 

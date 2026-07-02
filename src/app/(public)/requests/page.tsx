@@ -12,6 +12,7 @@ import { RequestFilters } from "@/components/features/passenger-requests/request
 import { FeedHeader } from "@/components/features/search/feed-header";
 import { EmptyState } from "@/components/ui/empty-state";
 import { CardSkeletonList } from "@/components/ui/card-skeleton";
+import { QueryError } from "@/components/ui/query-error";
 import { useUiRole } from "@/lib/hooks/use-role-colors";
 
 /** Role-aware empty state for the requests feed (feed.empty_* keys). */
@@ -53,7 +54,7 @@ export default function RequestsPage() {
     seats: params.get("seats") ? Number(params.get("seats")) : undefined,
   };
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = useInfiniteQuery({
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, error, refetch } = useInfiniteQuery({
     queryKey: ["passenger-requests", filters],
     queryFn: ({ pageParam }) =>
       listPassengerRequests({ ...filters, cursor: pageParam as string | undefined, limit: 20 }),
@@ -144,6 +145,8 @@ export default function RequestsPage() {
             </div>
             {isLoading ? (
               <CardSkeletonList variant="request" />
+            ) : isError ? (
+              <QueryError error={error} onRetry={() => void refetch()} />
             ) : requests.length === 0 ? <RequestsEmpty /> : list()}
           </div>
 
@@ -167,6 +170,8 @@ export default function RequestsPage() {
         <div className="px-4 pb-3">
           {isLoading ? (
             <CardSkeletonList variant="request" />
+          ) : isError ? (
+            <QueryError error={error} onRetry={() => void refetch()} />
           ) : requests.length === 0 ? <RequestsEmpty /> : list((id) => {
             setSelectedId(id);
             setMobileDetailOpen(true);

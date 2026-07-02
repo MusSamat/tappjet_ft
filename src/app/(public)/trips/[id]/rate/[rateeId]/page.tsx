@@ -12,7 +12,7 @@ import {
   submitRating,
   type SubmitRatingInput,
 } from "@/lib/api/ratings";
-import { Button, Spinner, Textarea, DriverAvatar } from "@/components/ui";
+import { Button, QueryError, Spinner, Textarea, DriverAvatar } from "@/components/ui";
 import { useAuth } from "@/store/auth";
 import { cn } from "@/lib/utils/cn";
 import { saveDeferredAction } from "@/lib/auth/deferred-action";
@@ -37,12 +37,13 @@ export default function RatePage({ params }: Props) {
     }
   }, [status, tripId, rateeId, router]);
 
-  const { data: pendingList, isLoading } = useQuery({
+  const pendingQuery = useQuery({
     queryKey: ["ratings", "pending"],
     queryFn: getPendingRatings,
     enabled: status === "authenticated",
     staleTime: 60_000,
   });
+  const { data: pendingList, isLoading } = pendingQuery;
 
   const pending = useMemo(
     () => pendingList?.data.find((p) => p.tripId === tripId && p.counterpartId === rateeId),
@@ -104,6 +105,16 @@ export default function RatePage({ params }: Props) {
         </p>
         <div className="mx-auto mt-6 h-1 w-20 rounded-full bg-accent-300" />
         <p className="mt-4 text-[12px] font-semibold text-ink-400">{t("success_redirect")}</p>
+      </div>
+    );
+  }
+
+  // Load failure ≠ "nothing to rate" — offer a retry instead of the
+  // unavailable screen.
+  if (pendingQuery.isError) {
+    return (
+      <div className="container max-w-lg py-20">
+        <QueryError error={pendingQuery.error} onRetry={() => void pendingQuery.refetch()} />
       </div>
     );
   }

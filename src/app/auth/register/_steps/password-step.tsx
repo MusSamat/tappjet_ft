@@ -22,13 +22,14 @@ export function PasswordStep({ onDone, onSkip, onError }: Props) {
   const parsed = passwordSchema.safeParse(password);
   const errMsg = touched && !parsed.success ? parsed.error.issues[0]?.message : undefined;
   const mismatch = confirm.length > 0 && confirm !== password;
-  const canSubmit = parsed.success && confirm === password;
 
   const mutation = useMutation({
     mutationFn: () => setPassword(password),
     onSuccess: onDone,
     onError,
   });
+
+  const canSubmit = parsed.success && confirm === password && !mutation.isPending;
 
   return (
     <form

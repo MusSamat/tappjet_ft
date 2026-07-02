@@ -23,6 +23,7 @@ export { ProgressBar } from "./progress-bar";
 export { Spinner } from "./spinner";
 export { Skeleton } from "./skeleton";
 export { CardSkeleton, CardSkeletonList, type CardSkeletonVariant } from "./card-skeleton";
+export { QueryError } from "./query-error";
 export { Input } from "./input";
 export { Textarea } from "./textarea";
 export { Label } from "./label";

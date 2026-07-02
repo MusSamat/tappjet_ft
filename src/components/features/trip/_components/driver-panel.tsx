@@ -19,6 +19,7 @@ import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { toastSuccess, toastError } from "@/components/layout/quick-toast";
 import { cn } from "@/lib/utils/cn";
 import { Spinner } from "@/components/ui";
+import { QueryError } from "@/components/ui/query-error";
 import { Overlay } from "./modal-overlay";
 import { DriverBookingRow } from "./driver-booking-row";
 
@@ -52,11 +53,12 @@ export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string
     t("reject_reason_other"),
   ];
 
-  const { data: incoming, isLoading } = useQuery({
+  const incomingQuery = useQuery({
     queryKey: ["bookings", "incoming", tripId],
     queryFn: () => listIncomingBookings(tripId),
     staleTime: 30_000,
   });
+  const { data: incoming, isLoading } = incomingQuery;
 
   const { data: ratingsData } = useQuery({
     queryKey: ["ratings", "pending"],
@@ -180,6 +182,8 @@ export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string
         <div className="flex justify-center rounded-2xl border border-ink-100 bg-white py-8">
           <Spinner size={20} />
         </div>
+      ) : incomingQuery.isError ? (
+        <QueryError error={incomingQuery.error} onRetry={() => void incomingQuery.refetch()} />
       ) : bookings.length === 0 ? (
         <div className="rounded-2xl border border-ink-100 bg-white p-6 text-center">
           <Users className="mx-auto mb-2 h-8 w-8 text-ink-300" />

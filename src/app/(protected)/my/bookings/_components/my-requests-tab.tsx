@@ -22,6 +22,7 @@ import { RequestCard } from "@/components/features/passenger-requests/request-ca
 import { DriverAvatar } from "@/components/ui/driver-avatar";
 import { Spinner } from "@/components/ui";
 import { CardSkeletonList } from "@/components/ui/card-skeleton";
+import { QueryError } from "@/components/ui/query-error";
 
 // ── Response offer card ────────────────────────────────────────────────
 function OfferCard({
@@ -145,12 +146,13 @@ function RequestWithOffers({
   const [expanded, setExpanded] = useState(false);
   const isOpen = request.status === "open";
 
-  const { data: responses, isLoading } = useQuery({
+  const responsesQuery = useQuery({
     queryKey: ["request-responses", request.id],
     queryFn: () => listRequestResponses(request.id),
     enabled: expanded && isOpen,
     staleTime: 30_000,
   });
+  const { data: responses, isLoading } = responsesQuery;
 
   const pending = responses?.filter((r) => r.status === "pending") ?? [];
 
@@ -183,6 +185,8 @@ function RequestWithOffers({
         <div className="flex flex-col gap-2 pl-2">
           {isLoading ? (
             <div className="flex justify-center py-4"><Spinner size={20} /></div>
+          ) : responsesQuery.isError ? (
+            <QueryError error={responsesQuery.error} onRetry={() => void responsesQuery.refetch()} />
           ) : !responses?.length ? (
             <p className="py-3 text-center text-[12px] font-semibold text-ink-400">
               {t("no_offers")}
@@ -210,7 +214,7 @@ export function MyRequestsTab() {
   const tToasts = useTranslations("toasts");
   const fe = useFriendlyError();
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["passenger-requests", "my"],
     queryFn: listMyPassengerRequests,
   });
@@ -230,6 +234,10 @@ export function MyRequestsTab() {
 
   if (isLoading) {
     return <CardSkeletonList variant="request" count={4} />;
+  }
+
+  if (isError) {
+    return <QueryError error={error} onRetry={() => void refetch()} />;
   }
 
   if (requests.length === 0) {

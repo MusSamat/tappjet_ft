@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { MessageCircle } from "lucide-react";
 import { getChatSummaries } from "@/lib/api/chat";
 import { Spinner } from "@/components/ui";
+import { QueryError } from "@/components/ui/query-error";
 import { ChatRow } from "./_components/chat-row";
 
 // Chat hub — design-spec §2.6. Mobile = conversation list; desktop = 2-col
@@ -15,7 +16,7 @@ const ACTIVE_CHAT_STATUSES = new Set(["pending", "viewed", "accepted"]);
 
 export function ChatHub() {
   const t = useTranslations("chat");
-  const { data: summaries = [], isLoading } = useQuery({
+  const { data: summaries = [], isLoading, isError, error, refetch } = useQuery({
     queryKey: ["chat", "summaries"],
     queryFn: getChatSummaries,
     staleTime: 15_000,
@@ -30,6 +31,8 @@ export function ChatHub() {
         <div className="flex justify-center py-16">
           <Spinner size={24} />
         </div>
+      ) : isError ? (
+        <QueryError error={error} onRetry={() => void refetch()} className="m-4" />
       ) : summaries.length === 0 ? (
         <div className="flex flex-col items-center justify-center gap-3 px-8 py-16 text-center">
           <span className="flex h-16 w-16 items-center justify-center rounded-full bg-ink-100 text-ink-400 dark:bg-ink-800">

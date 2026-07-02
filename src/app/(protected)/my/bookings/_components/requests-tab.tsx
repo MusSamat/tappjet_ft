@@ -27,9 +27,10 @@ interface Props {
   bookings: BookingExt[];
   onAccept: (id: string) => void;
   onReject: (id: string) => void;
+  actionPending?: boolean;
 }
 
-export function RequestsTab({ isLoading, bookings, onAccept, onReject }: Props) {
+export function RequestsTab({ isLoading, bookings, onAccept, onReject, actionPending }: Props) {
   const t = useTranslations("bookings");
 
   return (
@@ -48,6 +49,7 @@ export function RequestsTab({ isLoading, bookings, onAccept, onReject }: Props) 
             booking={b}
             onAccept={() => onAccept(b.id!)}
             onReject={() => onReject(b.id!)}
+            actionPending={actionPending}
           />
         ))
       )}

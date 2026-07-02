@@ -12,6 +12,7 @@ import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { toastSuccess, toastError } from "@/components/layout/quick-toast";
 import { cn } from "@/lib/utils/cn";
 import { Spinner } from "@/components/ui";
+import { QueryError } from "@/components/ui/query-error";
 import { formatPrice } from "@/lib/utils/date";
 import { PassengerCancelModal } from "./passenger-cancel-modal";
 import { BookButton } from "@/components/features/trip/book-button";
@@ -78,11 +79,12 @@ export function PassengerPanel({ trip, tripId }: { trip: TripDetail; tripId: str
     expired:                { label: t("status_expired"),             color: "text-ink-500",  bg: "bg-ink-50",   dot: "bg-ink-300" },
   };
 
-  const { data: bookingsData, isLoading } = useQuery({
+  const bookingsQuery = useQuery({
     queryKey: ["bookings", "my", "outgoing"],
     queryFn: () => listMyBookings(),
     staleTime: 30_000,
   });
+  const { data: bookingsData, isLoading } = bookingsQuery;
 
   const { data: ratingsData } = useQuery({
     queryKey: ["ratings", "pending"],
@@ -116,6 +118,12 @@ export function PassengerPanel({ trip, tripId }: { trip: TripDetail; tripId: str
         <Spinner size={24} />
       </div>
     );
+  }
+
+  // Don't fall through to the booking form when we couldn't check for an
+  // existing booking — that path risks a duplicate booking attempt.
+  if (bookingsQuery.isError) {
+    return <QueryError error={bookingsQuery.error} onRetry={() => void bookingsQuery.refetch()} />;
   }
 
   if (!myBooking) return <BookView trip={trip} />;

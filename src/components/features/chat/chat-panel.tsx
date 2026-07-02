@@ -12,6 +12,7 @@ import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { useChatSocket } from "@/lib/hooks/use-chat-socket";
 import { useAuth } from "@/store/auth";
 import { uuid } from "@/lib/utils/uuid";
+import { QueryError } from "@/components/ui/query-error";
 import { ChatSidebar } from "./_components/chat-sidebar";
 import { ChatHeader } from "./_components/chat-header";
 import { ChatMessages } from "./_components/chat-messages";
@@ -42,7 +43,7 @@ export function ChatPanel({ bookingId }: Props) {
     staleTime: 30_000,
   });
 
-  useQuery({
+  const historyQuery = useQuery({
     queryKey: ["chat", bookingId, "history"],
     queryFn: async () => {
       const res = await getChatHistory(bookingId);
@@ -247,19 +248,31 @@ export function ChatPanel({ bookingId }: Props) {
           </div>
         )}
 
-        <ChatMessages
-          messages={messages}
-          historyLoaded={historyLoaded}
-          myId={me?.id}
-          otherName={otherName}
-          otherAvatarUrl={otherAvatarUrl}
-          typingUserId={typingUserId}
-          sendError={sendError}
-          isReadOnly={isReadOnly}
-          bottomRef={bottomRef}
-          onSend={handleSend}
-          onTyping={chat.sendTyping}
-        />
+        {bookingQuery.isError || (historyQuery.isError && messages.length === 0) ? (
+          <div className="flex flex-1 items-center justify-center p-6">
+            <QueryError
+              error={bookingQuery.error ?? historyQuery.error}
+              onRetry={() => {
+                if (bookingQuery.isError) void bookingQuery.refetch();
+                if (historyQuery.isError) void historyQuery.refetch();
+              }}
+            />
+          </div>
+        ) : (
+          <ChatMessages
+            messages={messages}
+            historyLoaded={historyLoaded}
+            myId={me?.id}
+            otherName={otherName}
+            otherAvatarUrl={otherAvatarUrl}
+            typingUserId={typingUserId}
+            sendError={sendError}
+            isReadOnly={isReadOnly}
+            bottomRef={bottomRef}
+            onSend={handleSend}
+            onTyping={chat.sendTyping}
+          />
+        )}
       </div>
     </div>
     </div>

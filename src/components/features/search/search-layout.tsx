@@ -8,6 +8,7 @@ import { X } from "lucide-react";
 import { TripCard } from "@/components/ui/trip-card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { CardSkeletonList } from "@/components/ui/card-skeleton";
+import { QueryError } from "@/components/ui/query-error";
 import { useUiRole } from "@/lib/hooks/use-role-colors";
 
 import { SearchFilters } from "./search-filters";
@@ -59,7 +60,7 @@ export function SearchLayout({ params, initial }: Props) {
   const [mobileDetailOpen, setMobileDetailOpen] = useState(false);
   const listColRef = useRef<HTMLDivElement>(null);
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isError, error, refetch } = useInfiniteQuery({
     queryKey: ["trips", params],
     queryFn: ({ pageParam }) => searchTrips({ ...params, cursor: pageParam }),
     initialPageParam: undefined as string | undefined,
@@ -151,7 +152,11 @@ export function SearchLayout({ params, initial }: Props) {
                 {t("trips_count", { n: trips.length })}
               </p>
             </div>
-            {trips.length === 0 ? <FeedEmpty params={params} /> : tripList()}
+            {trips.length === 0
+              ? isError
+                ? <QueryError error={error} onRetry={() => void refetch()} />
+                : <FeedEmpty params={params} />
+              : tripList()}
           </div>
 
           {/* Right rail: detail pane */}
@@ -173,7 +178,9 @@ export function SearchLayout({ params, initial }: Props) {
 
         <div className="px-4 pb-3">
           {trips.length === 0
-            ? <FeedEmpty params={params} />
+            ? isError
+              ? <QueryError error={error} onRetry={() => void refetch()} />
+              : <FeedEmpty params={params} />
             : tripList((id) => {
                 setSelectedId(id);
                 setMobileDetailOpen(true);

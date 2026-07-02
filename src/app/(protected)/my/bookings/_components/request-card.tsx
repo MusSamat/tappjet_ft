@@ -42,10 +42,13 @@ export function RequestCard({
   booking,
   onAccept,
   onReject,
+  actionPending = false,
 }: {
   booking: BookingExt;
   onAccept: () => void;
   onReject: (reason?: string) => void;
+  /** Disables accept/reject while the mutation is in flight. */
+  actionPending?: boolean;
 }) {
   const t = useTranslations("bookings");
   const [showReject, setShowReject] = useState(false);
@@ -148,7 +151,8 @@ export function RequestCard({
             <button
               type="button"
               onClick={() => { onReject(reason); setShowReject(false); }}
-              className="rounded-2xl bg-coral-600 px-4 py-2 text-[13px] font-bold text-white hover:bg-coral-700"
+              disabled={actionPending}
+              className="rounded-2xl bg-coral-600 px-4 py-2 text-[13px] font-bold text-white hover:bg-coral-700 disabled:opacity-50"
             >
               {t("confirm_reject")}
             </button>
@@ -161,7 +165,8 @@ export function RequestCard({
               <button
                 type="button"
                 onClick={onAccept}
-                className="flex items-center gap-1.5 rounded-2xl bg-brand-600 px-4 py-2 text-[13px] font-bold text-white hover:bg-brand-700"
+                disabled={actionPending}
+                className="flex items-center gap-1.5 rounded-2xl bg-brand-600 px-4 py-2 text-[13px] font-bold text-white hover:bg-brand-700 disabled:opacity-50"
               >
                 <CheckCircle className="h-4 w-4" />
                 {t("accept_btn")}
@@ -169,7 +174,8 @@ export function RequestCard({
               <button
                 type="button"
                 onClick={() => setShowReject(true)}
-                className="flex items-center gap-1.5 rounded-2xl border border-ink-200 px-4 py-2 text-[13px] font-bold text-ink-700 hover:bg-ink-50"
+                disabled={actionPending}
+                className="flex items-center gap-1.5 rounded-2xl border border-ink-200 px-4 py-2 text-[13px] font-bold text-ink-700 hover:bg-ink-50 disabled:opacity-50"
               >
                 <XCircle className="h-4 w-4" />
                 {t("reject_btn")}

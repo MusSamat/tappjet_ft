@@ -8,6 +8,7 @@ import { useLikedTrips, useLikedRequests } from "@/lib/hooks/use-likes";
 import { Chip } from "@/components/ui/chip";
 import { Button } from "@/components/ui/button";
 import { CardSkeletonList } from "@/components/ui/card-skeleton";
+import { QueryError } from "@/components/ui/query-error";
 import { TripCard } from "@/components/ui/trip-card";
 import { RequestCard } from "@/components/features/passenger-requests/request-card";
 import type { UiRole } from "@/lib/role-colors";
@@ -76,6 +77,10 @@ export function LikedTab({ role }: { role: UiRole }) {
 
   if (q.isLoading) {
     return <CardSkeletonList variant={isDriver ? "request" : "trip"} count={3} />;
+  }
+
+  if (q.isError) {
+    return <QueryError error={q.error} onRetry={() => void q.refetch()} />;
   }
 
   const count = isDriver ? sortedRequests.length : sortedTrips.length;
