@@ -150,6 +150,19 @@
     "have_account": "Аккаунт барбы?",
     "login": "Кирүү"
   },
+  "gate": {
+    "title": "{title} — киргенден кийин",
+    "body": "Конок лентаны көрө алат. Брондоо, жарыялоо жана жазышуу үчүн кириңиз.",
+    "cta": "Tappjet'ке кирүү",
+    "titles": {
+      "create": "Жарыя түзүү",
+      "my": "Менин сапарларым",
+      "chat": "Чат",
+      "notifications": "Билдирүүлөр",
+      "profile": "Профиль",
+      "default": "Жеке кабинет"
+    }
+  },
   "errors": {
     "global_title": "Бир нерсе туура эмес болду",
     "global_desc": "Күтүлбөгөн ката кетти. Баракчаны жаңыртып көрүңүз.",
@@ -188,7 +201,7 @@
       "logging_in": "Кирүүдөбүз…",
       "change_number": "← Номерди өзгөртүү",
       "alternatives": "альтернативалар",
-      "login_sms": "SMS коду менен кирүү",
+      "login_sms": "Telegram коду менен кирүү",
       "login_telegram": "Telegram аркылуу кирүү",
       "sending": "Жибербиз…",
       "checking": "Текшеребиз…",
@@ -211,7 +224,7 @@
       "resend_in": "{n}с дан кийин кайра жиберүү",
       "resend_btn": "Кодду кайра жиберүү",
       "reset_title": "Жаңы купуя сөз коюңуз",
-      "reset_min_chars": "Минимум 6 белги",
+      "reset_min_chars": "Минимум 8 белги, кеминде бир сан",
       "new_password_label": "Жаңы купуя сөз",
       "new_password_placeholder": "Жаңы купуя сөздү киргизиңиз",
       "new_password_show": "Көрсөтүү",
@@ -232,7 +245,7 @@
       "step_label": "Кадам {step} / {total} · {title}",
       "error_title": "Ката",
       "step_phone": "Телефон",
-      "step_otp": "SMS коду",
+      "step_otp": "Telegram коду",
       "step_profile": "Өзүм жөнүндө",
       "step_password": "Купуя сөз",
       "step_routes": "Маршрут",
@@ -1153,5 +1166,21 @@
     "gate_pending_title": "Заявка текшерүүдө",
     "gate_pending_text": "Адатта 15 мүнөткө чейин. Биз кабарлайбыз.",
     "gate_pending_cta": "Текшерүү статусу"
+  },
+  "my": {
+    "title": "Меники",
+    "tab_active": "Активдүү",
+    "tab_history": "Тарых",
+    "tab_liked": "Тандалмалар",
+    "tab_trips": "Сапарлар",
+    "tab_requests": "Суроо-талаптар",
+    "publish_trip": "Жаңы сапар",
+    "publish_request": "Жаңы заявка",
+    "liked_empty_title": "Азырынча бош",
+    "liked_empty_hint": "Сапарларды жүрөкчө менен белгилеңиз — алар бул жерде чыгат.",
+    "filter_all": "Баары",
+    "filter_soon": "Жакында",
+    "filter_cheap": "Арзан",
+    "load_more": "Дагы көрсөтүү"
   }
 }

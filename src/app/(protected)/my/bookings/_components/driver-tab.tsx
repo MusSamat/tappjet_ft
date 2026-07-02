@@ -20,6 +20,8 @@ interface Props {
   completingId: string | undefined;
   onComplete: (id: string) => void;
   onCancel: (trip: TripListItem) => void;
+  /** hide the internal Активные/История bar when the parent owns those tabs */
+  showSubTabs?: boolean;
 }
 
 export function DriverTab({
@@ -32,17 +34,20 @@ export function DriverTab({
   completingId,
   onComplete,
   onCancel,
+  showSubTabs = true,
 }: Props) {
   const t = useTranslations("bookings");
 
   return (
     <div className="flex flex-col gap-3">
-      <SubTabBar
-        value={driverSubTab}
-        onChange={onSubTabChange}
-        activeCount={activeCount}
-        historyCount={historyCount}
-      />
+      {showSubTabs && (
+        <SubTabBar
+          value={driverSubTab}
+          onChange={onSubTabChange}
+          activeCount={activeCount}
+          historyCount={historyCount}
+        />
+      )}
       {isLoading ? (
         <CardSkeletonList variant="trip" />
       ) : displayedTrips.length === 0 ? (

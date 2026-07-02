@@ -25,6 +25,8 @@ interface Props {
   pendingRatingMap: Map<string, PendingRating>;
   onRate: (pr: PendingRating) => void;
   onCancel: (b: BookingExt) => void;
+  /** hide the internal Активные/История bar when the parent owns those tabs */
+  showSubTabs?: boolean;
 }
 
 export function PassengerTab({
@@ -37,6 +39,7 @@ export function PassengerTab({
   pendingRatingMap,
   onRate,
   onCancel,
+  showSubTabs = true,
 }: Props) {
   const t = useTranslations("bookings");
 
@@ -46,12 +49,14 @@ export function PassengerTab({
         <CardSkeletonList variant="booking" count={4} />
       ) : (
         <>
-          <SubTabBar
-            value={passengerSubTab}
-            onChange={onSubTabChange}
-            activeCount={activeCount}
-            historyCount={historyCount}
-          />
+          {showSubTabs && (
+            <SubTabBar
+              value={passengerSubTab}
+              onChange={onSubTabChange}
+              activeCount={activeCount}
+              historyCount={historyCount}
+            />
+          )}
           {displayedBookings.length === 0 ? (
             <div className="rounded-2xl border border-ink-100 bg-white p-8 text-center">
               {passengerSubTab === "active" ? (

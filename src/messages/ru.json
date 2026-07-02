@@ -150,6 +150,19 @@
     "have_account": "Уже есть аккаунт?",
     "login": "Войти"
   },
+  "gate": {
+    "title": "{title} — после входа",
+    "body": "Гость может смотреть ленту. Войдите, чтобы бронировать, публиковать и переписываться.",
+    "cta": "Войти в Tappjet",
+    "titles": {
+      "create": "Создание объявления",
+      "my": "Мои поездки",
+      "chat": "Чат",
+      "notifications": "Уведомления",
+      "profile": "Профиль",
+      "default": "Личный кабинет"
+    }
+  },
   "errors": {
     "global_title": "Что-то пошло не так",
     "global_desc": "Произошла непредвиденная ошибка. Попробуйте обновить страницу.",
@@ -188,7 +201,7 @@
       "logging_in": "Входим…",
       "change_number": "← Изменить номер",
       "alternatives": "альтернативы",
-      "login_sms": "Войти по коду из SMS",
+      "login_sms": "Войти по коду из Telegram",
       "login_telegram": "Войти через Telegram",
       "sending": "Отправляем…",
       "checking": "Проверяем…",
@@ -211,7 +224,7 @@
       "resend_in": "Отправить снова через {n}с",
       "resend_btn": "Отправить код снова",
       "reset_title": "Установите новый пароль",
-      "reset_min_chars": "Минимум 6 символов",
+      "reset_min_chars": "Минимум 8 символов, минимум одна цифра",
       "new_password_label": "Новый пароль",
       "new_password_placeholder": "Введите новый пароль",
       "new_password_show": "Показать",
@@ -232,7 +245,7 @@
       "step_label": "Шаг {step} из {total} · {title}",
       "error_title": "Ошибка",
       "step_phone": "Телефон",
-      "step_otp": "Код из SMS",
+      "step_otp": "Код из Telegram",
       "step_profile": "О себе",
       "step_password": "Пароль",
       "step_routes": "Маршрут",
@@ -1153,5 +1166,21 @@
     "gate_pending_title": "Заявка на проверке",
     "gate_pending_text": "Обычно занимает до 15 минут. Мы уведомим вас.",
     "gate_pending_cta": "Статус проверки"
+  },
+  "my": {
+    "title": "Мои",
+    "tab_active": "Активные",
+    "tab_history": "История",
+    "tab_liked": "Избранное",
+    "tab_trips": "Поездки",
+    "tab_requests": "Запросы",
+    "publish_trip": "Новая поездка",
+    "publish_request": "Новая заявка",
+    "liked_empty_title": "Пока пусто",
+    "liked_empty_hint": "Отмечайте поездки сердечком — они появятся здесь.",
+    "filter_all": "Все",
+    "filter_soon": "Скоро",
+    "filter_cheap": "Дёшево",
+    "load_more": "Показать ещё"
   }
 }

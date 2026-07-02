@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tansta
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { Plus, Eye, User, CarFront } from "lucide-react";
 import {
   listMyBookings,
   listIncomingBookings,
@@ -14,34 +15,32 @@ import {
 import { listMyTrips } from "@/lib/api/my-trips";
 import { getPendingRatings, type PendingRating } from "@/lib/api/ratings";
 import { RateModal } from "@/components/features/ratings/rate-modal";
-import { useAuth } from "@/store/auth";
-import { Container } from "@/components/ui";
+import { useUiRole } from "@/lib/hooks/use-role-colors";
+import { ROLE_THEME } from "@/lib/role-colors";
+import { Container, Segmented } from "@/components/ui";
 import { Confetti } from "@/components/ui/confetti";
-import { Plus } from "lucide-react";
 import type { Booking } from "@/lib/api/bookings";
 import { completeTrip, cancelTrip } from "@/lib/api/trips";
 import type { TripListItem } from "@/lib/api/trips";
+import { cn } from "@/lib/utils/cn";
 import { CancelModal } from "./_components/cancel-modal";
 import { CancelTripModal } from "./_components/cancel-trip-modal";
 import { PassengerTab } from "./_components/passenger-tab";
 import { DriverTab } from "./_components/driver-tab";
 import { RequestsTab } from "./_components/requests-tab";
-import { MainTabBar } from "./_components/main-tab-bar";
+import { LikedTab } from "./_components/liked-tab";
 
-type MainTab = "passenger" | "driver" | "requests";
-type SubTab = "active" | "history";
+// Role-aware «Мои» hub — design-spec §2.5. Segmented tabs differ by role:
+//   passenger → Активные / История / Избранное
+//   driver    → Поездки  / Запросы  / Избранное
+
+type Tab = "active" | "history" | "liked" | "trips" | "requests";
 
 type BookingExt = Booking & {
   tripId?: string;
   passengerId?: string;
   totalPrice?: number;
-  passenger?: {
-    id?: string;
-    name?: string;
-    avatarUrl?: string | null;
-    rating?: number | null;
-    ratingCount?: number;
-  };
+  passenger?: { id?: string; name?: string; avatarUrl?: string | null; rating?: number | null; ratingCount?: number };
   trip?: {
     id?: string;
     originCity?: string;
@@ -54,19 +53,36 @@ type BookingExt = Booking & {
 };
 
 const ACTIVE_STATUSES = new Set(["pending", "viewed", "accepted"]);
-const HISTORY_STATUSES = new Set(["completed", "rejected", "cancelled_by_passenger", "cancelled_by_driver", "cancelled_late", "no_show", "expired"]);
+const HISTORY_STATUSES = new Set([
+  "completed",
+  "rejected",
+  "cancelled_by_passenger",
+  "cancelled_by_driver",
+  "cancelled_late",
+  "no_show",
+  "expired",
+]);
+
+const ROLE_ICON = { guest: Eye, passenger: User, driver: CarFront } as const;
 
 export default function MyBookingsPage() {
-  const t = useTranslations("bookings");
-  const user = useAuth((s) => s.user);
-  const isDriver = user?.roles?.includes("driver") ?? false;
-  const [tab, setTab] = useState<MainTab>("passenger");
-  const [passengerSubTab, setPassengerSubTab] = useState<SubTab>("active");
-  const [driverSubTab, setDriverSubTab] = useState<SubTab>("active");
+  const tMy = useTranslations("my");
+  const tRoles = useTranslations("roles");
+  const role = useUiRole();
+  const theme = ROLE_THEME[role];
+  const isDriver = role === "driver";
+
+  const [tab, setTab] = useState<Tab>(isDriver ? "trips" : "active");
   const [rateTarget, setRateTarget] = useState<PendingRating | null>(null);
   const [cancelTarget, setCancelTarget] = useState<BookingExt | null>(null);
   const [cancelTripTarget, setCancelTripTarget] = useState<TripListItem | null>(null);
   const qc = useQueryClient();
+
+  // Reset the active tab when it isn't valid for the current role (after a switch).
+  useEffect(() => {
+    const roleTabs: Tab[] = isDriver ? ["trips", "requests", "liked"] : ["active", "history", "liked"];
+    setTab((prev) => (roleTabs.includes(prev) ? prev : isDriver ? "trips" : "active"));
+  }, [isDriver]);
 
   const outgoing = useQuery({
     queryKey: ["bookings", "my", "outgoing"],
@@ -88,20 +104,6 @@ export default function MyBookingsPage() {
     queryFn: () => listMyTrips("active"),
     enabled: isDriver,
     staleTime: 30_000,
-  });
-
-  const myPastTrips = useQuery({
-    queryKey: ["trips", "my", "past"],
-    queryFn: () => listMyTrips("past"),
-    enabled: isDriver,
-    staleTime: 60_000,
-  });
-
-  const myCancelledTrips = useQuery({
-    queryKey: ["trips", "my", "cancelled"],
-    queryFn: () => listMyTrips("cancelled"),
-    enabled: isDriver,
-    staleTime: 60_000,
   });
 
   const inTransitTrips = useQuery({
@@ -133,7 +135,6 @@ export default function MyBookingsPage() {
       void qc.invalidateQueries({ queryKey: ["bookings"] });
     },
   });
-
   const completeMut = useMutation({
     mutationFn: (id: string) => completeTrip(id),
     onSuccess: () => {
@@ -141,7 +142,6 @@ export default function MyBookingsPage() {
       void qc.invalidateQueries({ queryKey: ["bookings"] });
     },
   });
-
   const cancelTripMut = useMutation({
     mutationFn: ({ id, reason }: { id: string; reason?: string }) => cancelTrip(id, reason),
     onSuccess: () => {
@@ -168,126 +168,136 @@ export default function MyBookingsPage() {
 
   const activePassengerBookings = passengerBookings.filter((b) => ACTIVE_STATUSES.has(b.status as string));
   const historyPassengerBookings = passengerBookings.filter((b) => HISTORY_STATUSES.has(b.status as string));
-  const displayedPassengerBookings = passengerSubTab === "active" ? activePassengerBookings : historyPassengerBookings;
 
   const pendingRatingMap = new Map<string, PendingRating>(
     (pendingRatings.data?.data ?? []).map((pr) => [pr.tripId, pr]),
   );
 
-  const activeTrips = [
-    ...(inTransitTrips.data?.data ?? []),
-    ...(myTrips.data?.data ?? []),
-  ];
-  const pastTrips = [
-    ...(myPastTrips.data?.data ?? []),
-    ...(myCancelledTrips.data?.data ?? []),
-  ].sort((a, b) => new Date(b.departureAt ?? 0).getTime() - new Date(a.departureAt ?? 0).getTime());
-  const displayedDriverTrips = driverSubTab === "active" ? activeTrips : pastTrips;
-  const isDriverTripsLoading = driverSubTab === "active"
-    ? myTrips.isLoading || inTransitTrips.isLoading
-    : myPastTrips.isLoading || myCancelledTrips.isLoading;
+  const activeTrips = [...(inTransitTrips.data?.data ?? []), ...(myTrips.data?.data ?? [])];
 
-  const requestBookings = ((incoming.data?.data ?? []) as BookingExt[]).filter(
-    (b) => (["pending", "viewed", "accepted"] as string[]).includes(b.status as string),
+  const requestBookings = ((incoming.data?.data ?? []) as BookingExt[]).filter((b) =>
+    (["pending", "viewed", "accepted"] as string[]).includes(b.status as string),
   );
-  const requestsCount = requestBookings.filter(
-    (b) => (["pending", "viewed"] as string[]).includes(b.status as string),
+  const requestsCount = requestBookings.filter((b) =>
+    (["pending", "viewed"] as string[]).includes(b.status as string),
   ).length;
 
-  const passengerCount = outgoing.isLoading ? null : activePassengerBookings.length;
-  const tripsCount = (myTrips.isLoading || inTransitTrips.isLoading) ? null : activeTrips.length;
-  const reqCount = incoming.isLoading ? null : requestsCount;
+  const RoleIcon = ROLE_ICON[role];
 
-  const TABS = [
-    { id: "passenger" as MainTab, label: t("tab_passenger"), labelShort: t("tab_passenger_short"), count: passengerCount },
-    ...(isDriver ? [
-      { id: "driver" as MainTab, label: t("tab_driver"), labelShort: t("tab_driver_short"), count: tripsCount },
-      { id: "requests" as MainTab, label: t("tab_requests"), labelShort: t("tab_requests_short"), count: reqCount, highlight: (reqCount ?? 0) > 0 },
-    ] : []),
-  ];
+  const options = isDriver
+    ? [
+        { value: "trips" as Tab, label: tMy("tab_trips") },
+        { value: "requests" as Tab, label: tMy("tab_requests"), count: incoming.isLoading ? 0 : requestsCount },
+        { value: "liked" as Tab, label: tMy("tab_liked") },
+      ]
+    : [
+        { value: "active" as Tab, label: tMy("tab_active") },
+        { value: "history" as Tab, label: tMy("tab_history") },
+        { value: "liked" as Tab, label: tMy("tab_liked") },
+      ];
 
   return (
     <>
-    <Container className="py-8">
-      {showConfetti && <Confetti onDone={() => setShowConfetti(false)} />}
+      <Container className="py-8">
+        {showConfetti && <Confetti onDone={() => setShowConfetti(false)} />}
 
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-[26px] font-extrabold text-ink-900">{t("title")}</h1>
-          <p className="mt-0.5 text-[12px] font-semibold text-ink-400">
-            {t("subtitle")}
-          </p>
+        <div className="mb-4 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <h1 className="text-[26px] font-900 text-ink-900 dark:text-white">{tMy("title")}</h1>
+            <span className={cn("inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-900", theme.badge)}>
+              <RoleIcon className="h-3.5 w-3.5" aria-hidden="true" />
+              {tRoles(theme.labelKey)}
+            </span>
+          </div>
+          <Link href={isDriver ? "/trips/create" : "/requests/create"}>
+            <button
+              type="button"
+              className="flex items-center gap-1.5 rounded-2xl bg-accent-500 px-4 py-2.5 text-[13px] font-900 text-accent-ink shadow-cta hover:bg-accent-400"
+            >
+              <Plus className="h-4 w-4" aria-hidden="true" />
+              {isDriver ? tMy("publish_trip") : tMy("publish_request")}
+            </button>
+          </Link>
         </div>
-        <Link href="/trips/create">
-          <button
-            type="button"
-            className="flex items-center gap-1.5 rounded-2xl bg-accent-500 px-4 py-2.5 text-[13px] font-bold text-[#4A2C00] hover:bg-accent-600"
-          >
-            <Plus className="h-4 w-4" />
-            {t("publish_btn")}
-          </button>
-        </Link>
-      </div>
 
-      <MainTabBar tabs={TABS} active={tab} onChange={setTab} />
+        <div className="mb-4">
+          <Segmented options={options} value={tab} onChange={setTab} textOn={theme.textOn} />
+        </div>
 
-      {tab === "passenger" && (
-        <PassengerTab
-          isLoading={outgoing.isLoading}
-          passengerSubTab={passengerSubTab}
-          onSubTabChange={setPassengerSubTab}
-          displayedBookings={displayedPassengerBookings}
-          activeCount={activePassengerBookings.length}
-          historyCount={historyPassengerBookings.length}
-          pendingRatingMap={pendingRatingMap}
-          onRate={setRateTarget}
-          onCancel={setCancelTarget}
+        {tab === "active" && (
+          <PassengerTab
+            isLoading={outgoing.isLoading}
+            passengerSubTab="active"
+            onSubTabChange={() => {}}
+            displayedBookings={activePassengerBookings}
+            activeCount={activePassengerBookings.length}
+            historyCount={historyPassengerBookings.length}
+            pendingRatingMap={pendingRatingMap}
+            onRate={setRateTarget}
+            onCancel={setCancelTarget}
+            showSubTabs={false}
+          />
+        )}
+
+        {tab === "history" && (
+          <PassengerTab
+            isLoading={outgoing.isLoading}
+            passengerSubTab="history"
+            onSubTabChange={() => {}}
+            displayedBookings={historyPassengerBookings}
+            activeCount={activePassengerBookings.length}
+            historyCount={historyPassengerBookings.length}
+            pendingRatingMap={pendingRatingMap}
+            onRate={setRateTarget}
+            onCancel={setCancelTarget}
+            showSubTabs={false}
+          />
+        )}
+
+        {tab === "trips" && (
+          <DriverTab
+            isLoading={myTrips.isLoading || inTransitTrips.isLoading}
+            driverSubTab="active"
+            onSubTabChange={() => {}}
+            displayedTrips={activeTrips}
+            activeCount={activeTrips.length}
+            historyCount={0}
+            completingId={completeMut.isPending ? (completeMut.variables as string | undefined) : undefined}
+            onComplete={(id) => completeMut.mutate(id)}
+            onCancel={setCancelTripTarget}
+            showSubTabs={false}
+          />
+        )}
+
+        {tab === "requests" && (
+          <RequestsTab
+            isLoading={incoming.isLoading}
+            bookings={requestBookings}
+            onAccept={(id) => acceptMut.mutate(id)}
+            onReject={(id) => rejectMut.mutate(id)}
+          />
+        )}
+
+        {tab === "liked" && <LikedTab role={role} />}
+      </Container>
+
+      {rateTarget && <RateModal rating={rateTarget} onClose={() => setRateTarget(null)} />}
+      {cancelTarget && (
+        <CancelModal
+          booking={cancelTarget}
+          isPending={cancelMut.isPending}
+          onConfirm={() => cancelMut.mutate(cancelTarget.id!)}
+          onClose={() => setCancelTarget(null)}
         />
       )}
-
-      {tab === "driver" && (
-        <DriverTab
-          isLoading={isDriverTripsLoading}
-          driverSubTab={driverSubTab}
-          onSubTabChange={setDriverSubTab}
-          displayedTrips={displayedDriverTrips}
-          activeCount={activeTrips.length}
-          historyCount={pastTrips.length}
-          completingId={completeMut.isPending ? (completeMut.variables as string | undefined) : undefined}
-          onComplete={(id) => completeMut.mutate(id)}
-          onCancel={setCancelTripTarget}
+      {cancelTripTarget && (
+        <CancelTripModal
+          trip={cancelTripTarget}
+          isPending={cancelTripMut.isPending}
+          onConfirm={(reason) => cancelTripMut.mutate({ id: cancelTripTarget.id!, reason })}
+          onClose={() => setCancelTripTarget(null)}
         />
       )}
-
-      {tab === "requests" && (
-        <RequestsTab
-          isLoading={incoming.isLoading}
-          bookings={requestBookings}
-          onAccept={(id) => acceptMut.mutate(id)}
-          onReject={(id) => rejectMut.mutate(id)}
-        />
-      )}
-    </Container>
-
-    {rateTarget && (
-      <RateModal rating={rateTarget} onClose={() => setRateTarget(null)} />
-    )}
-    {cancelTarget && (
-      <CancelModal
-        booking={cancelTarget}
-        isPending={cancelMut.isPending}
-        onConfirm={() => cancelMut.mutate(cancelTarget.id!)}
-        onClose={() => setCancelTarget(null)}
-      />
-    )}
-    {cancelTripTarget && (
-      <CancelTripModal
-        trip={cancelTripTarget}
-        isPending={cancelTripMut.isPending}
-        onConfirm={(reason) => cancelTripMut.mutate({ id: cancelTripTarget.id!, reason })}
-        onClose={() => setCancelTripTarget(null)}
-      />
-    )}
     </>
   );
 }
