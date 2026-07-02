@@ -1,9 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { MapPin, Flag, Clock, Users, Search, Circle, SlidersHorizontal, Lock, LogOut, Zap, CarFront, Hand } from "lucide-react";
+import { MapPin, Flag, Clock, Users, Search, Circle, SlidersHorizontal, Lock, LogOut, Zap, CarFront, Hand, CheckCircle, Send, WifiOff } from "lucide-react";
+import { pushToast } from "@/components/layout/quick-toast";
 import {
+  ActionModal,
   Badge,
+  BottomSheetBody,
+  BottomSheetFooter,
   Chip,
   BottomSheet,
   BottomSheetContent,
@@ -429,10 +433,10 @@ export function DesignSystemShowcase() {
         </div>
       </Section>
 
-      <Section title="Modal · BottomSheet">
+      <Section title="Modal · ActionModal · BottomSheet · Toast">
         <Modal>
           <ModalTrigger asChild>
-            <Button variant="primary">Открыть Modal</Button>
+            <Button variant="brand">Открыть Modal</Button>
           </ModalTrigger>
           <ModalContent>
             <ModalHeader>
@@ -448,33 +452,109 @@ export function DesignSystemShowcase() {
           </ModalContent>
         </Modal>
 
+        <ActionModal
+          tone="accent"
+          icon={CheckCircle}
+          title="Отправить запрос?"
+          trigger={<Button variant="cta">ActionModal (accent)</Button>}
+          primary={
+            <Button variant="cta" size="lg" className="w-full">
+              Отправить запрос
+            </Button>
+          }
+          secondary={
+            <Button variant="ghost" size="lg" className="w-full">
+              Отмена
+            </Button>
+          }
+        >
+          Бишкек → Ош · 1 место · 1 200 с. Оплата водителю при встрече.
+        </ActionModal>
+
+        <ActionModal
+          tone="brand"
+          icon={Send}
+          title="Запрос отправлен ✈️"
+          trigger={<Button variant="brand">ActionModal (brand)</Button>}
+          primary={
+            <Button variant="brand" size="lg" className="w-full">
+              К моим поездкам
+            </Button>
+          }
+        >
+          Ждём ответа водителя. Уведомим в приложении и Telegram.
+        </ActionModal>
+
+        <ActionModal
+          tone="danger"
+          icon={WifiOff}
+          title="Нет соединения"
+          trigger={<Button variant="dangerSoft">ActionModal (danger)</Button>}
+          primary={
+            <Button variant="invert" size="lg" className="w-full">
+              Повторить
+            </Button>
+          }
+        >
+          Проверьте интернет и попробуйте снова
+        </ActionModal>
+
         <BottomSheet>
           <BottomSheetTrigger asChild>
-            <Button variant="secondary">Открыть BottomSheet</Button>
+            <Button variant="ghost">Открыть BottomSheet</Button>
           </BottomSheetTrigger>
           <BottomSheetContent>
             <BottomSheetHeader>
               <BottomSheetTitle>Фильтры поиска</BottomSheetTitle>
+              <button type="button" className="text-[12px] font-800 text-brand-600">
+                Сбросить
+              </button>
             </BottomSheetHeader>
-            <div className="flex flex-col gap-3">
-              <CardField
-                icon={<Clock className="h-4 w-4 text-brand-700" />}
-                label="ВРЕМЯ"
-                placeholder="Любое"
-              />
-              <CardField
-                icon={<Users className="h-4 w-4 text-ink-700" />}
-                label="МЕСТ"
-                defaultValue="1"
-              />
-            </div>
-            <div className="mt-6">
-              <Button variant="submit" size="lg" className="w-full">
+            <BottomSheetBody>
+              <div className="flex flex-col gap-3">
+                <CardField
+                  icon={<Clock className="h-4 w-4 text-brand-700" />}
+                  label="ВРЕМЯ"
+                  placeholder="Любое"
+                />
+                <CardField
+                  icon={<Users className="h-4 w-4 text-ink-700" />}
+                  label="МЕСТ"
+                  defaultValue="1"
+                />
+              </div>
+            </BottomSheetBody>
+            <BottomSheetFooter>
+              <Button variant="cta" size="lg" className="w-full">
                 Применить
               </Button>
-            </div>
+            </BottomSheetFooter>
           </BottomSheetContent>
         </BottomSheet>
+
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant="brand"
+            size="sm"
+            onClick={() => pushToast({ type: "booking_accepted", title: "Бронь отправлена", body: "" })}
+          >
+            Toast success
+          </Button>
+          <Button
+            variant="danger"
+            size="sm"
+            onClick={() => pushToast({ type: "error", title: "Мест больше нет", body: "" })}
+          >
+            Toast error
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => pushToast({ type: "info", title: "Соединение восстановлено", body: "" })}
+          >
+            Toast info
+          </Button>
+        </div>
       </Section>
     </div>
   );

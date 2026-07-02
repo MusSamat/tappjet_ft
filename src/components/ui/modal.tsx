@@ -17,7 +17,7 @@ export const ModalOverlay = forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      "fixed inset-0 z-50 bg-ink-900/60 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      "fixed inset-0 z-50 bg-ink-900/50 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       className,
     )}
     {...rest}
@@ -36,7 +36,7 @@ export const ModalContent = forwardRef<ElementRef<typeof DialogPrimitive.Content
       <DialogPrimitive.Content
         ref={ref}
         className={cn(
-          "fixed left-1/2 top-1/2 z-50 w-[calc(100%-32px)] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-3xl bg-white p-6 shadow-soft focus:outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
+          "fixed left-1/2 top-1/2 z-50 w-[calc(100%-32px)] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-4xl bg-white p-5 shadow-lift focus:outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 dark:bg-ink-900",
           className,
         )}
         {...rest}
@@ -45,7 +45,7 @@ export const ModalContent = forwardRef<ElementRef<typeof DialogPrimitive.Content
         {!hideCloseButton && (
           <ModalClose
             aria-label="Закрыть"
-            className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-ink-500 transition-colors hover:bg-ink-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+            className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-ink-500 transition-colors hover:bg-ink-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 dark:text-ink-400 dark:hover:bg-ink-800"
           >
             <X className="h-5 w-5" aria-hidden="true" />
           </ModalClose>
@@ -64,7 +64,7 @@ export const ModalTitle = forwardRef<
   ElementRef<typeof DialogPrimitive.Title>,
   ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
 >(({ className, ...rest }, ref) => (
-  <DialogPrimitive.Title ref={ref} className={cn("text-h1 text-ink-900", className)} {...rest} />
+  <DialogPrimitive.Title ref={ref} className={cn("text-h1 text-ink-900 dark:text-white", className)} {...rest} />
 ));
 ModalTitle.displayName = DialogPrimitive.Title.displayName;
 
@@ -74,7 +74,7 @@ export const ModalDescription = forwardRef<
 >(({ className, ...rest }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cn("text-body-lg text-ink-700", className)}
+    className={cn("text-body-lg text-ink-700 dark:text-ink-300", className)}
     {...rest}
   />
 ));

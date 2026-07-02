@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { X, Car, CheckCircle, AlertCircle, MessageCircle, AlertTriangle, Info } from "lucide-react";
+import { CheckCircle, AlertCircle, Info, X } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
 export interface ToastItem {
@@ -20,33 +20,34 @@ export interface ToastItem {
   body: string;
 }
 
-const ICONS = {
-  booking_request: Car,
-  booking_accepted: CheckCircle,
-  booking_rejected: AlertCircle,
-  booking_cancelled: AlertCircle,
-  booking_expired: AlertCircle,
-  chat_message: MessageCircle,
+// design-spec §3.11 — 3 visual buckets: success → brand, error → danger, info → ink.
+type ToastVariant = "success" | "error" | "info";
+
+const VARIANT = {
+  booking_request: "info",
+  booking_accepted: "success",
+  booking_rejected: "error",
+  booking_cancelled: "error",
+  booking_expired: "error",
+  chat_message: "info",
+  error: "error",
+  warning: "error",
+  info: "info",
+} satisfies Record<ToastItem["type"], ToastVariant>;
+
+const ICONS: Record<ToastVariant, React.ElementType> = {
+  success: CheckCircle,
   error: AlertCircle,
-  warning: AlertTriangle,
   info: Info,
-} satisfies Record<ToastItem["type"], React.ElementType>;
+};
 
-// Container styling collapses into the 3 canonical §11 buckets:
-// success → brand, error/warning → coral, info → ink. Text is always white.
-const COLORS = {
-  booking_request: "bg-ink-800 text-white shadow-lg",
-  booking_accepted: "bg-brand-600 text-white shadow-brandcta",
-  booking_rejected: "bg-coral-500 text-white shadow-lg",
-  booking_cancelled: "bg-coral-500 text-white shadow-lg",
-  booking_expired: "bg-coral-500 text-white shadow-lg",
-  chat_message: "bg-ink-800 text-white shadow-lg",
-  error: "bg-coral-500 text-white shadow-lg",
-  warning: "bg-coral-500 text-white shadow-lg",
-  info: "bg-ink-800 text-white shadow-lg",
-} satisfies Record<ToastItem["type"], string>;
+const COLORS: Record<ToastVariant, string> = {
+  success: "bg-brand-600 text-white shadow-brandcta",
+  error: "bg-danger-500 text-white shadow-lift",
+  info: "bg-ink-800 text-white shadow-lift dark:bg-ink-700",
+};
 
-const AUTO_DISMISS_MS = 6000;
+const AUTO_DISMISS_MS = 2600;
 
 function Toast({ item, onDismiss }: { item: ToastItem; onDismiss: () => void }) {
   useEffect(() => {
@@ -54,29 +55,28 @@ function Toast({ item, onDismiss }: { item: ToastItem; onDismiss: () => void }) 
     return () => clearTimeout(t);
   }, [onDismiss]);
 
-  const Icon = ICONS[item.type];
+  const variant = VARIANT[item.type];
+  const Icon = ICONS[variant];
 
   return (
     <div
       role="alert"
       aria-live="assertive"
       className={cn(
-        "flex w-[320px] items-center gap-3 rounded-2xl px-4 py-3",
-        COLORS[item.type],
+        "pointer-events-auto flex w-full max-w-[360px] items-center gap-2.5 rounded-2xl px-4 py-3",
+        COLORS[variant],
       )}
     >
-      <span className="flex-shrink-0">
-        <Icon className="h-5 w-5" aria-hidden="true" />
-      </span>
+      <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
       <div className="min-w-0 flex-1">
         <p className="text-[13px] font-800">{item.title}</p>
-        <p className="mt-0.5 text-[12px] font-600 text-white/80">{item.body}</p>
+        {item.body && <p className="mt-0.5 text-[12px] font-600 text-white/80">{item.body}</p>}
       </div>
       <button
         type="button"
         onClick={onDismiss}
         aria-label="Закрыть"
-        className="flex-shrink-0 text-white/70 hover:text-white"
+        className="shrink-0 text-white/70 hover:text-white"
       >
         <X className="h-4 w-4" aria-hidden="true" />
       </button>
@@ -108,7 +108,7 @@ export function QuickToastContainer() {
   if (toasts.length === 0) return null;
 
   return (
-    <div className="fixed right-4 top-20 z-50 flex flex-col gap-2">
+    <div className="pointer-events-none fixed inset-x-0 bottom-24 z-[60] flex flex-col items-center gap-2 px-5">
       {toasts.map((t) => (
         <Toast key={t.id} item={t} onDismiss={() => dismiss(t.id)} />
       ))}

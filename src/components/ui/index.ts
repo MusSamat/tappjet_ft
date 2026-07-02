@@ -58,5 +58,8 @@ export {
   BottomSheetClose,
   BottomSheetContent,
   BottomSheetHeader,
+  BottomSheetBody,
+  BottomSheetFooter,
   BottomSheetTitle,
 } from "./bottom-sheet";
+export { ActionModal, type ActionModalProps, type ActionModalTone } from "./action-modal";
