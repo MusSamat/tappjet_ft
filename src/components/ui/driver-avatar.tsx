@@ -68,8 +68,11 @@ export function DriverAvatar({
             alt={name}
             width={sizePx[size]}
             height={sizePx[size]}
+            sizes={`${sizePx[size]}px`}
             className="h-full w-full object-cover"
-            unoptimized
+            // Optimize in prod (remotePatterns cover the media hosts); keep
+            // unoptimized in dev where the backend serves raw files.
+            unoptimized={process.env.NODE_ENV !== "production"}
             onError={() => setFailed(true)}
           />
         </span>

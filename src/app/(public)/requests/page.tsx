@@ -1,7 +1,7 @@
 "use client";
 
 import { useInfiniteQuery, keepPreviousData } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, memo } from "react";
 import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { X } from "lucide-react";
@@ -41,6 +41,30 @@ function RequestsEmpty() {
     />
   );
 }
+
+// Memoized row so selection re-renders only the affected cards (RequestCard is
+// memo'd; onSelect is stable from the parent).
+const FeedRequestRow = memo(function FeedRequestRow({
+  request,
+  index,
+  active,
+  onSelect,
+}: {
+  request: PassengerRequest;
+  index: number;
+  active: boolean;
+  onSelect: (id: string) => void;
+}) {
+  return (
+    <div className="animate-card-in" style={{ animationDelay: `${Math.min(index, 10) * 45}ms` }}>
+      <RequestCard
+        request={request}
+        onClick={() => onSelect(request.id)}
+        className={active ? "ring-2 ring-grape-400 dark:ring-grape-500" : ""}
+      />
+    </div>
+  );
+});
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 export default function RequestsPage() {
@@ -83,33 +107,27 @@ export default function RequestsPage() {
   const sentinel = useInfiniteScroll({ hasNextPage, isFetchingNextPage, fetchNextPage });
   useScrollRestoration();
 
+  const handleSelectDesktop = useCallback((id: string) => setSelectedId(id), []);
+  const handleSelectMobile = useCallback((id: string) => {
+    setSelectedId(id);
+    setMobileDetailOpen(true);
+  }, []);
+
   const heading =
     filters.from_city && filters.to_city
       ? `${filters.from_city} → ${filters.to_city}`
       : t("page_title");
 
-  const list = (onSelect?: (id: string) => void) => (
+  const list = (onSelect: (id: string) => void, mobile: boolean) => (
     <div className="space-y-2.5">
       {requests.map((req, i) => (
-        <div
+        <FeedRequestRow
           key={req.id}
-          className="animate-card-in"
-          style={{ animationDelay: `${Math.min(i, 10) * 45}ms` }}
-        >
-          <RequestCard
-            request={req}
-            onClick={
-              onSelect
-                ? () => onSelect(req.id)
-                : () => setSelectedId(req.id)
-            }
-            className={
-              !onSelect && selectedId === req.id
-                ? "ring-2 ring-grape-400 dark:ring-grape-500"
-                : ""
-            }
-          />
-        </div>
+          request={req}
+          index={i}
+          active={!mobile && selectedId === req.id}
+          onSelect={onSelect}
+        />
       ))}
       {isFetchingNextPage && <CardSkeletonList variant="request" count={3} />}
       <div ref={sentinel} className="flex h-8 items-center justify-center">
@@ -142,7 +160,7 @@ export default function RequestsPage() {
               <CardSkeletonList variant="request" />
             ) : isError ? (
               <QueryError error={error} onRetry={() => void refetch()} />
-            ) : requests.length === 0 ? <RequestsEmpty /> : list()}
+            ) : requests.length === 0 ? <RequestsEmpty /> : list(handleSelectDesktop, false)}
           </div>
 
           {/* RIGHT: Detail */}
@@ -168,10 +186,7 @@ export default function RequestsPage() {
             <CardSkeletonList variant="request" />
           ) : isError ? (
             <QueryError error={error} onRetry={() => void refetch()} />
-          ) : requests.length === 0 ? <RequestsEmpty /> : list((id) => {
-            setSelectedId(id);
-            setMobileDetailOpen(true);
-          })}
+          ) : requests.length === 0 ? <RequestsEmpty /> : list(handleSelectMobile, true)}
         </div>
 
         {/* Backdrop */}

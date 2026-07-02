@@ -14,9 +14,11 @@ import {
   Zap,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
+import { memo, useCallback, useEffect, useRef } from "react";
 import type { Locale } from "@/i18n.config";
 import type { ReactNode } from "react";
 import type { TripListItem } from "@/lib/api/trips";
+import { usePrefetchTrip } from "@/lib/hooks/use-prefetch-trip";
 import { formatDepartureLabel } from "@/lib/utils/date";
 import { cn } from "@/lib/utils/cn";
 import { DriverAvatar } from "./driver-avatar";
@@ -43,7 +45,7 @@ interface TripCardProps {
 const BADGE_BASE =
   "inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-900";
 
-export function TripCard({
+function TripCardInner({
   trip,
   href,
   className,
@@ -55,6 +57,33 @@ export function TripCard({
 }: TripCardProps) {
   const t = useTranslations("card");
   const locale = useLocale() as Locale;
+
+  // Prefetch the detail on hover (desktop) or when the card scrolls into view
+  // (mobile). Guarded once per card; staleTime dedupes.
+  const prefetch = usePrefetchTrip();
+  const cardRef = useRef<HTMLElement>(null);
+  const prefetchedRef = useRef(false);
+  const doPrefetch = useCallback(() => {
+    if (prefetchedRef.current || !trip.id) return;
+    prefetchedRef.current = true;
+    prefetch(trip.id);
+  }, [prefetch, trip.id]);
+
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el || prefetchedRef.current) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          doPrefetch();
+          io.disconnect();
+        }
+      },
+      { rootMargin: "200px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [doPrefetch]);
   const driver = trip.driver ?? {};
   const driverName = driver.name ?? "";
   const rating = driver.rating ?? null;
@@ -98,12 +127,14 @@ export function TripCard({
 
   const content = (
     <article
+      ref={cardRef}
       className={cn(
         "group relative cursor-pointer overflow-hidden rounded-3xl bg-white p-3.5 shadow-card ring-1 ring-ink-100 transition hover:-translate-y-0.5 hover:shadow-lift dark:bg-ink-900 dark:ring-ink-800",
         active && "ring-2 ring-brand-500 dark:ring-brand-500",
         className,
       )}
       onClick={onClick}
+      onPointerEnter={doPrefetch}
       role={onClick ? "button" : undefined}
       tabIndex={onClick ? 0 : undefined}
       onKeyDown={onClick ? (e) => { if (e.key === "Enter" || e.key === " ") onClick(); } : undefined}
@@ -205,3 +236,5 @@ export function TripCard({
   }
   return content;
 }
+
+export const TripCard = memo(TripCardInner);

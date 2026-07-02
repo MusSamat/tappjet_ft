@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback, memo } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { searchTrips, type SearchTripsParams, type TripSearchResult, type TripListItem } from "@/lib/api/trips";
@@ -55,6 +55,34 @@ function FeedEmpty({ params }: { params: SearchTripsParams }) {
   );
 }
 
+// Memoized row so a selection/filter re-render only re-renders the two cards
+// whose `active` actually changed (TripCard itself is memo'd; onSelect is
+// stable from the parent).
+const FeedTripRow = memo(function FeedTripRow({
+  trip,
+  index,
+  active,
+  showBook,
+  onSelect,
+}: {
+  trip: TripListItem;
+  index: number;
+  active: boolean;
+  showBook: boolean;
+  onSelect: (id: string) => void;
+}) {
+  return (
+    <div className="animate-card-in" style={{ animationDelay: `${Math.min(index, 10) * 45}ms` }}>
+      <TripCard
+        trip={trip}
+        active={active}
+        onClick={() => onSelect(trip.id ?? "")}
+        showBookButton={showBook}
+      />
+    </div>
+  );
+});
+
 export function SearchLayout({ params, initial }: Props) {
   const t = useTranslations("feed");
   const role = useUiRole();
@@ -90,26 +118,28 @@ export function SearchLayout({ params, initial }: Props) {
   const sentinel = useInfiniteScroll({ hasNextPage, isFetchingNextPage, fetchNextPage });
   useScrollRestoration();
 
+  const handleSelectDesktop = useCallback((id: string) => setSelectedId(id), []);
+  const handleSelectMobile = useCallback((id: string) => {
+    setSelectedId(id);
+    setMobileDetailOpen(true);
+  }, []);
+
   const heading =
     params.from_city && params.to_city
       ? `${params.from_city} → ${params.to_city}`
       : t("all_trips");
 
-  const tripList = (onCardClick?: (id: string) => void) => (
+  const tripList = (onSelect: (id: string) => void, mobile: boolean) => (
     <div className="space-y-2.5">
       {trips.map((trip, i) => (
-        <div
+        <FeedTripRow
           key={trip.id}
-          className="animate-card-in"
-          style={{ animationDelay: `${Math.min(i, 10) * 45}ms` }}
-        >
-          <TripCard
-            trip={trip}
-            active={!onCardClick && selectedId === trip.id}
-            onClick={onCardClick ? () => onCardClick(trip.id ?? "") : () => setSelectedId(trip.id ?? null)}
-            showBookButton={!!onCardClick && role === "passenger"}
-          />
-        </div>
+          trip={trip}
+          index={i}
+          active={!mobile && selectedId === trip.id}
+          showBook={mobile && role === "passenger"}
+          onSelect={onSelect}
+        />
       ))}
       {isFetchingNextPage && <CardSkeletonList variant="trip" count={3} />}
       <div ref={sentinel} className="flex h-8 items-center justify-center">
@@ -153,7 +183,7 @@ export function SearchLayout({ params, initial }: Props) {
               ? isError
                 ? <QueryError error={error} onRetry={() => void refetch()} />
                 : <FeedEmpty params={params} />
-              : tripList()}
+              : tripList(handleSelectDesktop, false)}
           </div>
 
           {/* Right rail: detail pane */}
@@ -179,10 +209,7 @@ export function SearchLayout({ params, initial }: Props) {
             ? isError
               ? <QueryError error={error} onRetry={() => void refetch()} />
               : <FeedEmpty params={params} />
-            : tripList((id) => {
-                setSelectedId(id);
-                setMobileDetailOpen(true);
-              })}
+            : tripList(handleSelectMobile, true)}
         </div>
 
         {(mobileFiltersOpen || mobileDetailOpen) && (

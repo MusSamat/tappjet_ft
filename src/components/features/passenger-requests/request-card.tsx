@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { memo } from "react";
 import { CalendarClock, ChevronRight, Eye, MapPin, Star, Users } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { PassengerRequest } from "@/lib/api/passenger-requests";
@@ -25,7 +26,7 @@ function fmtDate(iso: string): string {
   return new Date(iso).toLocaleDateString("ru-RU", { day: "numeric", month: "short" });
 }
 
-export function RequestCard({
+function RequestCardInner({
   request,
   href,
   className,
@@ -158,3 +159,5 @@ export function RequestCard({
   }
   return content;
 }
+
+export const RequestCard = memo(RequestCardInner);

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { getAdminKpi, getAdminChart, type KpiCards } from "@/lib/api/admin";
 import {
@@ -12,10 +13,38 @@ import { cn } from "@/lib/utils/cn";
 import { KpiCard, KpiSkeleton } from "./_components/kpi-card";
 import { ActivityHeatmap } from "./_components/activity-heatmap";
 import { ChartCard } from "./_components/chart-card";
-import { RegistrationsChart } from "./_components/registrations-chart";
-import { TripsChart } from "./_components/trips-chart";
-import { RoutesChart, RatingChart } from "./_components/routes-and-rating-charts";
-import { FunnelChart } from "./_components/funnel-chart";
+
+// recharts is heavy (~200KB) and only ever needed on this admin route — pull
+// it out of the shared bundle via next/dynamic (ssr:false) so it never ships
+// to the public pages.
+function ChartFallback() {
+  return (
+    <div className="rounded-2xl bg-white p-5 shadow-card">
+      <div className="mb-4 h-4 w-40 animate-pulse rounded bg-ink-100" />
+      <div className="h-[200px] animate-pulse rounded-xl bg-ink-100" />
+    </div>
+  );
+}
+const RegistrationsChart = dynamic(
+  () => import("./_components/registrations-chart").then((m) => m.RegistrationsChart),
+  { ssr: false, loading: ChartFallback },
+);
+const TripsChart = dynamic(
+  () => import("./_components/trips-chart").then((m) => m.TripsChart),
+  { ssr: false, loading: ChartFallback },
+);
+const RoutesChart = dynamic(
+  () => import("./_components/routes-and-rating-charts").then((m) => m.RoutesChart),
+  { ssr: false, loading: ChartFallback },
+);
+const RatingChart = dynamic(
+  () => import("./_components/routes-and-rating-charts").then((m) => m.RatingChart),
+  { ssr: false, loading: ChartFallback },
+);
+const FunnelChart = dynamic(
+  () => import("./_components/funnel-chart").then((m) => m.FunnelChart),
+  { ssr: false, loading: ChartFallback },
+);
 
 type TripRaw = { date: string; status: string; count: number };
 function pivotTrips(raw: TripRaw[]) {
