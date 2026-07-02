@@ -146,9 +146,19 @@
     "chip_verified": "Проверенные",
     "chip_cheap": "Выгодно",
     "chip_fast": "Быстро",
+    "chip_chat": "Чат",
     "cta": "Поехали",
+    "cta_primary": "Войти или зарегистрироваться",
+    "cta_guest": "Посмотреть как гость",
     "have_account": "Уже есть аккаунт?",
     "login": "Войти"
+  },
+  "brand": {
+    "title": "Tappjet",
+    "subtitle": "знак, смысл, система",
+    "tagline": "Найди поездку и доберись — в один тап.",
+    "app_icon": "Иконка приложения",
+    "colors_title": "Цвета"
   },
   "gate": {
     "title": "{title} — после входа",

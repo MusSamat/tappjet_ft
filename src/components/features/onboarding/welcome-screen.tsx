@@ -1,85 +1,67 @@
 "use client";
 
-import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { Zap } from "lucide-react";
-import { ICON } from "@/components/ui";
-
-const ShieldCheck = ICON.verified;
-const Wallet = ICON.price;
-const ArrowRight = ICON.next;
+import { LogIn, MessageCircle, ShieldCheck, Wallet } from "lucide-react";
 
 interface WelcomeScreenProps {
-  onStart: () => void;
+  onLogin: () => void;
+  onGuest: () => void;
 }
 
-/** Design system §12 — дружелюбный первый экран-стикер. */
-export function WelcomeScreen({ onStart }: WelcomeScreenProps) {
+/** Welcome / onboarding entry — design-spec §2.1 (full-bleed teal gradient). */
+export function WelcomeScreen({ onLogin, onGuest }: WelcomeScreenProps) {
   const t = useTranslations("welcome");
 
   return (
-    <div className="relative flex min-h-screen flex-col items-center justify-between overflow-hidden bg-gradient-to-b from-brand-500 to-brand-600 px-6 py-10 text-center text-white">
-      {/* Decorative blobs */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -left-10 top-10 h-32 w-32 rounded-full bg-white/10"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -right-8 bottom-24 h-24 w-24 rounded-full bg-accent-400/20"
-      />
+    <div
+      className="flex min-h-screen flex-col text-white"
+      style={{ background: "linear-gradient(160deg,#2CC9B4 0%,#0D9488 45%,#0C6F65 100%)" }}
+    >
+      <div className="mx-auto flex w-full max-w-[460px] flex-1 flex-col items-center justify-center px-7 text-center">
+        {/* Logo tile with paper-plane mark */}
+        <span className="mb-5 flex h-24 w-24 items-center justify-center rounded-[2rem] bg-white/15 shadow-lift ring-1 ring-white/25">
+          <svg viewBox="0 0 48 48" className="h-16 w-16" aria-hidden="true">
+            <path d="M9 27 L39 13 L28 39 L23.5 29 Z" fill="#fff" />
+            <path d="M23.5 29 L39 13 L26.5 28 Z" fill="#fff" opacity="0.82" />
+            <circle cx="39" cy="11.5" r="4.2" fill="#FBB924" stroke="#fff" strokeWidth="1.4" />
+            <circle cx="12" cy="34" r="1.6" fill="#fff" opacity="0.8" />
+            <circle cx="17" cy="39" r="1.3" fill="#fff" opacity="0.7" />
+          </svg>
+        </span>
 
-      <div className="flex w-full max-w-sm flex-1 flex-col items-center justify-center">
-        {/* Sticker */}
-        <div className="relative mb-6">
-          <div className="flex h-36 w-36 items-center justify-center rounded-full bg-white/15 shadow-soft ring-4 ring-white/20">
-            <span aria-hidden="true" className="text-[80px] leading-none">
-              🚗
-            </span>
-          </div>
-          <span aria-hidden="true" className="absolute -right-2 -top-1 text-[34px]">
-            👋
-          </span>
-          <span
-            aria-hidden="true"
-            className="absolute -bottom-1 -left-2 text-[26px] motion-safe:animate-pulse motion-reduce:animate-none"
-          >
-            ✨
-          </span>
-        </div>
+        <p className="text-[15px] font-900 text-accent-300">{t("title")}</p>
+        <h1 className="font-disp mt-1 text-[25px] font-900 leading-tight text-white">{t("subtitle")}</h1>
 
-        <p className="text-[28px] font-900">{t("title")}</p>
-        <p className="mt-2 max-w-[260px] text-[14px] font-700 text-white/85">{t("subtitle")}</p>
-
-        {/* Trust chips */}
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
-          <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-3 py-1.5 text-[12px] font-800">
-            <ShieldCheck aria-hidden="true" className="h-3.5 w-3.5" /> {t("chip_verified")}
+        {/* Feature chips */}
+        <div className="mt-4 flex flex-wrap justify-center gap-2">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-2 text-[12px] font-800 ring-1 ring-white/20">
+            <ShieldCheck className="h-4 w-4" aria-hidden="true" /> {t("chip_verified")}
           </span>
-          <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-3 py-1.5 text-[12px] font-800">
-            <Wallet aria-hidden="true" className="h-3.5 w-3.5" /> {t("chip_cheap")}
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-2 text-[12px] font-800 ring-1 ring-white/20">
+            <Wallet className="h-4 w-4" aria-hidden="true" /> {t("chip_cheap")}
           </span>
-          <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-3 py-1.5 text-[12px] font-800">
-            <Zap aria-hidden="true" className="h-3.5 w-3.5" /> {t("chip_fast")}
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-2 text-[12px] font-800 ring-1 ring-white/20">
+            <MessageCircle className="h-4 w-4" aria-hidden="true" /> {t("chip_chat")}
           </span>
         </div>
       </div>
 
-      {/* CTA */}
-      <div className="w-full max-w-sm">
+      {/* Bottom actions */}
+      <div className="mx-auto w-full max-w-[460px] space-y-2.5 px-6 pb-9">
         <button
           type="button"
-          onClick={onStart}
-          className="flex h-[52px] w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 text-[16px] font-900 text-[#4A2C00] shadow-cta transition-transform active:scale-[0.98] hover:bg-accent-400"
+          onClick={onLogin}
+          className="flex h-13 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 py-3.5 text-[15px] font-900 text-accent-ink shadow-cta transition-colors hover:bg-accent-400"
         >
-          {t("cta")} <ArrowRight aria-hidden="true" className="h-5 w-5" />
+          <LogIn className="h-5 w-5" aria-hidden="true" /> {t("cta_primary")}
         </button>
-        <p className="mt-3 text-[12px] font-700 text-white/70">
-          {t("have_account")}{" "}
-          <Link href="/auth/login" className="font-900 text-white underline">
-            {t("login")}
-          </Link>
-        </p>
+        <button
+          type="button"
+          onClick={onGuest}
+          className="h-12 w-full rounded-2xl bg-white/15 text-[14px] font-900 text-white ring-1 ring-white/25 transition-colors hover:bg-white/20"
+        >
+          {t("cta_guest")}
+        </button>
       </div>
     </div>
   );

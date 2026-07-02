@@ -146,9 +146,19 @@
     "chip_verified": "Текшерилген",
     "chip_cheap": "Арзан",
     "chip_fast": "Ыкчам",
+    "chip_chat": "Чат",
     "cta": "Кеттик",
+    "cta_primary": "Кирүү же катталуу",
+    "cta_guest": "Конок катары кароо",
     "have_account": "Аккаунт барбы?",
     "login": "Кирүү"
+  },
+  "brand": {
+    "title": "Tappjet",
+    "subtitle": "белги, маани, система",
+    "tagline": "Сапар тап жана жет — бир тап менен.",
+    "app_icon": "Колдонмонун иконкасы",
+    "colors_title": "Түстөр"
   },
   "gate": {
     "title": "{title} — киргенден кийин",
