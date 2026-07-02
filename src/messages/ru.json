@@ -50,7 +50,9 @@
     "publish_trip_aria": "Опубликовать поездку",
     "create_request_aria": "Создать заявку",
     "login_aria": "Войти",
-    "main_nav_aria": "Основная навигация"
+    "main_nav_aria": "Основная навигация",
+    "feed": "Поиск",
+    "chats": "Чаты"
   },
   "locale": {
     "ru": "Русский",

@@ -2,181 +2,164 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Search, Plus, BookOpen, User, Hand } from "lucide-react";
-import { useQuery, keepPreviousData } from "@tanstack/react-query";
+import { LogIn, MessageCircle, Plus, Search, Ticket, User, type LucideIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { listIncomingBookings } from "@/lib/api/bookings";
-import { useUnreadCount } from "@/lib/hooks/use-unread-count";
-import { useRoleColors } from "@/lib/hooks/use-role-colors";
+import { useUnreadMessages } from "@/lib/hooks/use-unread-messages";
+import { useRoleTheme } from "@/lib/hooks/use-role-colors";
 import { useAuth } from "@/store/auth";
-import { DriverAvatar } from "@/components/ui";
 import { cn } from "@/lib/utils/cn";
 
-export function BottomNav() {
-  const t = useTranslations("nav");
-  const pathname = usePathname();
-  const user = useAuth((s) => s.user);
-  const isAuthenticated = useAuth((s) => s.status === "authenticated");
-  const activeMode = useAuth((s) => s.activeMode);
-  const isDriver = activeMode === "driver";
-  const { data: unread = 0 } = useUnreadCount();
-  const colors = useRoleColors();
+// Floating pill bottom nav — design-spec §1.2.
+// Logged-in: Поиск · Мои · [amber + FAB] · Чаты · Профиль.
+// Guest: Поиск · Войти (no FAB).
 
-  const { data: incomingData } = useQuery({
-    queryKey: ["bookings", "incoming", "bottom-nav"],
-    queryFn: () => listIncomingBookings(undefined, undefined, 50),
-    enabled: isAuthenticated && isDriver,
-    staleTime: 30_000,
-    placeholderData: keepPreviousData,
-    refetchInterval: 60_000,
-  });
-  const pendingCount = isDriver
-    ? (incomingData?.data ?? []).filter((b) => b.status === "pending" || b.status === "viewed").length
-    : 0;
-
-  const active = (href: string, exact = false) =>
-    exact ? pathname === href : pathname === href || pathname.startsWith(`${href}/`);
-
-  return (
-    <nav
-      className="fixed bottom-0 left-0 right-0 z-40 border-t border-ink-100 bg-white md:hidden"
-      style={{ height: "calc(64px + env(safe-area-inset-bottom))", paddingBottom: "env(safe-area-inset-bottom)" }}
-      aria-label={t("main_nav_aria")}
-    >
-      <div className="grid h-full grid-cols-5">
-
-        {/* Home */}
-        <NavItem href="/" label={t("home")} icon={Home} active={active("/", true)} activeClass={colors.navActive} />
-
-        {/* Browse — role-aware: driver looks for requests, passenger for trips */}
-        <NavItem
-          href={isDriver ? "/requests" : "/trips"}
-          label={isDriver ? t("requests") : t("search")}
-          icon={isDriver ? Hand : Search}
-          active={isDriver ? active("/requests") : active("/trips")}
-          activeClass={colors.navActive}
-        />
-
-        {/* Publish FAB */}
-        <Link
-          href={isDriver ? "/trips/create" : isAuthenticated ? "/requests/create" : "/auth/login"}
-          aria-label={isDriver ? t("publish_trip_aria") : isAuthenticated ? t("create_request_aria") : t("login_aria")}
-          className="flex flex-col items-center justify-center"
-        >
-          <div
-            className={cn(
-              "-mt-8 flex h-14 w-14 items-center justify-center rounded-full shadow-cta ring-4 ring-white transition-colors",
-              isDriver
-                ? "bg-gradient-to-br from-brand-500 to-brand-600 text-white"
-                : isAuthenticated
-                  ? "bg-gradient-to-br from-grape-400 to-grape-600 text-white"
-                  : "bg-ink-100 text-ink-400",
-            )}
-          >
-            {isDriver || !isAuthenticated ? (
-              <Plus className="h-6 w-6" aria-hidden="true" />
-            ) : (
-              <Hand className="h-5 w-5" aria-hidden="true" />
-            )}
-          </div>
-          <span className={cn(
-            "mt-0.5 text-[10px] font-bold",
-            isDriver ? "text-brand-600" : isAuthenticated ? "text-grape-600" : "text-ink-400",
-          )}>
-            {isDriver ? t("publish") : isAuthenticated ? t("create_request") : t("login")}
-          </span>
-        </Link>
-
-        {/* My bookings / Browse requests */}
-        {isAuthenticated ? (
-          <Link
-            href="/my/bookings"
-            className={cn(
-              "relative flex min-h-[56px] flex-col items-center justify-center gap-0.5 transition-colors",
-              active("/my/bookings") ? colors.navActive : "text-ink-400 hover:text-ink-600",
-            )}
-          >
-            <BookOpen className="h-6 w-6" aria-hidden="true" />
-            <span className="text-[10px] font-semibold">{t("bookings")}</span>
-            {isDriver && pendingCount > 0 && (
-              <span className="absolute right-3 top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent-500 px-0.5 text-[9px] font-extrabold text-white">
-                {pendingCount > 9 ? "9+" : pendingCount}
-              </span>
-            )}
-          </Link>
-        ) : (
-          <Link
-            href="/trips"
-            className={cn(
-              "relative flex min-h-[56px] flex-col items-center justify-center gap-0.5 transition-colors",
-              active("/trips") ? colors.navActive : "text-ink-400 hover:text-ink-600",
-            )}
-          >
-            <Search className="h-6 w-6" aria-hidden="true" />
-            <span className="text-[10px] font-semibold">{t("requests")}</span>
-          </Link>
-        )}
-
-        {/* Profile — always labelled "Профиль"; mode shown as dot on avatar */}
-        <Link
-          href={isAuthenticated ? "/profile" : "/auth/login"}
-          className={cn(
-            "relative flex min-h-[56px] flex-col items-center justify-center gap-0.5 transition-colors",
-            active("/profile") ? colors.navActive : "text-ink-400 hover:text-ink-600",
-          )}
-        >
-          {isAuthenticated ? (
-            <>
-              <span className={cn(
-                "relative flex h-7 w-7 items-center justify-center overflow-hidden rounded-full ring-2 transition-colors",
-                active("/profile") ? colors.profileRing : "ring-ink-200",
-              )}>
-                <DriverAvatar name={user?.name ?? "?"} src={user?.avatarUrl ?? null} size="sm" />
-                {/* Mode indicator dot */}
-                <span className={cn(
-                  "absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-white",
-                  isDriver ? "bg-brand-500" : "bg-grape-500",
-                )} />
-                {unread > 0 && (
-                  <span className="absolute -right-0.5 -top-0.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full border border-white bg-accent-500 px-0.5 text-[8px] font-extrabold leading-none text-white">
-                    {unread > 9 ? "9+" : unread}
-                  </span>
-                )}
-              </span>
-              <span className="text-[10px] font-semibold">{t("profile")}</span>
-            </>
-          ) : (
-            <>
-              <User className="h-6 w-6" aria-hidden="true" />
-              <span className="text-[10px] font-semibold">{t("login")}</span>
-            </>
-          )}
-        </Link>
-
-      </div>
-    </nav>
-  );
-}
-
-function NavItem({
-  href, label, icon: Icon, active, activeClass,
+function NavTab({
+  href,
+  label,
+  icon: Icon,
+  active,
+  pillOn,
+  textOn,
+  badge,
 }: {
   href: string;
   label: string;
-  icon: React.ElementType;
+  icon: LucideIcon;
   active: boolean;
-  activeClass: string;
+  pillOn: string;
+  textOn: string;
+  badge?: number;
 }) {
   return (
     <Link
       href={href}
+      aria-label={label}
       className={cn(
-        "relative flex min-h-[56px] flex-col items-center justify-center gap-0.5 transition-colors",
-        active ? activeClass : "text-ink-400 hover:text-ink-600",
+        "relative flex flex-1 flex-col items-center gap-1 rounded-2xl py-1.5 transition-colors",
+        active && pillOn,
       )}
     >
-      <Icon className="h-6 w-6" aria-hidden="true" />
-      <span className="text-[10px] font-semibold">{label}</span>
+      <Icon
+        className={cn("h-6 w-6", active ? textOn : "text-ink-400")}
+        strokeWidth={active ? 2.4 : 2}
+        aria-hidden="true"
+      />
+      <span
+        className={cn(
+          "text-[11px]",
+          active ? cn("font-900", textOn) : "font-700 text-ink-500",
+        )}
+      >
+        {label}
+      </span>
+      {typeof badge === "number" && badge > 0 && (
+        <span className="absolute right-1.5 top-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-coral-500 px-1 text-[9px] font-900 text-white ring-2 ring-white dark:ring-ink-900">
+          {badge > 9 ? "9+" : badge}
+        </span>
+      )}
     </Link>
+  );
+}
+
+export function BottomNav() {
+  const t = useTranslations("nav");
+  const pathname = usePathname();
+  const isAuthenticated = useAuth((s) => s.status === "authenticated");
+  const activeMode = useAuth((s) => s.activeMode);
+  const isDriver = activeMode === "driver";
+  const { theme } = useRoleTheme();
+  const { data: unreadMessages = 0 } = useUnreadMessages();
+
+  const startsWith = (href: string) =>
+    pathname === href || pathname.startsWith(`${href}/`);
+
+  const isChat = pathname.startsWith("/my/bookings/") && pathname.endsWith("/chat");
+  const feedHref = isDriver ? "/requests" : "/trips";
+  const feedActive = startsWith("/trips") || startsWith("/requests");
+  const createHref = isDriver ? "/trips/create" : "/requests/create";
+
+  return (
+    <nav
+      aria-label={t("main_nav_aria")}
+      className="fixed inset-x-0 bottom-0 z-40 flex items-end justify-center px-3 pb-3 md:hidden"
+      style={{ paddingBottom: "calc(12px + env(safe-area-inset-bottom))" }}
+    >
+      <div
+        className={cn(
+          "pointer-events-auto flex flex-1 items-center rounded-[1.75rem] border border-ink-100 bg-white/95 p-1.5 shadow-lift backdrop-blur-xl dark:border-ink-800 dark:bg-ink-900/95",
+          isAuthenticated ? "gap-0.5" : "gap-1",
+        )}
+      >
+        {isAuthenticated ? (
+          <>
+            <NavTab
+              href={feedHref}
+              label={t("feed")}
+              icon={Search}
+              active={feedActive}
+              pillOn={theme.navPillOn}
+              textOn={theme.navTextOn}
+            />
+            <NavTab
+              href="/my/bookings"
+              label={t("bookings")}
+              icon={Ticket}
+              active={startsWith("/my") && !isChat}
+              pillOn={theme.navPillOn}
+              textOn={theme.navTextOn}
+            />
+
+            {/* Center amber create FAB */}
+            <Link
+              href={createHref}
+              aria-label={isDriver ? t("publish_trip_aria") : t("create_request_aria")}
+              className="relative -mt-8 flex shrink-0 flex-col items-center gap-1"
+            >
+              <span className="flex h-[58px] w-[58px] items-center justify-center rounded-full bg-gradient-to-br from-accent-400 to-accent-600 text-accent-ink shadow-cta ring-4 ring-white dark:ring-ink-900">
+                <Plus className="h-7 w-7" strokeWidth={2.6} aria-hidden="true" />
+              </span>
+              <span className="text-[10px] font-900 text-accent-600">{t("publish")}</span>
+            </Link>
+
+            <NavTab
+              href="/my/bookings"
+              label={t("chats")}
+              icon={MessageCircle}
+              active={isChat}
+              pillOn={theme.navPillOn}
+              textOn={theme.navTextOn}
+              badge={unreadMessages}
+            />
+            <NavTab
+              href="/profile"
+              label={t("profile")}
+              icon={User}
+              active={startsWith("/profile")}
+              pillOn={theme.navPillOn}
+              textOn={theme.navTextOn}
+            />
+          </>
+        ) : (
+          <>
+            <NavTab
+              href="/trips"
+              label={t("feed")}
+              icon={Search}
+              active={feedActive}
+              pillOn={theme.navPillOn}
+              textOn={theme.navTextOn}
+            />
+            <NavTab
+              href="/auth/login"
+              label={t("login")}
+              icon={LogIn}
+              active={startsWith("/auth")}
+              pillOn={theme.navPillOn}
+              textOn={theme.navTextOn}
+            />
+          </>
+        )}
+      </div>
+    </nav>
   );
 }

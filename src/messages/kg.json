@@ -50,7 +50,9 @@
     "publish_trip_aria": "Сапар жарыялоо",
     "create_request_aria": "Арыз түзүү",
     "login_aria": "Кирүү",
-    "main_nav_aria": "Негизги навигация"
+    "main_nav_aria": "Негизги навигация",
+    "feed": "Издөө",
+    "chats": "Чаттар"
   },
   "locale": {
     "ru": "Орусча",

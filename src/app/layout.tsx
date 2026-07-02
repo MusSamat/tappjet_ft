@@ -8,6 +8,7 @@ import { AuthBootstrap } from "@/components/auth-bootstrap";
 import { TmaInit } from "@/components/tma-init";
 import { TopNav } from "@/components/layout/top-nav";
 import { BottomNav } from "@/components/layout/bottom-nav";
+import { FloatingBell } from "@/components/layout/floating-bell";
 import { Footer } from "@/components/layout/footer";
 import { QuickActions } from "@/components/features/quick-actions/quick-actions";
 import { QuickToastContainer } from "@/components/layout/quick-toast";
@@ -79,6 +80,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <main className="main-mobile-pad">{children}</main>
               <Footer />
               <BottomNav />
+              <FloatingBell />
               <QuickActions />
               <QuickToastContainer />
             </Providers>
