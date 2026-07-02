@@ -4,8 +4,20 @@ import { BookButton } from "@/components/features/trip/book-button";
 import { useAuth } from "@/store/auth";
 import { saveDeferredAction } from "@/lib/auth/deferred-action";
 import { useRouter } from "next/navigation";
+import ru from "@/messages/ru.json";
 
+const t = ru.book_button;
 const mockPush = vi.fn();
+
+vi.mock("next-intl", async () => {
+  const messages = (await import("@/messages/ru.json")).default as unknown as Record<
+    string,
+    Record<string, string>
+  >;
+  return {
+    useTranslations: (ns: string) => (key: string) => messages[ns]?.[key] ?? `${ns}.${key}`,
+  };
+});
 
 vi.mock("next/navigation", () => ({
   useRouter: vi.fn(),
@@ -48,11 +60,12 @@ beforeEach(() => {
   vi.mocked(useRouter).mockReturnValue({ push: mockPush } as any);
 });
 
-describe("BookButton — auth states", () => {
+describe("BookButton — auth bootstrapping", () => {
   it("renders loading skeleton when auth is idle", () => {
     mockAuthWith({ status: "idle" });
     const { container } = render(<BookButton tripId="t1" seatsAvailable={3} />);
     expect(container.querySelector(".animate-pulse")).toBeInTheDocument();
+    expect(screen.queryByText(t.book)).not.toBeInTheDocument();
   });
 
   it("renders loading skeleton when auth is loading", () => {
@@ -62,39 +75,43 @@ describe("BookButton — auth states", () => {
   });
 });
 
-describe("BookButton — own trip", () => {
-  it("shows own-trip card when driverId matches user id", () => {
+describe("BookButton — driver (own trip)", () => {
+  it("hides the book CTA and shows the own-trip card when driverId matches user id", () => {
     mockAuthWith({ user: { id: "driver-1", phoneVerified: true } });
     render(<BookButton tripId="t1" seatsAvailable={3} driverId="driver-1" />);
-    expect(screen.getByText("Это ваша поездка")).toBeInTheDocument();
+    expect(screen.getByText(t.own_trip_title)).toBeInTheDocument();
+    expect(screen.getByText(t.own_trip_hint)).toBeInTheDocument();
+    expect(screen.queryByText(t.book)).not.toBeInTheDocument();
   });
 
-  it("does not show own-trip card when driverId differs", () => {
+  it("shows the book CTA when driverId differs", () => {
     mockAuthWith({ user: { id: "passenger-1", phoneVerified: true } });
     render(<BookButton tripId="t1" seatsAvailable={3} driverId="driver-1" />);
-    expect(screen.queryByText("Это ваша поездка")).not.toBeInTheDocument();
+    expect(screen.queryByText(t.own_trip_title)).not.toBeInTheDocument();
+    expect(screen.getByText(t.book)).toBeInTheDocument();
   });
 });
 
 describe("BookButton — sold out", () => {
-  it("shows sold-out card when seatsAvailable=0", () => {
+  it("shows sold-out card and no CTA when seatsAvailable=0", () => {
     mockAuthWith();
     render(<BookButton tripId="t1" seatsAvailable={0} />);
-    expect(screen.getByText("Мест больше нет")).toBeInTheDocument();
+    expect(screen.getByText(t.sold_out_title)).toBeInTheDocument();
+    expect(screen.queryByText(t.book)).not.toBeInTheDocument();
   });
 
   it("does not show sold-out card when seats available", () => {
     mockAuthWith();
     render(<BookButton tripId="t1" seatsAvailable={2} />);
-    expect(screen.queryByText("Мест больше нет")).not.toBeInTheDocument();
+    expect(screen.queryByText(t.sold_out_title)).not.toBeInTheDocument();
   });
 });
 
 describe("BookButton — seat counter", () => {
-  it("shows the Забронировать button", () => {
+  it("shows the book button for a passenger", () => {
     mockAuthWith();
     render(<BookButton tripId="t1" seatsAvailable={3} />);
-    expect(screen.getByText("Забронировать")).toBeInTheDocument();
+    expect(screen.getByText(t.book)).toBeInTheDocument();
   });
 
   it("starts seat count at 1", () => {
@@ -106,40 +123,40 @@ describe("BookButton — seat counter", () => {
   it("increments seat count on + click", () => {
     mockAuthWith();
     render(<BookButton tripId="t1" seatsAvailable={3} />);
-    fireEvent.click(screen.getByLabelText("Больше мест"));
+    fireEvent.click(screen.getByLabelText(t.seat_plus));
     expect(screen.getByText("2")).toBeInTheDocument();
   });
 
   it("decrements seat count on − click", () => {
     mockAuthWith();
     render(<BookButton tripId="t1" seatsAvailable={3} />);
-    fireEvent.click(screen.getByLabelText("Больше мест"));
-    fireEvent.click(screen.getByLabelText("Меньше мест"));
+    fireEvent.click(screen.getByLabelText(t.seat_plus));
+    fireEvent.click(screen.getByLabelText(t.seat_minus));
     expect(screen.getByText("1")).toBeInTheDocument();
   });
 
   it("does not decrement below 1", () => {
     mockAuthWith();
     render(<BookButton tripId="t1" seatsAvailable={3} />);
-    fireEvent.click(screen.getByLabelText("Меньше мест"));
+    fireEvent.click(screen.getByLabelText(t.seat_minus));
     expect(screen.getByText("1")).toBeInTheDocument();
   });
 
   it("does not increment above seatsAvailable (capped at 4)", () => {
     mockAuthWith();
     render(<BookButton tripId="t1" seatsAvailable={2} />);
-    fireEvent.click(screen.getByLabelText("Больше мест"));
-    fireEvent.click(screen.getByLabelText("Больше мест"));
+    fireEvent.click(screen.getByLabelText(t.seat_plus));
+    fireEvent.click(screen.getByLabelText(t.seat_plus));
     // seatsAvailable=2, max=min(4,2)=2
     expect(screen.getByText("2")).toBeInTheDocument();
   });
 });
 
-describe("BookButton — unauthenticated click", () => {
-  it("saves deferred action and redirects to login", () => {
+describe("BookButton — guest (login gate)", () => {
+  it("saves deferred action and redirects to login on click", () => {
     mockAuthWith({ status: "unauthenticated", user: null });
     render(<BookButton tripId="trip-abc" seatsAvailable={2} />);
-    fireEvent.click(screen.getByText("Забронировать"));
+    fireEvent.click(screen.getByText(t.book));
     expect(vi.mocked(saveDeferredAction)).toHaveBeenCalledWith({
       action: "book_trip",
       trip_id: "trip-abc",
@@ -154,24 +171,24 @@ describe("BookButton — phone verification gate", () => {
     mockAuthWith({ user: { id: "user-1", phoneVerified: false } });
     render(<BookButton tripId="t1" seatsAvailable={3} />);
     expect(screen.queryByTestId("add-phone-modal")).not.toBeInTheDocument();
-    fireEvent.click(screen.getByText("Забронировать"));
+    fireEvent.click(screen.getByText(t.book));
     expect(screen.getByTestId("add-phone-modal")).toBeInTheDocument();
   });
 
   it("does not navigate to booking while phone is unverified", () => {
     mockAuthWith({ user: { id: "user-1", phoneVerified: false } });
     render(<BookButton tripId="t1" seatsAvailable={3} />);
-    fireEvent.click(screen.getByText("Забронировать"));
+    fireEvent.click(screen.getByText(t.book));
     expect(mockPush).not.toHaveBeenCalled();
   });
 });
 
 describe("BookButton — authenticated + verified click", () => {
-  it("navigates directly to booking when phone is verified", () => {
+  it("navigates to booking with the chosen seat count when phone is verified", () => {
     mockAuthWith({ user: { id: "user-1", phoneVerified: true } });
     render(<BookButton tripId="trip-xyz" seatsAvailable={3} />);
-    fireEvent.click(screen.getByLabelText("Больше мест")); // seats=2
-    fireEvent.click(screen.getByText("Забронировать"));
+    fireEvent.click(screen.getByLabelText(t.seat_plus)); // seats=2
+    fireEvent.click(screen.getByText(t.book));
     expect(mockPush).toHaveBeenCalledWith("/trips/trip-xyz/book?seats=2");
   });
 });
