@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Users, Search, ArrowLeftRight, MapPin, Flag, CalendarDays } from "lucide-react";
+import { Users, Search, ArrowLeftRight, Circle, MapPin, CalendarDays } from "lucide-react";
 import { CityAutocomplete } from "@/components/ui/city-autocomplete";
 import { DatePicker } from "@/components/ui/date-picker";
 import { Button } from "@/components/ui/button";
@@ -65,14 +65,14 @@ export function HeroSearchForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="mx-auto mt-6 max-w-[880px] rounded-3xl bg-white shadow-[0_20px_50px_rgba(17,24,39,.10)]"
+      className="mx-auto mt-6 max-w-[880px] rounded-3xl bg-white shadow-lift dark:bg-ink-900"
     >
       {/* ── Row 1: FROM | swap | TO ─────────────────────────────────── */}
       <div className="flex items-stretch">
         {/* FROM */}
         <div className="flex min-w-0 flex-1 items-center gap-2.5 rounded-tl-[20px] px-3 py-3 sm:px-4">
-          <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl bg-brand-50">
-            <MapPin className="h-3.5 w-3.5 text-brand-700" aria-hidden="true" />
+          <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl bg-brand-50 dark:bg-brand-500/15">
+            <Circle className="h-3.5 w-3.5 text-brand-600 dark:text-brand-300" aria-hidden="true" />
           </div>
           <div className="min-w-0 flex-1">
             <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{t("from_label")}</p>
@@ -93,7 +93,7 @@ export function HeroSearchForm() {
             onClick={swap}
             disabled={!from && !to}
             aria-label={t("swap_aria")}
-            className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border border-ink-200 text-ink-400 transition-colors hover:border-brand-400 hover:text-brand-600 disabled:opacity-30"
+            className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-ink-100 text-ink-500 transition-colors hover:text-brand-600 disabled:opacity-30 dark:bg-ink-800 dark:text-ink-300"
           >
             <ArrowLeftRight className="h-3 w-3" />
           </button>
@@ -101,8 +101,8 @@ export function HeroSearchForm() {
 
         {/* TO */}
         <div className="flex min-w-0 flex-1 items-center gap-2.5 rounded-tr-[20px] px-3 py-3 sm:px-4">
-          <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl bg-accent-50">
-            <Flag className="h-3.5 w-3.5 text-accent-600" aria-hidden="true" />
+          <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl bg-accent-50 dark:bg-accent-500/15">
+            <MapPin className="h-3.5 w-3.5 text-accent-500" aria-hidden="true" />
           </div>
           <div className="min-w-0 flex-1">
             <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{t("to_label")}</p>
@@ -118,7 +118,7 @@ export function HeroSearchForm() {
       </div>
 
       {/* Divider */}
-      <div className="h-px bg-ink-100" aria-hidden="true" />
+      <div className="mx-4 border-t border-dashed border-ink-200 dark:border-ink-700" aria-hidden="true" />
 
       {/* ── Row 2: Date | Seats (always side-by-side) + Button ──────── */}
       <div className="flex flex-col sm:flex-row sm:items-stretch">
@@ -126,8 +126,8 @@ export function HeroSearchForm() {
         <div className="flex flex-1 items-stretch">
           {/* Date */}
           <div className="flex min-w-0 flex-1 items-center gap-2.5 px-3 py-2.5 sm:px-4 sm:py-3">
-            <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl bg-brand-50">
-              <CalendarDays className="h-3.5 w-3.5 text-brand-700" aria-hidden="true" />
+            <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl bg-brand-50 dark:bg-brand-500/15">
+              <CalendarDays className="h-3.5 w-3.5 text-brand-600 dark:text-brand-300" aria-hidden="true" />
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{t("date_label")}</p>
@@ -141,12 +141,12 @@ export function HeroSearchForm() {
             </div>
           </div>
 
-          <div className="w-px self-stretch bg-ink-100" aria-hidden="true" />
+          <div className="w-px self-stretch bg-ink-100 dark:bg-ink-800" aria-hidden="true" />
 
           {/* Seats */}
           <div className="flex w-[88px] flex-shrink-0 items-center gap-2 px-2.5 py-2.5 sm:w-[110px] sm:px-3 sm:py-3">
-            <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl bg-ink-100">
-              <Users className="h-3.5 w-3.5 text-ink-700" aria-hidden="true" />
+            <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl bg-ink-100 dark:bg-ink-800">
+              <Users className="h-3.5 w-3.5 text-ink-700 dark:text-ink-300" aria-hidden="true" />
             </div>
             <div className="min-w-0">
               <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{t("seats_label")}</p>
@@ -156,17 +156,17 @@ export function HeroSearchForm() {
                 max={4}
                 value={seats}
                 onChange={(e) => setSeats(e.target.value)}
-                className="mt-0.5 w-full bg-transparent text-[14px] font-semibold text-ink-900 outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                className="mt-0.5 w-full bg-transparent text-[14px] font-800 text-ink-900 outline-none dark:text-white [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
               />
             </div>
           </div>
         </div>
 
         {/* Submit */}
-        <div className="flex items-center border-t border-ink-100 p-3 sm:border-l sm:border-t-0">
+        <div className="flex items-center border-t border-ink-100 p-3 dark:border-ink-800 sm:border-l sm:border-t-0">
           <Button
             type="submit"
-            variant="submit"
+            variant="cta"
             size="lg"
             className="w-full whitespace-nowrap sm:w-auto"
           >

@@ -20,10 +20,10 @@ export default async function HomePage() {
       {/* ===== POPULAR ROUTES ===== */}
       <section className="mx-auto max-w-[1200px] px-4 py-8 sm:py-12">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-[20px] font-extrabold text-ink-900 sm:text-[24px]">{t("popular_routes")}</h2>
+          <h2 className="font-disp text-[20px] font-900 text-ink-900 dark:text-white sm:text-[24px]">{t("popular_routes")}</h2>
           <Link
             href="/trips"
-            className="inline-flex items-center gap-1 rounded-full bg-ink-100 px-3.5 py-2 text-[13px] font-extrabold text-ink-700 hover:bg-ink-200"
+            className="inline-flex items-center gap-1 rounded-full bg-ink-100 px-3.5 py-2 text-[13px] font-800 text-ink-700 hover:bg-ink-200 dark:bg-ink-800 dark:text-ink-200 dark:hover:bg-ink-700"
           >
             {t("all_routes")}
             <ArrowRight className="h-3.5 w-3.5" aria-hidden={true} />
@@ -35,25 +35,32 @@ export default async function HomePage() {
             <Link
               key={`${r.from}-${r.to}`}
               href={`/trips?from=${encodeURIComponent(r.from)}&to=${encodeURIComponent(r.to)}`}
-              className="group rounded-3xl bg-white p-4 shadow-card ring-1 ring-ink-100 transition-all hover:ring-brand-300"
+              className="group relative overflow-hidden rounded-3xl bg-white p-4 shadow-card ring-1 ring-ink-100 transition hover:-translate-y-0.5 hover:shadow-lift dark:bg-ink-900 dark:ring-ink-800"
             >
-              <div className="mb-3 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="text-[15px] font-extrabold text-ink-900">{r.from}</span>
-                  <ArrowRight className="h-3.5 w-3.5 text-ink-400" aria-hidden={true} />
-                  <span className="text-[15px] font-extrabold text-ink-900">{r.to}</span>
+              {/* Ride-card spine motif (design-spec §1.5) */}
+              <div className="flex items-center gap-2.5">
+                <div className="flex shrink-0 flex-col items-center self-stretch py-1" aria-hidden={true}>
+                  <span className="h-2 w-2 shrink-0 rounded-full border-2 border-brand-600" />
+                  <span className="my-0.5 w-0.5 flex-1 rounded bg-gradient-to-b from-brand-500 to-accent-400" />
+                  <span className="h-2 w-2 shrink-0 rounded-full bg-accent-500" />
                 </div>
-                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-brand-50 text-brand-600 transition-colors group-hover:bg-brand-600 group-hover:text-white">
-                  <ArrowRight className="h-4 w-4" aria-hidden={true} />
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-[12px] font-bold text-ink-500">
-                  {r.tripCount > 0 ? t("active_trips", { n: r.tripCount }) : t("no_trips")}
-                </span>
-                {r.minPrice && (
-                  <span className="text-[13px] font-extrabold text-brand-700">{t("from_price", { n: r.minPrice })}</span>
-                )}
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-[15px] font-900 leading-tight text-ink-900 dark:text-white">{r.from}</p>
+                  <p className="my-0.5 text-[10px] font-700 text-ink-400">
+                    {r.tripCount > 0 ? t("active_trips", { n: r.tripCount }) : t("no_trips")}
+                  </p>
+                  <p className="truncate text-[15px] font-900 leading-tight text-ink-900 dark:text-white">{r.to}</p>
+                </div>
+                <div className="flex shrink-0 flex-col items-end gap-2 self-stretch">
+                  {r.minPrice ? (
+                    <span className="text-[13px] font-900 text-brand-700 dark:text-brand-300">{t("from_price", { n: r.minPrice })}</span>
+                  ) : (
+                    <span aria-hidden={true} />
+                  )}
+                  <span className="mt-auto flex h-7 w-7 items-center justify-center rounded-full bg-brand-50 text-brand-600 transition-colors group-hover:bg-brand-600 group-hover:text-white dark:bg-brand-500/15 dark:text-brand-300">
+                    <ArrowRight className="h-4 w-4" aria-hidden={true} />
+                  </span>
+                </div>
               </div>
             </Link>
           ))}
@@ -65,12 +72,12 @@ export default async function HomePage() {
           <BecomeDriverCta />
 
           {/* Safety */}
-          <div className="rounded-3xl bg-white p-6 shadow-card ring-1 ring-ink-100">
-            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-50 text-brand-600">
+          <div className="rounded-3xl bg-white p-6 shadow-card ring-1 ring-ink-100 dark:bg-ink-900 dark:ring-ink-800">
+            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-50 text-brand-600 dark:bg-brand-500/15 dark:text-brand-300">
               <ShieldCheck className="h-6 w-6" aria-hidden={true} />
             </span>
-            <h3 className="mt-3 text-[17px] font-extrabold text-ink-900">{t("safety_title")}</h3>
-            <p className="mt-2 text-[13px] font-semibold leading-relaxed text-ink-500">
+            <h3 className="mt-3 text-[17px] font-900 text-ink-900 dark:text-white">{t("safety_title")}</h3>
+            <p className="mt-2 text-[13px] font-700 leading-relaxed text-ink-500 dark:text-ink-400">
               {t("safety_desc")}
             </p>
           </div>
