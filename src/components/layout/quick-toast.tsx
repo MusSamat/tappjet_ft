@@ -32,28 +32,18 @@ const ICONS = {
   info: Info,
 } satisfies Record<ToastItem["type"], React.ElementType>;
 
+// Container styling collapses into the 3 canonical §11 buckets:
+// success → brand, error/warning → coral, info → ink. Text is always white.
 const COLORS = {
-  booking_request: "border-brand-200 bg-brand-50",
-  booking_accepted: "border-brand-200 bg-brand-50",
-  booking_rejected: "border-red-200 bg-red-50",
-  booking_cancelled: "border-red-200 bg-red-50",
-  booking_expired: "border-accent-200 bg-accent-50",
-  chat_message: "border-ink-200 bg-white",
-  error: "border-red-200 bg-red-50",
-  warning: "border-accent-200 bg-accent-50",
-  info: "border-brand-200 bg-brand-50",
-} satisfies Record<ToastItem["type"], string>;
-
-const ICON_COLORS = {
-  booking_request: "text-brand-600",
-  booking_accepted: "text-brand-600",
-  booking_rejected: "text-red-500",
-  booking_cancelled: "text-red-500",
-  booking_expired: "text-accent-500",
-  chat_message: "text-brand-600",
-  error: "text-red-500",
-  warning: "text-accent-500",
-  info: "text-brand-600",
+  booking_request: "bg-ink-800 text-white shadow-lg",
+  booking_accepted: "bg-brand-600 text-white shadow-brandcta",
+  booking_rejected: "bg-coral-500 text-white shadow-lg",
+  booking_cancelled: "bg-coral-500 text-white shadow-lg",
+  booking_expired: "bg-coral-500 text-white shadow-lg",
+  chat_message: "bg-ink-800 text-white shadow-lg",
+  error: "bg-coral-500 text-white shadow-lg",
+  warning: "bg-coral-500 text-white shadow-lg",
+  info: "bg-ink-800 text-white shadow-lg",
 } satisfies Record<ToastItem["type"], string>;
 
 const AUTO_DISMISS_MS = 6000;
@@ -71,22 +61,22 @@ function Toast({ item, onDismiss }: { item: ToastItem; onDismiss: () => void }) 
       role="alert"
       aria-live="assertive"
       className={cn(
-        "flex w-[320px] items-start gap-3 rounded-2xl border p-4 shadow-lg",
+        "flex w-[320px] items-center gap-3 rounded-2xl px-4 py-3",
         COLORS[item.type],
       )}
     >
-      <span className="mt-0.5 flex-shrink-0">
-        <Icon className={cn("h-5 w-5", ICON_COLORS[item.type])} aria-hidden="true" />
+      <span className="flex-shrink-0">
+        <Icon className="h-5 w-5" aria-hidden="true" />
       </span>
       <div className="min-w-0 flex-1">
-        <p className="text-[13px] font-bold text-ink-900">{item.title}</p>
-        <p className="mt-0.5 text-[12px] text-ink-700">{item.body}</p>
+        <p className="text-[13px] font-800">{item.title}</p>
+        <p className="mt-0.5 text-[12px] font-600 text-white/80">{item.body}</p>
       </div>
       <button
         type="button"
         onClick={onDismiss}
         aria-label="Закрыть"
-        className="flex-shrink-0 text-ink-400 hover:text-ink-600"
+        className="flex-shrink-0 text-white/70 hover:text-white"
       >
         <X className="h-4 w-4" aria-hidden="true" />
       </button>

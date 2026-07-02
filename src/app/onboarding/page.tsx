@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
+import { WelcomeScreen } from "@/components/features/onboarding/welcome-screen";
 
 const ONBOARDING_KEY = "tappjet_onboarding_done";
 
@@ -70,6 +71,7 @@ const SLIDE_ILLUSTRATIONS = [
 export default function OnboardingPage() {
   const t = useTranslations("onboarding");
   const router = useRouter();
+  const [showWelcome, setShowWelcome] = useState(true);
   const [slide, setSlide] = useState(0);
 
   const SLIDE_TEXTS = [
@@ -91,6 +93,10 @@ export default function OnboardingPage() {
   const current = SLIDE_ILLUSTRATIONS[slide]!;
   const currentText = SLIDE_TEXTS[slide]!;
   const isLast = slide === SLIDE_ILLUSTRATIONS.length - 1;
+
+  if (showWelcome) {
+    return <WelcomeScreen onStart={() => setShowWelcome(false)} />;
+  }
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-between bg-white px-6 py-8">

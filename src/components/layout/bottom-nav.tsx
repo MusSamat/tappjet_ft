@@ -65,19 +65,18 @@ export function BottomNav() {
         >
           <div
             className={cn(
-              "flex h-11 w-11 items-center justify-center rounded-2xl shadow-md transition-colors",
+              "-mt-8 flex h-14 w-14 items-center justify-center rounded-full shadow-cta ring-4 ring-white transition-colors",
               isDriver
                 ? "bg-gradient-to-br from-brand-500 to-brand-600 text-white"
                 : isAuthenticated
                   ? "bg-gradient-to-br from-grape-400 to-grape-600 text-white"
                   : "bg-ink-100 text-ink-400",
             )}
-            style={{ marginTop: "-10px" }}
           >
             {isDriver || !isAuthenticated ? (
-              <Plus className="h-5 w-5" aria-hidden="true" />
+              <Plus className="h-6 w-6" aria-hidden="true" />
             ) : (
-              <Hand className="h-4 w-4" aria-hidden="true" />
+              <Hand className="h-5 w-5" aria-hidden="true" />
             )}
           </div>
           <span className={cn(
