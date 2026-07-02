@@ -1226,6 +1226,21 @@
     "filter_cheap": "Дёшево",
     "load_more": "Показать ещё"
   },
+  "toasts": {
+    "booking_accepted": "Бронь подтверждена",
+    "booking_rejected": "Запрос отклонён",
+    "booking_cancelled": "Бронь отменена",
+    "trip_cancelled": "Поездка отменена",
+    "trip_completed": "Поездка завершена",
+    "request_cancelled": "Заявка отменена",
+    "offer_accepted": "Предложение принято",
+    "offer_declined": "Предложение отклонено",
+    "offer_sent": "Предложение отправлено",
+    "profile_saved": "Изменения сохранены",
+    "avatar_updated": "Фото профиля обновлено",
+    "phone_updated": "Номер телефона обновлён",
+    "logout_all": "Вы вышли на всех устройствах"
+  },
   "offline": {
     "no_connection": "Нет соединения",
     "restored": "Соединение восстановлено"
@@ -1350,7 +1365,6 @@
     "name_label": "Имя",
     "language_label": "Язык интерфейса",
     "save_error": "Не удалось сохранить. Попробуйте снова.",
-    "save_success": "Изменения сохранены.",
     "save": "Сохранить",
     "otp_sent_to": "Введите код из SMS на номер",
     "otp_label": "Код из SMS",

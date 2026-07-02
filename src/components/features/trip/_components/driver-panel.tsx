@@ -14,6 +14,9 @@ import {
 } from "@/lib/api/bookings";
 import { getPendingRatings } from "@/lib/api/ratings";
 import { cancelTrip, type TripDetail } from "@/lib/api/trips";
+import { extractError } from "@/lib/api/client";
+import { useFriendlyError } from "@/lib/hooks/use-api-error";
+import { toastSuccess, toastError } from "@/components/layout/quick-toast";
 import { cn } from "@/lib/utils/cn";
 import { Spinner } from "@/components/ui";
 import { Overlay } from "./modal-overlay";
@@ -38,6 +41,8 @@ type BookingExt = Booking & {
 
 export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string }) {
   const t = useTranslations("trip_actions");
+  const tToasts = useTranslations("toasts");
+  const fe = useFriendlyError();
   const qc = useQueryClient();
 
   const REJECT_REASONS = [
@@ -62,32 +67,40 @@ export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string
   const acceptMut = useMutation({
     mutationFn: acceptBooking,
     onSuccess: () => {
+      toastSuccess(tToasts("booking_accepted"));
       qc.invalidateQueries({ queryKey: ["bookings", "incoming", tripId] });
       qc.invalidateQueries({ queryKey: ["trips"] });
     },
+    onError: (e) => toastError(fe(extractError(e))),
   });
   const rejectMut = useMutation({
     mutationFn: (id: string) => rejectBooking(id),
     onSuccess: () => {
+      toastSuccess(tToasts("booking_rejected"));
       qc.invalidateQueries({ queryKey: ["bookings", "incoming", tripId] });
       setShowRejectFor(null);
       setRejectReason("");
     },
+    onError: (e) => toastError(fe(extractError(e))),
   });
   const cancelTripMut = useMutation({
     mutationFn: () => cancelTrip(tripId),
     onSuccess: () => {
+      toastSuccess(tToasts("trip_cancelled"));
       qc.invalidateQueries({ queryKey: ["trips"] });
       qc.invalidateQueries({ queryKey: ["bookings"] });
       setCancelTripOpen(false);
     },
+    onError: (e) => toastError(fe(extractError(e))),
   });
   const cancelBookingMut = useMutation({
     mutationFn: (id: string) => cancelBooking(id),
     onSuccess: () => {
+      toastSuccess(tToasts("booking_cancelled"));
       qc.invalidateQueries({ queryKey: ["bookings", "incoming", tripId] });
       setCancelBookingTarget(null);
     },
+    onError: (e) => toastError(fe(extractError(e))),
   });
 
   const [showRejectFor, setShowRejectFor] = useState<string | null>(null);

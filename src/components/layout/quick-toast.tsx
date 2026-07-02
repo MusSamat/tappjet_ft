@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils/cn";
 export interface ToastItem {
   id: string;
   type:
+    | "success"
     | "booking_request"
     | "booking_accepted"
     | "booking_rejected"
@@ -24,6 +25,7 @@ export interface ToastItem {
 type ToastVariant = "success" | "error" | "info";
 
 const VARIANT = {
+  success: "success",
   booking_request: "info",
   booking_accepted: "success",
   booking_rejected: "error",
@@ -92,6 +94,10 @@ export function pushToast(item: Omit<ToastItem, "id">): void {
   const id = `${Date.now()}-${Math.random()}`;
   listeners.forEach((fn) => fn({ ...item, id }));
 }
+
+// One-line action feedback (design-spec §3.11): success → brand, error → danger.
+export const toastSuccess = (title: string) => pushToast({ type: "success", title, body: "" });
+export const toastError = (title: string) => pushToast({ type: "error", title, body: "" });
 
 export function QuickToastContainer() {
   const [toasts, setToasts] = useState<ToastItem[]>([]);

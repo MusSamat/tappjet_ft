@@ -8,6 +8,7 @@ import type { PassengerRequest } from "@/lib/api/passenger-requests";
 import { respondToRequest, type RespondInput } from "@/lib/api/passenger-requests";
 import { extractError } from "@/lib/api/client";
 import { useFriendlyError } from "@/lib/hooks/use-api-error";
+import { toastSuccess } from "@/components/layout/quick-toast";
 import { Spinner } from "@/components/ui/spinner";
 
 interface Props {
@@ -18,6 +19,7 @@ interface Props {
 export function RespondModal({ request, onClose }: Props) {
   const qc = useQueryClient();
   const t = useTranslations("requests");
+  const tToasts = useTranslations("toasts");
   const fe = useFriendlyError();
   const [price, setPrice] = useState("");
   const [date, setDate] = useState(request.departureDate.split("T")[0] ?? "");
@@ -36,6 +38,7 @@ export function RespondModal({ request, onClose }: Props) {
       return respondToRequest(request.id, input);
     },
     onSuccess: () => {
+      toastSuccess(tToasts("offer_sent"));
       void qc.invalidateQueries({ queryKey: ["request-responses", request.id] });
       onClose();
     },

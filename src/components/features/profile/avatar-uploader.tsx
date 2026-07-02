@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { uploadAvatar } from "@/lib/api/profile";
 import { useAuth } from "@/store/auth";
 import { normalizeMediaUrl } from "@/lib/utils/media-url";
+import { toastSuccess } from "@/components/layout/quick-toast";
 import { Spinner } from "@/components/ui";
 import { cn } from "@/lib/utils/cn";
 
@@ -69,6 +70,7 @@ export function AvatarUploader({
   fontClass = "text-[30px]",
 }: AvatarUploaderProps = {}) {
   const t = useTranslations("profile_forms");
+  const tToasts = useTranslations("toasts");
   const user = useAuth((s) => s.user);
   const updateUser = useAuth((s) => s.updateUser);
   const queryClient = useQueryClient();
@@ -87,6 +89,7 @@ export function AvatarUploader({
       updateUser({ avatarUrl: url ?? undefined });
       setImgSrc(url);
       setImgError(false);
+      toastSuccess(tToasts("avatar_updated"));
       void queryClient.invalidateQueries({ queryKey: ["me"] });
     },
     onError: () => {

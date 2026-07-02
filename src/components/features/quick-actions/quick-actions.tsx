@@ -8,6 +8,9 @@ import { MessageCircle, X } from "lucide-react";
 import { listIncomingBookings, acceptBooking, rejectBooking } from "@/lib/api/bookings";
 import { getNotifications, markNotificationRead } from "@/lib/api/notifications";
 import { getChatSummaries, type ChatSummary } from "@/lib/api/chat";
+import { extractError } from "@/lib/api/client";
+import { useFriendlyError } from "@/lib/hooks/use-api-error";
+import { toastSuccess, toastError } from "@/components/layout/quick-toast";
 import { useAuth } from "@/store/auth";
 import { getSocket } from "@/lib/socket/client";
 import { cn } from "@/lib/utils/cn";
@@ -19,6 +22,8 @@ type QATab = "chats" | "requests" | "notifications";
 
 export function QuickActions() {
   const t = useTranslations("quick_actions");
+  const tToasts = useTranslations("toasts");
+  const fe = useFriendlyError();
   const user = useAuth((s) => s.user);
   const isAuthenticated = useAuth((s) => s.status === "authenticated");
   const isDriver = user?.roles?.includes("driver") ?? false;
@@ -90,11 +95,19 @@ export function QuickActions() {
 
   const acceptMut = useMutation({
     mutationFn: acceptBooking,
-    onSuccess: () => void qc.invalidateQueries({ queryKey: ["bookings"] }),
+    onSuccess: () => {
+      toastSuccess(tToasts("booking_accepted"));
+      void qc.invalidateQueries({ queryKey: ["bookings"] });
+    },
+    onError: (e) => toastError(fe(extractError(e))),
   });
   const rejectMut = useMutation({
     mutationFn: (id: string) => rejectBooking(id),
-    onSuccess: () => void qc.invalidateQueries({ queryKey: ["bookings"] }),
+    onSuccess: () => {
+      toastSuccess(tToasts("booking_rejected"));
+      void qc.invalidateQueries({ queryKey: ["bookings"] });
+    },
+    onError: (e) => toastError(fe(extractError(e))),
   });
   const readMut = useMutation({
     mutationFn: markNotificationRead,

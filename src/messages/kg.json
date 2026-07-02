@@ -1226,6 +1226,21 @@
     "filter_cheap": "Арзан",
     "load_more": "Дагы көрсөтүү"
   },
+  "toasts": {
+    "booking_accepted": "Брондоо ырасталды",
+    "booking_rejected": "Суроо-талап четке кагылды",
+    "booking_cancelled": "Брондоо жокко чыгарылды",
+    "trip_cancelled": "Сапар жокко чыгарылды",
+    "trip_completed": "Сапар аяктады",
+    "request_cancelled": "Табыштама жокко чыгарылды",
+    "offer_accepted": "Сунуш кабыл алынды",
+    "offer_declined": "Сунуш четке кагылды",
+    "offer_sent": "Сунуш жөнөтүлдү",
+    "profile_saved": "Өзгөртүүлөр сакталды",
+    "avatar_updated": "Профиль сүрөтү жаңыртылды",
+    "phone_updated": "Телефон номери жаңыртылды",
+    "logout_all": "Бардык түзмөктөрдөн чыктыңыз"
+  },
   "offline": {
     "no_connection": "Байланыш жок",
     "restored": "Байланыш калыбына келди"
@@ -1350,7 +1365,6 @@
     "name_label": "Аты",
     "language_label": "Интерфейс тили",
     "save_error": "Сактоо мүмкүн болбоду. Кайра аракет кылыңыз.",
-    "save_success": "Өзгөртүүлөр сакталды.",
     "save": "Сактоо",
     "otp_sent_to": "Номерге келген SMS кодун киргизиңиз",
     "otp_label": "SMS коду",

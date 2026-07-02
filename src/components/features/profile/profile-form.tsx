@@ -7,6 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { updateProfile } from "@/lib/api/auth";
 import { useAuth } from "@/store/auth";
+import { toastSuccess } from "@/components/layout/quick-toast";
 import { Button, Input, Label, Spinner } from "@/components/ui";
 
 const schema = z.object({
@@ -18,6 +19,7 @@ type FormData = z.infer<typeof schema>;
 export function ProfileForm() {
   const t = useTranslations("profile_forms");
   const tLocale = useTranslations("locale");
+  const tToasts = useTranslations("toasts");
   const user = useAuth((s) => s.user);
   const updateUser = useAuth((s) => s.updateUser);
 
@@ -29,9 +31,12 @@ export function ProfileForm() {
     },
   });
 
-  const { mutate, isPending, isSuccess, error } = useMutation({
+  const { mutate, isPending, error } = useMutation({
     mutationFn: (data: FormData) => updateProfile(data),
-    onSuccess: (updated) => updateUser({ name: updated.name }),
+    onSuccess: (updated) => {
+      updateUser({ name: updated.name });
+      toastSuccess(tToasts("profile_saved"));
+    },
   });
 
   return (
@@ -56,9 +61,6 @@ export function ProfileForm() {
 
       {error && (
         <p className="text-caption text-coral-500">{t("save_error")}</p>
-      )}
-      {isSuccess && (
-        <p className="text-caption text-brand-700">{t("save_success")}</p>
       )}
 
       <Button type="submit" variant="primary" size="md" disabled={!isDirty || isPending}>

@@ -7,6 +7,9 @@ import { Bell, Plus, LogOut, User, BookOpen, MessageCircle } from "lucide-react"
 import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { logout } from "@/lib/api/auth";
+import { extractError } from "@/lib/api/client";
+import { useFriendlyError } from "@/lib/hooks/use-api-error";
+import { toastError } from "@/components/layout/quick-toast";
 import { useAuth } from "@/store/auth";
 import { useUnreadCount } from "@/lib/hooks/use-unread-count";
 import { useUnreadMessages } from "@/lib/hooks/use-unread-messages";
@@ -35,6 +38,7 @@ const ICON_BTN =
 function UserDropdown({ onClose }: { onClose: () => void }) {
   const t = useTranslations("top_nav");
   const router = useRouter();
+  const fe = useFriendlyError();
   const user = useAuth((s) => s.user);
   const clearSession = useAuth((s) => s.clearSession);
   const activeMode = useAuth((s) => s.activeMode);
@@ -47,6 +51,7 @@ function UserDropdown({ onClose }: { onClose: () => void }) {
       router.replace("/");
       onClose();
     },
+    onError: (e) => toastError(fe(extractError(e))),
   });
 
   const links = [

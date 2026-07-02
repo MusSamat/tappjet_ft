@@ -19,6 +19,9 @@ import { useTranslations } from "next-intl";
 import { logout, logoutAll } from "@/lib/api/auth";
 import { exportData } from "@/lib/api/profile";
 import { getUserRatings } from "@/lib/api/users";
+import { extractError } from "@/lib/api/client";
+import { useFriendlyError } from "@/lib/hooks/use-api-error";
+import { toastSuccess, toastError } from "@/components/layout/quick-toast";
 import { useAuth } from "@/store/auth";
 import { useRoleTheme } from "@/lib/hooks/use-role-colors";
 import { AvatarUploader } from "@/components/features/profile/avatar-uploader";
@@ -39,6 +42,8 @@ const FAB_TINT: Record<string, string> = {
 
 export default function ProfilePage() {
   const t = useTranslations("profile");
+  const tToasts = useTranslations("toasts");
+  const fe = useFriendlyError();
   const { role, theme } = useRoleTheme();
   const user = useAuth((s) => s.user);
   const activeMode = useAuth((s) => s.activeMode);
@@ -65,14 +70,17 @@ export default function ProfilePage() {
       clearSession();
       router.replace("/");
     },
+    onError: (e) => toastError(fe(extractError(e))),
   });
 
   const logoutAllMutation = useMutation({
     mutationFn: logoutAll,
     onSuccess: () => {
       clearSession();
+      toastSuccess(tToasts("logout_all"));
       router.replace("/");
     },
+    onError: (e) => toastError(fe(extractError(e))),
   });
 
   const exportMutation = useMutation({
@@ -85,6 +93,7 @@ export default function ProfilePage() {
       a.click();
       URL.revokeObjectURL(url);
     },
+    onError: (e) => toastError(fe(extractError(e))),
   });
 
   const points = (user as { loyaltyPoints?: number } | null)?.loyaltyPoints ?? 0;

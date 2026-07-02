@@ -5,6 +5,9 @@ import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-q
 import { useTranslations } from "next-intl";
 import { CheckCheck, CheckCircle, Inbox, MessageCircle } from "lucide-react";
 import { getNotifications, markNotificationRead } from "@/lib/api/notifications";
+import { extractError } from "@/lib/api/client";
+import { useFriendlyError } from "@/lib/hooks/use-api-error";
+import { toastError } from "@/components/layout/quick-toast";
 import { NotificationItem } from "@/components/features/notifications/notification-item";
 import { useAuth } from "@/store/auth";
 import { SectionLabel, Spinner, Switch } from "@/components/ui";
@@ -63,6 +66,7 @@ function isToday(iso: string): boolean {
 
 export default function NotificationsPage() {
   const t = useTranslations("notifications");
+  const fe = useFriendlyError();
   const queryClient = useQueryClient();
   const userId = useAuth((s) => s.user?.id);
 
@@ -129,6 +133,7 @@ export default function NotificationsPage() {
       await Promise.all(unread.map((n) => markNotificationRead(n.id)));
     },
     onSuccess: () => void queryClient.invalidateQueries({ queryKey: ["notifications"] }),
+    onError: (e) => toastError(fe(extractError(e))),
   });
 
   const lastRef = useCallback(

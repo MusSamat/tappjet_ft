@@ -11,6 +11,7 @@ import {
   type Booking,
 } from "@/lib/api/bookings";
 import { Button, DriverAvatar, StatusBadge } from "@/components/ui";
+import { toastSuccess } from "@/components/layout/quick-toast";
 import { formatDepartureLabel } from "@/lib/utils/date";
 import { useLocale, useTranslations } from "next-intl";
 import type { Locale } from "@/i18n.config";
@@ -55,6 +56,7 @@ function ExpiresCountdown({ expiresAt }: { expiresAt: string }) {
 
 export function BookingCard({ booking, role }: Props) {
   const t = useTranslations("booking_card");
+  const tToasts = useTranslations("toasts");
   const qc = useQueryClient();
   const locale = useLocale() as Locale;
   const trip = booking.trip as BookingTrip | undefined;
@@ -65,15 +67,24 @@ export function BookingCard({ booking, role }: Props) {
 
   const acceptMut = useMutation({
     mutationFn: () => acceptBooking(booking.id!),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["bookings"] }),
+    onSuccess: () => {
+      toastSuccess(tToasts("booking_accepted"));
+      void qc.invalidateQueries({ queryKey: ["bookings"] });
+    },
   });
   const rejectMut = useMutation({
     mutationFn: () => rejectBooking(booking.id!),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["bookings"] }),
+    onSuccess: () => {
+      toastSuccess(tToasts("booking_rejected"));
+      void qc.invalidateQueries({ queryKey: ["bookings"] });
+    },
   });
   const cancelMut = useMutation({
     mutationFn: () => cancelBooking(booking.id!),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["bookings"] }),
+    onSuccess: () => {
+      toastSuccess(tToasts("booking_cancelled"));
+      void qc.invalidateQueries({ queryKey: ["bookings"] });
+    },
   });
 
   const canAcceptReject = role === "driver" && status === "pending";

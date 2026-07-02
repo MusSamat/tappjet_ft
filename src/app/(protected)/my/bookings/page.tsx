@@ -15,6 +15,9 @@ import {
 } from "@/lib/api/bookings";
 import { listMyTrips } from "@/lib/api/my-trips";
 import { getPendingRatings, type PendingRating } from "@/lib/api/ratings";
+import { extractError } from "@/lib/api/client";
+import { useFriendlyError } from "@/lib/hooks/use-api-error";
+import { toastSuccess, toastError } from "@/components/layout/quick-toast";
 import { RateModal } from "@/components/features/ratings/rate-modal";
 import { useUiRole } from "@/lib/hooks/use-role-colors";
 import { ROLE_THEME } from "@/lib/role-colors";
@@ -73,6 +76,8 @@ const ROLE_ICON = { guest: Eye, passenger: User, driver: CarFront } as const;
 export default function MyBookingsPage() {
   const tMy = useTranslations("my");
   const tRoles = useTranslations("roles");
+  const tToasts = useTranslations("toasts");
+  const fe = useFriendlyError();
   const role = useUiRole();
   const theme = ROLE_THEME[role];
   const isDriver = role === "driver";
@@ -135,32 +140,46 @@ export default function MyBookingsPage() {
 
   const acceptMut = useMutation({
     mutationFn: acceptBooking,
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["bookings"] }),
+    onSuccess: () => {
+      toastSuccess(tToasts("booking_accepted"));
+      void qc.invalidateQueries({ queryKey: ["bookings"] });
+    },
+    onError: (e) => toastError(fe(extractError(e))),
   });
   const rejectMut = useMutation({
     mutationFn: (id: string) => rejectBooking(id),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["bookings"] }),
+    onSuccess: () => {
+      toastSuccess(tToasts("booking_rejected"));
+      void qc.invalidateQueries({ queryKey: ["bookings"] });
+    },
+    onError: (e) => toastError(fe(extractError(e))),
   });
   const cancelMut = useMutation({
     mutationFn: (id: string) => cancelBooking(id),
     onSuccess: () => {
       setCancelTarget(null);
+      toastSuccess(tToasts("booking_cancelled"));
       void qc.invalidateQueries({ queryKey: ["bookings"] });
     },
+    onError: (e) => toastError(fe(extractError(e))),
   });
   const completeMut = useMutation({
     mutationFn: (id: string) => completeTrip(id),
     onSuccess: () => {
+      toastSuccess(tToasts("trip_completed"));
       void qc.invalidateQueries({ queryKey: ["trips", "my"] });
       void qc.invalidateQueries({ queryKey: ["bookings"] });
     },
+    onError: (e) => toastError(fe(extractError(e))),
   });
   const cancelTripMut = useMutation({
     mutationFn: ({ id, reason }: { id: string; reason?: string }) => cancelTrip(id, reason),
     onSuccess: () => {
       setCancelTripTarget(null);
+      toastSuccess(tToasts("trip_cancelled"));
       void qc.invalidateQueries({ queryKey: ["trips", "my"] });
     },
+    onError: (e) => toastError(fe(extractError(e))),
   });
 
   const [showConfetti, setShowConfetti] = useState(false);

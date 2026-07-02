@@ -7,6 +7,9 @@ import { useTranslations } from "next-intl";
 import { MessageCircle, Star, X, Phone } from "lucide-react";
 import { listMyBookings, cancelBooking, type Booking } from "@/lib/api/bookings";
 import { getPendingRatings } from "@/lib/api/ratings";
+import { extractError } from "@/lib/api/client";
+import { useFriendlyError } from "@/lib/hooks/use-api-error";
+import { toastSuccess, toastError } from "@/components/layout/quick-toast";
 import { cn } from "@/lib/utils/cn";
 import { Spinner } from "@/components/ui";
 import { formatPrice } from "@/lib/utils/date";
@@ -61,6 +64,8 @@ function BookView({ trip }: { trip: TripDetail }) {
 
 export function PassengerPanel({ trip, tripId }: { trip: TripDetail; tripId: string }) {
   const t = useTranslations("trip_actions");
+  const tToasts = useTranslations("toasts");
+  const fe = useFriendlyError();
   const qc = useQueryClient();
 
   const STATUS_CFG: Record<string, { label: string; color: string; bg: string; dot: string }> = {
@@ -97,10 +102,12 @@ export function PassengerPanel({ trip, tripId }: { trip: TripDetail; tripId: str
     mutationFn: ({ id, reasons }: { id: string; reasons?: string[] }) =>
       cancelBooking(id, reasons),
     onSuccess: () => {
+      toastSuccess(tToasts("booking_cancelled"));
       qc.invalidateQueries({ queryKey: ["bookings"] });
       setCancelOpen(false);
       setCancelReasons([]);
     },
+    onError: (e) => toastError(fe(extractError(e))),
   });
 
   if (isLoading) {

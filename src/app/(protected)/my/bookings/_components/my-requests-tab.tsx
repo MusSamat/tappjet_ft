@@ -17,6 +17,7 @@ import {
 } from "@/lib/api/passenger-requests";
 import { extractError } from "@/lib/api/client";
 import { useFriendlyError } from "@/lib/hooks/use-api-error";
+import { toastSuccess, toastError } from "@/components/layout/quick-toast";
 import { RequestCard } from "@/components/features/passenger-requests/request-card";
 import { DriverAvatar } from "@/components/ui/driver-avatar";
 import { Spinner } from "@/components/ui";
@@ -34,22 +35,26 @@ function OfferCard({
 }) {
   const qc = useQueryClient();
   const t = useTranslations("requests.my");
+  const tToasts = useTranslations("toasts");
   const fe = useFriendlyError();
-  const [error, setError] = useState<string | null>(null);
 
   const acceptMut = useMutation({
     mutationFn: () => acceptRequestResponse(requestId, response.id),
     onSuccess: ({ bookingId }) => {
+      toastSuccess(tToasts("offer_accepted"));
       void qc.invalidateQueries({ queryKey: ["passenger-requests", "my"] });
       onAccepted(bookingId);
     },
-    onError: (e) => setError(fe(extractError(e))),
+    onError: (e) => toastError(fe(extractError(e))),
   });
 
   const declineMut = useMutation({
     mutationFn: () => declineRequestResponse(requestId, response.id),
-    onSuccess: () => void qc.invalidateQueries({ queryKey: ["request-responses", requestId] }),
-    onError: (e) => setError(fe(extractError(e))),
+    onSuccess: () => {
+      toastSuccess(tToasts("offer_declined"));
+      void qc.invalidateQueries({ queryKey: ["request-responses", requestId] });
+    },
+    onError: (e) => toastError(fe(extractError(e))),
   });
 
   const isPending = response.status === "pending";
@@ -93,7 +98,7 @@ function OfferCard({
             <button
               type="button"
               disabled={acceptMut.isPending || declineMut.isPending}
-              onClick={() => { setError(null); acceptMut.mutate(); }}
+              onClick={() => acceptMut.mutate()}
               className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-600 text-white hover:bg-brand-700 disabled:opacity-40 transition-colors"
               aria-label={t("accept_aria")}
             >
@@ -102,7 +107,7 @@ function OfferCard({
             <button
               type="button"
               disabled={acceptMut.isPending || declineMut.isPending}
-              onClick={() => { setError(null); declineMut.mutate(); }}
+              onClick={() => declineMut.mutate()}
               className="flex h-8 w-8 items-center justify-center rounded-full border border-ink-200 bg-white text-ink-500 hover:border-coral-300 hover:text-coral-600 disabled:opacity-40 transition-colors"
               aria-label={t("reject_aria")}
             >
@@ -121,7 +126,6 @@ function OfferCard({
           </span>
         )}
       </div>
-      {error && <p className="mt-2 text-[12px] font-semibold text-coral-600">{error}</p>}
     </div>
   );
 }
@@ -203,6 +207,8 @@ function RequestWithOffers({
 export function MyRequestsTab() {
   const qc = useQueryClient();
   const t = useTranslations("requests.my");
+  const tToasts = useTranslations("toasts");
+  const fe = useFriendlyError();
 
   const { data, isLoading } = useQuery({
     queryKey: ["passenger-requests", "my"],
@@ -211,7 +217,11 @@ export function MyRequestsTab() {
 
   const cancelMut = useMutation({
     mutationFn: cancelPassengerRequest,
-    onSuccess: () => void qc.invalidateQueries({ queryKey: ["passenger-requests", "my"] }),
+    onSuccess: () => {
+      toastSuccess(tToasts("request_cancelled"));
+      void qc.invalidateQueries({ queryKey: ["passenger-requests", "my"] });
+    },
+    onError: (e) => toastError(fe(extractError(e))),
   });
 
   const requests = data?.data ?? [];

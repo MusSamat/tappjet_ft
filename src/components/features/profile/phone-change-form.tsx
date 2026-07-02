@@ -5,6 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { changePhone, confirmPhoneChange } from "@/lib/api/profile";
 import { useAuth } from "@/store/auth";
+import { toastSuccess } from "@/components/layout/quick-toast";
 import { Button, Label, OtpInput, PasswordInput, PhoneInput, Spinner } from "@/components/ui";
 import type { OtpInputHandle } from "@/components/ui/otp-input";
 import { useCountdown } from "@/lib/hooks/use-countdown";
@@ -13,6 +14,7 @@ type Step = "idle" | "otp";
 
 export function PhoneChangeForm() {
   const t = useTranslations("profile_forms");
+  const tToasts = useTranslations("toasts");
   const updateUser = useAuth((s) => s.updateUser);
   const [step, setStep] = useState<Step>("idle");
   const [newPhone, setNewPhone] = useState("");
@@ -35,6 +37,7 @@ export function PhoneChangeForm() {
     mutationFn: () => confirmPhoneChange(newPhone, otp),
     onSuccess: (updated) => {
       updateUser({ phone: updated.phone });
+      toastSuccess(tToasts("phone_updated"));
       setStep("idle");
       setNewPhone("");
       setPassword("");
