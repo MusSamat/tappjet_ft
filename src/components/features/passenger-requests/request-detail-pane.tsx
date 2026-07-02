@@ -9,7 +9,7 @@ import { DriverAvatar } from "@/components/ui/driver-avatar";
 import { LikeButton } from "@/components/ui/like-button";
 import { ListingMetrics } from "@/components/ui/listing-metrics";
 import { ListingTypeBadge } from "@/components/ui/listing-type-badge";
-import { SeatStack } from "@/components/ui/seat-stack";
+import { SeatStack } from "@/components/ui/seat-meter";
 import { useAuth } from "@/store/auth";
 import { useRecordView } from "@/lib/hooks/use-record-view";
 import { RespondModal } from "./_components/respond-modal";

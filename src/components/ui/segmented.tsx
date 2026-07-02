@@ -7,29 +7,41 @@ export interface SegmentOption<T extends string> {
   value: T;
   label: string;
   icon?: ReactNode;
+  /** coral unread-count badge inside the segment */
+  count?: number;
 }
 
 interface SegmentedProps<T extends string> {
   options: SegmentOption<T>[];
   value: T;
   onChange: (value: T) => void;
-  /** active pill colour */
+  /** accent for the active segment text */
   tone?: "brand" | "grape";
+  /** explicit active-text classes (overrides `tone`), e.g. ROLE_THEME[role].textOn */
+  textOn?: string;
   className?: string;
 }
 
-/** Segmented control (e.g. Поездки/Заявки, Пассажир/Водитель). Active = filled pill. */
+// design-spec §1.7 segmented control — literal maps, no interpolation
+const TONE_ON: Record<"brand" | "grape", string> = {
+  brand: "text-brand-700 dark:text-brand-300",
+  grape: "text-grape-600 dark:text-grape-300",
+};
+
+/** Segmented control (feed tabs, «Мои» tabs, role switch). Active = white card. */
 export function Segmented<T extends string>({
   options,
   value,
   onChange,
   tone = "brand",
+  textOn,
   className,
 }: SegmentedProps<T>) {
-  const activeCls =
-    tone === "grape" ? "bg-grape-500 text-white" : "bg-brand-600 text-white";
   return (
-    <div className={cn("flex gap-1 rounded-2xl bg-ink-100 p-1", className)} role="tablist">
+    <div
+      className={cn("flex gap-1 rounded-2xl bg-ink-100 p-1 dark:bg-ink-800", className)}
+      role="tablist"
+    >
       {options.map((opt) => {
         const active = opt.value === value;
         return (
@@ -40,12 +52,19 @@ export function Segmented<T extends string>({
             aria-selected={active}
             onClick={() => onChange(opt.value)}
             className={cn(
-              "flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2 text-[13px] font-extrabold transition-colors",
-              active ? activeCls : "text-ink-500 hover:text-ink-700",
+              "flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2 text-[12px] transition-colors",
+              active
+                ? cn("bg-white font-900 shadow-sm dark:bg-ink-900", textOn ?? TONE_ON[tone])
+                : "font-800 text-ink-500 hover:text-ink-700 dark:hover:text-ink-300",
             )}
           >
             {opt.icon}
             {opt.label}
+            {typeof opt.count === "number" && opt.count > 0 && (
+              <span className="rounded-full bg-coral-500 px-1.5 text-[10px] font-900 text-white">
+                {opt.count}
+              </span>
+            )}
           </button>
         );
       })}

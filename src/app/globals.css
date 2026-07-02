@@ -140,11 +140,4 @@
   .tabs-scroll::-webkit-scrollbar {
     display: none;
   }
-
-  /* Seat people — white halo so overlapping outline icons read cleanly.
-     Legacy: removed with seat-stack → seat-meter rewrite (Phase B). */
-  .seat {
-    filter: drop-shadow(1.5px 0 0 #fff) drop-shadow(-1.5px 0 0 #fff)
-      drop-shadow(0 1.5px 0 #fff) drop-shadow(0 -1.5px 0 #fff);
-  }
 }

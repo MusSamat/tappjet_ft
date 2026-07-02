@@ -7,7 +7,7 @@ import { DriverAvatar } from "@/components/ui/driver-avatar";
 import { LikeButton } from "@/components/ui/like-button";
 import { ListingMetrics } from "@/components/ui/listing-metrics";
 import { ListingTypeBadge } from "@/components/ui/listing-type-badge";
-import { SeatStack } from "@/components/ui/seat-stack";
+import { SeatStack } from "@/components/ui/seat-meter";
 import { cn } from "@/lib/utils/cn";
 
 interface RequestCardProps {

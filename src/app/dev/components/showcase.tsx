@@ -1,6 +1,7 @@
 "use client";
 
-import { MapPin, Flag, Clock, Users, Search, Circle, SlidersHorizontal, Lock, LogOut, Zap } from "lucide-react";
+import { useState } from "react";
+import { MapPin, Flag, Clock, Users, Search, Circle, SlidersHorizontal, Lock, LogOut, Zap, CarFront, Hand } from "lucide-react";
 import {
   Badge,
   Chip,
@@ -29,7 +30,12 @@ import {
   PendingBadge,
   ProgressBar,
   RatingStars,
+  SeatMeter,
   SeatsBadge,
+  SectionLabel,
+  OptionalTag,
+  Segmented,
+  Switch,
   Skeleton,
   Spinner,
   StatusDot,
@@ -90,6 +96,25 @@ function Section({ title, children }: { title: string; children: React.ReactNode
       <div className="flex flex-wrap items-start gap-4">{children}</div>
     </section>
   );
+}
+
+function SegmentedDemo() {
+  const [tab, setTab] = useState<"trips" | "requests">("trips");
+  return (
+    <Segmented
+      value={tab}
+      onChange={setTab}
+      options={[
+        { value: "trips", label: "Найти поездку", icon: <CarFront className="h-4 w-4" /> },
+        { value: "requests", label: "Найти пассажира", icon: <Hand className="h-4 w-4" />, count: 2 },
+      ]}
+    />
+  );
+}
+
+function SwitchDemo() {
+  const [on, setOn] = useState(true);
+  return <Switch checked={on} onCheckedChange={setOn} aria-label="Демо" />;
 }
 
 /** Renders the same demo twice — light panel + `class="dark"` panel. */
@@ -268,15 +293,55 @@ export function DesignSystemShowcase() {
         <StatusDot status="cancelled" label="Отменено" />
       </Section>
 
+      <Section title="SeatMeter">
+        <Dual>
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center gap-6">
+              <SeatMeter free={2} total={4} size="sm" showCount />
+              <SeatMeter free={1} total={4} size="sm" showCount />
+              <SeatMeter free={0} total={4} size="sm" showCount />
+            </div>
+            <div className="flex items-center gap-6">
+              <SeatMeter free={2} total={4} size="md" showCount />
+              <SeatMeter free={3} total={4} size="lg" showCount />
+            </div>
+          </div>
+        </Dual>
+      </Section>
+
+      <Section title="Segmented · Switch · SectionLabel">
+        <Dual>
+          <div className="flex w-full max-w-md flex-col gap-4">
+            <SegmentedDemo />
+            <div className="flex items-center gap-4">
+              <Switch checked aria-label="Вкл" />
+              <Switch checked={false} aria-label="Выкл" />
+              <SwitchDemo />
+            </div>
+            <div className="flex items-center gap-2">
+              <SectionLabel>Время выезда</SectionLabel>
+              <OptionalTag />
+            </div>
+            <SectionLabel size="xs">Маршрут (xs)</SectionLabel>
+          </div>
+        </Dual>
+      </Section>
+
       <Section title="DriverAvatar · RatingStars">
-        <DriverAvatar name="Асан Кадыров" size="sm" />
-        <DriverAvatar name="Нурия Токтосунова" size="md" />
-        <DriverAvatar name="Бакыт Осмонов" size="lg" />
-        <div className="flex flex-col gap-1">
-          <RatingStars value={4.8} showValue />
-          <RatingStars value={3.5} showValue />
-          <RatingStars value={5} showValue />
-        </div>
+        <Dual>
+          <div className="flex flex-wrap items-center gap-4">
+            <DriverAvatar name="Асан Кадыров" size="xs" />
+            <DriverAvatar name="Асан Кадыров" size="sm" />
+            <DriverAvatar name="Нурия Токтосунова" size="md" verified />
+            <DriverAvatar name="Бакыт Осмонов" size="lg" shape="square" />
+            <DriverAvatar name="Нурлан Осмонов" size="xl" shape="square" verified />
+            <div className="flex flex-col gap-1">
+              <RatingStars value={4.8} showValue />
+              <RatingStars value={3.5} showValue />
+              <RatingStars value={5} showValue />
+            </div>
+          </div>
+        </Dual>
       </Section>
 
       <Section title="NotifCard">
