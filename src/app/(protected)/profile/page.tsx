@@ -1,42 +1,56 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState, type ReactNode } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Award, ChevronRight, Settings, Shield } from "lucide-react";
+import {
+  BadgeCheck,
+  CarFront,
+  ChevronRight,
+  Gift,
+  History,
+  Quote,
+  Smartphone,
+  Star,
+  User as UserIcon,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
-import { logout } from "@/lib/api/auth";
+import { logout, logoutAll } from "@/lib/api/auth";
 import { exportData } from "@/lib/api/profile";
 import { getUserRatings } from "@/lib/api/users";
-import { getDriverStats } from "@/lib/api/drivers";
 import { useAuth } from "@/store/auth";
-import { useRouter } from "next/navigation";
+import { useRoleTheme } from "@/lib/hooks/use-role-colors";
 import { AvatarUploader } from "@/components/features/profile/avatar-uploader";
-import { RoleSwitcher } from "@/components/features/role-mode/role-switcher";
-import { Container, RatingStars } from "@/components/ui";
+import { AddPhoneModal } from "@/components/features/auth/add-phone-modal";
 import { cn } from "@/lib/utils/cn";
-import { useState } from "react";
-import { LoyaltyTierBadge } from "./_components/loyalty-tier-badge";
-import { StatBlock } from "./_components/stat-block";
 import { ReviewCard, ReviewCardSkeleton } from "./_components/review-card";
 import { ProfileCompletion } from "./_components/profile-completion";
 import { SettingsTab } from "./_components/settings-tab";
-import { AddPhoneModal } from "@/components/features/auth/add-phone-modal";
 
 type Tab = "about" | "reviews" | "history" | "settings";
+const TAB_ORDER: Tab[] = ["about", "reviews", "history", "settings"];
+
+const FAB_TINT: Record<string, string> = {
+  driver: "bg-brand-600",
+  passenger: "bg-grape-600",
+  guest: "bg-ink-600",
+};
 
 export default function ProfilePage() {
   const t = useTranslations("profile");
+  const { role, theme } = useRoleTheme();
   const user = useAuth((s) => s.user);
+  const activeMode = useAuth((s) => s.activeMode);
+  const setActiveMode = useAuth((s) => s.setActiveMode);
   const clearSession = useAuth((s) => s.clearSession);
   const router = useRouter();
   const [tab, setTab] = useState<Tab>("about");
   const [showAddPhone, setShowAddPhone] = useState(false);
 
-  const tierLabel = (tier: string) =>
-    tier === "novice" ? t("tier_novice") :
-    tier === "traveler" ? t("tier_traveler") :
-    tier === "expert" ? t("tier_expert") :
-    tier === "elite" ? t("tier_elite") : tier;
+  const isDriver = !!user?.roles?.includes("driver");
+  const joinYear = user?.createdAt ? new Date(user.createdAt).getFullYear() : null;
+  const fabClass = FAB_TINT[role] ?? FAB_TINT.passenger;
 
   const { data: ratingsData, isLoading: ratingsLoading } = useQuery({
     queryKey: ["ratings", user?.id],
@@ -47,6 +61,14 @@ export default function ProfilePage() {
 
   const logoutMutation = useMutation({
     mutationFn: logout,
+    onSuccess: () => {
+      clearSession();
+      router.replace("/");
+    },
+  });
+
+  const logoutAllMutation = useMutation({
+    mutationFn: logoutAll,
     onSuccess: () => {
       clearSession();
       router.replace("/");
@@ -65,211 +87,330 @@ export default function ProfilePage() {
     },
   });
 
-  const isDriver = user?.roles?.includes("driver");
+  const points = (user as { loyaltyPoints?: number } | null)?.loyaltyPoints ?? 0;
+  const bio = (user as { bio?: string | null } | null)?.bio;
 
-  const { data: driverStats } = useQuery({
-    queryKey: ["driver", "stats"],
-    queryFn: getDriverStats,
-    enabled: !!isDriver && tab === "about",
-    staleTime: 120_000,
-  });
+  // Role switch: driver toggles mode; passenger picking «Водитель» → verification.
+  const pickDriver = () => (isDriver ? setActiveMode("driver") : router.push("/profile/driver"));
 
-  const joinYear = user?.createdAt
-    ? new Date(user.createdAt).getFullYear()
-    : null;
+  const tabLabel: Record<Tab, string> = {
+    about: t("tab_about"),
+    reviews: ratingsData ? t("tab_reviews_count", { n: ratingsData.data.length }) : t("tab_reviews"),
+    history: t("tab_history"),
+    settings: t("tab_settings"),
+  };
+
+  const roleSwitch = (
+    <div className="flex gap-1 rounded-2xl bg-white p-1 shadow-soft ring-1 ring-ink-100 dark:bg-ink-900 dark:ring-ink-800">
+      <button
+        type="button"
+        onClick={() => setActiveMode("passenger")}
+        className={cn(
+          "flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2 text-[13px] transition-colors",
+          activeMode === "passenger"
+            ? "bg-grape-500 font-900 text-white"
+            : "font-800 text-ink-500 dark:text-ink-400",
+        )}
+      >
+        <UserIcon className="h-4 w-4" aria-hidden="true" />
+        {t("role_passenger")}
+      </button>
+      <button
+        type="button"
+        onClick={pickDriver}
+        className={cn(
+          "flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2 text-[13px] transition-colors",
+          activeMode === "driver"
+            ? "bg-brand-600 font-900 text-white"
+            : "font-800 text-ink-500 dark:text-ink-400",
+        )}
+      >
+        <CarFront className="h-4 w-4" aria-hidden="true" />
+        {t("role_driver")}
+      </button>
+    </div>
+  );
+
+  const aboutContent = (
+    <div className="space-y-3.5">
+      {roleSwitch}
+
+      {!isDriver && (
+        <Link
+          href="/profile/driver"
+          className="flex w-full items-center gap-3 rounded-3xl bg-brand-600 px-4 py-3.5 text-white shadow-brandcta"
+        >
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white/20">
+            <CarFront className="h-5 w-5" aria-hidden="true" />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-[14px] font-900">{t("become_driver_title")}</span>
+            <span className="block text-[11px] font-700 text-white/80">{t("become_driver_sub")}</span>
+          </span>
+          <ChevronRight className="h-5 w-5 shrink-0" aria-hidden="true" />
+        </Link>
+      )}
+
+      <ProfileCompletion user={user} isDriver={isDriver} />
+
+      {/* Bio */}
+      <div className="rounded-3xl bg-white p-4 shadow-card dark:bg-ink-900">
+        <div className="mb-2 flex items-center gap-2">
+          <Quote className="h-4 w-4 text-brand-600" aria-hidden="true" />
+          <span className="text-[13px] font-900 text-ink-900 dark:text-white">{t("bio_title")}</span>
+        </div>
+        <p className="text-[13px] font-600 leading-relaxed text-ink-500 dark:text-ink-400">
+          {bio || t("bio_placeholder")}
+        </p>
+      </div>
+
+      {/* Quick links */}
+      <div className="divide-y divide-ink-100 overflow-hidden rounded-3xl bg-white shadow-card dark:divide-ink-800 dark:bg-ink-900">
+        <Link href="/loyalty" className="flex items-center gap-3 px-4 py-3.5">
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent-100 text-accent-600 dark:bg-accent-500/15">
+            <Gift className="h-4 w-4" aria-hidden="true" />
+          </span>
+          <span className="flex-1 text-[14px] font-800 text-ink-800 dark:text-ink-100">{t("quick_bonuses")}</span>
+          <span className="rounded-full bg-accent-100 px-2 py-0.5 text-[11px] font-900 text-accent-700 dark:bg-accent-500/15">
+            {points}
+          </span>
+          <ChevronRight className="h-4 w-4 text-ink-300" aria-hidden="true" />
+        </Link>
+      </div>
+    </div>
+  );
+
+  const reviewsContent = (
+    <div className="flex flex-col gap-3">
+      {ratingsLoading ? (
+        Array.from({ length: 3 }).map((_, i) => <ReviewCardSkeleton key={i} />)
+      ) : ratingsData?.data.length === 0 ? (
+        <div className="rounded-3xl bg-white p-10 text-center shadow-card dark:bg-ink-900">
+          <p className="text-[17px] font-900 text-ink-900 dark:text-white">{t("no_reviews")}</p>
+          <p className="mt-2 text-[13px] font-700 text-ink-500">{t("no_reviews_hint")}</p>
+        </div>
+      ) : (
+        ratingsData?.data.map((r) => <ReviewCard key={r.id} review={r} />)
+      )}
+    </div>
+  );
+
+  const historyContent = (
+    <div className="rounded-3xl bg-white p-10 text-center shadow-card dark:bg-ink-900">
+      <p className="text-[13px] font-700 text-ink-500">{t("history_hint")}</p>
+    </div>
+  );
+
+  const settingsContent = (
+    <SettingsTab
+      isDriver={isDriver}
+      exportMutation={exportMutation}
+      logoutMutation={logoutMutation}
+      logoutAllMutation={logoutAllMutation}
+    />
+  );
+
+  const content: Record<Tab, ReactNode> = {
+    about: aboutContent,
+    reviews: reviewsContent,
+    history: historyContent,
+    settings: settingsContent,
+  };
+
+  const statStrip = (
+    <div className="mt-3 flex items-stretch rounded-2xl bg-ink-50 py-2.5 dark:bg-ink-800/60">
+      <div className="flex flex-1 flex-col items-center">
+        <span className="text-[16px] font-900 leading-none text-ink-900 dark:text-white">{user?.ratingCount ?? 0}</span>
+        <span className="mt-1 text-[10px] font-700 text-ink-400">{t("stat_reviews")}</span>
+      </div>
+      <span className="w-px bg-ink-200 dark:bg-ink-700" />
+      <div className="flex flex-1 flex-col items-center">
+        <span className="text-[16px] font-900 leading-none text-accent-600">
+          {user?.rating != null ? user.rating.toFixed(1) : "—"}
+        </span>
+        <span className="mt-1 text-[10px] font-700 text-ink-400">{t("stat_rating")}</span>
+      </div>
+      <span className="w-px bg-ink-200 dark:bg-ink-700" />
+      <div className="flex flex-1 flex-col items-center">
+        <span className="text-[16px] font-900 leading-none text-coral-500">{points}</span>
+        <span className="mt-1 text-[10px] font-700 text-ink-400">{t("stat_points")}</span>
+      </div>
+    </div>
+  );
+
+  const trustChips = (
+    <div className="mt-3 flex flex-wrap gap-1.5">
+      <span className="inline-flex items-center gap-1 rounded-full bg-brand-50 px-2.5 py-1 text-[11px] font-800 text-brand-700 dark:bg-brand-500/15 dark:text-brand-300">
+        <Smartphone className="h-3 w-3" aria-hidden="true" />
+        {t("chip_phone")}
+      </span>
+      {isDriver && (
+        <>
+          <span className="inline-flex items-center gap-1 rounded-full bg-brand-50 px-2.5 py-1 text-[11px] font-800 text-brand-700 dark:bg-brand-500/15 dark:text-brand-300">
+            <BadgeCheck className="h-3 w-3" aria-hidden="true" />
+            {t("chip_docs")}
+          </span>
+          <span className="inline-flex items-center gap-1 rounded-full bg-brand-50 px-2.5 py-1 text-[11px] font-800 text-brand-700 dark:bg-brand-500/15 dark:text-brand-300">
+            <CarFront className="h-3 w-3" aria-hidden="true" />
+            {t("chip_car")}
+          </span>
+        </>
+      )}
+      {user?.telegramLinked && (
+        <span className="inline-flex items-center gap-1 rounded-full bg-brand-50 px-2.5 py-1 text-[11px] font-800 text-brand-700 dark:bg-brand-500/15 dark:text-brand-300">
+          {t("chip_telegram")}
+        </span>
+      )}
+    </div>
+  );
 
   return (
-    <Container className="py-8">
-      {!user?.phoneVerified && (
-        <div className="mb-4 flex items-center justify-between rounded-2xl border border-accent-200 bg-accent-50 px-5 py-4">
-          <div>
-            <p className="text-[14px] font-bold text-accent-700">Добавьте номер телефона</p>
-            <p className="text-[12px] font-semibold text-accent-700">Нужен для бронирования и связи с водителями</p>
-          </div>
+    <div className="flex min-h-[calc(100vh-64px)] flex-col bg-ink-50 dark:bg-ink-950">
+      <div className="mx-auto w-full max-w-[760px] space-y-3.5 p-3.5 pt-11 md:p-6 lg:hidden">
+        {!user?.phoneVerified && (
           <button
             type="button"
             onClick={() => setShowAddPhone(true)}
-            className="ml-4 shrink-0 rounded-2xl bg-accent-500 px-4 py-2 text-[13px] font-bold text-white hover:bg-accent-600"
+            className="flex w-full items-center justify-between rounded-2xl bg-accent-50 px-4 py-3 text-left ring-1 ring-accent-200 dark:bg-accent-500/10 dark:ring-accent-500/20"
           >
-            Добавить
+            <span>
+              <span className="block text-[13px] font-900 text-accent-700">{t("add_phone_title")}</span>
+              <span className="block text-[11px] font-700 text-accent-700/80">{t("add_phone_sub")}</span>
+            </span>
+            <span className="rounded-full bg-accent-500 px-3 py-1.5 text-[12px] font-900 text-accent-ink shadow-cta">
+              {t("add_phone_cta")}
+            </span>
           </button>
-        </div>
-      )}
+        )}
 
-      <AddPhoneModal
-        open={showAddPhone}
-        onClose={() => setShowAddPhone(false)}
-      />
-
-      <div className="mb-4 rounded-2xl border border-ink-100 bg-white p-6">
-        <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-start sm:gap-6">
-          <AvatarUploader />
-
-          <div className="flex flex-1 flex-col items-center gap-2 sm:items-start">
-            <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-[22px] font-extrabold text-ink-900">{user?.name}</h1>
-              {user?.phoneVerified && (
-                <span className="flex items-center gap-1 rounded-full bg-brand-50 px-2.5 py-0.5 text-[11px] font-bold text-brand-700">
-                  <Shield className="h-3 w-3" aria-hidden="true" />
-                  {t("verified_badge")}
-                </span>
-              )}
-            </div>
-
-            {user?.rating != null && (
-              <div className="flex items-center gap-2">
-                <RatingStars value={user.rating} />
-                <span className="text-[14px] font-bold text-ink-700">{user.rating.toFixed(1)}</span>
-                <span className="text-[13px] text-ink-400">{t("rating_count", { n: user.ratingCount })}</span>
+        {/* Hero card */}
+        <div className="rounded-4xl bg-white p-4 shadow-card dark:bg-ink-900">
+          <div className="flex items-start gap-3">
+            <AvatarUploader
+              sizeClass="h-16 w-16"
+              shapeClass="rounded-2xl"
+              tintClass={theme.avatarTint}
+              fabClass={fabClass}
+              fontClass="text-[21px]"
+            />
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-1">
+                <h1 className="truncate text-[17px] font-900 text-ink-900 dark:text-white">{user?.name}</h1>
+                {isDriver && <BadgeCheck className="h-[18px] w-[18px] shrink-0 text-brand-600" aria-hidden="true" />}
               </div>
-            )}
-
-            <div className="flex flex-wrap gap-2">
-              {user?.phoneVerified && (
-                <span className="rounded-full border border-ink-200 px-2.5 py-0.5 text-[11px] font-semibold text-ink-600">
-                  {t("badge_phone")}
+              <p className="mt-0.5 text-[12px] font-700 text-ink-400">
+                <span className="text-accent-600">
+                  ★ {user?.rating != null ? user.rating.toFixed(1) : "—"}
                 </span>
-              )}
-              {isDriver && (
-                <span className="rounded-full border border-ink-200 px-2.5 py-0.5 text-[11px] font-semibold text-ink-600">
-                  {t("badge_driver")}
-                </span>
-              )}
-              {user?.telegramLinked && (
-                <span className="rounded-full border border-ink-200 px-2.5 py-0.5 text-[11px] font-semibold text-ink-600">
-                  {t("badge_telegram")}
-                </span>
-              )}
-              {joinYear && (
-                <span className="rounded-full border border-ink-200 px-2.5 py-0.5 text-[11px] font-semibold text-ink-600">
-                  {t("badge_since", { year: joinYear })}
-                </span>
-              )}
-              {user?.loyaltyTier && user.loyaltyTier !== "novice" && (
-                <LoyaltyTierBadge tier={user.loyaltyTier} />
-              )}
+                {" · "}
+                {t("rating_count", { n: user?.ratingCount ?? 0 })}
+                {joinYear ? ` · ${t("badge_since", { year: joinYear })}` : ""}
+              </p>
             </div>
           </div>
-
-          <button
-            type="button"
-            onClick={() => setTab("settings")}
-            className="flex items-center gap-1.5 self-start rounded-2xl border border-ink-200 px-3 py-2 text-[13px] font-semibold text-ink-700 hover:bg-ink-50"
-          >
-            <Settings className="h-4 w-4" aria-hidden="true" />
-            {t("settings_btn")}
-          </button>
+          {trustChips}
+          {statStrip}
         </div>
-      </div>
 
-      {isDriver && (
-        <div className="mb-4 flex items-center justify-between rounded-2xl border border-ink-100 bg-white px-5 py-3 md:hidden">
-          <span className="text-[13px] font-semibold text-ink-600">{t("mode_label")}</span>
-          <RoleSwitcher />
-        </div>
-      )}
-
-      <div className="tabs-scroll mb-4 flex overflow-x-auto border-b border-ink-200">
-        {(["about", "reviews", "history", "settings"] as Tab[]).map((tabKey) => {
-          const labels: Record<Tab, string> = {
-            about: t("tab_about"),
-            reviews: ratingsData ? t("tab_reviews_count", { n: ratingsData.data.length }) : t("tab_reviews"),
-            history: t("tab_history"),
-            settings: t("tab_settings"),
-          };
-          return (
+        {/* Underline tabs */}
+        <div className="tabs-scroll flex gap-5 overflow-x-auto border-b border-ink-100 px-1 dark:border-ink-800">
+          {TAB_ORDER.map((tk) => (
             <button
-              key={tabKey}
+              key={tk}
               type="button"
-              onClick={() => setTab(tabKey)}
+              onClick={() => setTab(tk)}
               className={cn(
-                "flex-shrink-0 border-b-2 px-4 py-2.5 text-[13px] font-bold transition-colors",
-                tab === tabKey
-                  ? "border-brand-600 text-brand-700"
-                  : "border-transparent text-ink-500 hover:text-ink-700",
+                "relative shrink-0 px-1 pb-2.5 text-[13px] font-800",
+                tab === tk ? theme.textOn : "text-ink-400",
               )}
             >
-              {labels[tabKey]}
+              {tabLabel[tk]}
+              {tab === tk && (
+                <span className={cn("absolute -bottom-px left-0 right-0 h-0.5 rounded", theme.tabUnderline)} />
+              )}
             </button>
-          );
-        })}
+          ))}
+        </div>
+
+        {content[tab]}
       </div>
 
-      {tab === "about" && (
-        <div className="flex flex-col gap-4">
-          <ProfileCompletion user={user} isDriver={!!isDriver} />
-          <div className="rounded-2xl border border-ink-100 bg-white p-5">
-            <h2 className="mb-4 text-[15px] font-extrabold text-ink-900">{t("stats_title")}</h2>
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-              <StatBlock value={user?.rating != null ? user.rating.toFixed(1) : "—"} label={t("stat_rating")} />
-              <StatBlock value={String(user?.ratingCount ?? 0)} label={t("stat_reviews")} />
-              <StatBlock value={String(user?.loyaltyPoints ?? 0)} label={t("stat_points")} />
-              {user?.loyaltyTier && <StatBlock value={tierLabel(user.loyaltyTier)} label={t("stat_tier")} />}
-            </div>
-            <Link
-              href="/loyalty"
-              className="mt-4 flex items-center justify-center gap-1 text-[12px] font-bold text-brand-600 hover:text-brand-700"
-            >
-              <Award className="h-3.5 w-3.5" aria-hidden="true" />
-              {t("loyalty_link")}
-              <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
-            </Link>
-          </div>
-
-          {isDriver && driverStats && (
-            <div className="rounded-2xl border border-sky-200 bg-sky-50 p-5">
-              <h2 className="mb-4 text-[15px] font-extrabold text-ink-900">{t("driver_stats_title")}</h2>
-              <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-                <StatBlock value={String(driverStats.totalTrips)} label={t("driver_stat_trips")} />
-                <StatBlock
-                  value={driverStats.rating != null ? driverStats.rating.toFixed(1) : "—"}
-                  label={t("driver_stat_rating")}
-                />
-                <StatBlock value={String(driverStats.ratingCount)} label={t("driver_stat_reviews")} />
-                <StatBlock value={String(driverStats.cancellations30d)} label={t("driver_stat_cancels")} />
+      {/* Desktop — 2-col with vertical nav (§2.7) */}
+      <div className="mx-auto hidden w-full max-w-[1080px] gap-6 p-6 lg:grid lg:grid-cols-[320px_1fr]">
+        <aside className="space-y-4">
+          <div className="overflow-hidden rounded-4xl bg-white shadow-card ring-1 ring-ink-100 dark:bg-ink-900 dark:ring-ink-800">
+            <div className={cn("h-24", theme.bannerGrad)} />
+            <div className="px-5 pb-5">
+              <div className="-mt-12 mb-3">
+                <div className="inline-block rounded-3xl ring-4 ring-white dark:ring-ink-900">
+                  <AvatarUploader
+                    sizeClass="h-24 w-24"
+                    shapeClass="rounded-3xl"
+                    tintClass={theme.avatarTint}
+                    fabClass={fabClass}
+                    fontClass="text-[30px]"
+                  />
+                </div>
               </div>
+              <div className="flex items-center gap-1.5">
+                <h1 className="text-[21px] font-900 text-ink-900 dark:text-white">{user?.name}</h1>
+                {isDriver && <BadgeCheck className="h-[22px] w-[22px] text-brand-600" aria-hidden="true" />}
+              </div>
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                <span className="inline-flex items-center gap-1 rounded-full bg-accent-50 px-2.5 py-1 text-[11px] font-800 text-accent-700 dark:bg-accent-500/15">
+                  <Star className="h-3 w-3 fill-accent-400 text-accent-400" aria-hidden="true" />
+                  {user?.rating != null ? user.rating.toFixed(1) : "—"}
+                </span>
+                {user?.phoneVerified && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-brand-50 px-2.5 py-1 text-[11px] font-800 text-brand-700 dark:bg-brand-500/15 dark:text-brand-300">
+                    <Smartphone className="h-3 w-3" aria-hidden="true" />
+                    {t("chip_verified")}
+                  </span>
+                )}
+                {joinYear && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-ink-100 px-2.5 py-1 text-[11px] font-800 text-ink-500 dark:bg-ink-800">
+                    {t("badge_since", { year: joinYear })}
+                  </span>
+                )}
+              </div>
+              <div className="mt-4">{roleSwitch}</div>
             </div>
-          )}
-
-          <div className="rounded-2xl border border-ink-100 bg-white p-5">
-            <h2 className="mb-3 text-[15px] font-extrabold text-ink-900">{t("bio_title")}</h2>
-            <p className="text-[14px] leading-relaxed text-ink-700">
-              {(user as { bio?: string | null } | null)?.bio || t("bio_placeholder")}
-            </p>
           </div>
-        </div>
-      )}
 
-      {tab === "reviews" && (
-        <div className="flex flex-col gap-3">
-          {ratingsLoading ? (
-            Array.from({ length: 3 }).map((_, i) => <ReviewCardSkeleton key={i} />)
-          ) : ratingsData?.data.length === 0 ? (
-            <div className="rounded-2xl border border-ink-100 bg-white p-10 text-center">
-              <p className="text-[17px] font-bold text-ink-900">{t("no_reviews")}</p>
-              <p className="mt-2 text-[13px] text-ink-500">{t("no_reviews_hint")}</p>
-            </div>
-          ) : (
-            ratingsData?.data.map((r) => <ReviewCard key={r.id} review={r} />)
-          )}
-        </div>
-      )}
+          <nav className="flex flex-col gap-1 rounded-3xl bg-white p-2 shadow-card dark:bg-ink-900">
+            {(
+              [
+                { key: "about", label: t("tab_about"), icon: UserIcon },
+                { key: "reviews", label: t("tab_reviews"), icon: Star },
+                { key: "history", label: t("nav_history"), icon: History },
+                { key: "settings", label: t("nav_settings"), icon: null },
+              ] as { key: Tab; label: string; icon: typeof UserIcon | null }[]
+            ).map(({ key, label, icon: Icon }) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setTab(key)}
+                className={cn(
+                  "flex items-center gap-2 rounded-xl px-4 py-2.5 text-[13px] font-800 transition-colors",
+                  tab === key
+                    ? cn(theme.navPillOn, theme.textOn)
+                    : "text-ink-600 hover:bg-ink-100 dark:text-ink-300 dark:hover:bg-ink-800",
+                )}
+              >
+                {Icon && <Icon className="h-4 w-4" aria-hidden="true" />}
+                {label}
+              </button>
+            ))}
+          </nav>
+        </aside>
 
-      {tab === "history" && (
-        <div className="rounded-2xl border border-ink-100 bg-white p-10 text-center">
-          <p className="text-[13px] font-semibold text-ink-500">
-            {t("history_hint")}
-          </p>
-        </div>
-      )}
+        <section className="space-y-3.5">
+          <h2 className="text-[20px] font-900 text-ink-900 dark:text-white">{tabLabel[tab]}</h2>
+          {content[tab]}
+        </section>
+      </div>
 
-      {tab === "settings" && (
-        <SettingsTab
-          isDriver={!!isDriver}
-          exportMutation={exportMutation}
-          logoutMutation={logoutMutation}
-        />
-      )}
-    </Container>
+      <AddPhoneModal open={showAddPhone} onClose={() => setShowAddPhone(false)} />
+    </div>
   );
 }

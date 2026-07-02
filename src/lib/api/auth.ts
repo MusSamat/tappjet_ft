@@ -131,6 +131,17 @@ export async function logout(): Promise<void> {
   }
 }
 
+// Revoke every refresh token for the caller (all devices). Local session must
+// be cleared by the caller afterwards.
+export async function logoutAll(): Promise<void> {
+  try {
+    await api.post("/auth/logout/all");
+  } finally {
+    setAccessToken(null);
+    clearSessionHint();
+  }
+}
+
 export async function getMe(): Promise<SelfUser> {
   const { data } = await api.get<SelfUser>("/users/me");
   return data;

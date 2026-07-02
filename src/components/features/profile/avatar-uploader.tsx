@@ -47,7 +47,26 @@ async function compressImage(file: File): Promise<File> {
   });
 }
 
-export function AvatarUploader() {
+interface AvatarUploaderProps {
+  /** wrapper size classes, e.g. "h-16 w-16" */
+  sizeClass?: string;
+  /** rounded shape, e.g. "rounded-2xl" (default circle) */
+  shapeClass?: string;
+  /** role-tinted fallback tile (bg + text) */
+  tintClass?: string;
+  /** camera FAB colour, e.g. "bg-brand-600" */
+  fabClass?: string;
+  /** initials font size, e.g. "text-[21px]" */
+  fontClass?: string;
+}
+
+export function AvatarUploader({
+  sizeClass = "h-32 w-32",
+  shapeClass = "rounded-full",
+  tintClass = "bg-brand-100 text-brand-700 dark:bg-brand-500/20 dark:text-brand-200",
+  fabClass = "bg-brand-600",
+  fontClass = "text-[30px]",
+}: AvatarUploaderProps = {}) {
   const user = useAuth((s) => s.user);
   const updateUser = useAuth((s) => s.updateUser);
   const queryClient = useQueryClient();
@@ -87,13 +106,15 @@ export function AvatarUploader() {
   const displaySrc = imgSrc ?? (imgError ? null : normalizeMediaUrl(user?.avatarUrl));
 
   return (
-    <div className="flex flex-col items-center gap-3">
+    <div className="relative shrink-0">
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
         disabled={isPending}
         className={cn(
-          "group relative h-32 w-32 overflow-hidden rounded-full ring-2 ring-brand-500/30 transition hover:ring-brand-500",
+          "group relative overflow-hidden transition",
+          sizeClass,
+          shapeClass,
           isPending && "opacity-70",
         )}
         aria-label="Загрузить фото профиля"
@@ -111,19 +132,25 @@ export function AvatarUploader() {
             }}
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-brand-100 text-[30px] font-extrabold text-brand-700">
+          <div className={cn("flex h-full w-full items-center justify-center font-900", tintClass, fontClass)}>
             {avatarInitials(user?.name)}
           </div>
         )}
 
         <span className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition group-hover:opacity-100 group-focus-visible:opacity-100">
-          {isPending ? (
-            <Spinner size={20} />
-          ) : (
-            <Camera className="h-6 w-6 text-white" aria-hidden="true" />
-          )}
+          {isPending && <Spinner size={20} />}
         </span>
       </button>
+
+      <span
+        className={cn(
+          "pointer-events-none absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full text-white ring-2 ring-white dark:ring-ink-900",
+          fabClass,
+        )}
+        aria-hidden="true"
+      >
+        <Camera className="h-3.5 w-3.5" />
+      </span>
 
       <input
         ref={inputRef}
@@ -133,7 +160,7 @@ export function AvatarUploader() {
         onChange={handleFile}
       />
       {error && (
-        <p className="text-caption text-coral-500">Ошибка загрузки. Попробуйте другой файл.</p>
+        <p className="absolute -bottom-6 left-0 whitespace-nowrap text-caption text-coral-500">Ошибка загрузки</p>
       )}
     </div>
   );

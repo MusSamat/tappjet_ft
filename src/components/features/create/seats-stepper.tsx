@@ -1,0 +1,48 @@
+"use client";
+
+import { SeatMeter } from "@/components/ui";
+import { cn } from "@/lib/utils/cn";
+
+// Seats stepper — design-spec §2.4: −/+ controls, role-accent count, SeatMeter
+// preview. Label differs by role («Свободных мест» / «Сколько мест»).
+
+interface Props {
+  value: number;
+  min?: number;
+  max?: number;
+  label: string;
+  counterText: string;
+  onChange: (v: number) => void;
+}
+
+export function SeatsStepper({ value, min = 1, max = 8, label, counterText, onChange }: Props) {
+  return (
+    <div className="flex items-center justify-between rounded-2xl bg-white p-4 shadow-xs ring-1 ring-ink-100 dark:bg-ink-900 dark:ring-ink-800">
+      <div className="flex flex-col gap-1.5">
+        <span className="text-[14px] font-900 text-ink-900 dark:text-white">{label}</span>
+        <SeatMeter free={value} total={Math.max(value, max)} size="sm" />
+      </div>
+      <div className="flex items-center gap-3">
+        <button
+          type="button"
+          onClick={() => onChange(Math.max(min, value - 1))}
+          disabled={value <= min}
+          aria-label="−"
+          className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-ink-200 text-[18px] font-900 text-ink-600 disabled:opacity-40 dark:border-ink-700 dark:text-ink-300"
+        >
+          −
+        </button>
+        <span className={cn("min-w-[24px] text-center text-[20px] font-900", counterText)}>{value}</span>
+        <button
+          type="button"
+          onClick={() => onChange(Math.min(max, value + 1))}
+          disabled={value >= max}
+          aria-label="+"
+          className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-ink-200 text-[18px] font-900 text-ink-600 disabled:opacity-40 dark:border-ink-700 dark:text-ink-300"
+        >
+          +
+        </button>
+      </div>
+    </div>
+  );
+}
