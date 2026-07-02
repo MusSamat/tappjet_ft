@@ -54,11 +54,8 @@ export default function RegisterPage() {
 
   if (step === "routes") {
     return (
-      <div
-        className="flex min-h-[calc(100vh-64px)] items-center justify-center px-5 py-10"
-        style={{ background: "linear-gradient(180deg, #ECFDF8 0%, #ffffff 60%)" }}
-      >
-        <div className="w-full max-w-[400px] rounded-3xl border border-ink-100 bg-white p-7 shadow-soft">
+      <div className="flex min-h-[calc(100vh-64px)] flex-col bg-white dark:bg-ink-950">
+        <div className="mx-auto flex w-full max-w-[400px] flex-1 flex-col justify-center px-6 py-10">
           <RoutePickerStep />
         </div>
       </div>
@@ -66,19 +63,23 @@ export default function RegisterPage() {
   }
 
   return (
-    <div
-      className="flex min-h-[calc(100vh-64px)] items-center justify-center px-5 py-10"
-      style={{ background: "linear-gradient(180deg, #ECFDF8 0%, #ffffff 60%)" }}
-    >
-      <div className="w-full max-w-[400px] rounded-3xl border border-ink-100 bg-white p-7 shadow-soft">
+    <div className="flex min-h-[calc(100vh-64px)] flex-col bg-white dark:bg-ink-950">
+      <div className="mx-auto flex w-full max-w-[400px] flex-1 flex-col justify-center px-6 py-10">
         <div className="mb-5 text-center">
-          <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-600 to-brand-500 text-[20px] font-900 text-white shadow-brandcta">
-            Tj
-          </div>
-          <h1 className="text-[22px] font-800 text-ink-900">{t("title")}</h1>
+          <span
+            className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-3xl shadow-brandcta"
+            style={{ background: "linear-gradient(135deg,#14B8A6,#0D9488)" }}
+          >
+            <svg viewBox="0 0 48 48" className="h-11 w-11" aria-hidden="true">
+              <path d="M11 27 L37 15 L27 37 L23.5 28.5 Z" fill="#fff" />
+              <path d="M23.5 28.5 L37 15 L26 27.5 Z" fill="#fff" opacity="0.62" />
+              <circle cx="37.5" cy="13.5" r="4" fill="#FBB924" stroke="#fff" strokeWidth="1.5" />
+            </svg>
+          </span>
+          <h1 className="text-[22px] font-900 text-ink-900 dark:text-white">{t("title")}</h1>
           <p className="mt-1 text-[13px] font-600 text-ink-400">
             {t("have_account")}{" "}
-            <Link href="/auth/login" className="font-800 text-brand-700 hover:text-brand-800">
+            <Link href="/auth/login" className="font-800 text-brand-700 hover:text-brand-800 dark:text-brand-300">
               {t("sign_in")}
             </Link>
           </p>

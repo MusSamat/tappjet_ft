@@ -6,7 +6,7 @@ export const phoneSchema = z
 
 export const otpSchema = z
   .string()
-  .regex(/^[0-9]{6}$/, "6 цифр из SMS");
+  .regex(/^[0-9]{6}$/, "6 цифр из Telegram");
 
 export const passwordSchema = z
   .string()
