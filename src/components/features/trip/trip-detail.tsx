@@ -350,7 +350,7 @@ export function TripDetailView({ trip, variant = "page", autoOpenBook = false }:
       <div className="flex min-h-[calc(100vh-56px)] flex-col lg:hidden">
         {header}
         <div className="flex-1">{body}</div>
-        <div className="sticky bottom-0 border-t border-ink-200 bg-white p-4 dark:border-ink-800 dark:bg-ink-900">
+        <div className="sticky-cta-nav sticky border-t border-ink-200 bg-white p-4 dark:border-ink-800 dark:bg-ink-900">
           {cta}
         </div>
       </div>

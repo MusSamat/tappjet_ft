@@ -3,14 +3,12 @@
 import { useState } from "react";
 import { Zap, Calendar, Clock } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Chip, SectionLabel, DatePicker } from "@/components/ui";
-import { BottomSheet, BottomSheetContent, BottomSheetHeader, BottomSheetBody, BottomSheetTitle } from "@/components/ui/bottom-sheet";
+import { Chip, SectionLabel, DatePickerModal } from "@/components/ui";
 import type { ChipAccent } from "@/components/ui";
-import { cn } from "@/lib/utils/cn";
 
 // When block — design-spec §2.4: date chips (Завтра / Послезавтра / Гибко /
-// Выбрать дату) + single-select time chips + a datePicker BottomSheet
-// (TJ.datePicker was never implemented in the prototype).
+// Выбрать дату) + single-select time chips + a calendar modal
+// (one tap on the chip opens the picker directly).
 
 const TIME_OPTIONS = ["06:00", "08:00", "09:00", "12:00", "15:00", "18:00"];
 
@@ -35,7 +33,7 @@ function fmt(iso: string): string {
 
 export function WhenChips({ date, time, flexible, tomorrow, dayAfter, today, accent, flexChip, onDate, onTime, onFlexible }: Props) {
   const t = useTranslations("create");
-  const [sheetOpen, setSheetOpen] = useState(false);
+  const [pickerOpen, setPickerOpen] = useState(false);
   const isCustom = !flexible && date !== "" && date !== tomorrow && date !== dayAfter;
 
   const pickDate = (v: string) => {
@@ -66,7 +64,7 @@ export function WhenChips({ date, time, flexible, tomorrow, dayAfter, today, acc
           kind="date"
           accent={accent}
           selected={isCustom}
-          onClick={() => setSheetOpen(true)}
+          onClick={() => setPickerOpen(true)}
           icon={<Calendar className="h-3.5 w-3.5" aria-hidden="true" />}
         >
           {isCustom ? fmt(date) : t("date_pick")}
@@ -85,7 +83,7 @@ export function WhenChips({ date, time, flexible, tomorrow, dayAfter, today, acc
             <Chip
               kind="time"
               selected={false}
-              onClick={() => setSheetOpen(true)}
+              onClick={() => setPickerOpen(true)}
               icon={<Clock className="h-3.5 w-3.5" aria-hidden="true" />}
             >
               {t("time_other")}
@@ -101,24 +99,14 @@ export function WhenChips({ date, time, flexible, tomorrow, dayAfter, today, acc
         </div>
       )}
 
-      <BottomSheet open={sheetOpen} onOpenChange={setSheetOpen}>
-        <BottomSheetContent className={cn("max-w-[440px]")}>
-          <BottomSheetHeader>
-            <BottomSheetTitle>{t("date_pick")}</BottomSheetTitle>
-          </BottomSheetHeader>
-          <BottomSheetBody className="pb-6">
-            <DatePicker
-              value={isCustom ? date : ""}
-              onChange={(v) => {
-                pickDate(v);
-                setSheetOpen(false);
-              }}
-              min={today}
-              placeholder={t("date_pick")}
-            />
-          </BottomSheetBody>
-        </BottomSheetContent>
-      </BottomSheet>
+      <DatePickerModal
+        open={pickerOpen}
+        onOpenChange={setPickerOpen}
+        value={isCustom ? date : ""}
+        onChange={pickDate}
+        min={today}
+        title={t("date_pick")}
+      />
     </div>
   );
 }

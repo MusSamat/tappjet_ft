@@ -29,11 +29,11 @@ export function ChatHeader({
   const t = useTranslations("chat");
   const isConfirmed = bookingStatus === "accepted";
 
+  // Priority: live typing state > trip context (route) > status
   const subtitle = typingUserId
     ? t("typing")
-    : isConfirmed
-      ? t("booking_confirmed")
-      : tripRoute ?? (connected ? t("online") : t("connecting"));
+    : tripRoute ??
+      (isConfirmed ? t("booking_confirmed") : connected ? t("online") : t("connecting"));
 
   const nameBlock = (
     <>
@@ -57,7 +57,7 @@ export function ChatHeader({
   );
 
   return (
-    <div className="flex items-center gap-3 bg-white px-4 pb-3 pt-11 ring-1 ring-ink-100 lg:pt-3.5 dark:bg-ink-900 dark:ring-ink-800">
+    <div className="flex shrink-0 items-center gap-3 bg-white px-4 pb-3 pt-[calc(env(safe-area-inset-top)+10px)] ring-1 ring-ink-100 md:pt-3.5 dark:bg-ink-900 dark:ring-ink-800">
       <Link
         href="/chat"
         aria-label={t("back")}

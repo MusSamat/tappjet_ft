@@ -52,7 +52,8 @@ export function Segmented<T extends string>({
             aria-selected={active}
             onClick={() => onChange(opt.value)}
             className={cn(
-              "flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2 text-[12px] transition-colors",
+              // min-h-[44px] = touch-target floor; active:scale = instant press feedback
+              "flex min-h-[44px] flex-1 touch-manipulation items-center justify-center gap-1.5 rounded-xl py-2 text-[12px] transition duration-100 active:scale-[0.97]",
               active
                 ? cn("bg-white font-900 shadow-sm dark:bg-ink-900", textOn ?? TONE_ON[tone])
                 : "font-800 text-ink-500 hover:text-ink-700 dark:hover:text-ink-300",

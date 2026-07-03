@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { LogIn, MessageCircle, Plus, Search, Ticket, User, type LucideIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useKeyboardOpen } from "@/lib/hooks/use-keyboard-open";
 import { useUnreadMessages } from "@/lib/hooks/use-unread-messages";
 import { useRoleTheme } from "@/lib/hooks/use-role-colors";
 import { useAuth } from "@/store/auth";
@@ -21,6 +23,7 @@ function NavTab({
   pillOn,
   textOn,
   badge,
+  onNavigate,
 }: {
   href: string;
   label: string;
@@ -29,13 +32,15 @@ function NavTab({
   pillOn: string;
   textOn: string;
   badge?: number;
+  onNavigate: (href: string) => void;
 }) {
   return (
     <Link
       href={href}
       aria-label={label}
+      onClick={() => onNavigate(href)}
       className={cn(
-        "relative flex flex-1 flex-col items-center gap-1 rounded-2xl py-1.5 transition-colors",
+        "relative flex flex-1 touch-manipulation flex-col items-center gap-1 rounded-2xl py-1.5 transition duration-100 active:scale-95",
         active && pillOn,
       )}
     >
@@ -69,15 +74,32 @@ export function BottomNav() {
   const isDriver = activeMode === "driver";
   const { theme } = useRoleTheme();
   const { data: unreadMessages = 0 } = useUnreadMessages();
+  const keyboardOpen = useKeyboardOpen();
+
+  // Optimistic tab highlight: the tapped tab lights up immediately, before the
+  // route transition commits (dev-mode compiles / slow networks otherwise leave
+  // the old tab highlighted for a beat). Cleared when the pathname catches up.
+  const [pendingHref, setPendingHref] = useState<string | null>(null);
+  useEffect(() => {
+    setPendingHref(null);
+  }, [pathname]);
 
   const startsWith = (href: string) =>
     pathname === href || pathname.startsWith(`${href}/`);
+  const isActive = (href: string, routeActive: boolean) =>
+    pendingHref ? pendingHref === href : routeActive;
 
   const isThread = pathname.startsWith("/my/bookings/") && pathname.endsWith("/chat");
   const isChat = isThread || startsWith("/chat");
   const feedHref = isDriver ? "/requests" : "/trips";
   const feedActive = startsWith("/trips") || startsWith("/requests");
   const createHref = isDriver ? "/trips/create" : "/requests/create";
+
+  // On-screen keyboard open → hide completely so it never covers the
+  // focused input (chat, OTP) or rides on top of the keyboard.
+  // Chat thread pages are full-screen conversations (standard mobile chat
+  // pattern) — the nav stays hidden there; back leads to the /chat hub.
+  if (keyboardOpen || isThread) return null;
 
   return (
     <nav
@@ -97,24 +119,26 @@ export function BottomNav() {
               href={feedHref}
               label={t("feed")}
               icon={Search}
-              active={feedActive}
+              active={isActive(feedHref, feedActive)}
               pillOn={theme.navPillOn}
               textOn={theme.navTextOn}
+              onNavigate={setPendingHref}
             />
             <NavTab
               href="/my/bookings"
               label={t("bookings")}
               icon={Ticket}
-              active={startsWith("/my") && !isChat}
+              active={isActive("/my/bookings", startsWith("/my") && !isChat)}
               pillOn={theme.navPillOn}
               textOn={theme.navTextOn}
+              onNavigate={setPendingHref}
             />
 
             {/* Center amber create FAB */}
             <Link
               href={createHref}
               aria-label={isDriver ? t("publish_trip_aria") : t("create_request_aria")}
-              className="relative -mt-8 flex shrink-0 flex-col items-center gap-1"
+              className="relative -mt-8 flex shrink-0 touch-manipulation flex-col items-center gap-1 transition-transform duration-100 active:scale-95"
             >
               <span className="flex h-[58px] w-[58px] items-center justify-center rounded-full bg-gradient-to-br from-accent-400 to-accent-600 text-accent-ink shadow-cta ring-4 ring-white dark:ring-ink-900">
                 <Plus className="h-7 w-7" strokeWidth={2.6} aria-hidden="true" />
@@ -126,18 +150,20 @@ export function BottomNav() {
               href="/chat"
               label={t("chats")}
               icon={MessageCircle}
-              active={isChat}
+              active={isActive("/chat", isChat)}
               pillOn={theme.navPillOn}
               textOn={theme.navTextOn}
               badge={unreadMessages}
+              onNavigate={setPendingHref}
             />
             <NavTab
               href="/profile"
               label={t("profile")}
               icon={User}
-              active={startsWith("/profile")}
+              active={isActive("/profile", startsWith("/profile"))}
               pillOn={theme.navPillOn}
               textOn={theme.navTextOn}
+              onNavigate={setPendingHref}
             />
           </>
         ) : (
@@ -146,17 +172,19 @@ export function BottomNav() {
               href="/trips"
               label={t("feed")}
               icon={Search}
-              active={feedActive}
+              active={isActive("/trips", feedActive)}
               pillOn={theme.navPillOn}
               textOn={theme.navTextOn}
+              onNavigate={setPendingHref}
             />
             <NavTab
               href="/auth/login"
               label={t("login")}
               icon={LogIn}
-              active={startsWith("/auth")}
+              active={isActive("/auth/login", startsWith("/auth"))}
               pillOn={theme.navPillOn}
               textOn={theme.navTextOn}
+              onNavigate={setPendingHref}
             />
           </>
         )}

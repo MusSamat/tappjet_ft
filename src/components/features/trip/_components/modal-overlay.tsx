@@ -9,7 +9,7 @@ export function Overlay({ children, onClose }: { children: React.ReactNode; onCl
       onClick={onClose}
     >
       <div
-        className="w-full max-w-md rounded-t-3xl bg-white p-6 sm:rounded-3xl"
+        className="max-h-[85dvh] w-full max-w-md overflow-y-auto rounded-t-3xl bg-white p-6 sm:rounded-3xl"
         onClick={(e) => e.stopPropagation()}
       >
         {children}

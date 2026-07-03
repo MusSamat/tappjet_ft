@@ -10,6 +10,7 @@ import { extractError } from "@/lib/api/client";
 import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { toastSuccess } from "@/components/layout/quick-toast";
 import { Spinner } from "@/components/ui/spinner";
+import { DatePicker } from "@/components/ui/date-picker";
 
 interface Props {
   request: PassengerRequest;
@@ -53,7 +54,7 @@ export function RespondModal({ request, onClose }: Props) {
       onClick={onClose}
     >
       <div
-        className="w-full max-w-[480px] overflow-hidden rounded-t-3xl bg-white sm:rounded-3xl"
+        className="max-h-[90dvh] w-full max-w-[480px] overflow-y-auto rounded-t-3xl bg-white sm:rounded-3xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between border-b border-ink-100 px-5 py-4">
@@ -93,12 +94,11 @@ export function RespondModal({ request, onClose }: Props) {
               <p className="mb-1.5 text-[10px] font-bold uppercase tracking-widest text-sky-600">
                 {t("date_label")}
               </p>
-              <input
-                type="date"
+              <DatePicker
                 min={request.departureDate.split("T")[0]}
                 value={date}
-                onChange={(e) => setDate(e.target.value)}
-                className="h-12 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 text-[13px] font-semibold text-ink-900 outline-none focus:border-sky-400 focus:bg-white"
+                onChange={setDate}
+                triggerClassName="h-12 rounded-2xl border-2 border-ink-200 bg-ink-50 text-[13px]"
               />
             </div>
             <div>

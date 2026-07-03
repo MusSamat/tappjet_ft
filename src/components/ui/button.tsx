@@ -16,7 +16,7 @@ const DANGER_SOLID = "bg-danger-500 text-white hover:bg-danger-600 focus-visible
 const SECONDARY = "bg-brand-50 text-brand-700 hover:bg-brand-100 focus-visible:ring-brand-500 dark:bg-brand-500/15 dark:text-brand-300 dark:hover:bg-brand-500/25";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap font-900 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:focus-visible:ring-offset-ink-950",
+  "inline-flex touch-manipulation items-center justify-center gap-2 whitespace-nowrap font-900 transition duration-100 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:focus-visible:ring-offset-ink-950",
   {
     variants: {
       variant: {

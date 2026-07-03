@@ -1,14 +1,31 @@
-import { useQuery, keepPreviousData } from "@tanstack/react-query";
+"use client";
+
+import { useEffect } from "react";
+import { useQuery, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 import { getChatSummaries } from "@/lib/api/chat";
+import { getSocket } from "@/lib/socket/client";
 import { useAuth } from "@/store/auth";
 
 /**
  * Total unread chat messages across accepted-booking chats.
- * Shares the ["chat","summaries"] cache with QuickActions (same source,
- * socket invalidation there keeps this badge live too).
+ * Kept live via socket: chat:message invalidates ["chat","summaries"]
+ * even when no chat screen is mounted (badge in the bottom nav).
  */
 export function useUnreadMessages() {
   const isAuthenticated = useAuth((s) => s.status === "authenticated");
+  const qc = useQueryClient();
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    const socket = getSocket();
+    const onChatMessage = () => {
+      void qc.invalidateQueries({ queryKey: ["chat", "summaries"] });
+    };
+    socket.on("chat:message", onChatMessage);
+    return () => {
+      socket.off("chat:message", onChatMessage);
+    };
+  }, [isAuthenticated, qc]);
 
   return useQuery({
     queryKey: ["chat", "summaries"],

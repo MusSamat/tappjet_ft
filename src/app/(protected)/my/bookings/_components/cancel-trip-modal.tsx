@@ -32,7 +32,7 @@ export function CancelTripModal({ trip, isPending, onConfirm, onClose }: {
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-4">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative w-full overflow-hidden rounded-t-[24px] bg-white shadow-2xl sm:max-w-[440px] sm:rounded-3xl">
+      <div className="relative max-h-[90dvh] w-full overflow-y-auto rounded-t-[24px] bg-white shadow-2xl sm:max-w-[440px] sm:rounded-3xl">
         <div className="flex justify-center pb-1 pt-3 sm:hidden">
           <div className="h-1 w-10 rounded-full bg-ink-200" />
         </div>

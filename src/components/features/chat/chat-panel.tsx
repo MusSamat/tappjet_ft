@@ -200,18 +200,15 @@ export function ChatPanel({ bookingId }: Props) {
   const isReadOnly = !!booking && !["pending", "viewed", "accepted"].includes(booking.status ?? "");
 
   return (
-    <div
-      className="flex justify-center"
-      style={{ height: "calc(100dvh - calc(64px + env(safe-area-inset-bottom)))" } as React.CSSProperties}
-    >
+    <div className="chat-screen flex justify-center bg-white dark:bg-ink-950">
     <div className="flex w-full max-w-[1500px]">
       {/* Sidebar — desktop only */}
       <div className="hidden w-[320px] flex-shrink-0 lg:block">
         <ChatSidebar activeBookingId={bookingId} />
       </div>
 
-      {/* Main chat */}
-      <div className="flex flex-1 flex-col overflow-hidden bg-white">
+      {/* Main chat — column: header / banners (shrink-0), list (flex-1 min-h-0), composer (shrink-0) */}
+      <div className="flex min-w-0 flex-1 flex-col overflow-hidden bg-white dark:bg-ink-950">
         {/* Header */}
         <ChatHeader
           otherUserId={otherUserId}
@@ -226,7 +223,7 @@ export function ChatPanel({ bookingId }: Props) {
 
         {/* Pre-booking banner */}
         {isPreBooking && (
-          <div className="mx-5 mt-3 rounded-2xl border border-accent-100 bg-accent-50 px-3 py-2.5">
+          <div className="mx-5 mt-3 shrink-0 rounded-2xl border border-accent-100 bg-accent-50 px-3 py-2.5">
             <p className="text-[12px] font-extrabold text-accent-700">
               🔒 {t("pre_book_note")}
             </p>
@@ -238,7 +235,7 @@ export function ChatPanel({ bookingId }: Props) {
 
         {/* Trip summary bar */}
         {rawBooking?.trip && (
-          <div className="flex items-center justify-between border-b border-brand-100 bg-brand-50 px-5 py-2">
+          <div className="flex shrink-0 items-center justify-between border-b border-brand-100 bg-brand-50 px-5 py-2">
             <div className="flex items-center gap-1.5 text-[12px] font-semibold text-brand-700">
               {rawBooking.trip.car && <><Car className="h-3.5 w-3.5" aria-hidden="true" /> {rawBooking.trip.car}</>}
             </div>

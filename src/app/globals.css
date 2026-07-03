@@ -5,6 +5,23 @@
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  /* Readable from JS (draggable FAB bounds) — env() is CSS-only */
+  :root {
+    --sai-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  /* Instant press feedback on touch devices. Tailwind preflight suppresses
+     the native tap highlight (-webkit-tap-highlight-color: transparent), so
+     every tappable element must show its own pressed state. Element-level
+     active: utilities can still layer richer effects on top. */
+  @media (pointer: coarse) {
+    button:active:not(:disabled),
+    [role="button"]:active,
+    a:active {
+      opacity: 0.7;
+      transition: opacity 50ms ease-out;
+    }
   }
   body {
     @apply bg-ink-50 text-ink-900 antialiased dark:bg-ink-950 dark:text-ink-100;
@@ -27,19 +44,16 @@
     outline: none;
     box-shadow: none;
   }
-  /* Prevent iOS Safari from auto-zooming when an input is focused.
-     The browser zooms if font-size < 16px. This rule ensures all
-     text inputs hit that threshold on mobile without changing desktop. */
-  @supports (-webkit-touch-callout: none) {
-    input[type="text"],
-    input[type="tel"],
-    input[type="number"],
-    input[type="email"],
-    input[type="search"],
-    input[type="password"],
-    textarea,
-    select {
-      font-size: 16px;
+  /* Prevent mobile Safari's focus auto-zoom (and the horizontal layout shift
+     it causes): the browser zooms when a focused control's computed
+     font-size < 16px. !important is required to beat utility classes like
+     text-[14px] on the chat textarea / modal inputs (portals included).
+     Never fix this via maximum-scale/user-scalable — that kills zoom a11y. */
+  @media (max-width: 767px) {
+    input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="color"]),
+    select,
+    textarea {
+      font-size: max(16px, 1em) !important;
     }
   }
 }
@@ -69,20 +83,36 @@
     }
   }
 
-  /* QuickActions FAB — clears mobile bottom nav */
-  .qa-fab-bottom {
-    bottom: calc(96px + env(safe-area-inset-bottom));
+  /* Sticky page CTA bar — rests above the floating bottom nav on mobile
+     (124px clears the pill AND the protruding center create-FAB). */
+  .sticky-cta-nav {
+    bottom: calc(124px + env(safe-area-inset-bottom));
   }
-  .qa-panel-bottom {
-    bottom: calc(180px + env(safe-area-inset-bottom));
+  /* Bottom-sheet content clearance so its buttons sit above the bottom nav */
+  .sheet-nav-pad {
+    padding-bottom: calc(124px + env(safe-area-inset-bottom));
   }
-
+  /* Chat conversation screen — mobile: fixed full-viewport column (there is
+     no top nav below md; the keyboard shrinks 100dvh via
+     interactive-widget=resizes-content; the bottom nav is hidden on thread
+     pages). md+: in-flow below the 64px top nav. */
+  .chat-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    height: 100dvh;
+  }
   @media (min-width: 768px) {
-    .qa-fab-bottom {
-      bottom: 32px;
+    .sticky-cta-nav {
+      bottom: 0;
     }
-    .qa-panel-bottom {
-      bottom: 104px;
+    .sheet-nav-pad {
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    .chat-screen {
+      position: static;
+      z-index: auto;
+      height: calc(100dvh - 64px - env(safe-area-inset-bottom));
     }
   }
 

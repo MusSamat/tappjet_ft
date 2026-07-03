@@ -19,13 +19,26 @@ export function MessageComposer({ onSend, onTyping, disabled, className }: Props
   const [text, setText] = useState("");
   const taRef = useRef<HTMLTextAreaElement>(null);
 
+  // Auto-grow up to max-h-28 (~4 lines), then the textarea scrolls internally.
+  const autoGrow = () => {
+    const ta = taRef.current;
+    if (!ta) return;
+    ta.style.height = "auto";
+    ta.style.height = `${Math.min(ta.scrollHeight, 112)}px`;
+  };
+
   const submit = (e: FormEvent) => {
     e.preventDefault();
     const t = text.trim();
     if (!t || disabled) return;
     onSend(t);
     setText("");
-    requestAnimationFrame(() => taRef.current?.focus());
+    requestAnimationFrame(() => {
+      const ta = taRef.current;
+      if (!ta) return;
+      ta.style.height = "auto";
+      ta.focus();
+    });
   };
 
   const handleKey = (e: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -39,7 +52,8 @@ export function MessageComposer({ onSend, onTyping, disabled, className }: Props
     <form
       onSubmit={submit}
       className={cn(
-        "flex items-end gap-2 border-t border-ink-100 bg-white p-3 pb-[calc(12px+env(safe-area-inset-bottom))] dark:border-ink-800 dark:bg-ink-900",
+        // border/bg/safe-area live on the parent composer zone (chat-messages)
+        "flex items-end gap-2 p-3",
         className,
       )}
     >
@@ -48,13 +62,14 @@ export function MessageComposer({ onSend, onTyping, disabled, className }: Props
         value={text}
         onChange={(e) => {
           setText(e.target.value.slice(0, MAX));
+          autoGrow();
           onTyping?.();
         }}
         onKeyDown={handleKey}
         placeholder={t("placeholder")}
         rows={1}
         disabled={disabled}
-        className="flex max-h-28 min-h-[44px] flex-1 resize-none rounded-2xl bg-ink-100 px-4 py-2.5 text-[14px] font-600 text-ink-900 outline-none placeholder:text-ink-400 focus:ring-2 focus:ring-brand-500 disabled:opacity-50 dark:bg-ink-800 dark:text-white"
+        className="max-h-28 min-h-[44px] min-w-0 flex-1 resize-none rounded-2xl bg-ink-100 px-4 py-2.5 text-[14px] font-600 text-ink-900 outline-none placeholder:text-ink-400 focus:ring-2 focus:ring-brand-500 disabled:opacity-50 dark:bg-ink-800 dark:text-white"
       />
       <button
         type="submit"

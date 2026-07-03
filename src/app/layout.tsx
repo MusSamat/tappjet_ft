@@ -51,6 +51,11 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  // env(safe-area-inset-*) used by the bottom nav is 0 on iOS without this.
+  viewportFit: "cover",
+  // Android Chrome 108+: on-screen keyboard shrinks the layout viewport so
+  // focused inputs (chat, OTP) stay visible; bottom nav hides via useKeyboardOpen.
+  interactiveWidget: "resizes-content",
   themeColor: "#0D9488",
 };
 

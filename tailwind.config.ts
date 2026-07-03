@@ -69,14 +69,16 @@ const config: Config = {
         "800": "800",
         "900": "900",
       },
+      // rem (1rem = 16px default) so text scales with the user's browser/OS
+      // font-size setting — hard px ignores it (accessibility).
       fontSize: {
-        display: ["32px", { lineHeight: "1.12", fontWeight: "900" }],
-        h1: ["24px", { lineHeight: "1.2", fontWeight: "800" }],
-        h2: ["18px", { lineHeight: "1.3", fontWeight: "800" }],
-        "body-lg": ["15px", { lineHeight: "1.5", fontWeight: "600" }],
-        body: ["14px", { lineHeight: "1.5", fontWeight: "600" }],
-        caption: ["12px", { lineHeight: "1.4", fontWeight: "700" }],
-        label: ["11px", { lineHeight: "1.2", fontWeight: "800", letterSpacing: "0.08em" }],
+        display: ["2rem", { lineHeight: "1.12", fontWeight: "900" }],
+        h1: ["1.5rem", { lineHeight: "1.2", fontWeight: "800" }],
+        h2: ["1.125rem", { lineHeight: "1.3", fontWeight: "800" }],
+        "body-lg": ["0.9375rem", { lineHeight: "1.5", fontWeight: "600" }],
+        body: ["0.875rem", { lineHeight: "1.5", fontWeight: "600" }],
+        caption: ["0.75rem", { lineHeight: "1.4", fontWeight: "700" }],
+        label: ["0.6875rem", { lineHeight: "1.2", fontWeight: "800", letterSpacing: "0.08em" }],
       },
       spacing: {
         "1": "4px",

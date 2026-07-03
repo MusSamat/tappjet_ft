@@ -221,8 +221,7 @@ export function SearchLayout({ params, initial }: Props) {
 
         {/* Filters bottom sheet */}
         <div
-          className={`search-sheet fixed bottom-0 left-0 right-0 z-40 max-h-[85vh] overflow-y-auto rounded-t-4xl bg-white dark:bg-ink-900${mobileFiltersOpen ? " open" : ""}`}
-          style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+          className={`search-sheet sheet-nav-pad fixed bottom-0 left-0 right-0 z-40 max-h-[85vh] overflow-y-auto rounded-t-4xl bg-white dark:bg-ink-900${mobileFiltersOpen ? " open" : ""}`}
         >
           <div className="flex items-center justify-between border-b border-ink-100 px-5 py-4 dark:border-ink-800">
             <h2 className="text-[16px] font-900 text-ink-900 dark:text-white">{t("filters")}</h2>
@@ -250,8 +249,7 @@ export function SearchLayout({ params, initial }: Props) {
 
         {/* Detail bottom sheet */}
         <div
-          className={`search-sheet fixed bottom-0 left-0 right-0 z-40 max-h-[90vh] overflow-y-auto rounded-t-4xl bg-white dark:bg-ink-900${mobileDetailOpen ? " open" : ""}`}
-          style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+          className={`search-sheet sheet-nav-pad fixed bottom-0 left-0 right-0 z-40 max-h-[90vh] overflow-y-auto rounded-t-4xl bg-white dark:bg-ink-900${mobileDetailOpen ? " open" : ""}`}
         >
           <div className="flex items-center justify-between border-b border-ink-100 px-5 py-4 dark:border-ink-800">
             <h2 className="text-[16px] font-900 text-ink-900 dark:text-white">{t("trip_details")}</h2>
