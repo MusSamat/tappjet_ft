@@ -12,6 +12,7 @@ import {
 } from "@/lib/api/auth";
 import { useAuth } from "@/store/auth";
 import { extractError } from "@/lib/api/client";
+import { openTelegramDeepLink } from "@/lib/utils/open-telegram";
 import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { Button, PhoneInput, Spinner } from "@/components/ui";
 import { Modal, ModalContent, ModalHeader, ModalTitle } from "@/components/ui/modal";
@@ -67,7 +68,8 @@ export function AddPhoneModal({ open, onClose, onDone }: Props) {
   const startDeepLinkFlow = async () => {
     const { token, deepLink: link } = await initTelegramLink(phone);
     setDeepLink(link);
-    window.open(link, "_blank");
+    // Past an await → no gesture context; window.open is popup-blocked on mobile.
+    openTelegramDeepLink(link);
     setStep("tg-waiting");
     pollRef.current = setInterval(async () => {
       try {

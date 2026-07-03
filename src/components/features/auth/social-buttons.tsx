@@ -7,6 +7,7 @@ import { initTelegramBotLogin, getTelegramBotLoginStatus, claimTelegramBotLogin 
 import { isFullAuthResult } from "@/lib/api/types";
 import { extractError } from "@/lib/api/client";
 import { consumeDeferredAction, routeForIntent } from "@/lib/auth/deferred-action";
+import { openTelegramDeepLink } from "@/lib/utils/open-telegram";
 import { useAuth } from "@/store/auth";
 import { Send } from "lucide-react";
 import { NotifCard, Spinner } from "@/components/ui";
@@ -58,7 +59,8 @@ export function SocialButtons({ onDone }: Props) {
     try {
       const { token, deepLink } = await initTelegramBotLogin();
       setTgBotLink({ token, deepLink });
-      window.open(deepLink, "_blank");
+      // Past an await → no gesture context; window.open is popup-blocked on mobile.
+      openTelegramDeepLink(deepLink);
       pollRef.current = setInterval(async () => {
         try {
           const { status } = await getTelegramBotLoginStatus(token);
@@ -120,7 +122,7 @@ export function SocialButtons({ onDone }: Props) {
             type="button"
             className="text-center text-[12px] font-700 text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300"
             onClick={() => {
-              window.open(tgBotLink.deepLink, "_blank");
+              openTelegramDeepLink(tgBotLink.deepLink);
             }}
           >
             {t("open_again")}

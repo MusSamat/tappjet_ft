@@ -15,6 +15,7 @@ import {
 import { extractError } from "@/lib/api/client";
 import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { consumeDeferredAction, routeForIntent } from "@/lib/auth/deferred-action";
+import { openTelegramDeepLink } from "@/lib/utils/open-telegram";
 import { useAuth } from "@/store/auth";
 import { useTranslations } from "next-intl";
 import { LogoMark, Wordmark, PhoneInput, Spinner, type OtpInputHandle } from "@/components/ui";
@@ -94,7 +95,8 @@ export default function LoginPage() {
       setOtpChannel("deeplink");
       setDeepLink(dl);
       // Opening the deep-link triggers the bot's /start → auto-sends the OTP.
-      window.open(dl, "_blank", "noopener,noreferrer");
+      // Past an await → no gesture context; window.open is popup-blocked on mobile.
+      openTelegramDeepLink(dl);
       setResendSeconds(60);
       setOtp("");
       setStep("otp");

@@ -10,6 +10,7 @@ import {
   verifyOtp,
 } from "@/lib/api/auth";
 import { otpSchema } from "@/lib/validation/auth";
+import { openTelegramDeepLink } from "@/lib/utils/open-telegram";
 import { Button, OtpInput, Spinner, type OtpInputHandle } from "@/components/ui";
 import type { AuthResult } from "@/lib/api/types";
 
@@ -73,7 +74,9 @@ export function TelegramStep({ phone, onVerified, onBack, onError }: Props) {
         setToken(res.token);
         setDeepLink(res.deepLink);
         // Opening the deep-link triggers the bot's /start → auto-sends the OTP.
-        if (res.deepLink) window.open(res.deepLink, "_blank", "noopener,noreferrer");
+        // We're past an await here (no user-gesture context), so window.open
+        // would be popup-blocked on mobile — openTelegramDeepLink handles it.
+        openTelegramDeepLink(res.deepLink);
       }
     },
     onError,
@@ -90,7 +93,7 @@ export function TelegramStep({ phone, onVerified, onBack, onError }: Props) {
     if (resendIn > 0) return;
     if (channel === "deeplink" && deepLink) {
       // Re-open the deep-link → bot re-sends the code.
-      window.open(deepLink, "_blank", "noopener,noreferrer");
+      openTelegramDeepLink(deepLink);
       statusQuery.refetch();
       setResendIn(60);
     } else {
