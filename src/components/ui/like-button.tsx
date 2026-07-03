@@ -45,6 +45,8 @@ export function LikeButton({ targetType, id, liked, className, size = "md" }: Li
       } else {
         void qc.invalidateQueries({ queryKey: ["passenger-requests"] });
       }
+      // Favorites list (GET /users/me/likes) must reflect the toggle.
+      void qc.invalidateQueries({ queryKey: ["likes", targetType] });
     },
   });
 
