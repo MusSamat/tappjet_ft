@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, CarFront, User, PartyPopper, ShieldCheck, Clock } from "lucide-react";
+import { ArrowLeft, CarFront, User, PartyPopper, ShieldCheck, Clock, Phone } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { createTrip, type CreateTripInput } from "@/lib/api/trips-create";
 import { createPassengerRequest, type CreatePassengerRequestInput } from "@/lib/api/passenger-requests";
@@ -105,9 +105,6 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
     }
   }, [status, router]);
 
-  useEffect(() => {
-    if (status === "authenticated" && !user?.phoneVerified) setShowAddPhone(true);
-  }, [status, user]);
 
   // Load persisted draft (preserve existing localStorage keys).
   useEffect(() => {
@@ -219,6 +216,28 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
     );
   }
 
+  // Phone required — block the form entirely (mirrors backend requirePhone 403).
+  // Filling the form and only failing on submit was the bad UX; gate up front.
+  if (status === "authenticated" && !user?.phoneVerified) {
+    return (
+      <div className="mx-auto max-w-[560px] px-4 py-8">
+        <div className="flex flex-col items-center gap-4 rounded-3xl border border-ink-100 bg-white px-6 py-10 text-center dark:border-ink-800 dark:bg-ink-900">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-50 text-brand-600 dark:bg-brand-500/15 dark:text-brand-300">
+            <Phone className="h-7 w-7" aria-hidden="true" />
+          </div>
+          <h1 className="text-[20px] font-900 text-ink-900 dark:text-white">{t("gate_phone_title")}</h1>
+          <p className="max-w-[380px] text-[13px] font-600 text-ink-500 dark:text-ink-400">
+            {isDriver ? t("gate_phone_text_driver") : t("gate_phone_text")}
+          </p>
+          <Button variant="brand" size="lg" className="mt-2 w-full max-w-[320px]" onClick={() => setShowAddPhone(true)}>
+            {t("gate_phone_cta")}
+          </Button>
+        </div>
+        <AddPhoneModal open={showAddPhone} onClose={() => setShowAddPhone(false)} onDone={() => setShowAddPhone(false)} />
+      </div>
+    );
+  }
+
   // Driver not yet verified — block the form (mirrors backend 403).
   if (isDriver && user?.phoneVerified && (driverLoading || (driverStatus && driverStatus.status !== "verified"))) {
     const pending = driverStatus?.status === "pending" || driverStatus?.status === "docs_requested";
@@ -320,8 +339,6 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
 
   return (
     <>
-      <AddPhoneModal open={showAddPhone} onClose={() => setShowAddPhone(false)} />
-
       {/* ===== MOBILE ===== */}
       <div className="flex min-h-[calc(100vh-56px)] flex-col lg:hidden">
         <div className={cn("px-5 pb-4 pt-11 text-white", theme.headerGrad)}>
