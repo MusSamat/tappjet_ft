@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { Star, ArrowRight, X } from "lucide-react";
+import { Star, ArrowRight, X, MessageCircle } from "lucide-react";
 import { DriverAvatar } from "@/components/ui";
 import { StatusBadge } from "@/components/ui";
 import type { Booking } from "@/lib/api/bookings";
@@ -79,8 +79,22 @@ export function PassengerCard({ booking, pendingRating, onRate, onCancel }: {
         </div>
       </Link>
 
-      {(pendingRating || onCancel) && (
+      {(pendingRating || onCancel || ACTIVE_STATUSES.has(status)) && (
         <div className="mt-3 flex flex-wrap gap-2 border-t border-ink-100 pt-3">
+          {/* Chat with the driver — available from pending onward (templates
+              before acceptance, free text after). This is the entry point the
+              passenger lost after closing the booking-sent modal. */}
+          {ACTIVE_STATUSES.has(status) && (
+            <Link href={`/my/bookings/${booking.id}/chat`}>
+              <button
+                type="button"
+                className="flex items-center gap-1.5 rounded-2xl border border-brand-200 bg-brand-50 px-4 py-2 text-[13px] font-bold text-brand-700 hover:bg-brand-100"
+              >
+                <MessageCircle className="h-4 w-4" />
+                {t("chat_btn")}
+              </button>
+            </Link>
+          )}
           {pendingRating && onRate && (
             <button
               type="button"
