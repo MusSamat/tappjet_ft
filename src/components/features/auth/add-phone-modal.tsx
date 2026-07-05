@@ -125,8 +125,9 @@ export function AddPhoneModal({ open, onClose, onDone }: Props) {
 
   // Primary TMA path: Telegram shares the account's own verified number as a
   // signed payload — one tap, no code. Manual entry stays for other numbers.
+  const isTma = detectRuntime() === "telegram";
   const canRequestContact =
-    detectRuntime() === "telegram" &&
+    isTma &&
     typeof window !== "undefined" &&
     typeof window.Telegram?.WebApp?.requestContact === "function";
 
@@ -197,26 +198,36 @@ export function AddPhoneModal({ open, onClose, onDone }: Props) {
           </div>
         )}
 
-        {step === "phone" && (
+        {step === "phone" && isTma ? (
+          // Inside Telegram: ONLY «Поделиться номером». No manual entry, no OTP —
+          // Telegram gives the account's verified number in one tap.
+          <div className="space-y-4">
+            <p className="text-[13px] font-700 text-ink-500 dark:text-ink-400">
+              {t("share_tg_body")}
+            </p>
+            {canRequestContact ? (
+              <Button
+                variant="cta"
+                size="lg"
+                className="w-full"
+                disabled={loading}
+                onClick={handleShareContact}
+              >
+                {loading ? <Spinner size={16} /> : t("share_tg_btn")}
+              </Button>
+            ) : (
+              <p className="rounded-xl bg-accent-50 px-3 py-2.5 text-[12px] font-700 text-accent-700 dark:bg-accent-500/10 dark:text-accent-300">
+                {t("update_telegram")}
+              </p>
+            )}
+          </div>
+        ) : step === "phone" ? (
+          // Web browser: manual number + OTP flow.
           <div className="space-y-4">
             <p className="text-[13px] font-700 text-ink-500 dark:text-ink-400">
               {user?.telegramLinked ? t("hint_linked") : t("hint_default")}
             </p>
-            {canRequestContact && (
-              <>
-                <Button
-                  variant="cta"
-                  size="lg"
-                  className="w-full"
-                  disabled={loading}
-                  onClick={handleShareContact}
-                >
-                  {loading ? <Spinner size={16} /> : t("share_tg_btn")}
-                </Button>
-                <p className="text-center text-[12px] font-600 text-ink-400">{t("share_tg_or")}</p>
-              </>
-            )}
-            <PhoneInput value={phone} onValueChange={setPhone} autoFocus={!canRequestContact} />
+            <PhoneInput value={phone} onValueChange={setPhone} autoFocus />
             <Button
               variant="cta"
               size="lg"
@@ -227,7 +238,7 @@ export function AddPhoneModal({ open, onClose, onDone }: Props) {
               {loading ? <Spinner size={16} /> : t("get_code")}
             </Button>
           </div>
-        )}
+        ) : null}
 
         {step === "tg-waiting" && deepLink && (
           <div className="flex flex-col gap-4">
