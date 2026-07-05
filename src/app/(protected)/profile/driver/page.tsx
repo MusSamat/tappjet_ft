@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import {
   ArrowRight,
@@ -16,49 +16,153 @@ import {
   Users,
 } from "lucide-react";
 import { api, extractError } from "@/lib/api/client";
+import { getDriverStatus } from "@/lib/api/profile";
 import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { compressImage, ImageValidationError } from "@/lib/utils/compress-image";
 import { Button, Label, NotifCard, Spinner } from "@/components/ui";
 import { SubmittedScreen } from "./_components/submitted-screen";
+import { ReuploadDocs } from "./_components/reupload-docs";
+import { CameraCapture } from "@/components/features/driver/camera-capture";
 
-type DocKey = "license" | "car_passport" | "car_photo" | "selfie";
+type DocKey = "license" | "license_back" | "car_passport" | "car_passport_back" | "car_photo" | "selfie";
 
-const TOTAL_STEPS = 5;
+const TOTAL_STEPS = 7;
+const OTHER_MAKE = "__other__";
+
+// Makes actually common on KG roads; datalist allows anything else typed in.
+const CAR_MAKES = [
+  "Toyota", "Honda", "Lexus", "Nissan", "Mazda", "Subaru", "Mitsubishi", "Suzuki",
+  "Mercedes-Benz", "BMW", "Audi", "Volkswagen", "Opel", "Porsche",
+  "Hyundai", "Kia", "Daewoo", "Chevrolet", "Ford",
+  "Lada (ВАЗ)", "ГАЗ", "УАЗ",
+  "Renault", "Peugeot", "Skoda", "Fiat",
+  "Geely", "Chery", "Haval", "Changan", "Lifan", "BYD",
+];
 // Steps 2..5 map to one document each (TZ §9.1 — separate screen per photo).
 const PHOTO_STEPS: { step: number; key: DocKey; icon: React.ElementType }[] = [
   { step: 2, key: "license", icon: Briefcase },
-  { step: 3, key: "car_passport", icon: Car },
-  { step: 4, key: "car_photo", icon: ImageIcon },
-  { step: 5, key: "selfie", icon: Camera },
+  { step: 3, key: "license_back", icon: Briefcase },
+  { step: 4, key: "car_passport", icon: Car },
+  { step: 5, key: "car_passport_back", icon: Car },
+  { step: 6, key: "car_photo", icon: ImageIcon },
+  { step: 7, key: "selfie", icon: Camera },
 ];
 
 export default function DriverVerifyPage() {
   const t = useTranslations("driver_reg");
   const fe = useFriendlyError();
   const router = useRouter();
-  const fileRef = useRef<HTMLInputElement>(null);
+  const queryClient = useQueryClient();
+
+  const { data: driverStatus, isLoading: statusLoading } = useQuery({
+    queryKey: ["driver-status"],
+    queryFn: getDriverStatus,
+    staleTime: 30_000,
+  });
 
   const [step, setStep] = useState(1);
-  const [docs, setDocs] = useState<Record<DocKey, File | null>>({
+  const emptyDocs = {
     license: null,
+    license_back: null,
     car_passport: null,
+    car_passport_back: null,
     car_photo: null,
     selfie: null,
-  });
-  const [previews, setPreviews] = useState<Record<DocKey, string | null>>({
-    license: null,
-    car_passport: null,
-    car_photo: null,
-    selfie: null,
-  });
+  };
+  const [docs, setDocs] = useState<Record<DocKey, File | null>>({ ...emptyDocs });
+  const [previews, setPreviews] = useState<Record<DocKey, string | null>>({ ...emptyDocs });
   const [docError, setDocError] = useState<string | null>(null);
+  const [cameraOpen, setCameraOpen] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
+  // Turn the backend's structured validation payload into per-field, human
+  // messages instead of the old generic «проверьте правильность данных».
+  const FIELD_LABELS: Record<string, string> = {
+    carPlate: t("err_carPlate"),
+    carYear: t("err_carYear"),
+    carMake: t("err_carMake"),
+    carModel: t("err_carModel"),
+    carColor: t("err_carColor"),
+    seatsCount: t("err_seatsCount"),
+  };
+  function explainError(e: unknown): void {
+    const err = extractError(e) as {
+      code?: string;
+      message?: string;
+      details?: { issues?: { path: string }[]; reason?: string; field?: string };
+    };
+    setFieldErrors({});
+    if (err.code === "VALIDATION_ERROR") {
+      const issues = err.details?.issues;
+      if (Array.isArray(issues) && issues.length > 0) {
+        const fe2: Record<string, string> = {};
+        for (const i of issues) {
+          const label = FIELD_LABELS[i.path];
+          if (label) fe2[i.path] = label;
+        }
+        setFieldErrors(fe2);
+        setServerError(t("fix_marked_fields"));
+        setStep(1); // car-data fields live on step 1 — bring the user to them
+        return;
+      }
+      if (err.details?.reason === "missing_file" || err.details?.reason === "missing_files") {
+        const field = err.details?.field;
+        setServerError(
+          field ? t("err_missing_photo", { doc: t(`doc_${field}_label`) }) : t("err_missing_photos"),
+        );
+        const stepFor = PHOTO_STEPS.find((ps) => ps.key === field)?.step;
+        if (stepFor) setStep(stepFor);
+        return;
+      }
+      // Upload-layer reasons (image checks, size limits) — all mapped to
+      // human text; the raw reason is appended so support can identify cases.
+      const PHOTO_REASONS: Record<string, string> = {
+        image_too_small: t("err_photo_small"),
+        unreadable_image_dimensions: t("err_photo_unreadable"),
+        unsupported_mime: t("err_photo_type"),
+        bad_magic_bytes: t("err_photo_type"),
+        mime_mismatch: t("err_photo_type"),
+        file_too_large: t("err_photo_large"),
+        upload_rejected: t("err_photo_unreadable"),
+      };
+      const reason = err.details?.reason;
+      const photoMsg = reason ? PHOTO_REASONS[reason] : undefined;
+      if (photoMsg) {
+        const field = err.details?.field;
+        const stepFor = PHOTO_STEPS.find((ps) => ps.key === field)?.step;
+        setServerError(field ? `${t(`doc_${field}_label`)}: ${photoMsg}` : photoMsg);
+        if (stepFor) setStep(stepFor);
+        return;
+      }
+    }
+    // Conflicts (номер занят, заявка уже в работе) carry a human server message.
+    if (err.code === "CONFLICT" && err.message) {
+      setServerError(err.message);
+      return;
+    }
+    const raw = extractError(e) as { code?: string; details?: { reason?: string } };
+    const trail = raw.details?.reason ?? raw.code;
+    setServerError(`${fe(extractError(e))}${trail ? ` (${trail})` : ""}`);
+  }
+  const galleryRef = useRef<HTMLInputElement>(null);
   const [compressing, setCompressing] = useState(false);
 
   const [carMake, setCarMake] = useState("");
+  const [makeOther, setMakeOther] = useState(false);
   const [carModel, setCarModel] = useState("");
   const [year, setYear] = useState("");
   const [color, setColor] = useState("");
   const [plate, setPlate] = useState("");
+  // KG standard (2016+): <01–10>KG<3 digits><3 letters>, e.g. 01KG003ADD
+  const PLATE_RE = /^(0[1-9]|10)KG\d{3}[A-Z]{3}$/;
+  const [plateManual, setPlateManual] = useState(false);
+  const plateValid = plateManual
+    ? /^[A-Z0-9]{4,10}$/.test(plate)
+    : PLATE_RE.test(plate);
+  const onPlateChange = (raw: string) => {
+    // uppercase, latin+digits only, hard cap at the format length (10)
+    setPlate(raw.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 10));
+  };
   const [seats, setSeats] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
@@ -75,23 +179,21 @@ export default function DriverVerifyPage() {
       (Object.keys(docs) as DocKey[]).forEach((k) => {
         if (docs[k]) fd.append(k, docs[k] as File);
       });
-      return api.post("/drivers/verification", fd, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      return api.post("/drivers/verification", fd);
     },
-    onSuccess: () => setSubmitted(true),
-    onError: (e) => setServerError(fe(extractError(e))),
+    onSuccess: () => {
+      setSubmitted(true);
+      void queryClient.invalidateQueries({ queryKey: ["driver-status"] });
+    },
+    onError: (e) => explainError(e),
   });
 
   const canCarData =
-    carMake.trim() && carModel.trim() && year && color.trim() && plate.trim() && seats;
+    carMake.trim() && carModel.trim() && year && color.trim() && plateValid && seats;
 
   const currentDoc = PHOTO_STEPS.find((p) => p.step === step);
 
-  async function handleFile(key: DocKey, e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    e.target.value = "";
-    if (!file) return;
+  async function acceptPhoto(key: DocKey, file: File) {
     setDocError(null);
     setCompressing(true);
     try {
@@ -117,6 +219,35 @@ export default function DriverVerifyPage() {
 
   if (submitted) return <SubmittedScreen />;
 
+  if (statusLoading) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <Spinner size={24} />
+      </div>
+    );
+  }
+  // Status-aware entry: never show a blank wizard to someone whose
+  // application is already in flight — that used to end in a confusing 409.
+  if (driverStatus && driverStatus.status === "pending") return <SubmittedScreen />;
+  if (driverStatus && driverStatus.status === "verified") {
+    return (
+      <div className="mx-auto max-w-[480px] p-6 pt-16 text-center">
+        <CheckCircle className="mx-auto h-12 w-12 text-brand-500" aria-hidden="true" />
+        <h1 className="mt-4 text-[18px] font-900 text-ink-900 dark:text-white">{t("already_verified_title")}</h1>
+        <p className="mt-2 text-[13px] font-600 text-ink-500">{t("already_verified_desc")}</p>
+        <Button variant="primary" size="md" className="mt-6" onClick={() => router.push("/profile")}>
+          {t("back_to_profile")}
+        </Button>
+      </div>
+    );
+  }
+  if (driverStatus && driverStatus.status === "docs_requested") {
+    return <ReuploadDocs requestedDocs={driverStatus.requestedDocs} onDone={() => {
+      void queryClient.invalidateQueries({ queryKey: ["driver-status"] });
+    }} />;
+  }
+  // rejected → show the reason banner above a fresh wizard (resubmission allowed)
+
   return (
     <div className="mx-auto max-w-[720px] px-4 py-8">
       <button
@@ -126,6 +257,12 @@ export default function DriverVerifyPage() {
       >
         {t("back")}
       </button>
+
+      {driverStatus?.status === "rejected" && (
+        <div className="mb-4 rounded-2xl bg-coral-50 px-4 py-3 text-[13px] font-700 text-coral-700 dark:bg-coral-500/10 dark:text-coral-300">
+          {t("rejected_banner", { reason: driverStatus.rejectionReason ?? "—" })}
+        </div>
+      )}
 
       <h1 className="text-[26px] font-extrabold text-ink-900">{t("title")}</h1>
       <p className="mt-1 text-[13px] font-semibold text-ink-500">{t("step", { step })}</p>
@@ -154,14 +291,38 @@ export default function DriverVerifyPage() {
               <div className="flex gap-2">
                 <div className="flex-1">
                   <Label htmlFor="car-make">{t("make_label")}</Label>
-                  <input
+                  {/* Native select works in every WebView (datalist does not in
+                      Telegram). "Other make" reveals free-text entry. */}
+                  <select
                     id="car-make"
-                    type="text"
-                    value={carMake}
-                    onChange={(e) => setCarMake(e.target.value)}
-                    placeholder={t("make_placeholder")}
+                    value={makeOther ? OTHER_MAKE : carMake}
+                    onChange={(e) => {
+                      if (e.target.value === OTHER_MAKE) {
+                        setMakeOther(true);
+                        setCarMake("");
+                      } else {
+                        setMakeOther(false);
+                        setCarMake(e.target.value);
+                      }
+                    }}
                     className="mt-1 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[14px] font-semibold text-ink-900 outline-none focus:border-brand-500"
-                  />
+                  >
+                    <option value="" disabled>{t("make_placeholder")}</option>
+                    {CAR_MAKES.map((m) => <option key={m} value={m}>{m}</option>)}
+                    <option value={OTHER_MAKE}>{t("make_other")}</option>
+                  </select>
+                  {makeOther && (
+                    <input
+                      type="text"
+                      value={carMake}
+                      onChange={(e) => setCarMake(e.target.value)}
+                      placeholder={t("make_other_placeholder")}
+                      className="mt-2 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[14px] font-semibold text-ink-900 outline-none focus:border-brand-500"
+                    />
+                  )}
+                  {fieldErrors.carMake && (
+                    <p className="mt-1 text-[11px] font-700 text-coral-500">{fieldErrors.carMake}</p>
+                  )}
                 </div>
                 <div className="flex-1">
                   <Label htmlFor="car-model">{t("model_label")}</Label>
@@ -173,6 +334,9 @@ export default function DriverVerifyPage() {
                     placeholder={t("model_placeholder")}
                     className="mt-1 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[14px] font-semibold text-ink-900 outline-none focus:border-brand-500"
                   />
+                  {fieldErrors.carModel && (
+                    <p className="mt-1 text-[11px] font-700 text-coral-500">{fieldErrors.carModel}</p>
+                  )}
                 </div>
               </div>
               <div className="flex gap-2">
@@ -188,6 +352,9 @@ export default function DriverVerifyPage() {
                     max={new Date().getFullYear() + 1}
                     className="mt-1 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[14px] font-semibold text-ink-900 outline-none focus:border-brand-500"
                   />
+                  {fieldErrors.carYear && (
+                    <p className="mt-1 text-[11px] font-700 text-coral-500">{fieldErrors.carYear}</p>
+                  )}
                 </div>
                 <div className="flex-1">
                   <Label htmlFor="car-color">{t("color_label")}</Label>
@@ -199,6 +366,9 @@ export default function DriverVerifyPage() {
                     placeholder={t("color_placeholder")}
                     className="mt-1 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[14px] font-semibold text-ink-900 outline-none focus:border-brand-500"
                   />
+                  {fieldErrors.carColor && (
+                    <p className="mt-1 text-[11px] font-700 text-coral-500">{fieldErrors.carColor}</p>
+                  )}
                 </div>
               </div>
               <div className="flex gap-2">
@@ -208,10 +378,30 @@ export default function DriverVerifyPage() {
                     id="car-plate"
                     type="text"
                     value={plate}
-                    onChange={(e) => setPlate(e.target.value.toUpperCase())}
-                    placeholder={t("plate_placeholder")}
-                    className="mt-1 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[14px] font-semibold text-ink-900 outline-none focus:border-brand-500"
+                    onChange={(e) => onPlateChange(e.target.value)}
+                    placeholder="01KG123ABC"
+                    autoCapitalize="characters"
+                    autoCorrect="off"
+                    spellCheck={false}
+                    maxLength={10}
+                    inputMode="text"
+                    className={`mt-1 w-full rounded-2xl border-2 bg-ink-50 px-3 py-2.5 text-[14px] font-800 uppercase tracking-widest text-ink-900 outline-none focus:border-brand-500 ${plate && !plateValid ? "border-coral-400" : "border-ink-200"}`}
                   />
+                  {plate && !plateValid && (
+                    <p className="mt-1 text-[11px] font-700 text-coral-500">
+                      {plateManual ? t("plate_manual_hint") : t("plate_format_hint")}
+                    </p>
+                  )}
+                  {fieldErrors.carPlate && plateValid && (
+                    <p className="mt-1 text-[11px] font-700 text-coral-500">{fieldErrors.carPlate}</p>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => setPlateManual((v) => !v)}
+                    className="mt-1 text-[11px] font-800 text-brand-600 underline"
+                  >
+                    {plateManual ? t("plate_standard_btn") : t("plate_manual_btn")}
+                  </button>
                 </div>
                 <div className="w-[120px]">
                   <Label htmlFor="seats-count">
@@ -227,6 +417,9 @@ export default function DriverVerifyPage() {
                     max={7}
                     className="mt-1 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[14px] font-semibold text-ink-900 outline-none focus:border-brand-500"
                   />
+                  {fieldErrors.seatsCount && (
+                    <p className="mt-1 text-[11px] font-700 text-coral-500">{fieldErrors.seatsCount}</p>
+                  )}
                 </div>
               </div>
             </div>
@@ -258,17 +451,44 @@ export default function DriverVerifyPage() {
               {t(`doc_${currentDoc.key}_desc`)}
             </p>
 
-            <input
-              ref={fileRef}
-              type="file"
-              accept="image/jpeg,image/png"
-              className="hidden"
-              onChange={(e) => handleFile(currentDoc.key, e)}
-            />
+            {/* Hybrid rule: documents may come from the gallery (many drivers
+                keep good scans), but the SELFIE is live-camera only — it is
+                the anti-fraud anchor the moderator matches the license photo
+                against. A gallery selfie would defeat the whole check. */}
+            {cameraOpen && (
+              <CameraCapture
+                kind={
+                  currentDoc.key === "selfie"
+                    ? "selfie"
+                    : currentDoc.key === "car_photo"
+                      ? "car"
+                      : "document"
+                }
+                onClose={() => setCameraOpen(false)}
+                onCapture={(file) => {
+                  setCameraOpen(false);
+                  void acceptPhoto(currentDoc.key, file);
+                }}
+              />
+            )}
+
+            {currentDoc.key !== "selfie" && (
+              <input
+                ref={galleryRef}
+                type="file"
+                accept="image/jpeg,image/png"
+                className="hidden"
+                onChange={(e) => {
+                  const f = e.target.files?.[0];
+                  e.target.value = "";
+                  if (f) void acceptPhoto(currentDoc.key, f);
+                }}
+              />
+            )}
 
             <button
               type="button"
-              onClick={() => fileRef.current?.click()}
+              onClick={() => setCameraOpen(true)}
               disabled={compressing}
               className="relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-ink-300 bg-ink-50 hover:border-brand-400"
             >
@@ -287,6 +507,19 @@ export default function DriverVerifyPage() {
                 </div>
               )}
             </button>
+
+            {currentDoc.key !== "selfie" ? (
+              <button
+                type="button"
+                onClick={() => galleryRef.current?.click()}
+                disabled={compressing}
+                className="mt-2 text-[12px] font-800 text-brand-600 underline disabled:opacity-50"
+              >
+                {t("from_gallery")}
+              </button>
+            ) : (
+              <p className="mt-2 text-[11px] font-semibold text-ink-400">{t("selfie_live_only")}</p>
+            )}
 
             <p className="mt-2 text-[11px] font-semibold text-ink-400">{t("photo_hint")}</p>
             {docs[currentDoc.key] && !docError && (
