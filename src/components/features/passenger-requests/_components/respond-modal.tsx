@@ -2,14 +2,15 @@
 
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { CheckCircle, X } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { PassengerRequest } from "@/lib/api/passenger-requests";
 import { respondToRequest, type RespondInput } from "@/lib/api/passenger-requests";
 import { extractError } from "@/lib/api/client";
 import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { toastSuccess } from "@/components/layout/quick-toast";
-import { Spinner } from "@/components/ui/spinner";
+import { Button, Spinner } from "@/components/ui";
+import { Modal, ModalContent, ModalHeader, ModalTitle, ModalDescription } from "@/components/ui/modal";
 import { DatePicker } from "@/components/ui/date-picker";
 import { TimeSelect24 } from "@/components/ui/time-select-24";
 
@@ -17,6 +18,8 @@ interface Props {
   request: PassengerRequest;
   onClose: () => void;
 }
+
+const FIELD_LABEL = "mb-1.5 text-[10px] font-bold uppercase tracking-widest text-sky-600";
 
 export function RespondModal({ request, onClose }: Props) {
   const qc = useQueryClient();
@@ -47,111 +50,96 @@ export function RespondModal({ request, onClose }: Props) {
     onError: (e) => setError(fe(extractError(e))),
   });
 
-  const canSubmit = price && Number(price) > 0 && date && time;
+  const canSubmit = Boolean(price) && Number(price) > 0 && Boolean(date) && Boolean(time);
 
+  // Radix Modal owns focus-trap / Escape / scroll-lock / aria; closing via
+  // onOpenChange covers overlay-click, the ✕ button and the Esc key uniformly.
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 sm:items-center"
-      onClick={onClose}
-    >
-      <div
-        className="max-h-[90dvh] w-full max-w-[480px] overflow-y-auto rounded-t-3xl bg-white sm:rounded-3xl"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between border-b border-ink-100 px-5 py-4">
-          <div>
-            <p className="text-[16px] font-extrabold text-ink-900">{t("respond_title")}</p>
-            <p className="text-[12px] text-ink-500">
+    <Modal open onOpenChange={(o) => { if (!o) onClose(); }}>
+      <ModalContent className="max-w-[480px] p-0">
+        <div className="p-5">
+          <ModalHeader>
+            <ModalTitle className="text-[16px] font-extrabold">{t("respond_title")}</ModalTitle>
+            <ModalDescription className="text-[12px] text-ink-500">
               {request.originCity} → {request.destinationCity}
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-ink-100 text-ink-500 hover:bg-ink-200"
-          >
-            <X className="h-4 w-4" aria-hidden />
-          </button>
-        </div>
+            </ModalDescription>
+          </ModalHeader>
 
-        <div className="flex flex-col gap-4 px-5 py-5">
-          <div>
-            <p className="mb-1.5 text-[10px] font-bold uppercase tracking-widest text-sky-600">
-              {t("price_label")}
-            </p>
-            <input
-              type="number"
-              min={1}
-              max={100000}
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              placeholder={t("price_placeholder")}
-              className="h-12 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 text-[16px] font-bold text-ink-900 outline-none focus:border-sky-400 focus:bg-white"
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
+          <div className="flex flex-col gap-4">
             <div>
-              <p className="mb-1.5 text-[10px] font-bold uppercase tracking-widest text-sky-600">
-                {t("date_label")}
-              </p>
-              <DatePicker
-                min={request.departureDate.split("T")[0]}
-                value={date}
-                onChange={setDate}
-                triggerClassName="h-12 rounded-2xl border-2 border-ink-200 bg-ink-50 text-[13px]"
+              <p className={FIELD_LABEL}>{t("price_label")}</p>
+              <input
+                type="number"
+                min={1}
+                max={100000}
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                placeholder={t("price_placeholder")}
+                className="h-12 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 text-[16px] font-bold text-ink-900 outline-none focus:border-sky-400 focus:bg-white dark:border-ink-700 dark:bg-ink-800 dark:text-white"
               />
             </div>
+
+            {/* Date + time — time needs more room than date (two selects), so
+                give it the wider column instead of an even 50/50 split. */}
+            <div className="grid grid-cols-[5fr_7fr] gap-3">
+              <div className="min-w-0">
+                <p className={FIELD_LABEL}>{t("date_label")}</p>
+                <DatePicker
+                  min={request.departureDate.split("T")[0]}
+                  value={date}
+                  onChange={setDate}
+                  triggerClassName="h-12 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 text-[13px]"
+                />
+              </div>
+              <div className="min-w-0">
+                <p className={FIELD_LABEL}>{t("time_label")}</p>
+                <TimeSelect24 value={time} onChange={setTime} ariaLabel={t("time_label")} />
+              </div>
+            </div>
+
             <div>
-              <p className="mb-1.5 text-[10px] font-bold uppercase tracking-widest text-sky-600">
-                {t("time_label")}
+              <p className="mb-1.5 text-[10px] font-bold uppercase tracking-widest text-ink-400">
+                {t("message_label")}
               </p>
-              <TimeSelect24 value={time} onChange={setTime} ariaLabel={t("time_label")} />
+              <textarea
+                rows={2}
+                maxLength={500}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder={t("message_placeholder")}
+                className="w-full resize-none rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 py-3 text-[13px] text-ink-900 outline-none focus:border-sky-400 focus:bg-white placeholder:text-ink-400 dark:border-ink-700 dark:bg-ink-800 dark:text-white"
+              />
             </div>
-          </div>
 
-          <div>
-            <p className="mb-1.5 text-[10px] font-bold uppercase tracking-widest text-ink-400">
-              {t("message_label")}
-            </p>
-            <textarea
-              rows={2}
-              maxLength={500}
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder={t("message_placeholder")}
-              className="w-full resize-none rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 py-3 text-[13px] text-ink-900 outline-none focus:border-sky-400 focus:bg-white placeholder:text-ink-400"
-            />
-          </div>
-
-          {error && (
-            <div className="rounded-2xl bg-coral-50 px-4 py-3 text-[13px] font-semibold text-coral-700">
-              {error}
-            </div>
-          )}
-        </div>
-
-        <div className="border-t border-ink-100 px-5 pb-6 pt-4">
-          <button
-            type="button"
-            disabled={!canSubmit || isPending}
-            onClick={() => {
-              setError(null);
-              mutate();
-            }}
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-sky-600 text-[14px] font-bold text-white transition-colors hover:bg-sky-700 disabled:opacity-40"
-          >
-            {isPending ? (
-              <Spinner size={18} />
-            ) : (
-              <>
-                <CheckCircle className="h-4 w-4" aria-hidden />
-                {t("submit_response")}
-              </>
+            {error && (
+              <div className="rounded-2xl bg-coral-50 px-4 py-3 text-[13px] font-semibold text-coral-700 dark:bg-coral-500/10 dark:text-coral-300">
+                {error}
+              </div>
             )}
-          </button>
+
+            <Button
+              type="button"
+              variant="primary"
+              size="lg"
+              className="w-full"
+              disabled={!canSubmit || isPending}
+              onClick={() => {
+                setError(null);
+                mutate();
+              }}
+            >
+              {isPending ? (
+                <Spinner size={18} />
+              ) : (
+                <>
+                  <CheckCircle className="h-4 w-4" aria-hidden />
+                  {t("submit_response")}
+                </>
+              )}
+            </Button>
+          </div>
         </div>
-      </div>
-    </div>
+      </ModalContent>
+    </Modal>
   );
 }
