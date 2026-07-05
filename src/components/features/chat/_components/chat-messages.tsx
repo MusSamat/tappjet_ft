@@ -6,6 +6,7 @@ import { ChevronDown, MessageCircle } from "lucide-react";
 import { Spinner } from "@/components/ui";
 import { MessageBubble } from "../message-bubble";
 import { MessageComposer } from "../message-composer";
+import { QuickReplies } from "./quick-replies";
 import type { ChatMessage } from "@/lib/api/chat";
 
 interface PendingMessage extends ChatMessage {
@@ -23,6 +24,10 @@ interface Props {
   typingUserId: string | null;
   sendError: string | null;
   isReadOnly: boolean;
+  /** booking still pending → passenger gets template picker, no free text */
+  preBooking?: boolean;
+  /** pending + viewer is the driver → backend blocks writing entirely */
+  driverBlocked?: boolean;
   bottomRef: React.RefObject<HTMLDivElement>;
   onSend: (text: string) => void;
   onTyping: () => void;
@@ -71,11 +76,14 @@ export function ChatMessages({
   typingUserId,
   sendError,
   isReadOnly,
+  preBooking,
+  driverBlocked,
   bottomRef,
   onSend,
   onTyping,
 }: Props) {
   const t = useTranslations("chat");
+  const tTpl = useTranslations("chat_templates");
   const listRef = useRef<HTMLDivElement>(null);
   const [scrolledUp, setScrolledUp] = useState(false);
 
@@ -132,7 +140,10 @@ export function ChatMessages({
           ) : (
             <div className="flex flex-col gap-2">
               {messages.map((m, i) => {
-                const mine = m.senderId === myId;
+                // clientMsgId exists only on messages sent from THIS client, so
+                // they are ours even if the optimistic senderId was stamped
+                // before the auth store hydrated (myId briefly undefined).
+                const mine = Boolean(m.clientMsgId) || (Boolean(myId) && m.senderId === myId);
                 const newDay = i === 0 || dayOf(m.createdAt) !== dayOf(messages[i - 1]?.createdAt);
                 return (
                   <Fragment key={m.clientMsgId ?? m.id}>
@@ -173,6 +184,22 @@ export function ChatMessages({
       {isReadOnly ? (
         <div className="shrink-0 border-t border-ink-200 bg-ink-50 px-5 py-3 pb-[calc(12px+env(safe-area-inset-bottom))] text-center text-[12px] font-semibold text-ink-400 dark:border-ink-800 dark:bg-ink-900">
           {t("read_only")}
+        </div>
+      ) : driverBlocked ? (
+        <div className="shrink-0 border-t border-ink-200 bg-ink-50 px-5 py-3 pb-[calc(12px+env(safe-area-inset-bottom))] text-center text-[12px] font-semibold text-ink-400 dark:border-ink-800 dark:bg-ink-900">
+          {t("driver_wait_note")}
+        </div>
+      ) : preBooking ? (
+        <div className="shrink-0 border-t border-ink-100 bg-white px-4 py-3 pb-[calc(12px+env(safe-area-inset-bottom))] dark:border-ink-800 dark:bg-ink-900">
+          {sendError && (
+            <div className="mb-2 rounded-xl bg-coral-50 px-3 py-2 text-[12px] font-semibold text-coral-700">
+              {sendError}
+            </div>
+          )}
+          <QuickReplies onSend={onSend} />
+          <p className="mt-2 text-center text-[11px] font-600 text-ink-400">
+            {tTpl("templates_hint")}
+          </p>
         </div>
       ) : (
         <div className="shrink-0 border-t border-ink-100 bg-white dark:border-ink-800 dark:bg-ink-900">

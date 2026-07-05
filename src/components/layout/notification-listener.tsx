@@ -25,10 +25,15 @@ export function NotificationListener() {
     const invalidateBookings = () => {
       void queryClient.invalidateQueries({ queryKey: ["bookings"] });
       void queryClient.invalidateQueries({ queryKey: ["bookings-my-all"] });
+      // singular detail query used by the open chat screen — without this the
+      // pre-booking banner/template mode survives an acceptance that happens
+      // while the chat is on screen (stale status, staleTime 30s)
+      void queryClient.invalidateQueries({ queryKey: ["booking"] });
     };
 
     const onNewMessage = (data: { message?: { bookingId?: string; text?: string } }) => {
       void queryClient.invalidateQueries({ queryKey: ["bookings-my-all"] });
+      void queryClient.invalidateQueries({ queryKey: ["chat", "summaries"] });
       const bookingId = data?.message?.bookingId;
       const chatPath = bookingId ? `/my/bookings/${bookingId}/chat` : null;
       if (chatPath && !pathname.startsWith(chatPath)) {
@@ -149,6 +154,33 @@ export function NotificationListener() {
       });
     };
 
+    // Driver saw the request → passenger's list shows «просмотрено» live.
+    const onBookingViewed = () => invalidateBookings();
+
+    // Trip completed → «оцените поездку» prompts refresh without a reload.
+    const onTripCompletedRate = () => {
+      void queryClient.invalidateQueries({ queryKey: ["ratings", "pending"] });
+      invalidateNotifications();
+    };
+
+    // Booking phase flipped (accept/complete) while chat may be open —
+    // refresh the booking detail the chat screen renders from.
+    const onChatPhaseChanged = () => {
+      void queryClient.invalidateQueries({ queryKey: ["booking"] });
+      void queryClient.invalidateQueries({ queryKey: ["chat", "summaries"] });
+    };
+
+    // A dropped connection (tunnel restart, backgrounded WebView, network
+    // blip) loses any fire-and-forget booking/notification events emitted
+    // while disconnected — resync everything once the socket comes back.
+    const onReconnect = () => {
+      invalidateBookings();
+      invalidateNotifications();
+      void queryClient.invalidateQueries({ queryKey: ["request-responses"] });
+      void queryClient.invalidateQueries({ queryKey: ["passenger-requests"] });
+    };
+
+    socket.on("connect", onReconnect);
     socket.on("notification:new", invalidateNotifications);
     socket.on("booking:new_request", onBookingNewRequest);
     socket.on("booking:accepted", onBookingAccepted);
@@ -157,12 +189,16 @@ export function NotificationListener() {
     socket.on("booking:cancelled", onBookingCancelled);
     socket.on("booking:expired", onBookingExpired);
     socket.on("trip:cancelled", onTripCancelled);
+    socket.on("booking:viewed", onBookingViewed);
+    socket.on("trip:completed_rate", onTripCompletedRate);
+    socket.on("chat:phase_changed", onChatPhaseChanged);
     socket.on("chat:message", onNewMessage);
     socket.on("request:response_received", onRequestResponseReceived);
     socket.on("request:response_accepted", onRequestResponseAccepted);
     socket.on("request:response_declined", onRequestResponseDeclined);
 
     return () => {
+      socket.off("connect", onReconnect);
       socket.off("notification:new", invalidateNotifications);
       socket.off("booking:new_request", onBookingNewRequest);
       socket.off("booking:accepted", onBookingAccepted);
@@ -171,6 +207,9 @@ export function NotificationListener() {
       socket.off("booking:cancelled", onBookingCancelled);
       socket.off("booking:expired", onBookingExpired);
       socket.off("trip:cancelled", onTripCancelled);
+      socket.off("booking:viewed", onBookingViewed);
+      socket.off("trip:completed_rate", onTripCompletedRate);
+      socket.off("chat:phase_changed", onChatPhaseChanged);
       socket.off("chat:message", onNewMessage);
       socket.off("request:response_received", onRequestResponseReceived);
       socket.off("request:response_accepted", onRequestResponseAccepted);

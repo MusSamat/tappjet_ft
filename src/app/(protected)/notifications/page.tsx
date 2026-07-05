@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useInfiniteQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { CheckCheck, CheckCircle, Inbox, MessageCircle } from "lucide-react";
-import { getNotifications, markNotificationRead } from "@/lib/api/notifications";
+import { getNotifications, markAllNotificationsRead } from "@/lib/api/notifications";
 import { extractError } from "@/lib/api/client";
 import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { toastError } from "@/components/layout/quick-toast";
@@ -136,10 +136,9 @@ export default function NotificationsPage() {
   const earlier = notifications.filter((n) => !isToday(n.createdAt));
 
   const { mutate: markAllRead, isPending: markingAll } = useMutation({
-    mutationFn: async () => {
-      const unread = allNotifications.filter((n) => !n.readAt);
-      await Promise.all(unread.map((n) => markNotificationRead(n.id)));
-    },
+    // Single bulk endpoint — covers unread rows on pages not yet loaded,
+    // which the old per-row fan-out silently missed.
+    mutationFn: () => markAllNotificationsRead(),
     onSuccess: () => void queryClient.invalidateQueries({ queryKey: ["notifications"] }),
     onError: (e) => toastError(fe(extractError(e))),
   });

@@ -36,6 +36,10 @@ export function ChatPanel({ bookingId }: Props) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const originalTitleRef = useRef<string>("");
   const isInitialLoad = useRef(true);
+  // Read receipts that referenced a server id we don't know yet (our own
+  // optimistic message before its ACK). Applied at id-reconciliation time —
+  // without this the tick is silently lost when chat:read wins the race.
+  const pendingReadsRef = useRef<Map<string, string>>(new Map());
 
   const bookingQuery = useQuery({
     queryKey: ["booking", bookingId],
@@ -62,17 +66,42 @@ export function ChatPanel({ bookingId }: Props) {
     setMessages((prev) => {
       // Exact-id dedup (normal case, message already in state).
       if (prev.some((m) => m.id === msg.id)) return prev;
-      // If client_msg_id is present and matches a pending optimistic message,
-      // the ACK will update it — skip adding a duplicate from the broadcast.
-      if (clientMsgId && prev.some((m) => m.clientMsgId === clientMsgId)) return prev;
+      // Broadcast echo of our own optimistic message: reconcile with the
+      // server copy (authoritative senderId/createdAt — the optimistic one
+      // may have been stamped while the auth store was still null, which
+      // used to flip the bubble to the other side). Keep clientMsgId so the
+      // React key and a late ACK still match.
+      if (clientMsgId && prev.some((m) => m.clientMsgId === clientMsgId)) {
+        const bufferedReadAt = msg.id ? pendingReadsRef.current.get(msg.id) : undefined;
+        if (msg.id && bufferedReadAt) pendingReadsRef.current.delete(msg.id);
+        return prev.map((m) =>
+          m.clientMsgId === clientMsgId
+            ? {
+                ...msg,
+                clientMsgId,
+                pending: false,
+                ...(bufferedReadAt ? { isRead: true, readAt: bufferedReadAt } : {}),
+              }
+            : m,
+        );
+      }
       return [...prev, msg];
     });
   }, []);
 
   const onAck = useCallback((clientMsgId: string, serverId: string) => {
+    const bufferedReadAt = pendingReadsRef.current.get(serverId);
+    if (bufferedReadAt) pendingReadsRef.current.delete(serverId);
     setMessages((prev) =>
       prev.map((m) =>
-        m.clientMsgId === clientMsgId ? { ...m, id: serverId, pending: false } : m,
+        m.clientMsgId === clientMsgId
+          ? {
+              ...m,
+              id: serverId,
+              pending: false,
+              ...(bufferedReadAt ? { isRead: true, readAt: bufferedReadAt } : {}),
+            }
+          : m,
       ),
     );
   }, []);
@@ -84,9 +113,15 @@ export function ChatPanel({ bookingId }: Props) {
   }, [me?.id]);
 
   const onRead = useCallback((messageId: string, readAt: string) => {
-    setMessages((prev) =>
-      prev.map((m) => (m.id === messageId ? { ...m, isRead: true, readAt } : m)),
-    );
+    setMessages((prev) => {
+      // Receipt for a message we don't have under that id yet (optimistic,
+      // pre-ACK) — buffer it; onAck / the broadcast echo will apply it.
+      if (!prev.some((m) => m.id === messageId)) {
+        pendingReadsRef.current.set(messageId, readAt);
+        return prev;
+      }
+      return prev.map((m) => (m.id === messageId ? { ...m, isRead: true, readAt } : m));
+    });
   }, []);
 
   const t = useTranslations("chat");
@@ -119,6 +154,19 @@ export function ChatPanel({ bookingId }: Props) {
       .then(() => qc.invalidateQueries({ queryKey: ["chat", "summaries"] }))
       .catch(() => undefined);
   }, [bookingId, qc]);
+
+  // The badge counts server-side unreadCount. While the user is INSIDE this
+  // chat, every incoming message must be acknowledged immediately — otherwise
+  // the nav badge keeps showing "unread" for messages already on screen.
+  const lastIncomingId = messages.length > 0 ? messages[messages.length - 1]?.id : null;
+  const lastIncomingSender = messages.length > 0 ? messages[messages.length - 1]?.senderId : null;
+  useEffect(() => {
+    if (!lastIncomingId || lastIncomingSender === me?.id) return;
+    if (typeof document !== "undefined" && document.hidden) return; // tab in background — stays unread
+    markAllChatRead(bookingId)
+      .then(() => qc.invalidateQueries({ queryKey: ["chat", "summaries"] }))
+      .catch(() => undefined);
+  }, [lastIncomingId, lastIncomingSender, bookingId, qc, me?.id]);
 
   useEffect(() => {
     if (messages.length === 0) return;
@@ -265,6 +313,8 @@ export function ChatPanel({ bookingId }: Props) {
             typingUserId={typingUserId}
             sendError={sendError}
             isReadOnly={isReadOnly}
+            preBooking={isPreBooking && !iAmDriver}
+            driverBlocked={isPreBooking && iAmDriver}
             bottomRef={bottomRef}
             onSend={handleSend}
             onTyping={chat.sendTyping}

@@ -77,7 +77,10 @@ export function NotificationItem({ notification }: Props) {
   const router = useRouter();
   const t = useTranslations("notif");
   const locale = useLocale() as Locale;
-  const [read, setRead] = useState(!!notification.readAt);
+  // Server prop is the source of truth (so «прочитать все» recolors every
+  // item on refetch); local flag only covers the optimistic single-click.
+  const [optimisticRead, setRead] = useState(false);
+  const read = optimisticRead || !!notification.readAt;
   const config = TYPE_CONFIG[notification.type] ?? { icon: Bell, color: "text-ink-700" };
   const label = typeLabel(notification.type, t);
   const Icon = config.icon;

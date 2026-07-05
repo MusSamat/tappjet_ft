@@ -60,8 +60,11 @@ export function useChatSocket({
       onRead?.(data.message_id, data.read_at);
     const onErrorEvent = (data: { code: string }) => onError?.(data.code);
 
+    // Re-join the booking room on EVERY (re)connect. `once` dropped the user
+    // out of the room after any disconnect (tunnel restart, background tab):
+    // chat looked alive but received no messages/read-ticks until remount.
     if (socket.connected) onConnect();
-    else socket.once("connect", onConnect);
+    socket.on("connect", onConnect);
 
     socket.on("disconnect", onDisconnect);
     socket.on("chat:joined", onJoined);
@@ -73,6 +76,7 @@ export function useChatSocket({
 
     return () => {
       socket.emit("chat:leave", { booking_id: bookingId });
+      socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
       socket.off("chat:joined", onJoined);
       socket.off("chat:message", onMsg);

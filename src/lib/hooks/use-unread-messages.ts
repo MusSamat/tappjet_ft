@@ -33,7 +33,6 @@ export function useUnreadMessages() {
     enabled: isAuthenticated,
     staleTime: 15_000,
     placeholderData: keepPreviousData,
-    refetchInterval: 60_000,
     select: (chats) =>
       chats
         .filter((c) => c.bookingStatus === "accepted")

@@ -23,3 +23,7 @@ export function getNotifications(params?: {
 export function markNotificationRead(id: string): Promise<void> {
   return api.patch(`/notifications/${id}/read`).then(() => undefined);
 }
+
+export function markAllNotificationsRead(): Promise<void> {
+  return api.patch("/notifications/read-all").then(() => undefined);
+}

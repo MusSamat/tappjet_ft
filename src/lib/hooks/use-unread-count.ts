@@ -13,6 +13,5 @@ export function useUnreadCount() {
     },
     enabled: isAuthenticated,
     staleTime: 60_000,
-    refetchInterval: 120_000,
   });
 }
