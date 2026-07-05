@@ -237,21 +237,25 @@ export default function MyBookingsPage() {
       <Container className="py-8">
         {showConfetti && <Confetti onDone={() => setShowConfetti(false)} />}
 
-        <div className="mb-4 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <h1 className="text-[26px] font-900 text-ink-900 dark:text-white">{tMy("title")}</h1>
-            <span className={cn("inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-900", theme.badge)}>
-              <RoleIcon className="h-3.5 w-3.5" aria-hidden="true" />
-              {tRoles(theme.labelKey)}
+        <div className="mb-4 flex items-center justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-2.5">
+            <h1 className="shrink-0 text-[26px] font-900 text-ink-900 dark:text-white">{tMy("title")}</h1>
+            <span className={cn("inline-flex min-w-0 items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-900", theme.badge)}>
+              <RoleIcon className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+              <span className="truncate">{tRoles(theme.labelKey)}</span>
             </span>
           </div>
-          <Link href={isDriver ? "/trips/create" : "/requests/create"}>
+          <Link href={isDriver ? "/trips/create" : "/requests/create"} className="shrink-0">
             <button
               type="button"
-              className="flex items-center gap-1.5 rounded-2xl bg-accent-500 px-4 py-2.5 text-[13px] font-900 text-accent-ink shadow-cta hover:bg-accent-400"
+              aria-label={isDriver ? tMy("publish_trip") : tMy("publish_request")}
+              className="flex items-center gap-1.5 whitespace-nowrap rounded-2xl bg-accent-500 px-3 py-2.5 text-[13px] font-900 text-accent-ink shadow-cta hover:bg-accent-400 sm:px-4"
             >
-              <Plus className="h-4 w-4" aria-hidden="true" />
-              {isDriver ? tMy("publish_trip") : tMy("publish_request")}
+              <Plus className="h-4 w-4 shrink-0" aria-hidden="true" />
+              {/* Label from sm up; icon-only on the tightest phones so the header never crowds. */}
+              <span className="hidden sm:inline">
+                {isDriver ? tMy("publish_trip") : tMy("publish_request")}
+              </span>
             </button>
           </Link>
         </div>
