@@ -1,21 +1,31 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { locales, type Locale } from "@/i18n.config";
-
-function getCurrentLocale(): Locale {
-  if (typeof document === "undefined") return "ru";
-  const match = document.cookie.match(/(?:^|;\s*)tappjet_locale=([^;]+)/);
-  const val = match?.[1];
-  return val === "kg" ? "kg" : "ru";
-}
+import { updateProfile } from "@/lib/api/auth";
+import { useAuth } from "@/store/auth";
 
 export function LocaleSwitcher() {
   const t = useTranslations("locale");
-  const current = getCurrentLocale();
+  const isAuthenticated = useAuth((s) => s.status === "authenticated");
+  // useLocale — the SAME locale the page's translations render with, identical
+  // on server and client. Reading document.cookie here rendered "ru" during
+  // SSR and React never patches the mismatched active class after hydration —
+  // that's why the interface could be Kyrgyz while the switcher highlighted RU.
+  const current = useLocale() as Locale;
 
-  const switchTo = (locale: Locale) => {
+  const switchTo = async (locale: Locale) => {
     document.cookie = `tappjet_locale=${locale};path=/;max-age=31536000;samesite=lax`;
+    // Keep the backend copy in sync — Telegram notifications are localized
+    // from user.language, not the cookie. Best-effort: a failure must not
+    // block the UI switch.
+    if (isAuthenticated) {
+      try {
+        await updateProfile({ language: locale });
+      } catch {
+        /* offline / token refresh in flight — cookie switch still applies */
+      }
+    }
     window.location.reload();
   };
 

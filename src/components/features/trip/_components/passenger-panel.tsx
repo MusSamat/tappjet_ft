@@ -169,6 +169,12 @@ export function PassengerPanel({ trip, tripId }: { trip: TripDetail; tripId: str
             {driverPhone}
           </a>
         )}
+        {status === "pending" && (
+          <p className="mb-4 flex items-center gap-2 rounded-xl bg-ink-50 px-3 py-2.5 text-[12px] font-700 text-ink-500 dark:bg-ink-800 dark:text-ink-400">
+            <Phone className="h-4 w-4" aria-hidden="true" />
+            {t("phone_after_accept")}
+          </p>
+        )}
 
         <div className="flex flex-col gap-2">
           {pendingRating && (

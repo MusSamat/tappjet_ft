@@ -67,6 +67,13 @@ export default function LoginPage() {
     return () => clearInterval(t);
   }, [resendSeconds]);
 
+  // Prefill phone handed over from the register flow (?phone=+996...).
+  // window.location instead of useSearchParams — no Suspense boundary needed.
+  useEffect(() => {
+    const p = new URLSearchParams(window.location.search).get("phone");
+    if (p && FULL_PHONE_RE.test(p)) setPhone(p);
+  }, []);
+
   // Already authenticated (e.g. Telegram Mini App silent login) → no OTP needed.
   // Only fires on the untouched login step, never mid password-reset flow.
   useEffect(() => {

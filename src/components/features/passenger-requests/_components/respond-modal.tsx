@@ -11,6 +11,7 @@ import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { toastSuccess } from "@/components/layout/quick-toast";
 import { Spinner } from "@/components/ui/spinner";
 import { DatePicker } from "@/components/ui/date-picker";
+import { TimeSelect24 } from "@/components/ui/time-select-24";
 
 interface Props {
   request: PassengerRequest;
@@ -105,12 +106,7 @@ export function RespondModal({ request, onClose }: Props) {
               <p className="mb-1.5 text-[10px] font-bold uppercase tracking-widest text-sky-600">
                 {t("time_label")}
               </p>
-              <input
-                type="time"
-                value={time}
-                onChange={(e) => setTime(e.target.value)}
-                className="h-12 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 text-[13px] font-semibold text-ink-900 outline-none focus:border-sky-400 focus:bg-white"
-              />
+              <TimeSelect24 value={time} onChange={setTime} ariaLabel={t("time_label")} />
             </div>
           </div>
 

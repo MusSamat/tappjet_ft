@@ -10,15 +10,17 @@ import { useAuth } from "@/store/auth";
 import { toastSuccess } from "@/components/layout/quick-toast";
 import { Button, Input, Label, Spinner } from "@/components/ui";
 
+// Language is NOT part of this form: the single источник — LocaleSwitcher
+// (settings tab / footer), which also syncs user.language to the backend.
+// A second dropdown here used to silently overwrite the switcher's choice.
 const schema = z.object({
   name: z.string().min(2).max(50),
-  language: z.enum(["ru", "kg"]),
+  bio: z.string().max(300).optional(),
 });
 type FormData = z.infer<typeof schema>;
 
 export function ProfileForm() {
   const t = useTranslations("profile_forms");
-  const tLocale = useTranslations("locale");
   const tToasts = useTranslations("toasts");
   const user = useAuth((s) => s.user);
   const updateUser = useAuth((s) => s.updateUser);
@@ -27,14 +29,14 @@ export function ProfileForm() {
     resolver: zodResolver(schema),
     defaultValues: {
       name: user?.name ?? "",
-      language: (user?.language as "ru" | "kg") ?? "ru",
+      bio: (user as { bio?: string | null } | null)?.bio ?? "",
     },
   });
 
   const { mutate, isPending, error } = useMutation({
     mutationFn: (data: FormData) => updateProfile(data),
     onSuccess: (updated) => {
-      updateUser({ name: updated.name });
+      updateUser({ name: updated.name, ...( { bio: (updated as { bio?: string | null }).bio } as object ) });
       toastSuccess(tToasts("profile_saved"));
     },
   });
@@ -48,15 +50,15 @@ export function ProfileForm() {
       </div>
 
       <div>
-        <Label htmlFor="language">{t("language_label")}</Label>
-        <select
-          id="language"
-          {...register("language")}
-          className="mt-1 h-12 w-full rounded-2xl border-2 border-ink-200 bg-white px-4 text-body-lg text-ink-900 outline-none focus:border-brand-500"
-        >
-          <option value="ru">{tLocale("ru")}</option>
-          <option value="kg">{tLocale("kg")}</option>
-        </select>
+        <Label htmlFor="bio">{t("bio_label")}</Label>
+        <textarea
+          id="bio"
+          rows={3}
+          maxLength={300}
+          placeholder={t("bio_placeholder")}
+          {...register("bio")}
+          className="mt-1 w-full resize-none rounded-2xl border-2 border-ink-200 bg-white px-4 py-3 text-body-lg text-ink-900 outline-none focus:border-brand-500 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
+        />
       </div>
 
       {error && (

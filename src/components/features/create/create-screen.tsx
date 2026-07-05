@@ -283,13 +283,6 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
         onDestination={(v) => patch({ destinationCity: v })}
         iconAccent={theme.iconAccent}
       />
-      <PickupZones
-        role={role}
-        pickup={draft.pickup}
-        dropoff={draft.dropoff}
-        onPickup={(v) => patch({ pickup: v })}
-        onDropoff={(v) => patch({ dropoff: v })}
-      />
       <WhenChips
         date={draft.date}
         time={draft.time}
@@ -313,6 +306,14 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
         value={draft.price}
         label={isDriver ? t("price_label_driver") : t("price_label_passenger")}
         onChange={(v) => patch({ price: v })}
+      />
+      {/* Pickup zones sit last, directly before the "Каалоолор" preferences block. */}
+      <PickupZones
+        role={role}
+        pickup={draft.pickup}
+        dropoff={draft.dropoff}
+        onPickup={(v) => patch({ pickup: v })}
+        onDropoff={(v) => patch({ dropoff: v })}
       />
     </div>
   );

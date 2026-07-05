@@ -126,6 +126,12 @@ export function BookingCard({ booking, role }: Props) {
                 {passenger.phone}
               </a>
             )}
+            {!isAccepted && booking.status === "pending" && (
+              <span className="flex items-center gap-1 text-caption text-ink-400">
+                <Phone className="h-3 w-3" aria-hidden="true" />
+                {t("phone_after_accept")}
+              </span>
+            )}
           </div>
           <span className="text-caption text-ink-500">{booking.seatsCount} {t("seats_word")}</span>
         </div>
@@ -144,6 +150,12 @@ export function BookingCard({ booking, role }: Props) {
                 <Phone className="h-3 w-3" aria-hidden="true" />
                 {driver.phone}
               </a>
+            )}
+            {!isAccepted && booking.status === "pending" && (
+              <span className="flex items-center gap-1 text-caption text-ink-400">
+                <Phone className="h-3 w-3" aria-hidden="true" />
+                {t("phone_after_accept")}
+              </span>
             )}
           </div>
         </div>

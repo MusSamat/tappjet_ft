@@ -150,6 +150,7 @@ export async function getMe(): Promise<SelfUser> {
 export async function updateProfile(patch: {
   name?: string;
   language?: "ru" | "kg";
+  bio?: string;
   termsAccepted?: true;
 }): Promise<SelfUser> {
   const { data } = await api.patch<SelfUser>("/users/me", patch);

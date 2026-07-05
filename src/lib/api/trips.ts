@@ -44,6 +44,8 @@ export interface SearchTripsParams {
 }
 
 export interface TripSearchResult {
+  /** true = exact city had no results; page shows same-raion (sub-city) matches */
+  nearby?: boolean;
   data: TripListItem[];
   nextCursor: string | null;
 }

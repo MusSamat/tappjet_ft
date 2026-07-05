@@ -17,7 +17,8 @@ import {
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { logout, logoutAll } from "@/lib/api/auth";
-import { exportData } from "@/lib/api/profile";
+import { exportData, getDriverStatus } from "@/lib/api/profile";
+import { getLoyaltyStatus } from "@/lib/api/loyalty";
 import { getUserRatings } from "@/lib/api/users";
 import { extractError } from "@/lib/api/client";
 import { useFriendlyError } from "@/lib/hooks/use-api-error";
@@ -66,6 +67,20 @@ export default function ProfilePage() {
   });
   const { data: ratingsData, isLoading: ratingsLoading } = ratingsQuery;
 
+  const { data: loyalty } = useQuery({
+    queryKey: ["loyalty-status"],
+    queryFn: getLoyaltyStatus,
+    enabled: !!user,
+    staleTime: 60_000,
+  });
+  const { data: driverStatus } = useQuery({
+    queryKey: ["driver-status"],
+    queryFn: getDriverStatus,
+    enabled: isDriver,
+    staleTime: 60_000,
+  });
+  const driverVerified = driverStatus?.status === "verified";
+
   const logoutMutation = useMutation({
     mutationFn: logout,
     onSuccess: () => {
@@ -98,7 +113,7 @@ export default function ProfilePage() {
     onError: (e) => toastError(fe(extractError(e))),
   });
 
-  const points = (user as { loyaltyPoints?: number } | null)?.loyaltyPoints ?? 0;
+  const points = loyalty?.points ?? 0;
   const bio = (user as { bio?: string | null } | null)?.bio;
 
   // Role switch: driver toggles mode; passenger picking «Водитель» → verification.
@@ -253,11 +268,13 @@ export default function ProfilePage() {
 
   const trustChips = (
     <div className="mt-3 flex flex-wrap gap-1.5">
-      <span className="inline-flex items-center gap-1 rounded-full bg-brand-50 px-2.5 py-1 text-[11px] font-800 text-brand-700 dark:bg-brand-500/15 dark:text-brand-300">
-        <Smartphone className="h-3 w-3" aria-hidden="true" />
-        {t("chip_phone")}
-      </span>
-      {isDriver && (
+      {user?.phoneVerified && (
+        <span className="inline-flex items-center gap-1 rounded-full bg-brand-50 px-2.5 py-1 text-[11px] font-800 text-brand-700 dark:bg-brand-500/15 dark:text-brand-300">
+          <Smartphone className="h-3 w-3" aria-hidden="true" />
+          {t("chip_phone")}
+        </span>
+      )}
+      {driverVerified && (
         <>
           <span className="inline-flex items-center gap-1 rounded-full bg-brand-50 px-2.5 py-1 text-[11px] font-800 text-brand-700 dark:bg-brand-500/15 dark:text-brand-300">
             <BadgeCheck className="h-3 w-3" aria-hidden="true" />

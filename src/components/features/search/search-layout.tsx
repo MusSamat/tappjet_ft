@@ -129,8 +129,15 @@ export function SearchLayout({ params, initial }: Props) {
       ? `${params.from_city} → ${params.to_city}`
       : t("all_trips");
 
+  const nearby = data?.pages[0]?.nearby === true;
+
   const tripList = (onSelect: (id: string) => void, mobile: boolean) => (
     <div className="space-y-2.5">
+      {nearby && (
+        <div className="rounded-2xl bg-accent-50 px-4 py-2.5 text-[12px] font-700 text-accent-700 dark:bg-accent-500/10 dark:text-accent-300">
+          {t("nearby_notice")}
+        </div>
+      )}
       {trips.map((trip, i) => (
         <FeedTripRow
           key={trip.id}

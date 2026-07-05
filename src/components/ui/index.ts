@@ -5,6 +5,7 @@ export { CityAutocomplete } from "./city-autocomplete";
 export { RouteCitiesPicker } from "./route-cities-picker";
 export { RouteStops } from "./route-stops";
 export { DatePicker, DatePickerModal, type DatePickerProps, type DatePickerModalProps } from "./date-picker";
+export { TimeSelect24 } from "./time-select-24";
 export { Button, type ButtonProps } from "./button";
 export { Chip, type ChipProps, type ChipKind, type ChipAccent } from "./chip";
 export { CardField, type CardFieldProps } from "./card-field";

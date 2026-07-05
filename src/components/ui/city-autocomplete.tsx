@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState, useId, useCallback } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { MapPin } from "lucide-react";
 import { searchCities, getCities, type City } from "@/lib/api/cities";
 import { cn } from "@/lib/utils/cn";
+import type { Locale } from "@/i18n.config";
 
 interface Props {
   value: string;
@@ -31,14 +32,18 @@ function useDebounce<T>(value: T, ms: number): T {
   return debounced;
 }
 
-/** Returns "Регион" or "Район" label for the dropdown subtitle. */
-function getSubtitle(city: City): string {
-  const district = city.districtNameRu;
-  const region = city.regionNameRu;
-  if (district && district.trim() && district !== region) {
-    return `${district}, ${region}`;
-  }
-  return region;
+/**
+ * Dropdown subtitle in the selected language: "район, айыл аймак" (the most
+ * useful disambiguators). Falls back to район alone, then to region for
+ * oblast-level cities that have neither.
+ */
+function getSubtitle(city: City, locale: Locale): string {
+  const kg = locale === "kg";
+  const district = (kg ? city.districtNameKg : city.districtNameRu)?.trim();
+  const aimak = (kg ? city.aiylAimakNameKg : city.aiylAimakNameRu)?.trim();
+  const region = (kg ? city.regionNameKg : city.regionNameRu)?.trim();
+  const parts = [district, aimak].filter((p): p is string => !!p);
+  return parts.length ? parts.join(", ") : region ?? "";
 }
 
 // Module-level cache — fetched once for the session, shared across all instances.
@@ -46,8 +51,9 @@ let popularCache: City[] | null = null;
 async function loadPopularCities(): Promise<City[]> {
   if (popularCache) return popularCache;
   try {
-    const all = await getCities();
-    popularCache = all.slice(0, 7);
+    // Endpoint orders by priority DESC — the first 7 ARE the popular ones;
+    // don't pull the whole 1000-row directory just to slice it.
+    popularCache = await getCities(7);
   } catch {
     popularCache = [];
   }
@@ -67,6 +73,7 @@ export function CityAutocomplete({
   borderless = false,
 }: Props) {
   const t = useTranslations("city_autocomplete");
+  const locale = useLocale() as Locale;
   const ph = placeholder ?? t("enter_city");
   const autoId = useId();
   const inputId = externalId ?? autoId;
@@ -82,6 +89,9 @@ export function CityAutocomplete({
   const listRef = useRef<HTMLUListElement>(null);
   const selectedRef = useRef(false);
   const userTypingRef = useRef(false);
+  const searchSeqRef = useRef(0);
+  // "typed text matches nothing" — drives the explanatory hint under the input
+  const [noMatch, setNoMatch] = useState(false);
 
   const debouncedQuery = useDebounce(query, 250);
 
@@ -122,23 +132,34 @@ export function CityAutocomplete({
     }
     setShowingPopular(false);
     setLoading(true);
+    // Guard against out-of-order responses: a slow reply for an older query
+    // must never overwrite results of the newer one.
+    const seq = ++searchSeqRef.current;
     searchCities(debouncedQuery, 8)
       .then((rows) => {
+        if (seq !== searchSeqRef.current) return;
         setResults(rows);
         setOpen(userTypingRef.current && rows.length > 0);
-        setActiveIdx(-1);
+        // Auto-highlight the top suggestion (combobox best practice): Enter
+        // or blur commits it without requiring an arrow-down first.
+        setActiveIdx(rows.length > 0 ? 0 : -1);
+        setNoMatch(userTypingRef.current && rows.length === 0);
       })
       .catch(() => {
+        if (seq !== searchSeqRef.current) return;
         setResults([]);
         setOpen(false);
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        if (seq === searchSeqRef.current) setLoading(false);
+      });
   }, [debouncedQuery, showingPopular]);
 
   const commit = (city: City) => {
     selectedRef.current = true;
     userTypingRef.current = false;
     setShowingPopular(false);
+    setNoMatch(false);
     setQuery(city.nameRu);
     onChange(city.nameRu);
     setOpen(false);
@@ -172,9 +193,10 @@ export function CityAutocomplete({
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       setActiveIdx((i) => Math.max(i - 1, 0));
-    } else if (e.key === "Enter" && activeIdx >= 0) {
+    } else if (e.key === "Enter") {
       e.preventDefault();
-      const city = results[activeIdx];
+      // activeIdx defaults to the top suggestion, so plain Enter picks it.
+      const city = results[activeIdx] ?? results[0];
       if (city) commit(city);
     } else if (e.key === "Escape") {
       setOpen(false);
@@ -210,6 +232,7 @@ export function CityAutocomplete({
           onChange={(e) => {
             userTypingRef.current = true;
             setShowingPopular(false);
+            setNoMatch(false);
             setQuery(e.target.value);
             onChange("");
             onInputChange?.(e.target.value);
@@ -218,16 +241,18 @@ export function CityAutocomplete({
           onFocus={handleFocus}
           onBlur={() => {
             userTypingRef.current = false;
-            // Auto-commit an exact (case-insensitive) match so typing a full city
-            // name counts even without an explicit click — otherwise the value
-            // stays empty and dependent submit buttons stay disabled.
+            // Leaving the field with typed text auto-commits the best match
+            // ("Бишке" → Бишкек) so the form never sits silently disabled:
+            // exact name match first, otherwise the top-ranked suggestion.
             const q = query.trim().toLowerCase();
-            if (q && !value) {
-              const exact = results.find((c) => c.nameRu.toLowerCase() === q);
-              if (exact) {
-                commit(exact);
+            if (q && !value && !showingPopular) {
+              const exact = results.find((c) => c.nameRu.toLowerCase() === q || c.nameKg.toLowerCase() === q);
+              const best = exact ?? results[0];
+              if (best) {
+                commit(best);
                 return;
               }
+              setNoMatch(true);
             }
             setTimeout(() => {
               setOpen(false);
@@ -243,6 +268,7 @@ export function CityAutocomplete({
             "w-full bg-transparent font-semibold text-ink-900 outline-none dark:text-white",
             compact ? "py-1.5 text-[12px]" : "py-2 text-[14px]",
             borderless ? "pr-3" : "rounded-2xl border border-ink-200 bg-white pl-9 pr-3 focus:border-brand-500",
+            noMatch && !borderless && "border-coral-400 focus:border-coral-400",
             "placeholder:text-ink-400",
             "disabled:cursor-not-allowed disabled:opacity-50",
           )}
@@ -254,6 +280,12 @@ export function CityAutocomplete({
           />
         )}
       </div>
+
+      {noMatch && (
+        <p className="mt-1 text-[11px] font-semibold text-coral-500" role="alert">
+          {query.trim() && results.length === 0 ? t("no_matches") : t("pick_from_list")}
+        </p>
+      )}
 
       {open && results.length > 0 && (
         <ul
@@ -289,7 +321,7 @@ export function CityAutocomplete({
               <MapPin className="h-3 w-3 flex-shrink-0 text-ink-400" aria-hidden="true" />
               <div className="min-w-0">
                 <p className={cn("font-bold text-ink-900", compact ? "text-[12px]" : "text-[13px]")}>{city.nameRu}</p>
-                <p className="text-[11px] font-semibold text-ink-400">{getSubtitle(city)}</p>
+                <p className="text-[11px] font-semibold text-ink-400">{getSubtitle(city, locale)}</p>
               </div>
             </li>
           ))}

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Zap, Calendar, Clock } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Chip, SectionLabel, DatePickerModal } from "@/components/ui";
+import { Chip, SectionLabel, DatePickerModal, TimeSelect24 } from "@/components/ui";
 import type { ChipAccent } from "@/components/ui";
 
 // When block — design-spec §2.4: date chips (Завтра / Послезавтра / Гибко /
@@ -34,7 +34,9 @@ function fmt(iso: string): string {
 export function WhenChips({ date, time, flexible, tomorrow, dayAfter, today, accent, flexChip, onDate, onTime, onFlexible }: Props) {
   const t = useTranslations("create");
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [customTimeOpen, setCustomTimeOpen] = useState(false);
   const isCustom = !flexible && date !== "" && date !== tomorrow && date !== dayAfter;
+  const isCustomTime = time !== "" && !TIME_OPTIONS.includes(time);
 
   const pickDate = (v: string) => {
     onFlexible(false);
@@ -82,13 +84,21 @@ export function WhenChips({ date, time, flexible, tomorrow, dayAfter, today, acc
             ))}
             <Chip
               kind="time"
-              selected={false}
-              onClick={() => setPickerOpen(true)}
+              selected={isCustomTime}
+              onClick={() => setCustomTimeOpen((v) => !v)}
               icon={<Clock className="h-3.5 w-3.5" aria-hidden="true" />}
             >
-              {t("time_other")}
+              {isCustomTime ? time : t("time_other")}
             </Chip>
           </div>
+          {(customTimeOpen || isCustomTime) && (
+            <TimeSelect24
+              value={time}
+              onChange={onTime}
+              ariaLabel={t("time_label")}
+              selectClassName="h-10 rounded-xl border-2 border-ink-200 bg-white px-2 text-[13px] font-bold text-ink-900 outline-none focus:border-brand-400 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
+            />
+          )}
         </div>
       )}
 

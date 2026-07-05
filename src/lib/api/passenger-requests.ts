@@ -32,6 +32,8 @@ export interface ListPassengerRequestsParams {
 }
 
 export interface PassengerRequestsResult {
+  /** true = exact city had no results; page shows same-raion (sub-city) matches */
+  nearby?: boolean;
   data: PassengerRequest[];
   nextCursor: string | null;
 }
