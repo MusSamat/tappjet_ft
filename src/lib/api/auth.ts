@@ -177,6 +177,11 @@ export async function sendPhoneOtpTelegram(phone: string): Promise<{ expiresInSe
   return data;
 }
 
+export async function confirmPhoneFromTelegram(response: string): Promise<AuthResult> {
+  const { data } = await api.post<AuthResult>("/users/me/phone/from-telegram", { response });
+  return data;
+}
+
 export async function confirmPhoneAdd(newPhone: string, code: string): Promise<AuthResult> {
   const { data } = await api.patch<AuthResult>("/users/me/phone/confirm", {
     newPhone,

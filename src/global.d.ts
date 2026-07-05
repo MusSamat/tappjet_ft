@@ -28,6 +28,11 @@ interface TelegramWebApp {
   ready(): void;
   expand(): void;
   close(): void;
+  /** Bot API 6.9+: asks the user to share the phone their Telegram account is
+   *  registered on; `response` is a bot-token-signed payload for the backend. */
+  requestContact?(
+    callback: (ok: boolean, event?: { status?: string; response?: string }) => void,
+  ): void;
   sendData(data: string): void;
   showAlert(message: string, callback?: () => void): void;
   showConfirm(message: string, callback: (confirmed: boolean) => void): void;

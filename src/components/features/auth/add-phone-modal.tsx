@@ -9,7 +9,9 @@ import {
   sendOtp,
   sendPhoneOtpTelegram,
   confirmPhoneAdd,
+  confirmPhoneFromTelegram,
 } from "@/lib/api/auth";
+import { detectRuntime } from "@/lib/detect-runtime";
 import { useAuth } from "@/store/auth";
 import { extractError } from "@/lib/api/client";
 import { openTelegramDeepLink } from "@/lib/utils/open-telegram";
@@ -121,6 +123,36 @@ export function AddPhoneModal({ open, onClose, onDone }: Props) {
     }
   };
 
+  // Primary TMA path: Telegram shares the account's own verified number as a
+  // signed payload — one tap, no code. Manual entry stays for other numbers.
+  const canRequestContact =
+    detectRuntime() === "telegram" &&
+    typeof window !== "undefined" &&
+    typeof window.Telegram?.WebApp?.requestContact === "function";
+
+  const handleShareContact = () => {
+    setError(null);
+    setLoading(true);
+    window.Telegram!.WebApp!.requestContact!((ok, event) => {
+      void (async () => {
+        try {
+          if (!ok || !event?.response) {
+            setError(t("share_declined"));
+            return;
+          }
+          const result = await confirmPhoneFromTelegram(event.response);
+          setSession(result);
+          onDone?.();
+          onClose();
+        } catch (e) {
+          setError(fe(extractError(e)));
+        } finally {
+          setLoading(false);
+        }
+      })();
+    });
+  };
+
   const handleOtpSubmit = async () => {
     if (otp.length < 6) return;
     setLoading(true);
@@ -170,7 +202,21 @@ export function AddPhoneModal({ open, onClose, onDone }: Props) {
             <p className="text-[13px] font-700 text-ink-500 dark:text-ink-400">
               {user?.telegramLinked ? t("hint_linked") : t("hint_default")}
             </p>
-            <PhoneInput value={phone} onValueChange={setPhone} autoFocus />
+            {canRequestContact && (
+              <>
+                <Button
+                  variant="cta"
+                  size="lg"
+                  className="w-full"
+                  disabled={loading}
+                  onClick={handleShareContact}
+                >
+                  {loading ? <Spinner size={16} /> : t("share_tg_btn")}
+                </Button>
+                <p className="text-center text-[12px] font-600 text-ink-400">{t("share_tg_or")}</p>
+              </>
+            )}
+            <PhoneInput value={phone} onValueChange={setPhone} autoFocus={!canRequestContact} />
             <Button
               variant="cta"
               size="lg"
