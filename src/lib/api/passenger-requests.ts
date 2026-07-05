@@ -13,6 +13,8 @@ export interface PassengerRequest extends EngagementFields {
   comment: string | null;
   status: string;
   createdAt: string;
+  /** The viewing driver's own response to this request, if any. */
+  myResponse?: { id: string; status: string } | null;
   passenger: {
     id: string;
     name: string;

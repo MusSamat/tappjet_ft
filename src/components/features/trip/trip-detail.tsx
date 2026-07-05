@@ -178,6 +178,7 @@ function DetailCta({
   onSignin,
   originCity,
   destinationCity,
+  myBooking,
   size = "mobile",
 }: {
   role: "guest" | "passenger" | "driver";
@@ -185,10 +186,22 @@ function DetailCta({
   onSignin: () => void;
   originCity?: string;
   destinationCity?: string;
+  myBooking?: { id: string; status: string } | null;
   size?: "mobile" | "desktop";
 }) {
   const t = useTranslations("detail");
   const h = size === "desktop" ? "h-14 text-[16px]" : "h-12 text-[14px]";
+  // Already booked → no duplicate; the CTA becomes an entry to the chat.
+  if (role === "passenger" && myBooking) {
+    return (
+      <Link href={`/my/bookings/${myBooking.id}/chat`} className="block">
+        <Button variant="brand" className={cn("w-full", h)}>
+          <MessageCircle className="h-5 w-5" aria-hidden="true" />
+          {t("cta_already_booked")}
+        </Button>
+      </Link>
+    );
+  }
   if (role === "driver") {
     const href = `/trips/create?from=${encodeURIComponent(originCity ?? "")}&to=${encodeURIComponent(destinationCity ?? "")}`;
     return (
@@ -317,7 +330,7 @@ export function TripDetailView({ trip, variant = "page", autoOpenBook = false }:
   );
 
   const cta = (
-    <DetailCta role={role} onBook={handleBook} onSignin={handleSignin} originCity={trip.originCity} destinationCity={trip.destinationCity} />
+    <DetailCta role={role} onBook={handleBook} onSignin={handleSignin} originCity={trip.originCity} destinationCity={trip.destinationCity} myBooking={(trip as { myBooking?: { id: string; status: string } | null }).myBooking ?? null} />
   );
 
   const bookingModal = (
@@ -430,6 +443,7 @@ export function TripDetailView({ trip, variant = "page", autoOpenBook = false }:
               onSignin={handleSignin}
               originCity={trip.originCity}
               destinationCity={trip.destinationCity}
+              myBooking={(trip as { myBooking?: { id: string; status: string } | null }).myBooking ?? null}
               size="desktop"
             />
           </div>

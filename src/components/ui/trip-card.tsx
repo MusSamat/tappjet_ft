@@ -5,6 +5,7 @@ import {
   AlarmClock,
   Ban,
   Briefcase,
+  CheckCircle2,
   Clock,
   Eye,
   Music,
@@ -40,6 +41,8 @@ interface TripCardProps {
   instant?: boolean;
   /** «Весь салон» badge + sofa amenity */
   wholeCabin?: boolean;
+  /** Viewer already has an active booking on this trip → show a badge. */
+  booked?: boolean;
 }
 
 const BADGE_BASE =
@@ -54,6 +57,7 @@ function TripCardInner({
   showBookButton,
   instant,
   wholeCabin,
+  booked,
 }: TripCardProps) {
   const t = useTranslations("card");
   const locale = useLocale() as Locale;
@@ -95,7 +99,14 @@ function TripCardInner({
   const stops = trip.pickupCities?.length ? trip.pickupCities.join(" · ") : null;
 
   let badge: ReactNode = null;
-  if (seatsAvailable === 0) {
+  if (booked) {
+    badge = (
+      <span className={cn(BADGE_BASE, "bg-brand-500 text-white")}>
+        <CheckCircle2 className="h-3 w-3" aria-hidden="true" />
+        {t("booked")}
+      </span>
+    );
+  } else if (seatsAvailable === 0) {
     badge = (
       <span className={cn(BADGE_BASE, "bg-ink-200 text-ink-500 dark:bg-ink-700 dark:text-ink-300")}>
         <Ban className="h-3 w-3" aria-hidden="true" />

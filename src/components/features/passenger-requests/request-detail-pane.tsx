@@ -180,6 +180,16 @@ export function RequestDetailPane({ request }: Props) {
             >
               {t("login_to_respond")}
             </Link>
+          ) : isDriver && request.myResponse ? (
+            // Already responded → no duplicate; edit-resend or just show state.
+            <button
+              type="button"
+              onClick={() => setShowModal(true)}
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl border-2 border-grape-300 bg-grape-50 text-[14px] font-bold text-grape-700 transition-colors hover:bg-grape-100"
+            >
+              <CheckCircle className="h-4 w-4" aria-hidden />
+              {t("responded_edit")}
+            </button>
           ) : isDriver && isOpen ? (
             <button
               type="button"

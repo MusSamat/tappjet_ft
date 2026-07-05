@@ -217,9 +217,9 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
         <Button type="button" variant="ghost" size="lg" className="flex-1" onClick={() => router.back()}>
           {t("cancel")}
         </Button>
-        <Button type="submit" variant="submit" size="lg" disabled={disabled} className="flex-[2]">
-          <Send className="h-4 w-4" aria-hidden="true" />
-          {mutation.isPending ? t("sending") : `${t("submit")} · ${formatPrice(total)}`}
+        <Button type="submit" variant="submit" size="lg" disabled={disabled} className="min-w-0 flex-[2]">
+          <Send className="h-4 w-4 shrink-0" aria-hidden="true" />
+          <span className="truncate">{mutation.isPending ? t("sending") : t("submit")}</span>
         </Button>
       </div>
     </form>

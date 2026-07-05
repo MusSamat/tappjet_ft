@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback, memo } from "react";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { searchTrips, type SearchTripsParams, type TripSearchResult, type TripListItem } from "@/lib/api/trips";
 import { X } from "lucide-react";
@@ -13,6 +13,8 @@ import { BackToTop } from "@/components/ui/back-to-top";
 import { useInfiniteScroll } from "@/lib/hooks/use-infinite-scroll";
 import { useScrollRestoration } from "@/lib/hooks/use-scroll-restoration";
 import { useUiRole } from "@/lib/hooks/use-role-colors";
+import { useAuth } from "@/store/auth";
+import { listMyBookings } from "@/lib/api/bookings";
 
 import { SearchFilters } from "./search-filters";
 import { TripDetailView, type DetailTripData } from "@/components/features/trip/trip-detail";
@@ -63,12 +65,14 @@ const FeedTripRow = memo(function FeedTripRow({
   index,
   active,
   showBook,
+  booked,
   onSelect,
 }: {
   trip: TripListItem;
   index: number;
   active: boolean;
   showBook: boolean;
+  booked: boolean;
   onSelect: (id: string) => void;
 }) {
   return (
@@ -78,6 +82,7 @@ const FeedTripRow = memo(function FeedTripRow({
         active={active}
         onClick={() => onSelect(trip.id ?? "")}
         showBookButton={showBook}
+        booked={booked}
       />
     </div>
   );
@@ -104,6 +109,22 @@ export function SearchLayout({ params, initial }: Props) {
   });
 
   const trips = data?.pages.flatMap((p) => p.data) ?? [];
+
+  // Which of these trips the viewer already booked — one query, so cards show a
+  // «Забронировано» badge and the user isn't confused about which they've sent.
+  const authed = useAuth((s) => s.status === "authenticated");
+  const { data: myBookings } = useQuery({
+    queryKey: ["bookings", "my", "outgoing"],
+    queryFn: () => listMyBookings(),
+    enabled: authed && role === "passenger",
+    staleTime: 30_000,
+  });
+  const bookedTripIds = new Set(
+    (myBookings?.data ?? [])
+      .filter((b) => ["pending", "viewed", "accepted"].includes(b.status as string))
+      .map((b) => (b as { tripId?: string }).tripId)
+      .filter(Boolean) as string[],
+  );
   const selectedTrip: TripListItem | null = trips.find((t) => t.id === selectedId) ?? trips[0] ?? null;
 
   useEffect(() => {
@@ -145,6 +166,7 @@ export function SearchLayout({ params, initial }: Props) {
           index={i}
           active={!mobile && selectedId === trip.id}
           showBook={mobile && role === "passenger"}
+          booked={bookedTripIds.has(trip.id ?? "")}
           onSelect={onSelect}
         />
       ))}
