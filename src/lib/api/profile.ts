@@ -40,6 +40,10 @@ export async function exportData(): Promise<Blob> {
 
 export interface DriverStatusView {
   status: "none" | "pending" | "verified" | "rejected" | "docs_requested" | "suspended" | "blocked";
+  submittedAt: string | null;
+  verifiedAt: string | null;
+  rejectionReason: string | null;
+  requestedDocs: string[];
   car: {
     make: string;
     model: string;
@@ -59,17 +63,13 @@ export async function getDriverStatus(): Promise<DriverStatusView> {
 export async function uploadCarPhoto(file: File): Promise<{ carPhotoUrl: string }> {
   const form = new FormData();
   form.append("file", file);
-  const { data } = await api.patch<{ carPhotoUrl: string }>("/drivers/car-photo", form, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+  const { data } = await api.patch<{ carPhotoUrl: string }>("/drivers/car-photo", form);
   return data;
 }
 
 export async function uploadAvatar(file: File): Promise<{ avatarUrl: string }> {
   const form = new FormData();
   form.append("avatar", file);
-  const { data } = await api.post<{ avatarUrl: string }>("/users/avatar", form, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+  const { data } = await api.post<{ avatarUrl: string }>("/users/avatar", form);
   return data;
 }

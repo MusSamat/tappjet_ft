@@ -16,7 +16,5 @@ export async function submitComplaint(input: SubmitComplaintInput, images?: File
   if (input.targetUserId) form.append("targetUserId", input.targetUserId);
   if (input.targetTripId) form.append("targetTripId", input.targetTripId);
   images?.forEach((f) => form.append("attachments", f));
-  await api.post("/complaints", form, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+  await api.post("/complaints", form);
 }

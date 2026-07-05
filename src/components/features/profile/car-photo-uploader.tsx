@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { getDriverStatus, uploadCarPhoto } from "@/lib/api/profile";
 import { Spinner } from "@/components/ui";
 import { cn } from "@/lib/utils/cn";
+import { normalizeMediaUrl } from "@/lib/utils/media-url";
 
 async function compressImage(file: File): Promise<File> {
   return new Promise((resolve, reject) => {
@@ -84,7 +85,9 @@ export function CarPhotoUploader() {
   if (!status || status.status !== "verified" || !status.car) return null;
 
   const { car } = status;
-  const currentPhotoUrl = preview ?? car.photoUrl;
+  // Backend returns BASE_URL-prefixed paths (localhost in dev) — rewrite to
+  // the API origin the client actually uses, same as the avatar uploader.
+  const currentPhotoUrl = preview ?? normalizeMediaUrl(car.photoUrl);
 
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-6">

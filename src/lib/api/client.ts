@@ -60,6 +60,13 @@ export const setTokens = (pair: Pick<TokenPair, "accessToken" | "refreshToken">)
 
 api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`;
+  // The instance defaults to application/json. For FormData (avatar, car photo,
+  // driver docs, complaint photos) that default must be dropped so axios/the
+  // browser generate `multipart/form-data; boundary=…` — otherwise multer sees
+  // no file and returns missing_file. One place covers every upload endpoint.
+  if (config.data instanceof FormData) {
+    delete config.headers["Content-Type"];
+  }
   return config;
 });
 

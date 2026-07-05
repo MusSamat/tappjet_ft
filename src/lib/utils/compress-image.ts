@@ -73,7 +73,14 @@ export async function compressImage(file: File, opts: CompressOptions = {}): Pro
     throw new ImageValidationError("too_small");
   }
 
-  const scale = Math.min(1, maxWidth / img.width, maxHeight / img.height);
+  // Orientation-aware max box: a portrait shot must not be squeezed into the
+  // landscape box (1080×1920 → 675×1200 broke the server's min-width check).
+  const portrait = img.height > img.width;
+  const boxW = portrait ? Math.min(maxWidth, maxHeight) : maxWidth;
+  const boxH = portrait ? Math.max(maxWidth, maxHeight) : maxHeight;
+  let scale = Math.min(1, boxW / img.width, boxH / img.height);
+  // Never scale below the validated minimum — quality caps handle size instead.
+  scale = Math.min(1, Math.max(scale, minWidth / img.width, minHeight / img.height));
   const w = Math.max(1, Math.round(img.width * scale));
   const h = Math.max(1, Math.round(img.height * scale));
 
