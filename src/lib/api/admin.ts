@@ -85,7 +85,13 @@ export interface AdminLoginResult {
   refreshToken: string;
   accessTokenExpiresIn: number;
   refreshTokenExpiresIn: number;
-  admin: { id: string; email: string; name: string; role: "admin" | "superadmin" };
+  admin: {
+    id: string;
+    email: string;
+    name: string;
+    role: "admin" | "superadmin";
+    mustChangePassword: boolean;
+  };
 }
 
 export interface KpiCards {
@@ -97,6 +103,10 @@ export interface KpiCards {
   pendingVerifications: number;
   openComplaints: number;
   avgDriverRating: number | null;
+  dau: number;
+  mau: number;
+  cancellationRate7d: number | null;
+  openRequests: number;
 }
 
 // ── Verifications ─────────────────────────────────────────────────────────────
@@ -119,7 +129,14 @@ export interface VerificationDetail {
   userId: string;
   user: { id: string; name: string; phone: string; language: string };
   car: { make: string; model: string; year: number; color: string; plate: string; seats: number };
-  photos: { license: string; carPassport: string; carPhoto: string; selfie: string };
+  photos: {
+    license: string;
+    licenseBack: string | null;
+    carPassport: string;
+    carPassportBack: string | null;
+    carPhoto: string;
+    selfie: string;
+  };
   verificationStatus: string;
   rejectionReason: string | null;
   requestedDocs: string[];
@@ -131,6 +148,10 @@ export interface VerificationDetail {
 // ── Users ─────────────────────────────────────────────────────────────────────
 
 export interface AdminUserItem {
+  language: string;
+  phoneConfirmed: boolean;
+  avatarUrl: string | null;
+  lastSeenAt: string | null;
   id: string;
   name: string;
   phone: string;
@@ -227,6 +248,10 @@ export async function adminLogin(
   return data;
 }
 
+export async function adminChangePassword(currentPassword: string, newPassword: string): Promise<void> {
+  await adminApi.post("/auth/admin/change-password", { currentPassword, newPassword });
+}
+
 // ─── Analytics ───────────────────────────────────────────────────────────────
 
 export async function getAdminKpi(): Promise<KpiCards> {
@@ -294,6 +319,8 @@ export async function listAdminUsers(params?: {
   role?: string;
   blocked?: "true" | "false";
   sort?: "created_desc" | "created_asc" | "rating_desc" | "rating_asc";
+  registered_from?: string;
+  registered_to?: string;
   cursor?: string;
   limit?: number;
 }): Promise<CursorPage<AdminUserItem>> {
@@ -324,6 +351,8 @@ export async function unblockUser(id: string): Promise<AdminUserDetail> {
 
 export async function listAdminComplaints(params?: {
   status?: string;
+  category?: string;
+  priority?: string;
   cursor?: string;
   limit?: number;
 }): Promise<CursorPage<ComplaintItem>> {

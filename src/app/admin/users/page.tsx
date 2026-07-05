@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { listAdminUsers, type AdminUserItem } from "@/lib/api/admin";
+import { normalizeMediaUrl } from "@/lib/utils/media-url";
 import { StatusBadge } from "@/components/ui";
 import { cn } from "@/lib/utils/cn";
 import { Search, ChevronRight, ChevronLeft, Star, Car } from "lucide-react";
@@ -21,6 +22,9 @@ export default function AdminUsersPage() {
   const [q, setQ] = useState("");
   const [roleFilter, setRoleFilter] = useState<"" | "driver" | "passenger">("");
   const [blockedFilter, setBlockedFilter] = useState<"" | "true" | "false">("");
+  const [sort, setSort] = useState<"created_desc" | "created_asc" | "rating_desc" | "rating_asc">("created_desc");
+  const [regFrom, setRegFrom] = useState("");
+  const [regTo, setRegTo] = useState("");
   const debouncedQ = useDebounce(q, 300);
 
   // Cursor stack for prev/next paging; reset whenever a filter changes.
@@ -28,15 +32,18 @@ export default function AdminUsersPage() {
   const cursor = cursors[cursors.length - 1];
   useEffect(() => {
     setCursors([]);
-  }, [debouncedQ, roleFilter, blockedFilter]);
+  }, [debouncedQ, roleFilter, blockedFilter, sort, regFrom, regTo]);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["admin", "users", debouncedQ, roleFilter, blockedFilter, cursor],
+    queryKey: ["admin", "users", debouncedQ, roleFilter, blockedFilter, sort, regFrom, regTo, cursor],
     queryFn: () =>
       listAdminUsers({
         q: debouncedQ || undefined,
         role: roleFilter || undefined,
         blocked: (blockedFilter || undefined) as "true" | "false" | undefined,
+        sort,
+        registered_from: regFrom ? new Date(`${regFrom}T00:00:00`).toISOString() : undefined,
+        registered_to: regTo ? new Date(`${regTo}T23:59:59`).toISOString() : undefined,
         cursor,
         limit: 20,
       }),
@@ -74,6 +81,26 @@ export default function AdminUsersPage() {
           <option value="driver">Водители</option>
           <option value="passenger">Пассажиры</option>
         </select>
+        <select
+          value={sort}
+          onChange={(e) => setSort(e.target.value as typeof sort)}
+          className="rounded-xl border border-ink-200 bg-white px-4 py-2.5 text-[13px] outline-none focus:border-ink-400"
+        >
+          <option value="created_desc">Сначала новые</option>
+          <option value="created_asc">Сначала старые</option>
+          <option value="rating_desc">Рейтинг ↓</option>
+          <option value="rating_asc">Рейтинг ↑</option>
+        </select>
+        <label className="flex items-center gap-1 text-[12px] font-bold text-ink-500">
+          Регистрация с
+          <input type="date" value={regFrom} onChange={(e) => setRegFrom(e.target.value)}
+            className="rounded-xl border border-ink-200 bg-white px-2 py-2 text-[13px] outline-none focus:border-ink-400" />
+        </label>
+        <label className="flex items-center gap-1 text-[12px] font-bold text-ink-500">
+          по
+          <input type="date" value={regTo} onChange={(e) => setRegTo(e.target.value)}
+            className="rounded-xl border border-ink-200 bg-white px-2 py-2 text-[13px] outline-none focus:border-ink-400" />
+        </label>
         <select
           value={blockedFilter}
           onChange={(e) => setBlockedFilter(e.target.value as "" | "true" | "false")}
@@ -115,6 +142,9 @@ export default function AdminUsersPage() {
                 <th className="hidden px-4 py-3 text-left text-[11px] font-bold uppercase tracking-widest text-ink-400 lg:table-cell">
                   Зарег.
                 </th>
+                <th className="hidden px-4 py-3 text-left text-[11px] font-bold uppercase tracking-widest text-ink-400 xl:table-cell">
+                  Активность
+                </th>
                 <th className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-widest text-ink-400">
                   Статус
                 </th>
@@ -126,12 +156,28 @@ export default function AdminUsersPage() {
                 <tr key={u.id} className="group hover:bg-ink-50">
                   <td className="px-4 py-3">
                     <Link href={`/admin/users/${u.id}`} className="flex items-center gap-3">
-                      <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-ink-200 text-[12px] font-bold text-ink-600">
-                        {u.name.charAt(0).toUpperCase()}
-                      </div>
+                      {u.avatarUrl ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={normalizeMediaUrl(u.avatarUrl) ?? u.avatarUrl}
+                          alt=""
+                          className="h-9 w-9 flex-shrink-0 rounded-full object-cover"
+                        />
+                      ) : (
+                        <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-ink-200 text-[12px] font-bold text-ink-600">
+                          {u.name.charAt(0).toUpperCase()}
+                        </div>
+                      )}
                       <div>
-                        <p className="font-bold text-ink-900">{u.name}</p>
-                        <p className="text-[11px] text-ink-500">{u.phone}</p>
+                        <p className="font-bold text-ink-900">
+                          {u.name}
+                          <span className="ml-1.5 align-middle text-[10px] font-bold uppercase text-ink-400">
+                            {u.language}
+                          </span>
+                        </p>
+                        <p className="text-[11px] text-ink-500">
+                          {u.phoneConfirmed ? u.phone : "⚠ без телефона (Telegram)"}
+                        </p>
                       </div>
                     </Link>
                   </td>
@@ -175,6 +221,9 @@ export default function AdminUsersPage() {
                   </td>
                   <td className="hidden px-4 py-3 text-[13px] text-ink-500 lg:table-cell">
                     {fmt(u.createdAt)}
+                  </td>
+                  <td className="hidden px-4 py-3 text-[13px] text-ink-500 xl:table-cell">
+                    {u.lastSeenAt ? fmt(u.lastSeenAt) : "—"}
                   </td>
                   <td className="px-4 py-3">
                     {u.isBlocked ? (

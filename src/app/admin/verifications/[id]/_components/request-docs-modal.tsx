@@ -6,11 +6,14 @@ import { requestVerificationDocs } from "@/lib/api/admin";
 import { Button } from "@/components/ui";
 
 const REQUESTABLE_DOCS = [
-  { id: "passport", label: "Паспорт" },
-  { id: "driver_license", label: "Водительское удостоверение" },
-  { id: "car_registration", label: "Тех. паспорт авто" },
-  { id: "selfie", label: "Сэлфи с документом" },
+  // ids MUST match the backend PhotoCategory enum — the old "driver_license"
+  // id silently produced requests the driver's re-upload screen ignored.
+  { id: "license", label: "Права — лицевая сторона" },
+  { id: "license_back", label: "Права — обратная сторона" },
+  { id: "car_passport", label: "Техпаспорт — лицевая сторона" },
+  { id: "car_passport_back", label: "Техпаспорт — обратная сторона" },
   { id: "car_photo", label: "Фото автомобиля" },
+  { id: "selfie", label: "Селфи" },
 ];
 
 interface Props {

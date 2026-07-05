@@ -11,6 +11,11 @@ import {
 import { Button, StatusBadge, type StatusBadgeStatus } from "@/components/ui";
 import { ArrowLeft, CheckCircle2, XCircle, FileQuestion } from "lucide-react";
 import { PhotoCard } from "./_components/photo-card";
+import { normalizeMediaUrl } from "@/lib/utils/media-url";
+
+// Storage URLs come with the backend's BASE_URL (localhost in dev) — rewrite
+// to the API origin the admin actually uses (tunnel), like the avatar path.
+const norm = (u: string): string => normalizeMediaUrl(u) ?? u;
 import { RejectModal } from "./_components/reject-modal";
 import { RequestDocsModal } from "./_components/request-docs-modal";
 
@@ -157,10 +162,16 @@ export default function VerificationDetailPage() {
           Документы и фото
         </p>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <PhotoCard label="Водительское уд." src={item.photos.license} />
-          <PhotoCard label="Тех. паспорт" src={item.photos.carPassport} />
-          <PhotoCard label="Фото авто" src={item.photos.carPhoto} />
-          <PhotoCard label="Сэлфи" src={item.photos.selfie} />
+          <PhotoCard label="Права — лицевая" src={norm(item.photos.license)} />
+          {item.photos.licenseBack && (
+            <PhotoCard label="Права — обратная" src={norm(item.photos.licenseBack)} />
+          )}
+          <PhotoCard label="Техпаспорт — лицевая" src={norm(item.photos.carPassport)} />
+          {item.photos.carPassportBack && (
+            <PhotoCard label="Техпаспорт — обратная" src={norm(item.photos.carPassportBack)} />
+          )}
+          <PhotoCard label="Фото авто (спереди)" src={norm(item.photos.carPhoto)} />
+          <PhotoCard label="Сэлфи" src={norm(item.photos.selfie)} />
         </div>
       </div>
 

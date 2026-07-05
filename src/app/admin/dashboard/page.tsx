@@ -136,6 +136,9 @@ export default function AdminDashboard() {
             <KpiCard label="Верификации" value={k?.pendingVerifications ?? 0} sub="ожидают проверки" icon={ShieldAlert} accent={k?.pendingVerifications ? "text-accent-600" : undefined} href="/admin/verifications" />
             <KpiCard label="Открытые жалобы" value={k?.openComplaints ?? 0} sub="требуют реакции" icon={MessageSquareWarning} accent={k?.openComplaints ? "text-danger-600" : undefined} href="/admin/complaints" />
             <KpiCard label="Рейтинг водителей" value={k?.avgDriverRating != null ? k.avgDriverRating.toFixed(2) : "—"} sub="среднее (≥3 отзывов)" icon={Star} accent="text-accent-500" />
+            <KpiCard label="DAU / MAU" value={k ? `${k.dau} / ${k.mau}` : "—"} sub="актив за 24ч / 30 дней" icon={Star} accent="text-brand-500" />
+            <KpiCard label="Отмены поездок" value={k?.cancellationRate7d != null ? `${k.cancellationRate7d}%` : "—"} sub="от исходов за 7 дней" icon={Star} accent="text-coral-500" />
+            <KpiCard label="Открытые запросы" value={k?.openRequests ?? "—"} sub="запросы пассажиров сейчас" icon={Star} accent="text-grape-500" />
           </>
         )}
       </div>

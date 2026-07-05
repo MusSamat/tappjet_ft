@@ -7,7 +7,7 @@ import { adminLogin } from "@/lib/api/admin";
 import { Button } from "@/components/ui";
 import type { AxiosError } from "axios";
 
-interface ApiErr { error?: { code?: string; message?: string } }
+interface ApiErr { error?: { code?: string; message?: string; details?: { reason?: string } } }
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
@@ -31,16 +31,26 @@ export default function AdminLoginPage() {
         accessTokenExpiresIn: result.accessTokenExpiresIn,
         refreshToken: result.refreshToken,
       });
-      router.replace("/admin/dashboard");
+      // Temp password must be replaced before entering the panel.
+      router.replace(result.admin.mustChangePassword ? "/admin/change-password" : "/admin/dashboard");
     } catch (err: unknown) {
-      const code = (err as AxiosError<ApiErr>)?.response?.data?.error?.code;
-      if (code === "TOTP_REQUIRED") {
+      const body = (err as AxiosError<ApiErr>)?.response?.data?.error;
+      const code = body?.code;
+      const reason = (body?.details as { reason?: string } | undefined)?.reason;
+      if (reason === "totp_required") {
         setShowTotp(true);
         setError("Введите код из приложения аутентификатора");
-      } else if (code === "INVALID_CREDENTIALS") {
+      } else if (reason === "totp_invalid") {
+        setShowTotp(true);
+        setError("Неверный код аутентификатора");
+      } else if (reason === "admin_credentials") {
         setError("Неверный email или пароль");
+      } else if (code === "VALIDATION_ERROR") {
+        setError("Проверьте формат: email и пароль не короче 8 символов");
+      } else if (code === "RATE_LIMITED") {
+        setError("Слишком много попыток — подождите минуту");
       } else {
-        setError("Ошибка входа. Попробуйте снова.");
+        setError(`Ошибка входа. Попробуйте снова${reason ? ` (${reason})` : ""}.`);
       }
     } finally {
       setLoading(false);

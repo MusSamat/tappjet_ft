@@ -44,11 +44,18 @@ function fmt(iso: string): string {
 
 export default function AdminComplaintsPage() {
   const [status, setStatus] = useState<StatusFilter>("new");
+  const [category, setCategory] = useState("");
+  const [priority, setPriority] = useState("");
 
   const { data, isLoading } = useQuery({
-    queryKey: ["admin", "complaints", status],
+    queryKey: ["admin", "complaints", status, category, priority],
     queryFn: () =>
-      listAdminComplaints({ status: status === "all" ? undefined : status, limit: 50 }),
+      listAdminComplaints({
+        status: status === "all" ? undefined : status,
+        category: category || undefined,
+        priority: priority || undefined,
+        limit: 50,
+      }),
     staleTime: 30_000,
   });
 
@@ -75,6 +82,29 @@ export default function AdminComplaintsPage() {
             {t.label}
           </button>
         ))}
+        <select
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          className="rounded-full border border-ink-200 bg-white px-3 py-1.5 text-[12px] font-bold text-ink-600"
+        >
+          <option value="">Все категории</option>
+          <option value="safety">Безопасность</option>
+          <option value="fraud">Мошенничество</option>
+          <option value="rudeness">Грубость</option>
+          <option value="no_show">Не приехал</option>
+          <option value="other">Другое</option>
+        </select>
+        <select
+          value={priority}
+          onChange={(e) => setPriority(e.target.value)}
+          className="rounded-full border border-ink-200 bg-white px-3 py-1.5 text-[12px] font-bold text-ink-600"
+        >
+          <option value="">Любой приоритет</option>
+          <option value="P0">P0 — критично</option>
+          <option value="P1">P1</option>
+          <option value="P2">P2</option>
+          <option value="P3">P3</option>
+        </select>
       </div>
 
       {isLoading ? (

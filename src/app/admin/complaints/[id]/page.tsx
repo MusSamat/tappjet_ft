@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getAdminComplaint, resolveComplaint, type ComplaintItem } from "@/lib/api/admin";
+import { normalizeMediaUrl } from "@/lib/utils/media-url";
 import { Button, StatusBadge } from "@/components/ui";
 import { cn } from "@/lib/utils/cn";
 import { ArrowLeft, AlertTriangle } from "lucide-react";
@@ -135,7 +136,7 @@ export default function ComplaintDetailPage() {
           <div className="mt-3 grid grid-cols-3 gap-2">
             {complaint.attachments.map((url, i) => (
               <a key={i} href={url} target="_blank" rel="noopener noreferrer">
-                <img src={url} alt="" className="h-20 w-full rounded-xl object-cover hover:opacity-90" />
+                <img src={normalizeMediaUrl(url) ?? url} alt="" className="h-20 w-full rounded-xl object-cover hover:opacity-90" />
               </a>
             ))}
           </div>
