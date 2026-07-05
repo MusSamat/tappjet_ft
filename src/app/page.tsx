@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, ShieldCheck } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { OnboardingGate } from "@/components/features/onboarding/onboarding-gate";
 import { HeroSection } from "@/components/features/home/hero-section";
 import { BecomeDriverCta } from "@/components/features/home/become-driver-cta";
 import { getPopularRoutes } from "@/lib/api/cities";
@@ -12,8 +11,6 @@ export default async function HomePage() {
 
   return (
     <>
-      <OnboardingGate />
-
       {/* ===== HERO — search-first for guest/passenger, publish-first for driver ===== */}
       <HeroSection />
 

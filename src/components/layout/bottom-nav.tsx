@@ -99,7 +99,9 @@ export function BottomNav() {
   // focused input (chat, OTP) or rides on top of the keyboard.
   // Chat thread pages are full-screen conversations (standard mobile chat
   // pattern) — the nav stays hidden there; back leads to the /chat hub.
-  if (keyboardOpen || isThread) return null;
+  // Auth is a pre-app full-screen flow — no nav there. Onboarding KEEPS the
+  // nav (the welcome page reserves space for it and shows it below the CTAs).
+  if (keyboardOpen || isThread || startsWith("/auth")) return null;
 
   return (
     <nav

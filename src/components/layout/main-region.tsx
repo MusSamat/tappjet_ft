@@ -14,6 +14,9 @@ import { cn } from "@/lib/utils/cn";
  */
 export function MainRegion({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const selfManaged = pathname === "/" || pathname.includes("/chat");
+  // /onboarding fills its own 100dvh and clears the nav itself — adding the
+  // 96px main pad on top of that would overflow the viewport and force a scroll.
+  const selfManaged =
+    pathname === "/" || pathname.includes("/chat") || pathname === "/onboarding";
   return <main className={cn(!selfManaged && "main-mobile-pad")}>{children}</main>;
 }
