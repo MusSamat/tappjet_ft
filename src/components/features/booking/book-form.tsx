@@ -140,15 +140,19 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
         </NotifCard>
       )}
 
-      {/* Seats + price in one compact card */}
+      {/* Seats + price in one compact card. Label + sub stack vertically on the
+          left (sub can be long — «700 сом × 1 · Наличными») so it never pushes
+          the stepper / amount off-screen on mobile. */}
       <div className="divide-y divide-ink-100 rounded-2xl border border-ink-200 bg-white">
-        <div className="flex items-center justify-between px-4 py-2.5">
-          <span className="flex items-center gap-2 text-[14px] font-bold text-ink-900">
-            <Users className="h-4 w-4 text-ink-400" aria-hidden="true" />
-            {t("seats_label")}
-            <span className="text-[11px] font-semibold text-ink-400">· {t("available", { n: seatsAvailable })}</span>
-          </span>
-          <div className="flex items-center gap-2.5">
+        <div className="flex items-center justify-between gap-3 px-4 py-2.5">
+          <div className="flex min-w-0 items-center gap-2">
+            <Users className="h-4 w-4 shrink-0 text-ink-400" aria-hidden="true" />
+            <div className="min-w-0">
+              <p className="text-[14px] font-bold leading-tight text-ink-900">{t("seats_label")}</p>
+              <p className="truncate text-[11px] font-semibold text-ink-400">{t("available", { n: seatsAvailable })}</p>
+            </div>
+          </div>
+          <div className="flex shrink-0 items-center gap-2.5">
             <button
               type="button"
               onClick={() => setSeats((s) => Math.max(1, s - 1))}
@@ -170,13 +174,15 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
             </button>
           </div>
         </div>
-        <div className="flex items-center justify-between px-4 py-2.5">
-          <span className="flex items-center gap-2 text-[14px] font-bold text-ink-900">
-            <Wallet className="h-4 w-4 text-brand-500" aria-hidden="true" />
-            {t("pay_to_driver")}
-            <span className="text-[11px] font-semibold text-ink-400">· {t("price_breakdown", { price: String(pricePerSeat), seats })}</span>
-          </span>
-          <span className="text-[20px] font-extrabold text-brand-700">{formatPrice(total)}</span>
+        <div className="flex items-center justify-between gap-3 px-4 py-2.5">
+          <div className="flex min-w-0 items-center gap-2">
+            <Wallet className="h-4 w-4 shrink-0 text-brand-500" aria-hidden="true" />
+            <div className="min-w-0">
+              <p className="text-[14px] font-bold leading-tight text-ink-900">{t("pay_to_driver")}</p>
+              <p className="truncate text-[11px] font-semibold text-ink-400">{t("price_breakdown", { price: String(pricePerSeat), seats })}</p>
+            </div>
+          </div>
+          <span className="shrink-0 text-[20px] font-extrabold text-brand-700">{formatPrice(total)}</span>
         </div>
       </div>
 
