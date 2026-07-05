@@ -1371,7 +1371,10 @@
     "seats_label": "Орундардын саны",
     "seat_minus": "Азыраак орун",
     "seat_plus": "Көбүрөөк орун",
-    "book": "Броньдоо"
+    "book": "Броньдоо",
+    "already_booked_title": "Сиз брондоп койдуңуз",
+    "already_booked_hint": "Бул сапарга активдүү арызыңыз бар.",
+    "already_booked_cta": "Чатты ачуу"
   },
   "profile_forms": {
     "name_label": "Аты",

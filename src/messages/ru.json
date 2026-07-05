@@ -1371,7 +1371,10 @@
     "seats_label": "Количество мест",
     "seat_minus": "Меньше мест",
     "seat_plus": "Больше мест",
-    "book": "Забронировать"
+    "book": "Забронировать",
+    "already_booked_title": "Вы уже забронировали",
+    "already_booked_hint": "У вас есть активная заявка на эту поездку.",
+    "already_booked_cta": "Открыть чат"
   },
   "profile_forms": {
     "name_label": "Имя",

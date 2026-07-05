@@ -58,6 +58,7 @@ function BookView({ trip }: { trip: TripDetail }) {
         tripId={(trip.id as string | undefined) ?? ""}
         seatsAvailable={(trip.seatsAvailable as number | undefined) ?? 0}
         driverId={trip.driverId as string | undefined}
+        myBooking={(trip as { myBooking?: { id: string; status: string } | null }).myBooking ?? null}
       />
     </div>
   );

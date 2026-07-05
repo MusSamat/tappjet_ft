@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { AlertTriangle, Bell, Clock, MessageCircle, Send } from "lucide-react";
+import { AlertTriangle, Bell, Clock, MessageCircle, Send, Users, Wallet } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { createBooking } from "@/lib/api/bookings";
@@ -12,7 +12,7 @@ import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { uuid } from "@/lib/utils/uuid";
 import { saveDeferredAction } from "@/lib/auth/deferred-action";
 import { useAuth } from "@/store/auth";
-import { Button, Label, NotifCard, Spinner, Textarea } from "@/components/ui";
+import { Button, NotifCard, Spinner, Textarea } from "@/components/ui";
 import { formatPrice } from "@/lib/utils/date";
 
 type Step = "form" | "waiting";
@@ -131,7 +131,7 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
         if (disabled) return;
         mutation.mutate();
       }}
-      className="flex flex-col gap-4"
+      className="flex flex-col gap-3"
       noValidate
     >
       {serverError && (
@@ -140,47 +140,59 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
         </NotifCard>
       )}
 
-      {/* Seat stepper */}
-      <div className="rounded-2xl border border-ink-200 bg-white p-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-[15px] font-bold text-ink-900">{t("seats_label")}</p>
-            <p className="mt-0.5 text-[12px] font-semibold text-ink-500">{t("available", { n: seatsAvailable })}</p>
-          </div>
-          <div className="flex items-center gap-3">
+      {/* Seats + price in one compact card */}
+      <div className="divide-y divide-ink-100 rounded-2xl border border-ink-200 bg-white">
+        <div className="flex items-center justify-between px-4 py-2.5">
+          <span className="flex items-center gap-2 text-[14px] font-bold text-ink-900">
+            <Users className="h-4 w-4 text-ink-400" aria-hidden="true" />
+            {t("seats_label")}
+            <span className="text-[11px] font-semibold text-ink-400">· {t("available", { n: seatsAvailable })}</span>
+          </span>
+          <div className="flex items-center gap-2.5">
             <button
               type="button"
               onClick={() => setSeats((s) => Math.max(1, s - 1))}
               aria-label={t("seat_minus")}
               disabled={seats <= 1 || disabled}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-ink-300 text-[20px] font-bold text-ink-900 hover:bg-ink-100 disabled:opacity-40"
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-ink-300 text-[18px] font-bold text-ink-900 hover:bg-ink-100 disabled:opacity-40"
             >
               −
             </button>
-            <span className="min-w-[28px] text-center text-[24px] font-extrabold text-ink-900">{seats}</span>
+            <span className="min-w-[24px] text-center text-[20px] font-extrabold text-ink-900">{seats}</span>
             <button
               type="button"
               onClick={() => setSeats((s) => Math.min(max, s + 1))}
               aria-label={t("seat_plus")}
               disabled={seats >= max || disabled}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-ink-300 text-[20px] font-bold text-ink-900 hover:bg-ink-100 disabled:opacity-40"
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-ink-300 text-[18px] font-bold text-ink-900 hover:bg-ink-100 disabled:opacity-40"
             >
               +
             </button>
           </div>
         </div>
+        <div className="flex items-center justify-between px-4 py-2.5">
+          <span className="flex items-center gap-2 text-[14px] font-bold text-ink-900">
+            <Wallet className="h-4 w-4 text-brand-500" aria-hidden="true" />
+            {t("pay_to_driver")}
+            <span className="text-[11px] font-semibold text-ink-400">· {t("price_breakdown", { price: String(pricePerSeat), seats })}</span>
+          </span>
+          <span className="text-[20px] font-extrabold text-brand-700">{formatPrice(total)}</span>
+        </div>
       </div>
 
-      {/* Comment */}
+      {/* Comment — compact: chips + 2-row textarea */}
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="comment">{t("comment_label")}</Label>
+        <span className="flex items-center gap-1.5 text-[12px] font-bold text-ink-500">
+          <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" />
+          {t("comment_label")}
+        </span>
         <div className="flex flex-wrap gap-1.5">
           {[t("chip_bus_station"), t("chip_small_luggage"), t("chip_alone"), t("chip_early")].map((chip) => (
             <button
               key={chip}
               type="button"
-              onClick={() => setComment((prev) => prev ? `${prev}, ${chip.toLowerCase()}` : chip)}
-              className="rounded-full border border-ink-200 bg-ink-50 px-2.5 py-1 text-[13px] font-semibold text-ink-600 transition-colors hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700"
+              onClick={() => setComment((prev) => (prev ? `${prev}, ${chip.toLowerCase()}` : chip))}
+              className="rounded-full border border-ink-200 bg-ink-50 px-2.5 py-1 text-[12px] font-semibold text-ink-600 transition-colors hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700"
             >
               {chip}
             </button>
@@ -191,31 +203,14 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
           value={comment}
           onChange={(e) => setComment(e.target.value.slice(0, 300))}
           placeholder={t("comment_placeholder")}
-          rows={3}
+          rows={2}
         />
-        <span className="text-caption text-ink-500">{t("comment_counter", { n: comment.length })}</span>
       </div>
 
-      {/* Price summary */}
-      <div className="rounded-2xl border border-brand-100 bg-brand-50 p-4">
-        <div className="flex items-center justify-between">
-          <span className="text-[15px] font-extrabold text-ink-900">{t("pay_to_driver")}</span>
-          <span className="text-[24px] font-extrabold text-brand-700">{formatPrice(total)}</span>
-        </div>
-        <p className="mt-1 text-[12px] font-semibold text-ink-500">
-          {t("price_breakdown", { price: String(pricePerSeat), seats })}
-        </p>
-      </div>
-
-      {/* Warning */}
-      <div className="rounded-2xl border border-accent-100 bg-accent-50 px-3 py-2.5">
-        <div className="flex items-center gap-2">
-          <AlertTriangle className="h-3.5 w-3.5 flex-shrink-0 text-accent-600" aria-hidden="true" />
-          <span className="text-[13px] font-bold text-ink-900">{t("warning_title")}</span>
-        </div>
-        <p className="mt-1 text-[12px] font-semibold text-ink-500">
-          {t("warning_hint")}
-        </p>
+      {/* Warning — one compact line */}
+      <div className="flex items-center gap-2 rounded-xl border border-accent-100 bg-accent-50 px-3 py-2">
+        <AlertTriangle className="h-3.5 w-3.5 flex-shrink-0 text-accent-600" aria-hidden="true" />
+        <span className="text-[12px] font-semibold text-accent-700">{t("warning_hint")}</span>
       </div>
 
       <div className="flex gap-2">
@@ -224,7 +219,7 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
         </Button>
         <Button type="submit" variant="submit" size="lg" disabled={disabled} className="flex-[2]">
           <Send className="h-4 w-4" aria-hidden="true" />
-          {mutation.isPending ? t("sending") : t("submit")}
+          {mutation.isPending ? t("sending") : `${t("submit")} · ${formatPrice(total)}`}
         </Button>
       </div>
     </form>

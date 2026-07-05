@@ -2,7 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, CheckCircle } from "lucide-react";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui";
 import { saveDeferredAction } from "@/lib/auth/deferred-action";
@@ -14,9 +15,11 @@ interface Props {
   seatsAvailable: number;
   driverId?: string;
   disabled?: boolean;
+  /** Viewer's active booking on this trip — blocks a duplicate up front. */
+  myBooking?: { id: string; status: string } | null;
 }
 
-export function BookButton({ tripId, seatsAvailable, driverId, disabled }: Props) {
+export function BookButton({ tripId, seatsAvailable, driverId, disabled, myBooking }: Props) {
   const t = useTranslations("book_button");
   const router = useRouter();
   const authStatus = useAuth((s) => s.status);
@@ -55,6 +58,25 @@ export function BookButton({ tripId, seatsAvailable, driverId, disabled }: Props
       <div className="rounded-2xl border border-brand-200 bg-brand-50 p-4 text-center">
         <p className="text-body font-bold text-brand-700">{t("own_trip_title")}</p>
         <p className="mt-1 text-caption text-brand-600">{t("own_trip_hint")}</p>
+      </div>
+    );
+  }
+
+  // Already booked this trip → no duplicate; offer the chat instead.
+  if (myBooking) {
+    return (
+      <div className="rounded-2xl border border-brand-200 bg-brand-50 p-4 text-center">
+        <p className="flex items-center justify-center gap-1.5 text-body font-bold text-brand-700">
+          <CheckCircle className="h-4 w-4" aria-hidden="true" />
+          {t("already_booked_title")}
+        </p>
+        <p className="mt-1 text-caption text-brand-600">{t("already_booked_hint")}</p>
+        <Link href={`/my/bookings/${myBooking.id}/chat`} className="mt-3 inline-block">
+          <Button type="button" variant="primary" size="md">
+            <MessageCircle className="h-4 w-4" aria-hidden="true" />
+            {t("already_booked_cta")}
+          </Button>
+        </Link>
       </div>
     );
   }
