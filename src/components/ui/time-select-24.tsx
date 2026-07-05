@@ -18,11 +18,13 @@ interface Props {
 
 export function TimeSelect24({ value, onChange, className, selectClassName, ariaLabel }: Props) {
   const [h = "", m = ""] = value.split(":");
+  // min-w-0 + flex-1 (added below) keep the two selects inside their container
+  // on narrow screens instead of overflowing into a horizontal scroll.
   const base =
     selectClassName ??
-    "h-12 rounded-2xl border-2 border-ink-200 bg-ink-50 px-2 text-[13px] font-semibold text-ink-900 outline-none focus:border-sky-400 focus:bg-white dark:border-ink-700 dark:bg-ink-900 dark:text-white";
+    "h-12 min-w-0 flex-1 rounded-2xl border-2 border-ink-200 bg-ink-50 px-2 text-center text-[14px] font-semibold text-ink-900 outline-none focus:border-sky-400 focus:bg-white dark:border-ink-700 dark:bg-ink-900 dark:text-white";
   return (
-    <div className={className ?? "flex items-center gap-1.5"}>
+    <div className={className ?? "flex w-full items-center gap-1.5"}>
       <select
         value={h}
         aria-label={ariaLabel}

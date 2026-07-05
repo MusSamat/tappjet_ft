@@ -69,26 +69,26 @@ export function RespondModal({ request, onClose }: Props) {
             <div>
               <p className={FIELD_LABEL}>{t("price_label")}</p>
               <input
-                type="number"
-                min={1}
-                max={100000}
+                type="text"
+                inputMode="numeric"
                 value={price}
-                onChange={(e) => setPrice(e.target.value)}
+                onChange={(e) => setPrice(e.target.value.replace(/\D/g, "").slice(0, 6))}
                 placeholder={t("price_placeholder")}
                 className="h-12 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 text-[16px] font-bold text-ink-900 outline-none focus:border-sky-400 focus:bg-white dark:border-ink-700 dark:bg-ink-800 dark:text-white"
               />
             </div>
 
-            {/* Date + time — time needs more room than date (two selects), so
-                give it the wider column instead of an even 50/50 split. */}
-            <div className="grid grid-cols-[5fr_7fr] gap-3">
+            {/* Date + time — stacked on mobile (each full-width, so the date
+                isn't truncated and the time selects don't overflow), side by
+                side from sm up where there's room. */}
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-[5fr_7fr]">
               <div className="min-w-0">
                 <p className={FIELD_LABEL}>{t("date_label")}</p>
                 <DatePicker
                   min={request.departureDate.split("T")[0]}
                   value={date}
                   onChange={setDate}
-                  triggerClassName="h-12 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 text-[13px]"
+                  triggerClassName="h-12 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 text-[14px]"
                 />
               </div>
               <div className="min-w-0">
