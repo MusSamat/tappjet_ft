@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Plus, Users, Star, Shield, ChevronDown, Check, X } from "lucide-react";
+import { Plus, Users, Star, Shield, ChevronDown, Check, X, MessageCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import {
   listMyPassengerRequests,
@@ -117,9 +117,21 @@ function OfferCard({
           </div>
         )}
         {isAccepted && (
-          <span className="flex-shrink-0 rounded-full bg-brand-100 px-2.5 py-1 text-[11px] font-bold text-brand-700">
-            {t("accepted")}
-          </span>
+          <div className="flex flex-shrink-0 flex-col items-end gap-1.5">
+            <span className="rounded-full bg-brand-100 px-2.5 py-1 text-[11px] font-bold text-brand-700">
+              {t("accepted")}
+            </span>
+            {/* Accepting an offer creates the booking — this is the only path to
+                the driver chat for the request flow. */}
+            {response.bookingId && (
+              <Link href={`/my/bookings/${response.bookingId}/chat`}>
+                <span className="flex items-center gap-1 rounded-full border border-brand-200 bg-brand-50 px-2.5 py-1 text-[11px] font-bold text-brand-700 hover:bg-brand-100">
+                  <MessageCircle className="h-3.5 w-3.5" />
+                  {t("chat_btn")}
+                </span>
+              </Link>
+            )}
+          </div>
         )}
         {isDeclined && (
           <span className="flex-shrink-0 rounded-full bg-ink-100 px-2.5 py-1 text-[11px] font-bold text-ink-500">
