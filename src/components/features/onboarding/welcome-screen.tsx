@@ -1,24 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { ArrowRight, LogIn, MessageCircle, ShieldCheck, Wallet } from "lucide-react";
+import { ArrowRight, MessageCircle, ShieldCheck, Wallet } from "lucide-react";
 import { LogoMark } from "@/components/ui";
-import { detectRuntime } from "@/lib/detect-runtime";
 
 interface WelcomeScreenProps {
-  onLogin: () => void;
   onGuest: () => void;
 }
 
 /** Welcome / onboarding entry — design-spec §2.1 (full-bleed teal gradient). */
-export function WelcomeScreen({ onLogin, onGuest }: WelcomeScreenProps) {
+export function WelcomeScreen({ onGuest }: WelcomeScreenProps) {
   const t = useTranslations("welcome");
-  // Inside the Telegram Mini App the account comes from silent Telegram login —
-  // «войти/зарегистрироваться/гость» make no sense there; show a single CTA.
-  // Detected in an effect to keep SSR markup stable (no hydration mismatch).
-  const [isTma, setIsTma] = useState(false);
-  useEffect(() => setIsTma(detectRuntime() === "telegram"), []);
+  // Single «Начать» CTA everywhere. In the Mini App the account comes from
+  // silent Telegram login; in the browser login is done via Telegram too, and
+  // triggers only when a protected action needs it — so the old
+  // «войти / гость» fork is gone. Tapping «Начать» just enters the app.
 
   return (
     // Single-viewport, never-scroll layout: fixed to the DYNAMIC viewport
@@ -64,32 +60,13 @@ export function WelcomeScreen({ onLogin, onGuest }: WelcomeScreenProps) {
         className="mx-auto w-full max-w-[460px] shrink-0 space-y-2.5 px-6 pt-2"
         style={{ paddingBottom: "calc(96px + env(safe-area-inset-bottom))" }}
       >
-        {isTma ? (
-          <button
-            type="button"
-            onClick={onGuest}
-            className="flex h-13 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 py-3.5 text-[15px] font-900 text-accent-ink shadow-cta transition-colors hover:bg-accent-400"
-          >
-            {t("cta_start")} <ArrowRight className="h-5 w-5" aria-hidden="true" />
-          </button>
-        ) : (
-        <>
-        <button
-          type="button"
-          onClick={onLogin}
-          className="flex h-13 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 py-3.5 text-[15px] font-900 text-accent-ink shadow-cta transition-colors hover:bg-accent-400"
-        >
-          <LogIn className="h-5 w-5" aria-hidden="true" /> {t("cta_primary")}
-        </button>
         <button
           type="button"
           onClick={onGuest}
-          className="h-12 w-full rounded-2xl bg-white/15 text-[14px] font-900 text-white ring-1 ring-white/25 transition-colors hover:bg-white/20"
+          className="flex h-13 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 py-3.5 text-[15px] font-900 text-accent-ink shadow-cta transition-colors hover:bg-accent-400"
         >
-          {t("cta_guest")}
+          {t("cta_start")} <ArrowRight className="h-5 w-5" aria-hidden="true" />
         </button>
-        </>
-        )}
       </div>
     </div>
   );

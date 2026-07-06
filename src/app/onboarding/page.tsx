@@ -9,10 +9,6 @@ export default function OnboardingPage() {
 
   return (
     <WelcomeScreen
-      onLogin={() => {
-        markOnboardingSeen();
-        router.push("/auth/login");
-      }}
       onGuest={() => {
         markOnboardingSeen();
         router.replace("/trips");

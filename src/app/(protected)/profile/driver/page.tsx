@@ -333,7 +333,10 @@ export default function DriverVerifyPage() {
                     }}
                     className="mt-1 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[14px] font-semibold text-ink-900 outline-none focus:border-brand-500"
                   >
-                    <option value="" disabled>{t("make_placeholder")}</option>
+                    {/* NOT disabled: a disabled empty option makes mobile/Telegram
+                        WebViews display the first real option (Toyota) while the
+                        value stays "" — looked selected but failed validation. */}
+                    <option value="">{t("make_placeholder")}</option>
                     {CAR_MAKES.map((m) => <option key={m} value={m}>{m}</option>)}
                     <option value={OTHER_MAKE}>{t("make_other")}</option>
                   </select>
