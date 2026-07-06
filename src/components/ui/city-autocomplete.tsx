@@ -267,7 +267,7 @@ export function CityAutocomplete({
           className={cn(
             "w-full bg-transparent font-semibold text-ink-900 outline-none dark:text-white",
             compact ? "py-1.5 text-[12px]" : "py-2 text-[14px]",
-            borderless ? "pr-3" : "rounded-2xl border border-ink-200 bg-white pl-9 pr-3 focus:border-brand-500",
+            borderless ? "pr-3" : "rounded-2xl border border-ink-200 bg-white pl-9 pr-3 focus:border-brand-500 dark:border-ink-700 dark:bg-ink-900",
             noMatch && !borderless && "border-coral-400 focus:border-coral-400",
             "placeholder:text-ink-400",
             "disabled:cursor-not-allowed disabled:opacity-50",
@@ -293,10 +293,10 @@ export function CityAutocomplete({
           id={`${inputId}-list`}
           role="listbox"
           style={popupStyle}
-          className="overflow-hidden rounded-2xl border border-ink-100 bg-white shadow-soft"
+          className="overflow-hidden rounded-2xl border border-ink-100 bg-white shadow-soft dark:border-ink-800 dark:bg-ink-900"
         >
           {showingPopular && (
-            <li className="border-b border-ink-100 px-4 py-2">
+            <li className="border-b border-ink-100 px-4 py-2 dark:border-ink-800">
               <span className="text-[10px] font-bold uppercase tracking-wide text-ink-400">
                 {t("popular_cities")}
               </span>
@@ -315,12 +315,12 @@ export function CityAutocomplete({
               className={cn(
                 "flex cursor-pointer items-center gap-2 transition-colors",
                 compact ? "px-3 py-1.5" : "px-4 py-2.5",
-                idx === activeIdx ? "bg-brand-50" : "hover:bg-ink-50",
+                idx === activeIdx ? "bg-brand-50 dark:bg-brand-500/15" : "hover:bg-ink-50 dark:hover:bg-ink-800",
               )}
             >
               <MapPin className="h-3 w-3 flex-shrink-0 text-ink-400" aria-hidden="true" />
               <div className="min-w-0">
-                <p className={cn("font-bold text-ink-900", compact ? "text-[12px]" : "text-[13px]")}>{city.nameRu}</p>
+                <p className={cn("font-bold text-ink-900 dark:text-white", compact ? "text-[12px]" : "text-[13px]")}>{city.nameRu}</p>
                 <p className="text-[11px] font-semibold text-ink-400">{getSubtitle(city, locale)}</p>
               </div>
             </li>
