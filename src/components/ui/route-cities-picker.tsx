@@ -133,7 +133,7 @@ export function RouteCitiesPicker({
             }}
             onFocus={() => setOpen(true)}
             onBlur={() => setTimeout(() => setOpen(false), 150)}
-            className="w-full rounded-lg border border-ink-200 bg-white py-1.5 pl-8 pr-7 text-[12px] font-semibold text-ink-900 outline-none placeholder:text-ink-400 focus:border-brand-500"
+            className="w-full rounded-lg border border-ink-200 bg-white py-1.5 pl-8 pr-7 text-[12px] font-semibold text-ink-900 outline-none placeholder:text-ink-400 focus:border-brand-500 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
           />
           {isFetching && (
             <span className="absolute right-2.5 top-1/2 -translate-y-1/2">

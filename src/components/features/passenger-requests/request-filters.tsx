@@ -16,7 +16,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 }
 
 const selectCls =
-  "h-10 w-full rounded-xl border-2 border-ink-200 bg-ink-50 px-3 text-[13px] font-semibold text-ink-900 outline-none focus:border-sky-400 focus:bg-white transition-colors";
+  "h-10 w-full rounded-xl border-2 border-ink-200 bg-ink-50 px-3 text-[13px] font-semibold text-ink-900 outline-none focus:border-sky-400 focus:bg-white transition-colors dark:border-ink-700 dark:bg-ink-900 dark:text-white dark:focus:bg-ink-900";
 
 export function RequestFilters() {
   const router = useRouter();

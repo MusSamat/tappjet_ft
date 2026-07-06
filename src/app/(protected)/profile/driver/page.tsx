@@ -331,7 +331,7 @@ export default function DriverVerifyPage() {
                         setCarMake(e.target.value);
                       }
                     }}
-                    className="mt-1 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[14px] font-semibold text-ink-900 outline-none focus:border-brand-500"
+                    className="mt-1 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[14px] font-semibold text-ink-900 outline-none focus:border-brand-500 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
                   >
                     {/* NOT disabled: a disabled empty option makes mobile/Telegram
                         WebViews display the first real option (Toyota) while the
@@ -346,7 +346,7 @@ export default function DriverVerifyPage() {
                       value={carMake}
                       onChange={(e) => setCarMake(e.target.value)}
                       placeholder={t("make_other_placeholder")}
-                      className="mt-2 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[14px] font-semibold text-ink-900 outline-none focus:border-brand-500"
+                      className="mt-2 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[14px] font-semibold text-ink-900 outline-none focus:border-brand-500 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
                     />
                   )}
                   {fieldErrors.carMake && (
@@ -361,7 +361,7 @@ export default function DriverVerifyPage() {
                     value={carModel}
                     onChange={(e) => setCarModel(e.target.value)}
                     placeholder={t("model_placeholder")}
-                    className="mt-1 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[14px] font-semibold text-ink-900 outline-none focus:border-brand-500"
+                    className="mt-1 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[14px] font-semibold text-ink-900 outline-none focus:border-brand-500 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
                   />
                   {fieldErrors.carModel && (
                     <p className="mt-1 text-[11px] font-700 text-coral-500">{fieldErrors.carModel}</p>
@@ -379,7 +379,7 @@ export default function DriverVerifyPage() {
                     placeholder={t("year_placeholder")}
                     min={1980}
                     max={new Date().getFullYear() + 1}
-                    className="mt-1 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[14px] font-semibold text-ink-900 outline-none focus:border-brand-500"
+                    className="mt-1 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[14px] font-semibold text-ink-900 outline-none focus:border-brand-500 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
                   />
                   {fieldErrors.carYear && (
                     <p className="mt-1 text-[11px] font-700 text-coral-500">{fieldErrors.carYear}</p>
@@ -393,7 +393,7 @@ export default function DriverVerifyPage() {
                     value={color}
                     onChange={(e) => setColor(e.target.value)}
                     placeholder={t("color_placeholder")}
-                    className="mt-1 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[14px] font-semibold text-ink-900 outline-none focus:border-brand-500"
+                    className="mt-1 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[14px] font-semibold text-ink-900 outline-none focus:border-brand-500 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
                   />
                   {fieldErrors.carColor && (
                     <p className="mt-1 text-[11px] font-700 text-coral-500">{fieldErrors.carColor}</p>
@@ -414,7 +414,7 @@ export default function DriverVerifyPage() {
                     spellCheck={false}
                     maxLength={10}
                     inputMode="text"
-                    className={`mt-1 w-full rounded-2xl border-2 bg-ink-50 px-3 py-2.5 text-[14px] font-800 uppercase tracking-widest text-ink-900 outline-none focus:border-brand-500 ${plate && !plateValid ? "border-coral-400" : "border-ink-200"}`}
+                    className={`mt-1 w-full rounded-2xl border-2 bg-ink-50 px-3 py-2.5 text-[14px] font-800 uppercase tracking-widest text-ink-900 outline-none focus:border-brand-500 dark:bg-ink-900 dark:text-white ${plate && !plateValid ? "border-coral-400" : "border-ink-200 dark:border-ink-700"}`}
                   />
                   {plate && !plateValid && (
                     <p className="mt-1 text-[11px] font-700 text-coral-500">
@@ -444,7 +444,7 @@ export default function DriverVerifyPage() {
                     placeholder="4"
                     min={1}
                     max={7}
-                    className="mt-1 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[14px] font-semibold text-ink-900 outline-none focus:border-brand-500"
+                    className="mt-1 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[14px] font-semibold text-ink-900 outline-none focus:border-brand-500 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
                   />
                   {fieldErrors.seatsCount && (
                     <p className="mt-1 text-[11px] font-700 text-coral-500">{fieldErrors.seatsCount}</p>
