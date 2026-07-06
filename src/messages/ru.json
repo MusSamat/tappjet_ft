@@ -20,7 +20,7 @@
     "new": "Новый",
     "flexible": "Гибко",
     "cancel": "Отменить",
-    "booked": "Забронировано"
+    "booked": "Заявка отправлена"
   },
   "status": {
     "active": "Активна",
@@ -80,6 +80,7 @@
     "create_request_btn": "Создать заявку",
     "sign_in_btn": "Войти",
     "profile_link": "Профиль",
+    "become_driver": "Стать водителем",
     "driver_label": "Водитель",
     "passenger_label": "Пассажир",
     "logout": "Выйти",
@@ -281,7 +282,8 @@
       "save_password": "Сохранить пароль",
       "skip_btn": "Пропустить →",
       "app_title": "Вход в Tappjet",
-      "app_subtitle": "Межгород попутки Кыргызстана"
+      "app_subtitle": "Межгород попутки Кыргызстана",
+      "telegram_only_hint": "Новый или существующий аккаунт — просто продолжите через Telegram."
     },
     "register": {
       "title": "Регистрация",
@@ -337,7 +339,8 @@
       "err_telegram_expired": "Ссылка устарела. Начните заново.",
       "confirm_password_label": "Повторите пароль",
       "confirm_password_placeholder": "Повторите пароль",
-      "passwords_mismatch": "Пароли не совпадают"
+      "passwords_mismatch": "Пароли не совпадают",
+      "telegram_only_hint": "Регистрация через Telegram — номер подтвердится автоматически."
     }
   },
   "trips": {
@@ -757,6 +760,7 @@
     "role_driver": "Водитель",
     "become_driver_title": "Стать водителем",
     "become_driver_sub": "публикуйте поездки, зарабатывайте",
+    "become_driver_hide": "Скрыть",
     "quick_bonuses": "Бонусы",
     "add_phone_title": "Добавьте номер телефона",
     "add_phone_sub": "Нужен для бронирования и связи с водителями",
@@ -775,6 +779,9 @@
   },
   "driver_reg": {
     "back": "← Назад",
+    "gate_phone_title": "Сначала добавьте номер",
+    "gate_phone_text": "Чтобы стать водителем, подтвердите номер телефона — так пассажиры смогут с вами связаться.",
+    "gate_phone_cta": "Добавить номер",
     "title": "Стать водителем",
     "subtitle": "Верификация занимает 24 часа. Все данные хранятся безопасно.",
     "docs_section": "Документы",
@@ -1152,7 +1159,7 @@
     "cta_create_similar": "Создать похожую поездку",
     "trust_pay": "Оплата водителю при встрече",
     "trust_verified": "Документы водителя проверены",
-    "cta_already_booked": "Вы забронировали · Открыть чат"
+    "cta_already_booked": "Заявка отправлена · Открыть чат"
   },
   "create": {
     "back": "Назад",
@@ -1375,7 +1382,7 @@
     "seat_minus": "Меньше мест",
     "seat_plus": "Больше мест",
     "book": "Забронировать",
-    "already_booked_title": "Вы уже забронировали",
+    "already_booked_title": "Заявка уже отправлена",
     "already_booked_hint": "У вас есть активная заявка на эту поездку.",
     "already_booked_cta": "Открыть чат"
   },

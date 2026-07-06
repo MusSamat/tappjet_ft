@@ -8,6 +8,8 @@ import { extractError } from "@/lib/api/client";
 import { consumeDeferredAction, routeForIntent } from "@/lib/auth/deferred-action";
 import { useAuth } from "@/store/auth";
 import { LogoMark, NotifCard, ProgressBar } from "@/components/ui";
+import { SocialButtons } from "@/components/features/auth/social-buttons";
+import { AUTH_TELEGRAM_ONLY } from "@/lib/auth/telegram-only";
 import { PhoneStep } from "./_steps/phone-step";
 import { TelegramStep } from "./_steps/telegram-step";
 import { ProfileStep } from "./_steps/profile-step";
@@ -59,6 +61,30 @@ export default function RegisterPage() {
     };
     setServerError(known[err.code] ?? err.message);
   };
+
+  // Telegram-only testing period: registration happens through the same Telegram
+  // flow as login (the bot's request_contact gives us the verified number).
+  // The legacy phone/OTP multi-step flow below is kept but not reachable.
+  if (AUTH_TELEGRAM_ONLY) {
+    return (
+      <div className="flex min-h-[calc(100vh-64px)] flex-col bg-white dark:bg-ink-950">
+        <div className="mx-auto flex w-full max-w-[400px] flex-1 flex-col justify-center px-6 py-10">
+          <div className="mb-6 text-center">
+            <LogoMark className="mx-auto mb-4 h-16 w-16 rounded-3xl shadow-brandcta" />
+            <h1 className="text-[22px] font-900 text-ink-900 dark:text-white">{t("title")}</h1>
+            <p className="mt-1 text-[13px] font-600 text-ink-400">{t("telegram_only_hint")}</p>
+          </div>
+          <SocialButtons />
+          <p className="mt-5 text-center text-[12px] font-700 text-ink-400">
+            {t("have_account")}{" "}
+            <Link href="/auth/login" className="font-900 text-brand-700 dark:text-brand-300">
+              {t("sign_in")}
+            </Link>
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (step === "routes") {
     return (

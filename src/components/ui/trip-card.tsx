@@ -99,14 +99,7 @@ function TripCardInner({
   const stops = trip.pickupCities?.length ? trip.pickupCities.join(" · ") : null;
 
   let badge: ReactNode = null;
-  if (booked) {
-    badge = (
-      <span className={cn(BADGE_BASE, "bg-brand-500 text-white")}>
-        <CheckCircle2 className="h-3 w-3" aria-hidden="true" />
-        {t("booked")}
-      </span>
-    );
-  } else if (seatsAvailable === 0) {
+  if (seatsAvailable === 0) {
     badge = (
       <span className={cn(BADGE_BASE, "bg-ink-200 text-ink-500 dark:bg-ink-700 dark:text-ink-300")}>
         <Ban className="h-3 w-3" aria-hidden="true" />
@@ -142,6 +135,7 @@ function TripCardInner({
       className={cn(
         "group relative cursor-pointer overflow-hidden rounded-3xl bg-white p-3.5 shadow-card ring-1 ring-ink-100 transition hover:-translate-y-0.5 hover:shadow-lift dark:bg-ink-900 dark:ring-ink-800",
         active && "ring-2 ring-brand-500 dark:ring-brand-500",
+        booked && "bg-emerald-50/60 ring-emerald-200 dark:bg-emerald-500/[0.07] dark:ring-emerald-500/25",
         className,
       )}
       onClick={onClick}
@@ -229,15 +223,25 @@ function TripCardInner({
         </span>
       </div>
 
-      {/* Direct book CTA (mobile lists) */}
+      {/* Direct book CTA (mobile lists) — disabled once the viewer has booked */}
       {showBookButton && trip.id && seatsAvailable > 0 && (
-        <Link
-          href={`/trips/${trip.id}/book`}
-          onClick={(e) => e.stopPropagation()}
-          className="mt-2.5 flex w-full items-center justify-center rounded-xl bg-accent-500 py-2 text-[13px] font-900 text-accent-ink transition-colors hover:bg-accent-400"
-        >
-          {t("book")}
-        </Link>
+        booked ? (
+          <div
+            className="mt-2.5 flex w-full items-center justify-center gap-1.5 rounded-xl bg-emerald-50 py-2 text-[13px] font-900 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300"
+            aria-disabled="true"
+          >
+            <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
+            {t("booked")}
+          </div>
+        ) : (
+          <Link
+            href={`/trips/${trip.id}/book`}
+            onClick={(e) => e.stopPropagation()}
+            className="mt-2.5 flex w-full items-center justify-center rounded-xl bg-accent-500 py-2 text-[13px] font-900 text-accent-ink transition-colors hover:bg-accent-400"
+          >
+            {t("book")}
+          </Link>
+        )
       )}
     </article>
   );

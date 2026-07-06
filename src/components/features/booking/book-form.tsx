@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AlertTriangle, Bell, Clock, MessageCircle, Send, Users, Wallet } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
@@ -30,6 +30,7 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
   const router = useRouter();
   const status = useAuth((s) => s.status);
   const fe = useFriendlyError();
+  const qc = useQueryClient();
 
   const [step, setStep] = useState<Step>("form");
   const [createdBookingId, setCreatedBookingId] = useState<string | null>(null);
@@ -54,6 +55,9 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
     onSuccess: (booking) => {
       setCreatedBookingId(booking.id ?? null);
       setStep("waiting");
+      // Refresh the outgoing-bookings cache so the trip card badge and the
+      // detail CTA flip to "already booked" immediately.
+      void qc.invalidateQueries({ queryKey: ["bookings"] });
     },
     onError: (e) => {
       setServerError(fe(extractError(e)));

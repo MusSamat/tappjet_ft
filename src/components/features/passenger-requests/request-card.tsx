@@ -44,6 +44,7 @@ function RequestCardInner({
       className={cn(
         "group relative cursor-pointer overflow-hidden rounded-3xl bg-white p-3.5 shadow-card ring-1 ring-ink-100 transition hover:-translate-y-0.5 hover:shadow-lift dark:bg-ink-900 dark:ring-ink-800",
         !isOpen && "opacity-60",
+        request.myResponse && "bg-emerald-50/60 ring-emerald-200 dark:bg-emerald-500/[0.07] dark:ring-emerald-500/25",
         className,
       )}
       onClick={onClick}

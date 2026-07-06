@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { useRef, useState, useEffect } from "react";
-import { Bell, Plus, LogOut, User, BookOpen, MessageCircle } from "lucide-react";
+import { Bell, Plus, LogOut, User, BookOpen, MessageCircle, CarFront } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { logout } from "@/lib/api/auth";
@@ -87,6 +87,16 @@ function UserDropdown({ onClose }: { onClose: () => void }) {
             {label}
           </Link>
         ))}
+        {!user?.roles?.includes("driver") && (
+          <Link
+            href="/profile/driver"
+            onClick={onClose}
+            className="flex items-center gap-3 px-4 py-2.5 text-[13px] font-800 text-grape-700 hover:bg-grape-50 dark:text-grape-300 dark:hover:bg-grape-500/10"
+          >
+            <CarFront className="h-4 w-4 text-grape-600 dark:text-grape-400" aria-hidden="true" />
+            {t("become_driver")}
+          </Link>
+        )}
       </div>
 
       <div className="border-t border-ink-100 py-1 dark:border-ink-800">

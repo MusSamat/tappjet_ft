@@ -2,7 +2,7 @@ import type { Config } from "tailwindcss";
 import animate from "tailwindcss-animate";
 
 // Design tokens — mirror the Tappjet Prototype (claude.ai/design, tappjet-proto.js).
-// brand = teal (driver accent), grape = indigo (passenger accent), ink = warm stone
+// brand = teal (passenger accent), grape = indigo (driver accent), ink = warm stone
 // neutrals, accent = amber CTA (text on amber uses accent-ink #4A2C00).
 const brand = {
   50: "#ECFDF8",

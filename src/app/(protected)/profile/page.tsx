@@ -25,6 +25,7 @@ import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { toastSuccess, toastError } from "@/components/layout/quick-toast";
 import { QueryError } from "@/components/ui/query-error";
 import { useAuth } from "@/store/auth";
+import { switchRoleAndReload } from "@/lib/auth/switch-role";
 import { useRoleTheme } from "@/lib/hooks/use-role-colors";
 import { AvatarUploader } from "@/components/features/profile/avatar-uploader";
 import { AddPhoneModal } from "@/components/features/auth/add-phone-modal";
@@ -49,7 +50,6 @@ export default function ProfilePage() {
   const { role, theme } = useRoleTheme();
   const user = useAuth((s) => s.user);
   const activeMode = useAuth((s) => s.activeMode);
-  const setActiveMode = useAuth((s) => s.setActiveMode);
   const clearSession = useAuth((s) => s.clearSession);
   const router = useRouter();
   const [tab, setTab] = useState<Tab>("about");
@@ -116,8 +116,8 @@ export default function ProfilePage() {
   const points = loyalty?.points ?? 0;
   const bio = (user as { bio?: string | null } | null)?.bio;
 
-  // Role switch: driver toggles mode; passenger picking «Водитель» → verification.
-  const pickDriver = () => (isDriver ? setActiveMode("driver") : router.push("/profile/driver"));
+  // Role switch: driver toggles mode (with reload); passenger picking «Водитель» → verification.
+  const pickDriver = () => (isDriver ? switchRoleAndReload("driver") : router.push("/profile/driver"));
 
   const tabLabel: Record<Tab, string> = {
     about: t("tab_about"),
@@ -130,11 +130,11 @@ export default function ProfilePage() {
     <div className="flex gap-1 rounded-2xl bg-white p-1 shadow-soft ring-1 ring-ink-100 dark:bg-ink-900 dark:ring-ink-800">
       <button
         type="button"
-        onClick={() => setActiveMode("passenger")}
+        onClick={() => switchRoleAndReload("passenger")}
         className={cn(
           "flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2 text-[13px] transition-colors",
           activeMode === "passenger"
-            ? "bg-grape-500 font-900 text-white"
+            ? "bg-brand-600 font-900 text-white"
             : "font-800 text-ink-500 dark:text-ink-400",
         )}
       >
@@ -147,7 +147,7 @@ export default function ProfilePage() {
         className={cn(
           "flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2 text-[13px] transition-colors",
           activeMode === "driver"
-            ? "bg-brand-600 font-900 text-white"
+            ? "bg-grape-500 font-900 text-white"
             : "font-800 text-ink-500 dark:text-ink-400",
         )}
       >
@@ -164,7 +164,7 @@ export default function ProfilePage() {
       {!isDriver && (
         <Link
           href="/profile/driver"
-          className="flex w-full items-center gap-3 rounded-3xl bg-brand-600 px-4 py-3.5 text-white shadow-brandcta"
+          className="flex w-full items-center gap-3 rounded-3xl bg-grape-600 px-4 py-3.5 text-white shadow-indigocta"
         >
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white/20">
             <CarFront className="h-5 w-5" aria-hidden="true" />

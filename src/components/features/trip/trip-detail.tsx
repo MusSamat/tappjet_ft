@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
@@ -21,6 +22,8 @@ import {
   Quote,
 } from "lucide-react";
 import { useUiRole } from "@/lib/hooks/use-role-colors";
+import { useAuth } from "@/store/auth";
+import { listMyBookings } from "@/lib/api/bookings";
 import { useRecordView } from "@/lib/hooks/use-record-view";
 import { saveDeferredAction } from "@/lib/auth/deferred-action";
 import { formatDepartureLabel } from "@/lib/utils/date";
@@ -238,6 +241,23 @@ export function TripDetailView({ trip, variant = "page", autoOpenBook = false }:
 
   useRecordView("trip", tripId);
 
+  // The detail page is SSR-cached without the viewer's token, so trip.myBooking
+  // is always null. Resolve it CLIENT-SIDE (shared cache key with the feed).
+  const authed = useAuth((s) => s.status === "authenticated");
+  const { data: myBookings } = useQuery({
+    queryKey: ["bookings", "my", "outgoing"],
+    queryFn: () => listMyBookings(),
+    enabled: authed,
+    staleTime: 30_000,
+  });
+  const myBooking =
+    (myBookings?.data ?? []).find(
+      (b) =>
+        (b as { tripId?: string }).tripId === tripId &&
+        ["pending", "viewed", "accepted"].includes(b.status as string),
+    ) ?? null;
+  const myBookingRef = myBooking ? { id: myBooking.id ?? "", status: myBooking.status as string } : null;
+
   const [bookOpen, setBookOpen] = useState(autoOpenBook);
 
   const handleShare = () => {
@@ -330,7 +350,7 @@ export function TripDetailView({ trip, variant = "page", autoOpenBook = false }:
   );
 
   const cta = (
-    <DetailCta role={role} onBook={handleBook} onSignin={handleSignin} originCity={trip.originCity} destinationCity={trip.destinationCity} myBooking={(trip as { myBooking?: { id: string; status: string } | null }).myBooking ?? null} />
+    <DetailCta role={role} onBook={handleBook} onSignin={handleSignin} originCity={trip.originCity} destinationCity={trip.destinationCity} myBooking={myBookingRef} />
   );
 
   const bookingModal = (
@@ -443,7 +463,7 @@ export function TripDetailView({ trip, variant = "page", autoOpenBook = false }:
               onSignin={handleSignin}
               originCity={trip.originCity}
               destinationCity={trip.destinationCity}
-              myBooking={(trip as { myBooking?: { id: string; status: string } | null }).myBooking ?? null}
+              myBooking={myBookingRef}
               size="desktop"
             />
           </div>

@@ -23,6 +23,7 @@ import { OtpStep } from "./_steps/otp-step";
 import { ResetStep } from "./_steps/reset-step";
 import { cn } from "@/lib/utils/cn";
 import { SocialButtons } from "@/components/features/auth/social-buttons";
+import { AUTH_TELEGRAM_ONLY } from "@/lib/auth/telegram-only";
 
 type Step = "login" | "otp" | "reset";
 
@@ -196,6 +197,16 @@ export default function LoginPage() {
           <>
             <SocialButtons />
 
+            {AUTH_TELEGRAM_ONLY && (
+              <p className="mt-4 text-center text-[12px] font-700 text-ink-400">
+                {tl("telegram_only_hint")}
+              </p>
+            )}
+
+            {/* Legacy phone + password login — hidden during the Telegram-only
+                testing period (see AUTH_TELEGRAM_ONLY). */}
+            {!AUTH_TELEGRAM_ONLY && (
+            <>
             <div className="my-4 flex items-center gap-3">
               <span className="h-px flex-1 bg-ink-200 dark:bg-ink-700" />
               <span className="text-[11px] font-800 text-ink-400">{tl("or_phone")}</span>
@@ -272,6 +283,8 @@ export default function LoginPage() {
                 </Link>
               </p>
             </div>
+            </>
+            )}
           </>
         )}
 

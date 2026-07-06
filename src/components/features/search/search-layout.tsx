@@ -20,6 +20,7 @@ import { SearchFilters } from "./search-filters";
 import { TripDetailView, type DetailTripData } from "@/components/features/trip/trip-detail";
 import { PopularRoutes } from "./popular-routes";
 import { FeedHeader } from "./feed-header";
+import { BecomeDriverBanner } from "@/components/features/driver/become-driver-banner";
 
 interface Props {
   params: SearchTripsParams;
@@ -116,7 +117,7 @@ export function SearchLayout({ params, initial }: Props) {
   const { data: myBookings } = useQuery({
     queryKey: ["bookings", "my", "outgoing"],
     queryFn: () => listMyBookings(),
-    enabled: authed && role === "passenger",
+    enabled: authed,
     staleTime: 30_000,
   });
   const bookedTripIds = new Set(
@@ -234,6 +235,7 @@ export function SearchLayout({ params, initial }: Props) {
         <FeedHeader tab="trips" onOpenFilters={() => setMobileFiltersOpen(true)} />
 
         <div className="px-4 pb-3">
+          <BecomeDriverBanner />
           {trips.length === 0
             ? isError
               ? <QueryError error={error} onRetry={() => void refetch()} />

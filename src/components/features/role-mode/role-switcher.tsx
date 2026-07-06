@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useAuth } from "@/store/auth";
+import { switchRoleAndReload } from "@/lib/auth/switch-role";
 import { cn } from "@/lib/utils/cn";
 
 export function RoleSwitcher() {
@@ -9,7 +10,6 @@ export function RoleSwitcher() {
   const user = useAuth((s) => s.user);
   const status = useAuth((s) => s.status);
   const activeMode = useAuth((s) => s.activeMode);
-  const setActiveMode = useAuth((s) => s.setActiveMode);
 
   if (status !== "authenticated" || !user?.roles?.includes("driver")) return null;
 
@@ -17,11 +17,11 @@ export function RoleSwitcher() {
     <div className="flex rounded-full border border-ink-200 bg-ink-100 p-0.5 text-[12px] font-bold">
       <button
         type="button"
-        onClick={() => setActiveMode("passenger")}
+        onClick={() => switchRoleAndReload("passenger")}
         className={cn(
           "rounded-full px-3.5 py-1 transition-all",
           activeMode === "passenger"
-            ? "bg-grape-500 text-white shadow-sm"
+            ? "bg-brand-600 text-white shadow-sm"
             : "text-ink-500 hover:text-ink-700",
         )}
       >
@@ -29,11 +29,11 @@ export function RoleSwitcher() {
       </button>
       <button
         type="button"
-        onClick={() => setActiveMode("driver")}
+        onClick={() => switchRoleAndReload("driver")}
         className={cn(
           "rounded-full px-3.5 py-1 transition-all",
           activeMode === "driver"
-            ? "bg-brand-600 text-white shadow-sm"
+            ? "bg-grape-500 text-white shadow-sm"
             : "text-ink-500 hover:text-ink-700",
         )}
       >

@@ -45,6 +45,7 @@ export function RespondModal({ request, onClose }: Props) {
     onSuccess: () => {
       toastSuccess(tToasts("offer_sent"));
       void qc.invalidateQueries({ queryKey: ["request-responses", request.id] });
+      void qc.invalidateQueries({ queryKey: ["passenger-requests"] });
       onClose();
     },
     onError: (e) => setError(fe(extractError(e))),

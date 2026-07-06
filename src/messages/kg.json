@@ -20,7 +20,7 @@
     "new": "Жаңы",
     "flexible": "Ийкемдүү",
     "cancel": "Жокко чыгаруу",
-    "booked": "Брондолду"
+    "booked": "Арыз жөнөтүлдү"
   },
   "status": {
     "active": "Активдүү",
@@ -80,6 +80,7 @@
     "create_request_btn": "Арыз түзүү",
     "sign_in_btn": "Кирүү",
     "profile_link": "Профиль",
+    "become_driver": "Айдоочу болуу",
     "driver_label": "Айдоочу",
     "passenger_label": "Жолоочу",
     "logout": "Чыгуу",
@@ -281,7 +282,8 @@
       "save_password": "Купуя сөздү сактоо",
       "skip_btn": "Өткөрүп жиберүү →",
       "app_title": "Tappjetке кирүү",
-      "app_subtitle": "Кыргызстандын шаарлар аралык попутчиктери"
+      "app_subtitle": "Кыргызстандын шаарлар аралык попутчиктери",
+      "telegram_only_hint": "Жаңы же бар аккаунт — Telegram аркылуу улантыңыз."
     },
     "register": {
       "title": "Катталуу",
@@ -337,7 +339,8 @@
       "err_telegram_expired": "Шилтеме эскирди. Кайра баштаңыз.",
       "confirm_password_label": "Купуя сөздү кайталаңыз",
       "confirm_password_placeholder": "Купуя сөздү кайталаңыз",
-      "passwords_mismatch": "Купуя сөздөр дал келбейт"
+      "passwords_mismatch": "Купуя сөздөр дал келбейт",
+      "telegram_only_hint": "Telegram аркылуу катталуу — номер автоматтык түрдө ырасталат."
     }
   },
   "trips": {
@@ -757,6 +760,7 @@
     "role_driver": "Айдоочу",
     "become_driver_title": "Айдоочу болуу",
     "become_driver_sub": "сапарларды жарыялап, киреше табыңыз",
+    "become_driver_hide": "Жашыруу",
     "quick_bonuses": "Бонустар",
     "add_phone_title": "Телефон номериңизди кошуңуз",
     "add_phone_sub": "Брондоо жана айдоочулар менен байланыш үчүн керек",
@@ -775,6 +779,9 @@
   },
   "driver_reg": {
     "back": "← Артка",
+    "gate_phone_title": "Адегенде номер кошуңуз",
+    "gate_phone_text": "Айдоочу болуу үчүн телефон номериңизди ырастаңыз — жүргүнчүлөр сиз менен байланыша алат.",
+    "gate_phone_cta": "Номер кошуу",
     "title": "Айдоочу болуу",
     "subtitle": "Верификация 24 саатта аяктайт. Бардык маалыматтар коопсуз сакталат.",
     "docs_section": "Документтер",
@@ -1152,7 +1159,7 @@
     "cta_create_similar": "Окшош сапар түзүү",
     "trust_pay": "Төлөм жолугушууда айдоочуга",
     "trust_verified": "Айдоочунун документтери текшерилген",
-    "cta_already_booked": "Брондоп койдуңуз · Чатты ачуу"
+    "cta_already_booked": "Арыз жөнөтүлдү · Чатты ачуу"
   },
   "create": {
     "back": "Артка",
@@ -1375,7 +1382,7 @@
     "seat_minus": "Азыраак орун",
     "seat_plus": "Көбүрөөк орун",
     "book": "Броньдоо",
-    "already_booked_title": "Сиз брондоп койдуңуз",
+    "already_booked_title": "Арыз жөнөтүлдү",
     "already_booked_hint": "Бул сапарга активдүү арызыңыз бар.",
     "already_booked_cta": "Чатты ачуу"
   },
