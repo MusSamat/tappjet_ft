@@ -52,9 +52,9 @@ export function PhoneChangeForm() {
   if (step === "otp") {
     return (
       <div className="space-y-4">
-        <p className="text-body-lg text-ink-700">
+        <p className="text-body-lg text-ink-700 dark:text-ink-300">
           {t("otp_sent_to")}{" "}
-          <span className="font-semibold text-ink-900">{newPhone}</span>
+          <span className="font-semibold text-ink-900 dark:text-white">{newPhone}</span>
         </p>
         <div>
           <Label>{t("otp_label")}</Label>

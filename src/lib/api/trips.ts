@@ -19,8 +19,11 @@ export type TripListItem = Omit<GeneratedTripListItem, "driver"> & {
   // Not yet in the generated spec — pickup (origin side) / dropoff (dest side) points.
   pickupCities?: string[];
   dropoffCities?: string[];
+  // «Выезд 06:00–11:00»: departureAt = start, this = optional window end.
+  departureWindowEnd?: string | null;
 } & EngagementFields;
 export type TripDetail = components["schemas"]["TripDetail"] & {
+  departureWindowEnd?: string | null;
   pickupCities?: string[];
   dropoffCities?: string[];
 } & EngagementFields;
@@ -53,6 +56,14 @@ export interface TripSearchResult {
 export async function searchTrips(params: SearchTripsParams): Promise<TripSearchResult> {
   const { data } = await api.get<TripSearchResult>("/trips", { params });
   return data;
+}
+
+/** Per-day active-trip counts for a route — calendar availability hints. */
+export async function getTripsCalendar(from: string, to: string): Promise<Record<string, number>> {
+  const { data } = await api.get<{ data: { date: string; count: number }[] }>("/trips/calendar", {
+    params: { from_city: from, to_city: to },
+  });
+  return Object.fromEntries(data.data.map((d) => [d.date, d.count]));
 }
 
 export async function getTrip(id: string): Promise<TripDetail> {

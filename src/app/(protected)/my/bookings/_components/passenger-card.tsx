@@ -41,7 +41,7 @@ export function PassengerCard({ booking, pendingRating, onRate, onCancel }: {
   const status = booking.status as string;
 
   return (
-    <div className="rounded-2xl border border-ink-100 bg-white p-5 transition-shadow hover:shadow-md">
+    <div className="rounded-2xl border border-ink-100 bg-white p-5 transition-shadow hover:shadow-md dark:bg-ink-900 dark:border-ink-800">
       <Link href={tripId ? `/trips/${tripId}` : "#"} className="block">
         <div className="flex items-start justify-between gap-3">
           <div className="flex min-w-0 flex-1 items-center gap-3">
@@ -51,7 +51,7 @@ export function PassengerCard({ booking, pendingRating, onRate, onCancel }: {
               size="md"
             />
             <div className="min-w-0">
-              <p className="truncate text-[15px] font-extrabold text-ink-900">
+              <p className="truncate text-[15px] font-extrabold text-ink-900 dark:text-white">
                 {trip?.originCity} → {trip?.destinationCity}
               </p>
               <p className="text-[12px] text-ink-500">
@@ -68,7 +68,7 @@ export function PassengerCard({ booking, pendingRating, onRate, onCancel }: {
         <div className="mt-3 flex gap-5">
           <div>
             <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{t("seats_label")}</p>
-            <p className="text-[13px] font-bold text-ink-900">{booking.seatsCount}</p>
+            <p className="text-[13px] font-bold text-ink-900 dark:text-white">{booking.seatsCount}</p>
           </div>
           <div>
             <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{t("sum_label")}</p>

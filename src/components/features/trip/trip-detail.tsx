@@ -48,6 +48,7 @@ export interface DetailTripData {
   seatsAvailable?: number | null;
   seatsTotal?: number | null;
   departureAt?: string | null;
+  departureWindowEnd?: string | null;
   estimatedDurationMin?: number | null;
   luggage?: string | null;
   comment?: string | null;
@@ -84,7 +85,12 @@ function useDetailModel(trip: DetailTripData) {
   const rating = driver.rating ?? null;
   const ratingCount = driver.ratingCount ?? 0;
   const car = driver.car ? [driver.car.make, driver.car.model].filter(Boolean).join(" ") : null;
-  const departureLabel = trip.departureAt ? formatDepartureLabel(trip.departureAt, locale) : "—";
+  // «Сегодня, 06:00» → «Сегодня, 06:00–11:00» — approximate departure window.
+  let departureLabel = trip.departureAt ? formatDepartureLabel(trip.departureAt, locale) : "—";
+  if (trip.departureAt && trip.departureWindowEnd) {
+    const end = new Date(trip.departureWindowEnd);
+    departureLabel += `–${String(end.getHours()).padStart(2, "0")}:${String(end.getMinutes()).padStart(2, "0")}`;
+  }
   const luggageLabel =
     trip.luggage === "yes" ? t("luggage_big") : trip.luggage === "small" ? t("luggage_small") : t("luggage_none");
   const stops = (trip.pickupCities ?? []).concat(trip.dropoffCities ?? []).filter(Boolean);

@@ -59,9 +59,9 @@ export function CancelModal({
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-4">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative max-h-[90dvh] w-full overflow-y-auto rounded-t-[24px] bg-white shadow-2xl sm:max-w-[440px] sm:rounded-3xl">
+      <div className="relative max-h-[90dvh] w-full overflow-y-auto rounded-t-[24px] bg-white shadow-2xl sm:max-w-[440px] sm:rounded-3xl dark:bg-ink-900">
         <div className="flex justify-center pb-1 pt-3 sm:hidden">
-          <div className="h-1 w-10 rounded-full bg-ink-200" />
+          <div className="h-1 w-10 rounded-full bg-ink-200 dark:bg-ink-700" />
         </div>
         <button
           type="button"
@@ -72,7 +72,7 @@ export function CancelModal({
         </button>
 
         <div className="px-6 pb-8 pt-4">
-          <h2 className="text-[18px] font-extrabold text-ink-900">{t("cancel_booking_title")}</h2>
+          <h2 className="text-[18px] font-extrabold text-ink-900 dark:text-white">{t("cancel_booking_title")}</h2>
           <p className="mt-1 text-[13px] text-ink-500">
             {booking.trip?.originCity} → {booking.trip?.destinationCity}
             {booking.trip?.departureAt ? ` · ${fmtDate(booking.trip.departureAt)}` : ""}
@@ -90,8 +90,8 @@ export function CancelModal({
             </div>
           )}
 
-          <div className="mt-4 rounded-2xl bg-ink-50 p-4 text-[12px] text-ink-600">
-            <p className="font-bold text-ink-800">{t("cancel_policy_title")}</p>
+          <div className="mt-4 rounded-2xl bg-ink-50 p-4 text-[12px] text-ink-600 dark:bg-ink-800">
+            <p className="font-bold text-ink-800 dark:text-white">{t("cancel_policy_title")}</p>
             <ul className="mt-1.5 space-y-1">
               <li>{t("cancel_policy_free", { n: LATE_CANCEL_HOURS })}</li>
               <li>{t("cancel_policy_warn", { n: LATE_CANCEL_HOURS })}</li>
@@ -116,7 +116,7 @@ export function CancelModal({
             <button
               type="button"
               onClick={onClose}
-              className="w-full rounded-2xl border border-ink-200 py-3 text-[15px] font-bold text-ink-700 hover:bg-ink-50"
+              className="w-full rounded-2xl border border-ink-200 py-3 text-[15px] font-bold text-ink-700 hover:bg-ink-50 dark:border-ink-700 dark:text-ink-300"
             >
               {t("keep_booking")}
             </button>

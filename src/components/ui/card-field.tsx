@@ -15,7 +15,7 @@ export const CardField = forwardRef<HTMLInputElement, CardFieldProps>(
   ({ icon, label, value, iconBg = "bg-brand-50", className, placeholder, readOnly, ...rest }, ref) => (
     <label
       className={cn(
-        "group flex cursor-pointer items-center gap-3 bg-white px-4 py-3 transition-colors focus-within:bg-brand-50/40",
+        "group flex cursor-pointer items-center gap-3 bg-white dark:bg-ink-900 px-4 py-3 transition-colors focus-within:bg-brand-50/40",
         className,
       )}
     >
@@ -29,14 +29,14 @@ export const CardField = forwardRef<HTMLInputElement, CardFieldProps>(
         {icon}
       </span>
       <span className="flex min-w-0 flex-1 flex-col">
-        <span className="text-label uppercase tracking-wider text-ink-500">{label}</span>
+        <span className="text-label uppercase tracking-wider text-ink-500 dark:text-ink-400">{label}</span>
         <input
           ref={ref}
           type="text"
           defaultValue={value}
           placeholder={placeholder}
           readOnly={readOnly}
-          className="mt-0.5 w-full border-none bg-transparent p-0 text-body-lg font-bold text-ink-900 outline-none placeholder:text-ink-500 placeholder:font-semibold"
+          className="mt-0.5 w-full border-none bg-transparent p-0 text-body-lg font-bold text-ink-900 dark:text-white outline-none placeholder:text-ink-500 placeholder:font-semibold"
           {...rest}
         />
       </span>

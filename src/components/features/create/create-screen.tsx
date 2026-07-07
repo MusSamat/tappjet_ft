@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, CarFront, User, PartyPopper, ShieldCheck, Clock, Phone } from "lucide-react";
@@ -38,6 +38,7 @@ interface Draft {
   dropoff: string[];
   date: string;
   time: string;
+  timeEnd: string; // "" = exact time; else «выезжаем time–timeEnd» (driver only)
   flexible: boolean;
   seats: number;
   price: number;
@@ -61,8 +62,11 @@ function defaults(isDriver: boolean): Draft {
     dropoff: [],
     date: "",
     time: "09:00",
+    timeEnd: "",
     flexible: false,
-    seats: isDriver ? 3 : 2,
+    // Driver: placeholder until the car's capacity loads (see effect below).
+    // Passenger: most requests are for one seat.
+    seats: isDriver ? 3 : 1,
     price: isDriver ? 1200 : 1500,
     comment: "",
     prefs: emptyPrefs(),
@@ -106,6 +110,10 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
   }, [status, router]);
 
 
+  // Whether the user (or a persisted draft) already chose a seat count — the
+  // car-capacity default below must never override an explicit choice.
+  const seatsCustomized = useRef(false);
+
   // Load persisted draft (preserve existing localStorage keys).
   useEffect(() => {
     const base = defaults(isDriver);
@@ -113,6 +121,7 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
     try {
       const raw = localStorage.getItem(draftKey);
       const saved = raw ? (JSON.parse(raw) as Partial<Draft>) : {};
+      seatsCustomized.current = saved.seats !== undefined;
       const merged: Draft = { ...base, ...saved, prefs: { ...base.prefs, ...(saved.prefs ?? {}) } };
       if (initialFrom) merged.originCity = initialFrom;
       if (initialTo) merged.destinationCity = initialTo;
@@ -142,9 +151,25 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
     staleTime: 60_000,
   });
 
+  // Default seats to the car's capacity from the driver profile («Мест» in the
+  // account) — unless the user or a saved draft already chose a count.
+  const carSeats = driverStatus?.car?.seats;
+  useEffect(() => {
+    if (!isDriver || !carSeats || seatsCustomized.current) return;
+    setDraft((prev) => ({ ...prev, seats: Math.min(Math.max(carSeats, 1), 7) }));
+  }, [isDriver, carSeats]);
+
   const departureAt = (): string => {
     const day = /^\d{4}-\d{2}-\d{2}$/.test(draft.date) ? draft.date : dstr(1);
     return new Date(`${day}T${draft.flexible ? "12:00" : draft.time}:00`).toISOString();
+  };
+
+  // Window end is meaningful only for exact-time driver trips and only when it
+  // is actually after the start (string compare works for HH:MM).
+  const departureWindowEnd = (): string | undefined => {
+    if (draft.flexible || !draft.timeEnd || draft.timeEnd <= draft.time) return undefined;
+    const day = /^\d{4}-\d{2}-\d{2}$/.test(draft.date) ? draft.date : dstr(1);
+    return new Date(`${day}T${draft.timeEnd}:00`).toISOString();
   };
 
   const { mutate, isPending } = useMutation({
@@ -157,6 +182,7 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
           dropoffCities: draft.dropoff,
           originAddress: draft.originCity,
           departureAt: departureAt(),
+          departureWindowEnd: departureWindowEnd(),
           departureFlexible: draft.flexible,
           seatsTotal: draft.seats,
           pricePerSeat: draft.price,
@@ -292,7 +318,7 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
 
   const form = (
     <div className="space-y-3.5">
-      <p className="text-[13px] font-600 text-ink-500 dark:text-ink-400">
+      <p className="text-[13px] font-700 text-ink-600 dark:text-ink-400">
         {isDriver ? t("intro_driver") : t("intro_passenger")}
       </p>
       <RouteCard
@@ -314,12 +340,19 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
         onDate={(v) => patch({ date: v })}
         onTime={(v) => patch({ time: v })}
         onFlexible={(v) => patch({ flexible: v })}
+        {...(isDriver ? { timeEnd: draft.timeEnd, onTimeEnd: (v: string) => patch({ timeEnd: v }) } : {})}
       />
       <SeatsStepper
         value={draft.seats}
         label={isDriver ? t("seats_label_driver") : t("seats_label_passenger")}
+        // Driver can't offer more seats than the car has (backend 409s otherwise).
+        max={isDriver ? Math.min(carSeats ?? 7, 7) : 8}
+        hint={isDriver && carSeats ? t("seats_car_capacity", { n: carSeats }) : undefined}
         counterText={theme.counterText}
-        onChange={(v) => patch({ seats: v })}
+        onChange={(v) => {
+          seatsCustomized.current = true;
+          patch({ seats: v });
+        }}
       />
       <PriceCard
         value={draft.price}
@@ -346,13 +379,13 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           </button>
           <h1 className="text-[15px] font-900">{isDriver ? t("title_driver") : t("title_passenger")}</h1>
-          <p className="text-[12px] font-600 text-white/80">{isDriver ? t("subtitle_driver") : t("subtitle_passenger")}</p>
+          <p className="text-[12px] font-700 text-white/90">{isDriver ? t("subtitle_driver") : t("subtitle_passenger")}</p>
         </div>
         <div className="flex-1 space-y-3.5 px-4 py-4">{form}</div>
         <div className="space-y-3.5 px-4 pb-4">
           <PrefsCollapsible role={role} prefs={draft.prefs} onToggle={(k) => patch({ prefs: { ...draft.prefs, [k]: !draft.prefs[k] } })} />
           <div className="rounded-2xl bg-white p-4 shadow-card dark:bg-ink-900">
-            <p className="mb-3 text-center text-[12px] font-medium text-ink-400">{isDriver ? t("note_driver") : t("note_passenger")}</p>
+            <p className="mb-3 text-center text-[12px] font-700 text-ink-500 dark:text-ink-400">{isDriver ? t("note_driver") : t("note_passenger")}</p>
             {createError && <p className="mb-3 rounded-xl bg-coral-50 px-4 py-2 text-[13px] font-700 text-coral-700 dark:bg-coral-500/10">{createError}</p>}
             {submitBtn}
           </div>
@@ -363,9 +396,9 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
       <div className="mx-auto hidden max-w-[1080px] gap-8 bg-ink-50 p-8 lg:grid lg:grid-cols-[330px_1fr] dark:bg-ink-950">
         <aside className="space-y-4">
           <h2 className="text-[26px] font-900 text-ink-900 dark:text-white">{isDriver ? t("web_title_driver") : t("web_title_passenger")}</h2>
-          <p className="text-[14px] font-600 text-ink-500 dark:text-ink-400">{isDriver ? t("web_sub_driver") : t("web_sub_passenger")}</p>
+          <p className="text-[14px] font-700 text-ink-600 dark:text-ink-400">{isDriver ? t("web_sub_driver") : t("web_sub_passenger")}</p>
           <div className="rounded-3xl bg-brand-50 p-4 dark:bg-brand-500/10">
-            <div className="flex items-start gap-2.5 text-[12px] font-600 text-ink-600 dark:text-ink-300">
+            <div className="flex items-start gap-2.5 text-[12px] font-700 text-ink-700 dark:text-ink-300">
               <ShieldCheck className="h-4 w-4 shrink-0 text-brand-600" aria-hidden="true" />
               {t("web_trust")}
             </div>

@@ -125,7 +125,7 @@ export function TelegramStep({ phone, onVerified, onBack, onError }: Props) {
       </div>
 
       <div>
-        <p className="text-[20px] font-900 text-ink-900">
+        <p className="text-[20px] font-900 text-ink-900 dark:text-white">
           {channel === null
             ? t("sending")
             : isDeepLink

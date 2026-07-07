@@ -58,10 +58,10 @@ export function PassengerTab({
             />
           )}
           {displayedBookings.length === 0 ? (
-            <div className="rounded-2xl border border-ink-100 bg-white p-8 text-center">
+            <div className="rounded-2xl border border-ink-100 bg-white p-8 text-center dark:bg-ink-900 dark:border-ink-800">
               {passengerSubTab === "active" ? (
                 <>
-                  <p className="text-[17px] font-bold text-ink-900">{t("no_active_trips")}</p>
+                  <p className="text-[17px] font-bold text-ink-900 dark:text-white">{t("no_active_trips")}</p>
                   <p className="mt-2 text-[13px] text-ink-500">{t("no_active_hint")}</p>
                   <Link href="/trips">
                     <button
@@ -74,7 +74,7 @@ export function PassengerTab({
                 </>
               ) : (
                 <>
-                  <p className="text-[17px] font-bold text-ink-900">{t("empty_history")}</p>
+                  <p className="text-[17px] font-bold text-ink-900 dark:text-white">{t("empty_history")}</p>
                   <p className="mt-2 text-[13px] text-ink-500">{t("history_hint")}</p>
                 </>
               )}

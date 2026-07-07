@@ -30,7 +30,7 @@ export function ResetStep({
         <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-brand-50">
           <CheckCircle className="h-6 w-6 text-brand-600" aria-hidden="true" />
         </div>
-        <p className="text-[16px] font-800 text-ink-900">{tl("reset_title")}</p>
+        <p className="text-[16px] font-800 text-ink-900 dark:text-white">{tl("reset_title")}</p>
         <p className="mt-1 text-[12px] font-600 text-ink-500">{tl("reset_min_chars")}</p>
       </div>
 
@@ -42,7 +42,7 @@ export function ResetStep({
             value={newPassword}
             onChange={(e) => { setNewPassword(e.target.value); setServerError(null); }}
             placeholder={tl("new_password_placeholder")}
-            className="h-12 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 pr-10 text-[15px] font-800 text-ink-900 outline-none focus:border-brand-500"
+            className="h-12 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 pr-10 text-[15px] font-800 text-ink-900 outline-none focus:border-brand-500 dark:bg-ink-800 dark:border-ink-700 dark:text-white"
           />
           <button
             type="button"
@@ -63,10 +63,10 @@ export function ResetStep({
           onKeyDown={(e) => { if (e.key === "Enter" && canReset) resetMutation.mutate(); }}
           placeholder={tl("confirm_password_placeholder")}
           className={cn(
-            "h-12 w-full rounded-2xl border-2 bg-ink-50 px-4 text-[15px] font-800 outline-none",
+            "h-12 w-full rounded-2xl border-2 bg-ink-50 px-4 text-[15px] font-800 outline-none dark:bg-ink-800",
             confirmPassword && confirmPassword !== newPassword
               ? "border-coral-300 text-coral-700"
-              : "border-ink-200 text-ink-900 focus:border-brand-500",
+              : "border-ink-200 text-ink-900 focus:border-brand-500 dark:border-ink-700 dark:text-white",
           )}
         />
         {confirmPassword && confirmPassword !== newPassword && (

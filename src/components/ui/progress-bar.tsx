@@ -11,9 +11,9 @@ export function ProgressBar({ value, max = 100, label, className }: ProgressBarP
   const pct = Math.min(100, Math.max(0, (value / max) * 100));
   return (
     <div className={cn("flex flex-col gap-1", className)}>
-      {label && <span className="text-caption font-semibold text-ink-700">{label}</span>}
+      {label && <span className="text-caption font-semibold text-ink-700 dark:text-ink-300">{label}</span>}
       <div
-        className="h-1.5 w-full overflow-hidden rounded-full bg-ink-200"
+        className="h-1.5 w-full overflow-hidden rounded-full bg-ink-200 dark:bg-ink-700"
         role="progressbar"
         aria-valuenow={value}
         aria-valuemin={0}

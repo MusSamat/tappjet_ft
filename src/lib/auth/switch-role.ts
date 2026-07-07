@@ -7,9 +7,11 @@ import { useAuth } from "@/store/auth";
  * reset cleanly instead of relying on every subscriber reacting to the store.
  * The mode is persisted to localStorage first, so it survives the reload.
  */
-export function switchRoleAndReload(mode: "passenger" | "driver"): void {
+export function switchRoleAndReload(mode: "passenger" | "driver", redirectTo?: string): void {
   const { activeMode, setActiveMode } = useAuth.getState();
-  if (activeMode === mode) return; // no-op — don't reload on a redundant tap
+  if (activeMode === mode && !redirectTo) return; // no-op — don't reload on a redundant tap
   setActiveMode(mode);
-  if (typeof window !== "undefined") window.location.reload();
+  if (typeof window === "undefined") return;
+  if (redirectTo) window.location.href = redirectTo;
+  else window.location.reload();
 }

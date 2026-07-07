@@ -54,7 +54,7 @@ export function ProfileStep({ onSaved, onError }: Props) {
           onChange={(e) => setName(e.target.value)}
           placeholder="Асан"
           aria-invalid={Boolean(nameErr) || undefined}
-          className="rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 py-3 text-[15px] font-800"
+          className="rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 py-3 text-[15px] font-800 dark:bg-ink-800 dark:border-ink-700"
         />
         {nameErr && <span className="text-caption text-coral-500">{nameErr}</span>}
       </div>
@@ -63,13 +63,13 @@ export function ProfileStep({ onSaved, onError }: Props) {
         <label className="text-[11px] font-900 uppercase tracking-wider text-ink-400">
           {t("lang_label")}
         </label>
-        <div className="flex gap-1 rounded-2xl bg-ink-100 p-1">
+        <div className="flex gap-1 rounded-2xl bg-ink-100 p-1 dark:bg-ink-800">
           <button
             type="button"
             onClick={() => setLanguage(languageSchema.parse("ru"))}
             className={
               language === "ru"
-                ? "flex-1 rounded-xl bg-white py-2 text-[13px] font-900 text-brand-700 shadow-sm"
+                ? "flex-1 rounded-xl bg-white py-2 text-[13px] font-900 text-brand-700 shadow-sm dark:bg-ink-700 dark:text-brand-300"
                 : "flex-1 rounded-xl py-2 text-[13px] font-800 text-ink-500"
             }
           >
@@ -80,7 +80,7 @@ export function ProfileStep({ onSaved, onError }: Props) {
             onClick={() => setLanguage(languageSchema.parse("kg"))}
             className={
               language === "kg"
-                ? "flex-1 rounded-xl bg-white py-2 text-[13px] font-900 text-brand-700 shadow-sm"
+                ? "flex-1 rounded-xl bg-white py-2 text-[13px] font-900 text-brand-700 shadow-sm dark:bg-ink-700 dark:text-brand-300"
                 : "flex-1 rounded-xl py-2 text-[13px] font-800 text-ink-500"
             }
           >
@@ -91,7 +91,7 @@ export function ProfileStep({ onSaved, onError }: Props) {
 
       <label className="flex items-start gap-2">
         <Checkbox id="terms" checked={terms} onCheckedChange={(v) => setTerms(v === true)} />
-        <span className="text-body-lg text-ink-700">
+        <span className="text-body-lg text-ink-700 dark:text-ink-300">
           {t("terms_prefix")}{" "}
           <Link href="/terms" className="font-700 text-brand-700 hover:text-brand-800">
             {t("terms_link")}

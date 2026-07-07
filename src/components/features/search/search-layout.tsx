@@ -20,6 +20,7 @@ import { SearchFilters } from "./search-filters";
 import { TripDetailView, type DetailTripData } from "@/components/features/trip/trip-detail";
 import { PopularRoutes } from "./popular-routes";
 import { FeedHeader } from "./feed-header";
+import { DateQuickChips } from "./date-quick-chips";
 import { BecomeDriverBanner } from "@/components/features/driver/become-driver-banner";
 
 interface Props {
@@ -53,6 +54,13 @@ function FeedEmpty({ params }: { params: SearchTripsParams }) {
         action={action}
         className="bg-white shadow-card ring-1 ring-ink-100 dark:bg-ink-900 dark:ring-ink-800"
       />
+      {/* Escape hatch: try another day without leaving the results screen */}
+      <div>
+        <p className="mb-2 text-[12px] font-800 text-ink-500 dark:text-ink-400">{t("empty_try_date")}</p>
+        <div className="flex flex-wrap gap-2">
+          <DateQuickChips />
+        </div>
+      </div>
       <PopularRoutes />
     </div>
   );
@@ -222,7 +230,7 @@ export function SearchLayout({ params, initial }: Props) {
               <TripDetailView trip={selectedTrip as DetailTripData} variant="rail" />
             ) : (
               <div className="flex h-full items-center justify-center">
-                <p className="text-[13px] font-800 text-ink-500">{t("select_trip")}</p>
+                <p className="text-[13px] font-800 text-ink-500 dark:text-ink-400">{t("select_trip")}</p>
               </div>
             )}
           </div>

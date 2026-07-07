@@ -26,14 +26,14 @@ export function SubTabBar({ value, onChange, activeCount, historyCount }: {
               "flex items-center gap-1.5 rounded-full px-4 py-1.5 text-[12px] font-bold transition-colors",
               value === st
                 ? "bg-brand-600 text-white"
-                : "bg-ink-100 text-ink-600 hover:bg-ink-200",
+                : "bg-ink-100 text-ink-600 hover:bg-ink-200 dark:bg-ink-800 dark:text-ink-300",
             )}
           >
             {label}
             {count > 0 && (
               <span className={cn(
                 "rounded-full px-1.5 py-0.5 text-[10px] font-extrabold",
-                value === st ? "bg-brand-700 text-white" : "bg-ink-200 text-ink-600",
+                value === st ? "bg-brand-700 text-white" : "bg-ink-200 text-ink-600 dark:bg-ink-700 dark:text-ink-300",
               )}>
                 {count}
               </span>

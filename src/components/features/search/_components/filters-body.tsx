@@ -9,8 +9,13 @@ import { DatePicker } from "@/components/ui/date-picker";
 import { Chip } from "@/components/ui/chip";
 import { SectionLabel } from "@/components/ui/section-label";
 import { Switch } from "@/components/ui/switch";
+import { useCalendarCounts } from "@/lib/hooks/use-calendar-counts";
 
-function todayYMD() { return new Date().toISOString().split("T")[0]!; }
+// Kyrgyzstan is fixed UTC+6 — anchor «Сегодня/Завтра» to the local calendar day.
+function ymdKg(offsetDays = 0) {
+  return new Date(Date.now() + 6 * 3_600_000 + offsetDays * 86_400_000).toISOString().slice(0, 10);
+}
+function todayYMD() { return ymdKg(0); }
 function isCustomDate(v: string) { return /^\d{4}-\d{2}-\d{2}$/.test(v); }
 
 const PRICE_INPUT =
@@ -28,11 +33,11 @@ export function FiltersBody() {
     { value: "rating_desc", label: t("sort_rating_desc") },
   ] as const;
 
+  // Real YYYY-MM-DD values — the API validates dates, symbolic tokens 400.
   const DATE_CHIPS = [
-    { value: "today",    label: t("date_today") },
-    { value: "tomorrow", label: t("date_tomorrow") },
-    { value: "weekend",  label: t("date_weekend") },
-  ] as const;
+    { value: ymdKg(0), label: t("date_today") },
+    { value: ymdKg(1), label: t("date_tomorrow") },
+  ];
 
   const RATING_OPTIONS = [
     { value: "0",   label: t("rating_any") },
@@ -50,6 +55,8 @@ export function FiltersBody() {
 
   const fromCity     = params.get("from") ?? params.get("from_city") ?? "";
   const toCity       = params.get("to")   ?? params.get("to_city")   ?? "";
+  // Availability per day for the custom-date calendar below.
+  const dayCounts    = useCalendarCounts("trips", fromCity, toCity);
   const sort         = params.get("sort")          ?? "time";
   const onlyVerified = params.get("only_verified") === "true";
   const womenOnly    = params.get("women_only")    === "true";
@@ -99,17 +106,25 @@ export function FiltersBody() {
         </div>
       </div>
 
-      {/* Date */}
+      {/* Date — the feed defaults to today when no date is set; «Каалаган/Любая»
+          writes the explicit `any` sentinel to suppress that default. */}
       <div>
         <SectionLabel size="xs" className="mb-1.5">{t("date_label")}</SectionLabel>
         <div className="flex flex-wrap gap-1.5">
-          <Chip kind="filter" selected={!dateParam} onClick={() => update({ date: null })}>{t("date_any")}</Chip>
+          <Chip kind="filter" selected={dateParam === "any"} onClick={() => update({ date: "any" })}>{t("date_any")}</Chip>
           {DATE_CHIPS.map((d) => (
-            <Chip key={d.value} kind="filter" selected={dateParam === d.value} onClick={() => update({ date: d.value })}>{d.label}</Chip>
+            <Chip
+              key={d.value}
+              kind="filter"
+              selected={dateParam === d.value || (!dateParam && d.value === ymdKg(0))}
+              onClick={() => update({ date: d.value })}
+            >
+              {d.label}
+            </Chip>
           ))}
         </div>
         <div className="mt-2">
-          <DatePicker compact value={isCustomDate(dateParam) ? dateParam : ""} onChange={(v) => update({ date: v || null })} min={todayYMD()} placeholder={t("date_pick")} />
+          <DatePicker compact value={isCustomDate(dateParam) ? dateParam : ""} onChange={(v) => update({ date: v || null })} min={todayYMD()} placeholder={t("date_pick")} dayCounts={dayCounts} />
         </div>
       </div>
 

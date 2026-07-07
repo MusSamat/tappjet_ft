@@ -146,7 +146,7 @@ export function RouteCitiesPicker({
       {open && debounced.trim().length > 0 && (available.length > 0 || !isFetching) && (
         <ul
           style={popupStyle}
-          className="max-h-60 overflow-auto rounded-2xl border border-ink-100 bg-white shadow-soft"
+          className="max-h-60 overflow-auto rounded-2xl border border-ink-100 bg-white shadow-soft dark:bg-ink-900 dark:border-ink-800"
         >
           {available.length === 0 ? (
             <li className="px-3 py-2 text-[12px] font-semibold text-ink-400">{emptyHint}</li>
@@ -162,7 +162,7 @@ export function RouteCitiesPicker({
               >
                 <MapPin className="h-3 w-3 flex-shrink-0 text-ink-400" aria-hidden="true" />
                 <div className="min-w-0">
-                  <p className="text-[12px] font-bold text-ink-900">{c.nameRu}</p>
+                  <p className="text-[12px] font-bold text-ink-900 dark:text-white">{c.nameRu}</p>
                   <p className="text-[11px] font-semibold text-ink-400">{c.regionNameRu}</p>
                 </div>
               </li>

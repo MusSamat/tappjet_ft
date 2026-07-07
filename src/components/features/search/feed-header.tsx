@@ -6,16 +6,13 @@ import { ArrowDownUp, CarFront, Circle, MapPin, SlidersHorizontal, User } from "
 import { CityAutocomplete } from "@/components/ui/city-autocomplete";
 import { Segmented } from "@/components/ui/segmented";
 import { Chip } from "@/components/ui/chip";
+import { DateQuickChips } from "./date-quick-chips";
 import { useUiRole } from "@/lib/hooks/use-role-colors";
 
 // Mobile feed header — design-spec §2.2: map hero band + overlaid search
 // card, «Найти поездку / Найти пассажира» segmented, filter chips row.
 
 type FeedTab = "trips" | "requests";
-
-function todayYMD() {
-  return new Date().toISOString().split("T")[0]!;
-}
 
 /** Decorative dashed route over the map band (stroke #0D9488, teal→amber dots). */
 function MapRoute() {
@@ -54,12 +51,7 @@ export function FeedHeader({ tab, onOpenFilters }: FeedHeaderProps) {
 
   const from = params.get("from") ?? params.get("from_city") ?? "";
   const to = params.get("to") ?? params.get("to_city") ?? "";
-  const date = params.get("date") ?? "";
   const sort = params.get("sort") ?? "";
-
-  // «Сегодня» token: trips search accepts the "today" alias, requests need YMD.
-  const todayValue = tab === "trips" ? "today" : todayYMD();
-  const todayOn = date === todayValue;
   const cheaperOn = sort === "price_asc";
 
   const update = (patch: Record<string, string | null>) => {
@@ -98,14 +90,16 @@ export function FeedHeader({ tab, onOpenFilters }: FeedHeaderProps) {
               <CityAutocomplete
                 borderless
                 value={from}
-                onChange={(v) => update({ from: v || null })}
+                // Commit only a chosen city: typing emits "" per keystroke, and
+                // dropping the param would kick the user back to route entry.
+                onChange={(v) => { if (v) update({ from: v }); }}
                 placeholder={t("from_placeholder")}
                 className="min-w-0 flex-1"
               />
               <button
                 type="button"
                 onClick={() => update({ from: to || null, to: from || null })}
-                disabled={!from && !to}
+                disabled={!from || !to}
                 aria-label={t("swap_aria")}
                 className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-ink-100 text-ink-500 transition-colors disabled:opacity-40 dark:bg-ink-800 dark:text-ink-300"
               >
@@ -118,7 +112,7 @@ export function FeedHeader({ tab, onOpenFilters }: FeedHeaderProps) {
               <CityAutocomplete
                 borderless
                 value={to}
-                onChange={(v) => update({ to: v || null })}
+                onChange={(v) => { if (v) update({ to: v }); }}
                 placeholder={t("to_placeholder")}
                 className="min-w-0 flex-1"
               />
@@ -155,14 +149,7 @@ export function FeedHeader({ tab, onOpenFilters }: FeedHeaderProps) {
         >
           {t("filters")}
         </Chip>
-        <Chip
-          kind="quick"
-          selected={todayOn}
-          accent="accent"
-          onClick={() => update({ date: todayOn ? null : todayValue })}
-        >
-          {t("today")}
-        </Chip>
+        <DateQuickChips />
         {tab === "trips" && (
           <Chip
             kind="quick"

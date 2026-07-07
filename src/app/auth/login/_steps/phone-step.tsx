@@ -20,9 +20,9 @@ export function PhoneStep({ tl, phone, setPhone, setServerError, isPending, onCo
         <SocialButtons />
       </div>
       <div className="mb-5 flex items-center gap-3">
-        <span className="h-px flex-1 bg-ink-200" />
+        <span className="h-px flex-1 bg-ink-200 dark:bg-ink-700" />
         <span className="text-[12px] font-600 text-ink-400">{tl("or_phone")}</span>
-        <span className="h-px flex-1 bg-ink-200" />
+        <span className="h-px flex-1 bg-ink-200 dark:bg-ink-700" />
       </div>
 
       <div className="mb-4 flex flex-col gap-1.5">

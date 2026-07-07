@@ -42,12 +42,12 @@ function tripIdOf(b: BookingExt): string | undefined {
 function BookView({ trip }: { trip: TripDetail }) {
   const t = useTranslations("trip_actions");
   return (
-    <div className="rounded-2xl border border-ink-200 bg-white p-5">
+    <div className="rounded-2xl border border-ink-200 bg-white p-5 dark:border-ink-800 dark:bg-ink-900">
       <div className="mb-4 flex items-baseline justify-between">
-        <span className="text-display font-extrabold text-brand-700">
+        <span className="text-display font-extrabold text-brand-700 dark:text-brand-300">
           {formatPrice((trip.pricePerSeat as number | undefined) ?? 0)}
         </span>
-        <span className="text-caption text-ink-500">{t("per_seat")}</span>
+        <span className="text-caption text-ink-500 dark:text-ink-400">{t("per_seat")}</span>
       </div>
       {trip.priceNegotiable && (
         <p className="mb-4 rounded-xl bg-accent-50 p-3 text-caption text-accent-700">
@@ -75,9 +75,9 @@ export function PassengerPanel({ trip, tripId }: { trip: TripDetail; tripId: str
     accepted:               { label: t("status_accepted"),            color: "text-brand-800",  bg: "bg-brand-50",   dot: "bg-brand-500" },
     completed:              { label: t("status_completed"),           color: "text-sky-700",  bg: "bg-sky-50",   dot: "bg-sky-400" },
     rejected:               { label: t("status_rejected"),            color: "text-coral-700",   bg: "bg-coral-50",    dot: "bg-coral-500"  },
-    cancelled_by_passenger: { label: t("status_cancelled_by_you"),   color: "text-ink-600",  bg: "bg-ink-100",  dot: "bg-ink-400" },
-    cancelled_by_driver:    { label: t("status_cancelled_by_driver"), color: "text-ink-600",  bg: "bg-ink-100",  dot: "bg-ink-400" },
-    expired:                { label: t("status_expired"),             color: "text-ink-500",  bg: "bg-ink-50",   dot: "bg-ink-300" },
+    cancelled_by_passenger: { label: t("status_cancelled_by_you"),   color: "text-ink-600",  bg: "bg-ink-100 dark:bg-ink-800 dark:text-ink-300",  dot: "bg-ink-400" },
+    cancelled_by_driver:    { label: t("status_cancelled_by_driver"), color: "text-ink-600",  bg: "bg-ink-100 dark:bg-ink-800 dark:text-ink-300",  dot: "bg-ink-400" },
+    expired:                { label: t("status_expired"),             color: "text-ink-500",  bg: "bg-ink-50 dark:bg-ink-800 dark:text-ink-300",   dot: "bg-ink-300" },
   };
 
   const bookingsQuery = useQuery({
@@ -115,7 +115,7 @@ export function PassengerPanel({ trip, tripId }: { trip: TripDetail; tripId: str
 
   if (isLoading) {
     return (
-      <div className="flex justify-center rounded-2xl border border-ink-200 bg-white py-10">
+      <div className="flex justify-center rounded-2xl border border-ink-200 bg-white py-10 dark:border-ink-800 dark:bg-ink-900">
         <Spinner size={24} />
       </div>
     );
@@ -137,7 +137,7 @@ export function PassengerPanel({ trip, tripId }: { trip: TripDetail; tripId: str
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="rounded-2xl border border-ink-200 bg-white p-5">
+      <div className="rounded-2xl border border-ink-200 bg-white p-5 dark:border-ink-800 dark:bg-ink-900">
         <div className="mb-4 flex items-center justify-between">
           <p className="text-[11px] font-bold uppercase tracking-widest text-ink-400">
             {t("your_booking")}
@@ -151,11 +151,11 @@ export function PassengerPanel({ trip, tripId }: { trip: TripDetail; tripId: str
         <div className="mb-4 flex gap-5">
           <div>
             <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{t("seats_label")}</p>
-            <p className="text-[16px] font-bold text-ink-900">{myBooking.seatsCount}</p>
+            <p className="text-[16px] font-bold text-ink-900 dark:text-white">{myBooking.seatsCount}</p>
           </div>
           <div>
             <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{t("sum_label")}</p>
-            <p className="text-[16px] font-bold text-brand-700">
+            <p className="text-[16px] font-bold text-brand-700 dark:text-brand-300">
               {(myBooking as BookingExt).totalPrice ?? "—"} {t("som")}
             </p>
           </div>
@@ -204,7 +204,7 @@ export function PassengerPanel({ trip, tripId }: { trip: TripDetail; tripId: str
             <button
               type="button"
               onClick={() => setCancelOpen(true)}
-              className="flex w-full items-center justify-center gap-2 rounded-xl border border-ink-200 py-2.5 text-[13px] font-bold text-ink-600 hover:bg-ink-50"
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-ink-200 py-2.5 text-[13px] font-bold text-ink-600 hover:bg-ink-50 dark:border-ink-700 dark:text-ink-300"
             >
               <X className="h-4 w-4" />
               {t("cancel_booking_btn")}

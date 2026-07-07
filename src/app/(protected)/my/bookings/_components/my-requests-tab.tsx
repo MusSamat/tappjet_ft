@@ -63,12 +63,12 @@ function OfferCard({
   const isDeclined = response.status === "declined";
 
   return (
-    <div className={`rounded-2xl border bg-white p-4 ${isDeclined ? "opacity-50" : isAccepted ? "border-brand-300" : "border-ink-200"}`}>
+    <div className={`rounded-2xl border bg-white p-4 dark:bg-ink-900 dark:border-ink-800 ${isDeclined ? "opacity-50" : isAccepted ? "border-brand-300" : "border-ink-200"}`}>
       <div className="flex items-start gap-3">
         <DriverAvatar name={response.driver.name} src={response.driver.avatarUrl} size="md" />
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5">
-            <span className="text-[14px] font-bold text-ink-900">{response.driver.name}</span>
+            <span className="text-[14px] font-bold text-ink-900 dark:text-white">{response.driver.name}</span>
             {response.driver.verified && <Shield className="h-3.5 w-3.5 text-brand-500" aria-hidden />}
             {response.driver.rating !== null && (
               <div className="flex items-center gap-0.5">
@@ -109,7 +109,7 @@ function OfferCard({
               type="button"
               disabled={acceptMut.isPending || declineMut.isPending}
               onClick={() => declineMut.mutate()}
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-ink-200 bg-white text-ink-500 hover:border-coral-300 hover:text-coral-600 disabled:opacity-40 transition-colors"
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-ink-200 bg-white text-ink-500 hover:border-coral-300 hover:text-coral-600 disabled:opacity-40 transition-colors dark:bg-ink-900 dark:border-ink-700"
               aria-label={t("reject_aria")}
             >
               {declineMut.isPending ? <Spinner size={14} /> : <X className="h-4 w-4" />}
@@ -258,7 +258,7 @@ export function MyRequestsTab() {
         <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-sky-100">
           <Users className="h-8 w-8 text-sky-400" />
         </div>
-        <p className="text-[16px] font-bold text-ink-700">{t("empty_title")}</p>
+        <p className="text-[16px] font-bold text-ink-700 dark:text-ink-300">{t("empty_title")}</p>
         <p className="mt-1 mb-5 text-[13px] text-ink-500">{t("empty_hint")}</p>
         <Link href="/requests/create">
           <button

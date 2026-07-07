@@ -5,6 +5,7 @@ import {
   AlarmClock,
   Ban,
   Briefcase,
+  CarFront,
   CheckCircle2,
   Clock,
   Eye,
@@ -24,7 +25,6 @@ import { formatDepartureLabel } from "@/lib/utils/date";
 import { cn } from "@/lib/utils/cn";
 import { DriverAvatar } from "./driver-avatar";
 import { LikeButton } from "./like-button";
-import { SeatMeter } from "./seat-meter";
 
 // Ride card — design-spec §1.5: vertical route spine, price with «с»
 // superscript, single priority badge, driver strip with seat meter.
@@ -97,8 +97,18 @@ function TripCardInner({
   const price = trip.pricePerSeat ?? 0;
   const luggage = trip.luggage as "yes" | "small" | "no" | undefined;
   const stops = trip.pickupCities?.length ? trip.pickupCities.join(" · ") : null;
+  const car = driver.car ?? null;
 
-  let badge: ReactNode = null;
+  // «Сегодня, 06:00» → «Сегодня, 06:00–11:00» when the driver set a window.
+  let when = trip.departureAt ? formatDepartureLabel(trip.departureAt, locale) : "";
+  if (when && trip.departureWindowEnd) {
+    const end = new Date(trip.departureWindowEnd);
+    when += `–${String(end.getHours()).padStart(2, "0")}:${String(end.getMinutes()).padStart(2, "0")}`;
+  }
+
+  // Seats indicator (Yandex «Свободно 4 из 4») — ALWAYS present on the card.
+  // 0 / 1 free get their urgency variants; feature badges render alongside.
+  let badge: ReactNode;
   if (seatsAvailable === 0) {
     badge = (
       <span className={cn(BADGE_BASE, "bg-ink-200 text-ink-500 dark:bg-ink-700 dark:text-ink-300")}>
@@ -113,15 +123,24 @@ function TripCardInner({
         {t("last_seat")}
       </span>
     );
-  } else if (instant) {
+  } else {
     badge = (
+      <span className={cn(BADGE_BASE, "bg-ink-800 text-white dark:bg-ink-700 dark:text-ink-100")}>
+        {t("free_seats", { free: seatsAvailable, total: seatsTotal })}
+      </span>
+    );
+  }
+
+  let featureBadge: ReactNode = null;
+  if (instant) {
+    featureBadge = (
       <span className={cn(BADGE_BASE, "bg-accent-500 text-accent-ink")}>
         <Zap className="h-3 w-3" aria-hidden="true" />
         {t("instant")}
       </span>
     );
   } else if (wholeCabin) {
-    badge = (
+    featureBadge = (
       <span className={cn(BADGE_BASE, "bg-sky-500 text-white")}>
         <Sofa className="h-3 w-3" aria-hidden="true" />
         {t("whole_cabin")}
@@ -155,29 +174,30 @@ function TripCardInner({
         />
       )}
 
-      {/* Row 1 — vertical route spine + cities + price */}
-      <div className="flex items-center gap-2.5 pr-7">
-        <div className="flex shrink-0 flex-col items-center self-stretch py-1" aria-hidden="true">
-          <span className="h-2 w-2 shrink-0 rounded-full border-2 border-brand-600" />
-          <span className="my-0.5 w-0.5 flex-1 rounded bg-gradient-to-b from-brand-500 to-accent-400" />
-          <span className="h-2 w-2 shrink-0 rounded-full bg-accent-500" />
+      {/* Row 0 — type pill + seats badge (Yandex hierarchy: state first) */}
+      <div className="mb-2.5 flex flex-wrap items-center gap-1.5 pr-8">
+        <span className="inline-flex items-center gap-1 rounded-full bg-brand-100 px-2 py-0.5 text-[10px] font-900 uppercase tracking-wide text-brand-700 dark:bg-brand-500/20 dark:text-brand-300">
+          <CarFront className="h-3 w-3" aria-hidden="true" />
+          {t("type_driver")}
+        </span>
+        {badge}
+        {featureBadge}
+      </div>
+
+      {/* Row 1 — departure time (hero, window-aware) + price */}
+      <div className="flex items-start justify-between gap-3 pr-7">
+        <div className="min-w-0">
+          <div className="flex items-center gap-1.5 text-[16px] font-900 leading-tight text-ink-900 dark:text-white">
+            <Clock className="h-4 w-4 shrink-0 text-brand-600 dark:text-brand-400" aria-hidden="true" />
+            <span className="truncate">{when}</span>
+          </div>
+          {/* Route — thin, small: context, not the hero (route is already chosen) */}
+          <div className="mt-1 truncate text-[12px] font-600 text-ink-500 dark:text-ink-400">
+            {trip.originCity ?? ""} → {trip.destinationCity ?? ""}
+            {stops && ` · ${t("via", { stops })}`}
+          </div>
         </div>
-        <div className="min-w-0 flex-1">
-          <div className="truncate text-[15px] font-900 leading-tight text-ink-900 dark:text-white">
-            {trip.originCity ?? ""}
-          </div>
-          <div className="my-0.5 flex items-center gap-1 text-[11px] font-600 text-ink-400">
-            <Clock className="h-3 w-3 shrink-0" aria-hidden="true" />
-            <span className="truncate">
-              {trip.departureAt ? formatDepartureLabel(trip.departureAt, locale) : ""}
-              {stops && ` · ${t("via", { stops })}`}
-            </span>
-          </div>
-          <div className="truncate text-[15px] font-900 leading-tight text-ink-900 dark:text-white">
-            {trip.destinationCity ?? ""}
-          </div>
-        </div>
-        <div className="shrink-0 self-start text-right">
+        <div className="shrink-0 text-right">
           <div className="text-[18px] font-900 leading-none text-brand-700 dark:text-brand-300">
             {price.toLocaleString("ru-RU")}
             <span className="text-[10px]">{t("som")}</span>
@@ -186,28 +206,33 @@ function TripCardInner({
         </div>
       </div>
 
-      {/* Badge row — single badge by priority: full > last seat > instant > cabin */}
-      {badge && <div className="mt-2 pl-[18px]">{badge}</div>}
-
-      {/* Row 2 — driver strip */}
+      {/* Row 2 — driver strip (Yandex: name ★rating / car · plate) */}
       <div className="mt-2.5 flex items-center gap-2 border-t border-ink-100 pt-2.5 dark:border-ink-800">
-        <DriverAvatar name={driverName} src={driver.avatarUrl ?? null} size="xs" />
-        <span className="flex min-w-0 items-center gap-0.5 text-[12px] font-700 text-ink-700 dark:text-ink-200">
-          <span className="truncate">{driverName.split(" ")[0]}</span>
-          {driver.verified && (
-            <ShieldCheck className="h-3 w-3 shrink-0 text-brand-600" aria-hidden="true" />
+        <DriverAvatar name={driverName} src={driver.avatarUrl ?? null} size="lg" />
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-1 text-[14px] font-800 leading-tight text-ink-900 dark:text-white">
+            <span className="truncate">{driverName}</span>
+            {driver.verified && (
+              <ShieldCheck className="h-3 w-3 shrink-0 text-brand-600" aria-hidden="true" />
+            )}
+            {rating !== null && ratingCount >= 3 ? (
+              <span className="flex shrink-0 items-center gap-0.5 font-700 text-ink-500 dark:text-ink-400">
+                <Star className="h-3 w-3 fill-accent-400 text-accent-400" aria-hidden="true" />
+                {rating.toFixed(1)}
+              </span>
+            ) : (
+              <span className="shrink-0 text-[11px] font-800 text-brand-600 dark:text-brand-300">
+                {t("new")}
+              </span>
+            )}
+          </div>
+          {car && (car.make || car.model) && (
+            <div className="mt-0.5 truncate text-[12px] font-600 text-ink-500 dark:text-ink-400">
+              {[car.make, car.model].filter(Boolean).join(" ")}
+              {car.plate && ` · ${car.plate}`}
+            </div>
           )}
-        </span>
-        {rating !== null && ratingCount >= 3 ? (
-          <span className="flex shrink-0 items-center gap-0.5 text-[12px] font-700 text-ink-500 dark:text-ink-400">
-            <Star className="h-3 w-3 fill-accent-400 text-accent-400" aria-hidden="true" />
-            {rating.toFixed(1)}
-          </span>
-        ) : (
-          <span className="shrink-0 text-[11px] font-800 text-brand-600 dark:text-brand-300">
-            {t("new")}
-          </span>
-        )}
+        </div>
         <span className="flex shrink-0 items-center gap-1.5 text-ink-400" aria-hidden="true">
           {luggage && luggage !== "no" && <Briefcase className="h-3.5 w-3.5" />}
           {wholeCabin ? <Sofa className="h-3.5 w-3.5 text-sky-500" /> : <Music className="h-3.5 w-3.5" />}
@@ -218,9 +243,6 @@ function TripCardInner({
             {trip.metrics.views}
           </span>
         )}
-        <span className="ml-auto flex shrink-0 items-center gap-1">
-          <SeatMeter free={seatsAvailable} total={seatsTotal} size="sm" showCount />
-        </span>
       </div>
 
       {/* Direct book CTA (mobile lists) — disabled once the viewer has booked */}

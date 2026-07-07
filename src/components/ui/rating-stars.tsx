@@ -43,7 +43,7 @@ export function RatingStars({
           />
         ))}
       </span>
-      {showValue && <span className="text-caption font-bold text-ink-900">{value.toFixed(1)}</span>}
+      {showValue && <span className="text-caption font-bold text-ink-900 dark:text-white">{value.toFixed(1)}</span>}
     </span>
   );
 }

@@ -15,6 +15,8 @@ export interface CreateTripInput {
   originLat?: number;
   originLng?: number;
   departureAt: string;
+  /** «Выезжаем 06:00–11:00» — optional window end, ISO datetime after departureAt. */
+  departureWindowEnd?: string;
   departureFlexible?: boolean;
   seatsTotal: number;
   pricePerSeat: number;

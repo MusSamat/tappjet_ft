@@ -51,10 +51,10 @@ export function DriverTab({
       {isLoading ? (
         <CardSkeletonList variant="trip" />
       ) : displayedTrips.length === 0 ? (
-        <div className="rounded-2xl border border-ink-100 bg-white p-8 text-center">
+        <div className="rounded-2xl border border-ink-100 bg-white p-8 text-center dark:bg-ink-900 dark:border-ink-800">
           {driverSubTab === "active" ? (
             <>
-              <p className="text-[17px] font-bold text-ink-900">{t("no_published_trips")}</p>
+              <p className="text-[17px] font-bold text-ink-900 dark:text-white">{t("no_published_trips")}</p>
               <p className="mt-2 text-[13px] text-ink-500">{t("no_published_hint")}</p>
               <Link href="/trips/create">
                 <button
@@ -68,7 +68,7 @@ export function DriverTab({
             </>
           ) : (
             <>
-              <p className="text-[17px] font-bold text-ink-900">{t("no_trip_history")}</p>
+              <p className="text-[17px] font-bold text-ink-900 dark:text-white">{t("no_trip_history")}</p>
               <p className="mt-2 text-[13px] text-ink-500">{t("history_hint")}</p>
             </>
           )}

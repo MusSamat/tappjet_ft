@@ -5,6 +5,7 @@ import { ArrowLeftRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { CityAutocomplete } from "@/components/ui/city-autocomplete";
 import { DatePicker } from "@/components/ui/date-picker";
+import { useCalendarCounts } from "@/lib/hooks/use-calendar-counts";
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -28,6 +29,8 @@ export function RequestFilters() {
   const to = params.get("to") ?? "";
   const date = params.get("date") ?? "";
   const seats = params.get("seats") ?? "";
+  // Availability per day for the date calendar below.
+  const dayCounts = useCalendarCounts("requests", from, to);
 
   const update = (patch: Record<string, string | null>) => {
     const next = new URLSearchParams(params);
@@ -44,7 +47,7 @@ export function RequestFilters() {
 
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-[16px] font-extrabold text-ink-900">{t("title")}</p>
+      <p className="text-[16px] font-extrabold text-ink-900 dark:text-white">{t("title")}</p>
 
       {/* From/To with swap */}
       <Field label={t("route_label")}>
@@ -56,17 +59,17 @@ export function RequestFilters() {
             placeholder={t("from_placeholder")}
           />
           <div className="flex items-center gap-2">
-            <div className="h-px flex-1 bg-ink-100" />
+            <div className="h-px flex-1 bg-ink-100 dark:bg-ink-800" />
             <button
               type="button"
               onClick={() => update({ from: to || null, to: from || null })}
               disabled={!from && !to}
               aria-label={t("swap_aria")}
-              className="flex h-6 w-6 items-center justify-center rounded-full border border-ink-200 bg-white text-ink-400 hover:border-sky-300 hover:text-sky-600 disabled:opacity-30 transition-colors"
+              className="flex h-6 w-6 items-center justify-center rounded-full border border-ink-200 bg-white text-ink-400 hover:border-sky-300 hover:text-sky-600 disabled:opacity-30 transition-colors dark:bg-ink-800 dark:border-ink-700"
             >
               <ArrowLeftRight className="h-2.5 w-2.5" aria-hidden />
             </button>
-            <div className="h-px flex-1 bg-ink-100" />
+            <div className="h-px flex-1 bg-ink-100 dark:bg-ink-800" />
           </div>
           <CityAutocomplete
             compact
@@ -82,6 +85,7 @@ export function RequestFilters() {
           compact
           value={date}
           onChange={(v) => update({ date: v || null })}
+          dayCounts={dayCounts}
         />
       </Field>
 

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, ShieldCheck } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { HeroSection } from "@/components/features/home/hero-section";
+import { RouteEntry } from "@/components/features/search/route-entry";
 import { BecomeDriverCta } from "@/components/features/home/become-driver-cta";
 import { getPopularRoutes } from "@/lib/api/cities";
 
@@ -11,8 +11,9 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* ===== HERO — search-first for guest/passenger, publish-first for driver ===== */}
-      <HeroSection />
+      {/* ===== HERO — route-first search (Yandex «Межгород» pattern); drivers
+           get an intent toggle «Ищу поездку / Ищу пассажиров» ===== */}
+      <RouteEntry modeSwitchable showPopular={false} />
 
       {/* ===== POPULAR ROUTES ===== */}
       <section className="mx-auto max-w-[1200px] px-4 py-8 sm:py-12">

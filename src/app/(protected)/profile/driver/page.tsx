@@ -21,6 +21,7 @@ import { getDriverStatus } from "@/lib/api/profile";
 import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { compressImage, ImageValidationError } from "@/lib/utils/compress-image";
 import { useAuth } from "@/store/auth";
+import { switchRoleAndReload } from "@/lib/auth/switch-role";
 import { Button, Label, NotifCard, Spinner } from "@/components/ui";
 import { AddPhoneModal } from "@/components/features/auth/add-phone-modal";
 import { SubmittedScreen } from "./_components/submitted-screen";
@@ -261,7 +262,17 @@ export default function DriverVerifyPage() {
         <CheckCircle className="mx-auto h-12 w-12 text-brand-500" aria-hidden="true" />
         <h1 className="mt-4 text-[18px] font-900 text-ink-900 dark:text-white">{t("already_verified_title")}</h1>
         <p className="mt-2 text-[13px] font-600 text-ink-500">{t("already_verified_desc")}</p>
-        <Button variant="primary" size="md" className="mt-6" onClick={() => router.push("/profile")}>
+        {/* Not a dead end: verified drivers came here to «switch into driver» —
+            give them exactly that, landing on the driver-mode search. */}
+        <Button
+          variant="primary"
+          size="md"
+          className="mt-6"
+          onClick={() => switchRoleAndReload("driver", "/")}
+        >
+          {t("switch_to_driver")}
+        </Button>
+        <Button variant="ghost" size="md" className="mt-2" onClick={() => router.push("/profile")}>
           {t("back_to_profile")}
         </Button>
       </div>
@@ -290,10 +301,10 @@ export default function DriverVerifyPage() {
         </div>
       )}
 
-      <h1 className="text-[26px] font-extrabold text-ink-900">{t("title")}</h1>
+      <h1 className="text-[26px] font-extrabold text-ink-900 dark:text-white">{t("title")}</h1>
       <p className="mt-1 text-[13px] font-semibold text-ink-500">{t("step", { step })}</p>
 
-      <div className="mb-6 mt-4 h-1.5 overflow-hidden rounded-full bg-ink-100">
+      <div className="mb-6 mt-4 h-1.5 overflow-hidden rounded-full bg-ink-100 dark:bg-ink-800">
         <div
           className="h-full rounded-full bg-brand-600 transition-all duration-300"
           style={{ width: `${(step / TOTAL_STEPS) * 100}%` }}
@@ -311,8 +322,8 @@ export default function DriverVerifyPage() {
       {/* Step 1 — car data */}
       {step === 1 && (
         <>
-          <div className="rounded-3xl border border-ink-100 bg-white p-5 shadow-sm">
-            <h2 className="mb-4 text-[16px] font-extrabold text-ink-900">{t("car_section")}</h2>
+          <div className="rounded-3xl border border-ink-100 bg-white p-5 shadow-sm dark:bg-ink-900 dark:border-ink-800">
+            <h2 className="mb-4 text-[16px] font-extrabold text-ink-900 dark:text-white">{t("car_section")}</h2>
             <div className="flex flex-col gap-3">
               <div className="flex gap-2">
                 <div className="flex-1">
@@ -441,7 +452,6 @@ export default function DriverVerifyPage() {
                     type="number"
                     value={seats}
                     onChange={(e) => setSeats(e.target.value)}
-                    placeholder="4"
                     min={1}
                     max={7}
                     className="mt-1 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[14px] font-semibold text-ink-900 outline-none focus:border-brand-500 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
@@ -469,10 +479,10 @@ export default function DriverVerifyPage() {
       {/* Steps 2..5 — one document photo each */}
       {currentDoc && (
         <>
-          <div className="rounded-3xl border border-ink-100 bg-white p-5 shadow-sm">
+          <div className="rounded-3xl border border-ink-100 bg-white p-5 shadow-sm dark:bg-ink-900 dark:border-ink-800">
             <div className="mb-1 flex items-center gap-2">
               <currentDoc.icon className="h-[18px] w-[18px] text-brand-700" aria-hidden="true" />
-              <h2 className="text-[16px] font-extrabold text-ink-900">
+              <h2 className="text-[16px] font-extrabold text-ink-900 dark:text-white">
                 {t(`doc_${currentDoc.key}_label`)}
               </h2>
             </div>
@@ -519,7 +529,7 @@ export default function DriverVerifyPage() {
               type="button"
               onClick={() => setCameraOpen(true)}
               disabled={compressing}
-              className="relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-ink-300 bg-ink-50 hover:border-brand-400"
+              className="relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-ink-300 bg-ink-50 hover:border-brand-400 dark:bg-ink-900 dark:border-ink-700"
             >
               {compressing ? (
                 <Spinner size={24} />
@@ -560,10 +570,10 @@ export default function DriverVerifyPage() {
           </div>
 
           {currentDoc.key === "selfie" && (
-            <div className="mt-4 rounded-2xl bg-ink-50 px-4 py-3">
+            <div className="mt-4 rounded-2xl bg-ink-50 px-4 py-3 dark:bg-ink-800">
               <div className="mb-1 flex items-center gap-2">
                 <Lock className="h-3.5 w-3.5 flex-shrink-0 text-ink-600" aria-hidden="true" />
-                <span className="text-[13px] font-bold text-ink-900">{t("privacy_note")}</span>
+                <span className="text-[13px] font-bold text-ink-900 dark:text-white">{t("privacy_note")}</span>
               </div>
               <p className="text-[12px] font-semibold text-ink-500">{t("privacy_desc")}</p>
             </div>

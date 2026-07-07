@@ -89,7 +89,7 @@ export function RespondModal({ request, onClose }: Props) {
                   min={request.departureDate.split("T")[0]}
                   value={date}
                   onChange={setDate}
-                  triggerClassName="h-12 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 text-[14px]"
+                  triggerClassName="h-12 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 text-[14px] dark:bg-ink-800 dark:border-ink-700"
                 />
               </div>
               <div className="min-w-0">

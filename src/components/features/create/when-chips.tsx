@@ -24,6 +24,9 @@ interface Props {
   onDate: (v: string) => void;
   onTime: (v: string) => void;
   onFlexible: (v: boolean) => void;
+  /** Optional departure-window end («выезжаем 06:00–11:00»). Rendered only when provided (driver mode). */
+  timeEnd?: string;
+  onTimeEnd?: (v: string) => void;
 }
 
 function fmt(iso: string): string {
@@ -31,7 +34,7 @@ function fmt(iso: string): string {
   return new Date(`${iso}T00:00:00`).toLocaleDateString("ru-RU", { day: "numeric", month: "long" });
 }
 
-export function WhenChips({ date, time, flexible, tomorrow, dayAfter, today, accent, flexChip, onDate, onTime, onFlexible }: Props) {
+export function WhenChips({ date, time, flexible, tomorrow, dayAfter, today, accent, flexChip, onDate, onTime, onFlexible, timeEnd = "", onTimeEnd }: Props) {
   const t = useTranslations("create");
   const [pickerOpen, setPickerOpen] = useState(false);
   const [customTimeOpen, setCustomTimeOpen] = useState(false);
@@ -98,6 +101,31 @@ export function WhenChips({ date, time, flexible, tomorrow, dayAfter, today, acc
               ariaLabel={t("time_label")}
               selectClassName="h-10 rounded-xl border-2 border-ink-200 bg-white px-2 text-[13px] font-bold text-ink-900 outline-none focus:border-brand-400 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
             />
+          )}
+
+          {/* Departure window («выезжаем 06:00–11:00») — driver trips only */}
+          {onTimeEnd && (
+            <div className="space-y-2 pt-1">
+              <SectionLabel>{t("time_end_label")}</SectionLabel>
+              <div className="flex flex-wrap items-center gap-2">
+                <Chip
+                  kind="time"
+                  selected={timeEnd !== ""}
+                  onClick={() => onTimeEnd(timeEnd ? "" : `${String((parseInt(time, 10) + 3) % 24).padStart(2, "0")}:00`)}
+                  icon={<Clock className="h-3.5 w-3.5" aria-hidden="true" />}
+                >
+                  {timeEnd ? `${time}–${timeEnd}` : t("time_end_add")}
+                </Chip>
+                {timeEnd && (
+                  <TimeSelect24
+                    value={timeEnd}
+                    onChange={onTimeEnd}
+                    ariaLabel={t("time_end_label")}
+                    selectClassName="h-10 rounded-xl border-2 border-ink-200 bg-white px-2 text-[13px] font-bold text-ink-900 outline-none focus:border-brand-400 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
+                  />
+                )}
+              </div>
+            </div>
           )}
         </div>
       )}

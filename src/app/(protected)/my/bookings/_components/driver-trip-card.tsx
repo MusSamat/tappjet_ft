@@ -34,11 +34,11 @@ export function DriverTripCard({ trip, onComplete, completing, onCancel }: {
     : trip.status === "active" ? "bg-brand-50 text-brand-700" : "bg-ink-100 text-ink-600";
 
   return (
-    <div className="rounded-2xl border border-ink-100 bg-white p-5 transition-shadow hover:shadow-md">
+    <div className="rounded-2xl border border-ink-100 bg-white p-5 transition-shadow hover:shadow-md dark:bg-ink-900 dark:border-ink-800">
       <Link href={`/trips/${trip.id}`} className="block">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <p className="text-[16px] font-extrabold text-ink-900">
+            <p className="text-[16px] font-extrabold text-ink-900 dark:text-white">
               {trip.originCity} → {trip.destinationCity}
             </p>
             <p className="mt-0.5 text-[12px] text-ink-500">
@@ -56,7 +56,7 @@ export function DriverTripCard({ trip, onComplete, completing, onCancel }: {
         <div className="mt-3 flex items-end justify-between">
           <div>
             <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{t("seats_free_label")}</p>
-            <p className="text-[14px] font-bold text-ink-900">{trip.seatsAvailable}/{trip.seatsTotal}</p>
+            <p className="text-[14px] font-bold text-ink-900 dark:text-white">{trip.seatsAvailable}/{trip.seatsTotal}</p>
           </div>
           {trip.metrics && <ListingMetrics metrics={trip.metrics} />}
         </div>

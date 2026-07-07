@@ -10,6 +10,8 @@ import { RequestCard } from "@/components/features/passenger-requests/request-ca
 import { RequestDetailPane } from "@/components/features/passenger-requests/request-detail-pane";
 import { RequestFilters } from "@/components/features/passenger-requests/request-filters";
 import { FeedHeader } from "@/components/features/search/feed-header";
+import { RouteEntry } from "@/components/features/search/route-entry";
+import { DateQuickChips } from "@/components/features/search/date-quick-chips";
 import { EmptyState } from "@/components/ui/empty-state";
 import { CardSkeletonList } from "@/components/ui/card-skeleton";
 import { QueryError } from "@/components/ui/query-error";
@@ -31,14 +33,23 @@ function RequestsEmpty() {
         : { label: t("empty_requests_cta"), href: "/requests/create" };
 
   return (
-    <EmptyState
-      icon="request"
-      iconTone="grape"
-      title={t("empty_requests_title")}
-      description={role === "driver" ? t("empty_requests_desc_driver") : t("empty_requests_desc")}
-      action={action}
-      className="bg-white shadow-card ring-1 ring-ink-100 dark:bg-ink-900 dark:ring-ink-800"
-    />
+    <div className="flex flex-col gap-5">
+      <EmptyState
+        icon="request"
+        iconTone="grape"
+        title={t("empty_requests_title")}
+        description={role === "driver" ? t("empty_requests_desc_driver") : t("empty_requests_desc")}
+        action={action}
+        className="bg-white shadow-card ring-1 ring-ink-100 dark:bg-ink-900 dark:ring-ink-800"
+      />
+      {/* Escape hatch: try another day without leaving the results screen */}
+      <div>
+        <p className="mb-2 text-[12px] font-800 text-ink-500 dark:text-ink-400">{t("empty_try_date")}</p>
+        <div className="flex flex-wrap gap-2">
+          <DateQuickChips />
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -74,12 +85,20 @@ export default function RequestsPage() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [mobileDetailOpen, setMobileDetailOpen] = useState(false);
 
+  // Chips write YYYY-MM-DD; the API wants full ISO. Anchor at KG midnight (+06:00).
+  // No explicit date → default to today; «any» sentinel = no date filter.
+  const rawDate =
+    params.get("date") ?? new Date(Date.now() + 6 * 3_600_000).toISOString().slice(0, 10);
   const filters = {
     from_city: params.get("from") ?? undefined,
     to_city: params.get("to") ?? undefined,
-    date: params.get("date") ?? undefined,
+    date: /^\d{4}-\d{2}-\d{2}$/.test(rawDate) ? `${rawDate}T00:00:00+06:00` : undefined,
     seats: params.get("seats") ? Number(params.get("seats")) : undefined,
   };
+
+  // Route-first: don't fetch or show any requests until origin AND destination
+  // are both set (matches the trips feed / «Межгород» flow).
+  const hasRoute = Boolean(filters.from_city && filters.to_city);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, error, refetch } = useInfiniteQuery({
     queryKey: ["passenger-requests", filters],
@@ -89,6 +108,7 @@ export default function RequestsPage() {
     getNextPageParam: (last) => last.nextCursor ?? undefined,
     placeholderData: keepPreviousData,
     staleTime: 30_000,
+    enabled: hasRoute,
   });
 
   const requests = data?.pages.flatMap((p) => p.data) ?? [];
@@ -119,6 +139,10 @@ export default function RequestsPage() {
       : t("page_title");
 
   const nearby = data?.pages[0]?.nearby === true;
+
+  if (!hasRoute) {
+    return <RouteEntry mode="requests" modeSwitchable initialFrom={filters.from_city} initialTo={filters.to_city} />;
+  }
 
   const list = (onSelect: (id: string) => void, mobile: boolean) => (
     <div className="space-y-2.5">

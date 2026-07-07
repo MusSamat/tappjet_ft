@@ -67,7 +67,7 @@ export function RequestCard({
   ];
 
   return (
-    <div className="rounded-2xl border border-ink-100 bg-white p-5">
+    <div className="rounded-2xl border border-ink-100 bg-white p-5 dark:bg-ink-900 dark:border-ink-800">
       <div className="mb-3 flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
           {passengerId ? (
@@ -78,7 +78,7 @@ export function RequestCard({
             <DriverAvatar name={passenger?.name ?? t("passenger_fallback")} src={passenger?.avatarUrl} size="md" />
           )}
           <div>
-            <p className="text-[15px] font-extrabold text-ink-900">{passenger?.name}</p>
+            <p className="text-[15px] font-extrabold text-ink-900 dark:text-white">{passenger?.name}</p>
             {passenger?.rating != null && (
               <div className="flex items-center gap-1 text-[12px] text-ink-500">
                 <Star className="h-3 w-3 fill-accent-400 text-accent-400" />
@@ -91,20 +91,20 @@ export function RequestCard({
         <StatusBadge status={status} />
       </div>
 
-      <div className="mb-3 grid grid-cols-2 gap-3 rounded-xl bg-ink-50 p-3 sm:grid-cols-4">
+      <div className="mb-3 grid grid-cols-2 gap-3 rounded-xl bg-ink-50 p-3 sm:grid-cols-4 dark:bg-ink-800">
         <div>
           <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{t("route_label")}</p>
-          <p className="text-[13px] font-bold text-ink-900">
+          <p className="text-[13px] font-bold text-ink-900 dark:text-white">
             {trip?.originCity} → {trip?.destinationCity}
           </p>
         </div>
         <div>
           <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{t("departure_label")}</p>
-          <p className="text-[13px] font-bold text-ink-900">{fmtDate(trip?.departureAt)}</p>
+          <p className="text-[13px] font-bold text-ink-900 dark:text-white">{fmtDate(trip?.departureAt)}</p>
         </div>
         <div>
           <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{t("seats_label")}</p>
-          <p className="text-[13px] font-bold text-ink-900">{booking.seatsCount}</p>
+          <p className="text-[13px] font-bold text-ink-900 dark:text-white">{booking.seatsCount}</p>
         </div>
         <div>
           <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{t("earn_label")}</p>
@@ -115,14 +115,14 @@ export function RequestCard({
       </div>
 
       {booking.comment && (
-        <div className="mb-3 rounded-xl bg-ink-50 px-4 py-3 text-[13px] text-ink-700">
+        <div className="mb-3 rounded-xl bg-ink-50 px-4 py-3 text-[13px] text-ink-700 dark:bg-ink-800 dark:text-ink-300">
           <span className="font-bold text-ink-500">{t("comment_label")}: </span>«{booking.comment}»
         </div>
       )}
 
       {showReject ? (
         <div className="flex flex-col gap-3">
-          <p className="text-[12px] font-bold text-ink-700">{t("reject_reason_label")}</p>
+          <p className="text-[12px] font-bold text-ink-700 dark:text-ink-300">{t("reject_reason_label")}</p>
           <div className="flex flex-wrap gap-2">
             {REJECT_REASONS.map((r) => (
               <button
@@ -133,7 +133,7 @@ export function RequestCard({
                   "rounded-full border-2 px-3 py-1.5 text-[12px] font-bold transition-colors",
                   reason === r
                     ? "border-coral-400 bg-coral-50 text-coral-700"
-                    : "border-ink-200 text-ink-700 hover:border-ink-300",
+                    : "border-ink-200 text-ink-700 hover:border-ink-300 dark:border-ink-700 dark:text-ink-300",
                 )}
               >
                 {r}
@@ -144,7 +144,7 @@ export function RequestCard({
             <button
               type="button"
               onClick={() => { setShowReject(false); setReason(""); }}
-              className="rounded-2xl border border-ink-200 px-4 py-2 text-[13px] font-bold text-ink-700 hover:bg-ink-50"
+              className="rounded-2xl border border-ink-200 px-4 py-2 text-[13px] font-bold text-ink-700 hover:bg-ink-50 dark:border-ink-700 dark:text-ink-300"
             >
               {t("cancel_label")}
             </button>
@@ -175,7 +175,7 @@ export function RequestCard({
                 type="button"
                 onClick={() => setShowReject(true)}
                 disabled={actionPending}
-                className="flex items-center gap-1.5 rounded-2xl border border-ink-200 px-4 py-2 text-[13px] font-bold text-ink-700 hover:bg-ink-50 disabled:opacity-50"
+                className="flex items-center gap-1.5 rounded-2xl border border-ink-200 px-4 py-2 text-[13px] font-bold text-ink-700 hover:bg-ink-50 disabled:opacity-50 dark:border-ink-700 dark:text-ink-300"
               >
                 <XCircle className="h-4 w-4" />
                 {t("reject_btn")}

@@ -42,11 +42,11 @@ export default function GlobalError({
 
   return (
     <html>
-      <body className="flex min-h-screen flex-col items-center justify-center bg-ink-50 px-5 py-12 text-center font-sans">
+      <body className="flex min-h-screen flex-col items-center justify-center bg-ink-50 px-5 py-12 text-center font-sans dark:bg-ink-950">
         <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-danger-100 text-danger-600">
           <AlertTriangle className="h-8 w-8" aria-hidden="true" />
         </div>
-        <h1 className="font-disp text-[22px] font-900 text-ink-900">{msg.title}</h1>
+        <h1 className="font-disp text-[22px] font-900 text-ink-900 dark:text-white">{msg.title}</h1>
         <p className="mt-2 max-w-sm text-[14px] font-600 text-ink-500">{msg.desc}</p>
         {error.digest && (
           <p className="mt-1 font-mono text-[11px] text-ink-400">{msg.code}{error.digest}</p>

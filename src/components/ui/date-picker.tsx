@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { CalendarDays, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
@@ -14,9 +14,24 @@ import {
   dayYMD,
 } from "./date-picker-utils";
 
-function cap(s: string): string {
-  return s.charAt(0).toUpperCase() + s.slice(1);
-}
+// Hardcoded names: Intl.DateTimeFormat("ky") is missing in some browsers
+// (e.g. Firefox) and silently falls back to English (“Mon Tue …”).
+const CAL_NAMES: Record<Locale, { weekdays: string[]; months: string[] }> = {
+  ru: {
+    weekdays: ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"],
+    months: [
+      "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
+      "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь",
+    ],
+  },
+  kg: {
+    weekdays: ["Дш", "Ше", "Ша", "Бш", "Жм", "Иш", "Жк"],
+    months: [
+      "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
+      "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь",
+    ],
+  },
+};
 
 function useResolvedLocale(locale?: Locale): Locale {
   const activeLocale = useLocale();
@@ -34,6 +49,8 @@ export interface DatePickerModalProps {
   max?: string;
   locale?: Locale;
   title?: string;
+  /** YYYY-MM-DD → count; shows availability under each day (e.g. trips per day). */
+  dayCounts?: Record<string, number>;
 }
 
 export function DatePickerModal({
@@ -45,10 +62,10 @@ export function DatePickerModal({
   max,
   locale,
   title,
+  dayCounts,
 }: DatePickerModalProps) {
   const t = useTranslations("date_picker");
   const resolvedLocale = useResolvedLocale(locale);
-  const intlLocale = resolvedLocale === "kg" ? "ky" : "ru";
   const today = toYMD(new Date());
 
   const now = new Date();
@@ -62,15 +79,8 @@ export function DatePickerModal({
     setView({ year: base.getFullYear(), month: base.getMonth() });
   }, [open, value]);
 
-  // Locale-aware names via Intl ("kg" → "ky"); 2024-01-01 is a Monday
-  const weekdays = useMemo(() => {
-    const fmt = new Intl.DateTimeFormat(intlLocale, { weekday: "short" });
-    return Array.from({ length: 7 }, (_, i) => cap(fmt.format(new Date(2024, 0, i + 1))));
-  }, [intlLocale]);
-  const monthLabel = useMemo(
-    () => cap(new Intl.DateTimeFormat(intlLocale, { month: "long" }).format(new Date(view.year, view.month, 1))),
-    [intlLocale, view.year, view.month],
-  );
+  const weekdays = CAL_NAMES[resolvedLocale].weekdays;
+  const monthLabel = CAL_NAMES[resolvedLocale].months[view.month];
 
   const prevMonth = () =>
     setView((v) => (v.month === 0 ? { year: v.year - 1, month: 11 } : { ...v, month: v.month - 1 }));
@@ -147,6 +157,7 @@ export function DatePickerModal({
             const selected = ymd === value;
             const isToday = ymd === today;
             const weekend = i % 7 >= 5;
+            const count = !disabled ? dayCounts?.[ymd] : undefined;
             return (
               <button
                 key={day}
@@ -154,7 +165,8 @@ export function DatePickerModal({
                 disabled={disabled}
                 onClick={() => select(day)}
                 className={cn(
-                  "flex h-11 w-full items-center justify-center rounded-xl text-[14px] font-700 transition-colors",
+                  "flex w-full flex-col items-center justify-center rounded-xl text-[14px] font-700 transition-colors",
+                  dayCounts ? "h-12" : "h-11",
                   disabled && "cursor-not-allowed opacity-25",
                   selected && "bg-brand-600 font-800 text-white",
                   !selected && !disabled && "hover:bg-ink-100 dark:hover:bg-ink-800",
@@ -163,7 +175,24 @@ export function DatePickerModal({
                   !selected && !isToday && !disabled && !weekend && "text-ink-800 dark:text-ink-100",
                 )}
               >
-                {day}
+                <span className="leading-none">{day}</span>
+                {/* Availability hint — trips/requests per day; 0 shown muted */}
+                {dayCounts && (
+                  <span
+                    className={cn(
+                      "mt-0.5 text-[9px] font-800 leading-none",
+                      selected
+                        ? "text-white/90"
+                        : disabled
+                          ? "text-transparent"
+                          : count
+                            ? "text-brand-600 dark:text-brand-300"
+                            : "text-ink-300 dark:text-ink-600",
+                    )}
+                  >
+                    {count ?? 0}
+                  </span>
+                )}
               </button>
             );
           })}
@@ -201,6 +230,8 @@ export interface DatePickerProps {
   className?: string;
   /** Extra classes for the trigger button (match surrounding form fields) */
   triggerClassName?: string;
+  /** YYYY-MM-DD → count; availability hints under each calendar day. */
+  dayCounts?: Record<string, number>;
 }
 
 export function DatePicker({
@@ -214,6 +245,7 @@ export function DatePicker({
   borderless = false,
   className,
   triggerClassName,
+  dayCounts,
 }: DatePickerProps) {
   const t = useTranslations("date_picker");
   const resolvedLocale = useResolvedLocale(locale);
@@ -281,6 +313,7 @@ export function DatePicker({
         min={min}
         max={max}
         locale={locale}
+        dayCounts={dayCounts}
       />
     </div>
   );

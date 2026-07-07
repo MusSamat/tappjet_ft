@@ -20,7 +20,7 @@ export function RoutePickerStep() {
         <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-brand-50 text-[28px]">
           🗺️
         </div>
-        <h2 className="text-[20px] font-800 text-ink-900">{t("routes_title")}</h2>
+        <h2 className="text-[20px] font-800 text-ink-900 dark:text-white">{t("routes_title")}</h2>
         <p className="mt-1.5 text-[14px] text-ink-500">{t("routes_subtitle")}</p>
       </div>
       <div className="grid grid-cols-2 gap-3">
@@ -32,9 +32,9 @@ export function RoutePickerStep() {
               localStorage.setItem("tappjet_onboarding_done", "1");
               router.replace(`/trips?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`);
             }}
-            className="flex flex-col items-start rounded-2xl border-2 border-ink-200 bg-white p-4 text-left transition-all hover:border-brand-400 hover:shadow-sm active:scale-[0.97]"
+            className="flex flex-col items-start rounded-2xl border-2 border-ink-200 bg-white p-4 text-left transition-all hover:border-brand-400 hover:shadow-sm active:scale-[0.97] dark:bg-ink-900 dark:border-ink-700"
           >
-            <span className="text-[15px] font-800 text-ink-900">{from}</span>
+            <span className="text-[15px] font-800 text-ink-900 dark:text-white">{from}</span>
             <span className="mt-0.5 text-[11px] font-700 uppercase tracking-widest text-ink-400">↓</span>
             <span className="text-[15px] font-800 text-brand-700">{to}</span>
           </button>

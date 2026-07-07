@@ -13,7 +13,7 @@ const CIRCLE_TONE = {
   accent: "bg-accent-100 text-accent-600",
   sky: "bg-sky-100 text-sky-600",
   coral: "bg-coral-100 text-coral-500",
-  ink: "bg-ink-100 text-ink-500",
+  ink: "bg-ink-100 text-ink-500 dark:bg-ink-800 dark:text-ink-300",
 } as const satisfies Record<IconTone, string>;
 
 export interface EmptyStateAction {
@@ -41,7 +41,7 @@ export function EmptyState({ icon, iconTone = "brand", title, description, actio
   return (
     <div
       className={cn(
-        "flex flex-col items-center gap-3 rounded-2xl bg-ink-50 px-4 py-8 text-center",
+        "flex flex-col items-center gap-3 rounded-2xl bg-ink-50 dark:bg-ink-900 px-4 py-8 text-center",
         className,
       )}
     >
@@ -53,7 +53,7 @@ export function EmptyState({ icon, iconTone = "brand", title, description, actio
       >
         <Glyph className="h-8 w-8" aria-hidden="true" />
       </div>
-      <p className="text-[15px] font-900 text-ink-900">{title}</p>
+      <p className="text-[15px] font-900 text-ink-900 dark:text-white">{title}</p>
       {description ? <p className="text-[12px] font-700 text-ink-400">{description}</p> : null}
       {action ? <EmptyStateCta action={action} /> : null}
     </div>

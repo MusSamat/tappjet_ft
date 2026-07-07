@@ -111,7 +111,7 @@ export function CarPhotoUploader() {
               className="h-full w-full object-cover"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-ink-100">
+            <div className="flex h-full w-full items-center justify-center bg-ink-100 dark:bg-ink-800">
               <Car className="h-10 w-10 text-ink-400" aria-hidden="true" />
             </div>
           )}
@@ -152,7 +152,7 @@ export function CarPhotoUploader() {
           ].map(({ label, value }) => (
             <div key={label}>
               <p className="text-[10px] font-semibold uppercase tracking-wide text-ink-400">{label}</p>
-              <p className="text-[14px] font-bold text-ink-900">{value}</p>
+              <p className="text-[14px] font-bold text-ink-900 dark:text-white">{value}</p>
             </div>
           ))}
         </div>

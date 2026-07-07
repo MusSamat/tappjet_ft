@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { memo } from "react";
-import { CalendarClock, ChevronRight, Eye, MapPin, Star, Users } from "lucide-react";
+import { CalendarClock, ChevronRight, Eye, Hand, MapPin, Star } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { PassengerRequest } from "@/lib/api/passenger-requests";
 import { DriverAvatar } from "@/components/ui/driver-avatar";
@@ -52,93 +52,87 @@ function RequestCardInner({
       tabIndex={onClick ? 0 : undefined}
       onKeyDown={onClick ? (e) => { if (e.key === "Enter" || e.key === " ") onClick(); } : undefined}
     >
-      {/* Row 1 — passenger identity + seats needed */}
-      <div className="flex items-center gap-2.5 pr-1">
-        <DriverAvatar
-          name={passenger.name}
-          src={passenger.avatarUrl}
-          size="md"
-          shape="square"
-        />
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-1.5">
-            <span className="truncate text-[14px] font-900 text-ink-900 dark:text-white">
-              {passenger.name.split(" ")[0]}
-            </span>
-            <span className="shrink-0 rounded bg-grape-100 px-1.5 py-0.5 text-[10px] font-900 text-grape-600 dark:bg-grape-500/20 dark:text-grape-300">
-              {t("seeking")}
-            </span>
-          </div>
-          <div className="mt-0.5 flex items-center gap-1 text-[12px] font-600 text-ink-400">
-            {showRating ? (
-              <>
-                <Star className="h-3 w-3 fill-accent-400 text-accent-400" aria-hidden="true" />
-                {passenger.rating!.toFixed(1)}
-                <span>· {t("reviews", { n: passenger.ratingCount })}</span>
-              </>
-            ) : (
-              <span>{t("new")}</span>
-            )}
-          </div>
-        </div>
-        <div className="shrink-0 text-right">
-          <div className="text-[10px] font-600 text-ink-400">{t("needs")}</div>
-          <div className="text-[17px] font-900 leading-none text-grape-600 dark:text-grape-300">
-            {request.seatsNeeded}
-            <span className="text-[10px]"> {t("seats_unit", { n: request.seatsNeeded })}</span>
-          </div>
-        </div>
-        <LikeButton
-          targetType="passenger_request"
-          id={request.id}
-          liked={!!request.liked}
-          size="sm"
-          className="-my-1 shrink-0 self-start bg-transparent hover:bg-transparent"
-        />
-      </div>
-
-      {/* Row 2 — route block on ink-50 with grape spine */}
-      <div className="mt-2.5 flex items-center gap-2.5 rounded-2xl bg-ink-50 px-3 py-2 dark:bg-ink-800/60">
-        <div className="flex shrink-0 flex-col items-center self-stretch py-1" aria-hidden="true">
-          <span className="h-2 w-2 shrink-0 rounded-full border-2 border-grape-500" />
-          <span className="my-0.5 w-0.5 flex-1 rounded bg-gradient-to-b from-grape-400 to-accent-400" />
-          <span className="h-2 w-2 shrink-0 rounded-full bg-accent-500" />
-        </div>
-        <div className="min-w-0 flex-1">
-          <div className="truncate text-[13px] font-900 leading-tight text-ink-900 dark:text-white">
-            {request.originCity}
-          </div>
-          <div className="mt-1 truncate text-[13px] font-900 leading-tight text-ink-900 dark:text-white">
-            {request.destinationCity}
-          </div>
-        </div>
-      </div>
-
-      {/* Row 3 — meta */}
-      <div className="mt-2.5 flex items-center gap-3 overflow-hidden text-[12px] font-700 text-ink-500 dark:text-ink-400">
-        <span className="flex shrink-0 items-center gap-1">
-          <CalendarClock className="h-3.5 w-3.5 text-grape-500" aria-hidden="true" />
-          {fmtDate(request.departureDate)}
-          {request.flexible && ` · ${t("flexible")}`}
+      {/* Type pill — makes it unmistakable this is a passenger looking for a ride */}
+      <div className="mb-2 flex items-center gap-1.5">
+        <span className="inline-flex items-center gap-1 rounded-full bg-grape-100 px-2 py-0.5 text-[10px] font-900 uppercase tracking-wide text-grape-600 dark:bg-grape-500/20 dark:text-grape-300">
+          <Hand className="h-3 w-3" aria-hidden="true" />
+          {t("type_passenger")}
         </span>
-        <span className="flex shrink-0 items-center gap-1">
-          <Users className="h-3.5 w-3.5" aria-hidden="true" />
-          {request.seatsNeeded}
-        </span>
-        {request.comment && (
-          <span className="flex min-w-0 items-center gap-1">
-            <MapPin className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-            <span className="truncate">{request.comment}</span>
+        {request.myResponse && (
+          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-900 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300">
+            {t("responded")}
           </span>
         )}
+      </div>
+
+      {/* Row 1 — date (hero) + seats needed; heart top-right */}
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <div className="flex items-center gap-1.5 text-[16px] font-900 leading-tight text-ink-900 dark:text-white">
+            <CalendarClock className="h-4 w-4 shrink-0 text-grape-500 dark:text-grape-400" aria-hidden="true" />
+            <span className="truncate">
+              {fmtDate(request.departureDate)}
+              {request.flexible && ` · ${t("flexible")}`}
+            </span>
+          </div>
+          {/* Route — thin, small: context, not the hero */}
+          <div className="mt-1 truncate text-[12px] font-600 text-ink-500 dark:text-ink-400">
+            {request.originCity} → {request.destinationCity}
+          </div>
+        </div>
+        <div className="flex shrink-0 items-start gap-1">
+          <div className="text-right">
+            <div className="text-[10px] font-600 text-ink-400">{t("needs")}</div>
+            <div className="text-[17px] font-900 leading-none text-grape-600 dark:text-grape-300">
+              {request.seatsNeeded}
+              <span className="text-[10px]"> {t("seats_unit", { n: request.seatsNeeded })}</span>
+            </div>
+          </div>
+          <LikeButton
+            targetType="passenger_request"
+            id={request.id}
+            liked={!!request.liked}
+            size="sm"
+            className="-my-1 shrink-0 bg-transparent hover:bg-transparent"
+          />
+        </div>
+      </div>
+
+      {/* Row 2 — passenger strip (mirrors TripCard's driver strip) */}
+      <div className="mt-2.5 flex items-center gap-2 border-t border-ink-100 pt-2.5 dark:border-ink-800">
+        <DriverAvatar name={passenger.name} src={passenger.avatarUrl} size="md" shape="square" />
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-1 text-[13px] font-800 leading-tight text-ink-900 dark:text-white">
+            <span className="truncate">{passenger.name.split(" ")[0]}</span>
+            {showRating ? (
+              <span className="flex shrink-0 items-center gap-0.5 font-700 text-ink-500 dark:text-ink-400">
+                <Star className="h-3 w-3 fill-accent-400 text-accent-400" aria-hidden="true" />
+                {passenger.rating!.toFixed(1)}
+              </span>
+            ) : (
+              <span className="shrink-0 text-[11px] font-800 text-grape-600 dark:text-grape-300">
+                {t("new")}
+              </span>
+            )}
+          </div>
+          {request.comment && (
+            <div className="mt-0.5 flex min-w-0 items-center gap-1 text-[11px] font-600 text-ink-400">
+              <MapPin className="h-3 w-3 shrink-0" aria-hidden="true" />
+              <span className="truncate">{request.comment}</span>
+            </div>
+          )}
+        </div>
         {request.metrics && (
-          <span className="flex shrink-0 items-center gap-1 text-[11px] font-600 text-ink-400">
-            <Eye className="h-3 w-3" aria-hidden="true" />
+          <span
+            className="flex shrink-0 items-center gap-1 text-[12px] font-700 text-ink-500 dark:text-ink-400"
+            title={t("views_title", { n: request.metrics.views })}
+          >
+            <Eye className="h-3.5 w-3.5" aria-hidden="true" />
             {request.metrics.views}
           </span>
         )}
         {!isOpen && <StatusBadge status={request.status} className="shrink-0" />}
-        <ChevronRight className="ml-auto h-4 w-4 shrink-0 text-grape-400" aria-hidden="true" />
+        <ChevronRight className="h-4 w-4 shrink-0 text-grape-400" aria-hidden="true" />
       </div>
 
       {/* Cancel (own list only) */}

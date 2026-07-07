@@ -31,7 +31,7 @@ export function PasswordStep({
     <>
       <div className="mb-6 text-center">
         <p className="text-[14px] text-ink-600">{tl("password_step_label")}</p>
-        <p className="mt-1 text-[17px] font-700 text-ink-900">+996 {displayPhone}</p>
+        <p className="mt-1 text-[17px] font-700 text-ink-900 dark:text-white">+996 {displayPhone}</p>
       </div>
 
       {hasPassword ? (
@@ -49,10 +49,10 @@ export function PasswordStep({
                 onKeyDown={(e) => { if (e.key === "Enter" && password) passwordMutation.mutate(); }}
                 placeholder={tl("password_placeholder")}
                 className={cn(
-                  "h-12 w-full rounded-2xl border-2 bg-ink-50 px-3 pr-10 text-[14px] font-600 outline-none transition-colors",
+                  "h-12 w-full rounded-2xl border-2 bg-ink-50 px-3 pr-10 text-[14px] font-600 outline-none transition-colors dark:bg-ink-800",
                   serverError
                     ? "border-coral-400 text-coral-700"
-                    : "border-ink-200 text-ink-900 focus:border-brand-500",
+                    : "border-ink-200 text-ink-900 focus:border-brand-500 dark:border-ink-700 dark:text-white",
                 )}
               />
               <button

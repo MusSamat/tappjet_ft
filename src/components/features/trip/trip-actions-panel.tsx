@@ -11,12 +11,12 @@ import type { TripDetail } from "@/lib/api/trips";
 function BookView({ trip }: { trip: TripDetail }) {
   const t = useTranslations("trip_actions");
   return (
-    <div className="rounded-2xl border border-ink-200 bg-white p-5">
+    <div className="rounded-2xl border border-ink-200 bg-white p-5 dark:border-ink-800 dark:bg-ink-900">
       <div className="mb-4 flex items-baseline justify-between">
-        <span className="text-display font-extrabold text-brand-700">
+        <span className="text-display font-extrabold text-brand-700 dark:text-brand-300">
           {formatPrice((trip.pricePerSeat as number | undefined) ?? 0)}
         </span>
-        <span className="text-caption text-ink-500">{t("per_seat")}</span>
+        <span className="text-caption text-ink-500 dark:text-ink-400">{t("per_seat")}</span>
       </div>
       {trip.priceNegotiable && (
         <p className="mb-4 rounded-xl bg-accent-50 p-3 text-caption text-accent-700">
@@ -39,7 +39,7 @@ export function TripActionsPanel({ trip }: { trip: TripDetail }) {
 
   if (status === "loading" || status === "idle") {
     return (
-      <div className="rounded-2xl border border-ink-200 bg-white p-5">
+      <div className="rounded-2xl border border-ink-200 bg-white p-5 dark:border-ink-800 dark:bg-ink-900">
         <div className="mb-4 h-9 w-28 animate-pulse rounded-lg bg-ink-100" />
         <div className="mb-3 h-4 w-full animate-pulse rounded bg-ink-100" />
         <div className="h-12 animate-pulse rounded-2xl bg-ink-100" />

@@ -32,7 +32,7 @@ export function ChatRow({ s, isActive }: { s: ChatSummary; isActive: boolean }) 
     <Link
       href={`/my/bookings/${s.bookingId}/chat`}
       className={cn(
-        "flex items-center gap-3 px-4 py-3 transition-colors hover:bg-ink-50",
+        "flex items-center gap-3 px-4 py-3 transition-colors hover:bg-ink-50 dark:hover:bg-ink-800",
         isActive && "bg-brand-50 hover:bg-brand-50",
         isClosed && "opacity-60",
       )}
@@ -50,7 +50,7 @@ export function ChatRow({ s, isActive }: { s: ChatSummary; isActive: boolean }) 
         <div className="flex items-baseline justify-between gap-1">
           <span className={cn(
             "truncate text-[14px] font-bold",
-            isActive ? "text-brand-900" : isClosed ? "text-ink-500" : hasUnread ? "text-ink-900" : "text-ink-700",
+            isActive ? "text-brand-900" : isClosed ? "text-ink-500" : hasUnread ? "text-ink-900 dark:text-white" : "text-ink-700 dark:text-ink-300",
           )}>
             {s.otherName}
           </span>

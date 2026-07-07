@@ -96,7 +96,7 @@ export function RequestDetailPane({ request }: Props) {
           <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.08em] text-ink-500">
             {tFilters("route_label")}
           </p>
-          <div className="rounded-2xl border border-ink-100 bg-white p-4">
+          <div className="rounded-2xl border border-ink-100 bg-white p-4 dark:bg-ink-800 dark:border-ink-700">
             <div className="flex items-start gap-3">
               <div className="flex flex-col items-center pt-1">
                 <span
@@ -104,7 +104,7 @@ export function RequestDetailPane({ request }: Props) {
                   style={{ boxShadow: "0 0 0 3px #EDE9FE" }}
                   aria-hidden
                 />
-                <div className="my-1.5 h-10 w-0.5 bg-ink-200" aria-hidden />
+                <div className="my-1.5 h-10 w-0.5 bg-ink-200 dark:bg-ink-700" aria-hidden />
                 <span
                   className="h-2.5 w-2.5 flex-shrink-0 rounded-full bg-grape-400"
                   style={{ boxShadow: "0 0 0 3px #EDE9FE" }}
@@ -113,7 +113,7 @@ export function RequestDetailPane({ request }: Props) {
               </div>
               <div className="flex flex-1 flex-col gap-4">
                 <div>
-                  <p className="text-[16px] font-extrabold text-ink-900">
+                  <p className="text-[16px] font-extrabold text-ink-900 dark:text-white">
                     {request.originCity}
                   </p>
                   <p className="mt-0.5 text-[12px] font-semibold text-ink-500">
@@ -121,7 +121,7 @@ export function RequestDetailPane({ request }: Props) {
                   </p>
                 </div>
                 <div>
-                  <p className="text-[16px] font-extrabold text-ink-900">
+                  <p className="text-[16px] font-extrabold text-ink-900 dark:text-white">
                     {request.destinationCity}
                   </p>
                   <p className="mt-0.5 text-[12px] font-semibold text-ink-500">
@@ -135,12 +135,12 @@ export function RequestDetailPane({ request }: Props) {
 
         {/* Details */}
         <div className="grid grid-cols-2 gap-3">
-          <div className="flex flex-col gap-1 rounded-2xl border border-ink-100 bg-white p-3">
+          <div className="flex flex-col gap-1 rounded-2xl border border-ink-100 bg-white p-3 dark:bg-ink-800 dark:border-ink-700">
             <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-ink-400">
               <Calendar className="h-3 w-3" aria-hidden />
               {t("date_detail")}
             </div>
-            <p className="text-[13px] font-bold text-ink-900">{fmtDate(request.departureDate)}</p>
+            <p className="text-[13px] font-bold text-ink-900 dark:text-white">{fmtDate(request.departureDate)}</p>
             {request.flexible && (
               <span className="mt-0.5 inline-flex w-fit items-center gap-1 rounded-full bg-accent-50 px-2 py-0.5 text-[10px] font-bold text-accent-700">
                 <Zap className="h-2.5 w-2.5" aria-hidden />
@@ -149,7 +149,7 @@ export function RequestDetailPane({ request }: Props) {
             )}
           </div>
 
-          <div className="flex flex-col gap-1 rounded-2xl border border-ink-100 bg-white p-3">
+          <div className="flex flex-col gap-1 rounded-2xl border border-ink-100 bg-white p-3 dark:bg-ink-800 dark:border-ink-700">
             <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-ink-400">
               <Users className="h-3 w-3" aria-hidden />
               {t("seats_needed")}
@@ -200,11 +200,11 @@ export function RequestDetailPane({ request }: Props) {
               {t("respond_btn")}
             </button>
           ) : isDriver && !isOpen ? (
-            <div className="flex items-center justify-center rounded-2xl border border-ink-200 bg-ink-50 px-4 py-3">
+            <div className="flex items-center justify-center rounded-2xl border border-ink-200 bg-ink-50 px-4 py-3 dark:bg-ink-800 dark:border-ink-700">
               <p className="text-[12px] font-semibold text-ink-500">{t("closed")}</p>
             </div>
           ) : (
-            <div className="flex items-center gap-2 rounded-2xl border border-ink-200 bg-ink-50 px-4 py-3">
+            <div className="flex items-center gap-2 rounded-2xl border border-ink-200 bg-ink-50 px-4 py-3 dark:bg-ink-800 dark:border-ink-700">
               <MessageCircle className="h-4 w-4 flex-shrink-0 text-ink-400" aria-hidden />
               <p className="text-[12px] text-ink-500">{t("switch_to_driver")}</p>
             </div>

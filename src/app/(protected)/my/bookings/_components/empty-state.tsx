@@ -8,15 +8,15 @@ export function PassengerEmptyState({ subTab }: { subTab: "active" | "history" }
   const t = useTranslations("bookings");
   if (subTab === "history") {
     return (
-      <div className="rounded-2xl border border-ink-100 bg-white p-8 text-center">
-        <p className="text-[17px] font-bold text-ink-900">{t("empty_history")}</p>
+      <div className="rounded-2xl border border-ink-100 bg-white p-8 text-center dark:bg-ink-900 dark:border-ink-800">
+        <p className="text-[17px] font-bold text-ink-900 dark:text-white">{t("empty_history")}</p>
         <p className="mt-2 text-[13px] text-ink-500">{t("history_hint")}</p>
       </div>
     );
   }
   return (
-    <div className="rounded-2xl border border-ink-100 bg-white p-8 text-center">
-      <p className="text-[17px] font-bold text-ink-900">{t("no_active_trips")}</p>
+    <div className="rounded-2xl border border-ink-100 bg-white p-8 text-center dark:bg-ink-900 dark:border-ink-800">
+      <p className="text-[17px] font-bold text-ink-900 dark:text-white">{t("no_active_trips")}</p>
       <p className="mt-2 text-[13px] text-ink-500">{t("no_active_hint")}</p>
       <Link href="/trips">
         <button
@@ -34,15 +34,15 @@ export function DriverEmptyState({ subTab }: { subTab: "active" | "history" }) {
   const t = useTranslations("bookings");
   if (subTab === "history") {
     return (
-      <div className="rounded-2xl border border-ink-100 bg-white p-8 text-center">
-        <p className="text-[17px] font-bold text-ink-900">{t("no_trip_history")}</p>
+      <div className="rounded-2xl border border-ink-100 bg-white p-8 text-center dark:bg-ink-900 dark:border-ink-800">
+        <p className="text-[17px] font-bold text-ink-900 dark:text-white">{t("no_trip_history")}</p>
         <p className="mt-2 text-[13px] text-ink-500">{t("history_hint")}</p>
       </div>
     );
   }
   return (
-    <div className="rounded-2xl border border-ink-100 bg-white p-8 text-center">
-      <p className="text-[17px] font-bold text-ink-900">{t("no_published_trips")}</p>
+    <div className="rounded-2xl border border-ink-100 bg-white p-8 text-center dark:bg-ink-900 dark:border-ink-800">
+      <p className="text-[17px] font-bold text-ink-900 dark:text-white">{t("no_published_trips")}</p>
       <p className="mt-2 text-[13px] text-ink-500">{t("no_published_hint")}</p>
       <Link href="/trips/create">
         <button
@@ -60,8 +60,8 @@ export function DriverEmptyState({ subTab }: { subTab: "active" | "history" }) {
 export function RequestsEmptyState() {
   const t = useTranslations("bookings");
   return (
-    <div className="rounded-2xl border border-ink-100 bg-white p-8 text-center">
-      <p className="text-[17px] font-bold text-ink-900">{t("no_requests_label")}</p>
+    <div className="rounded-2xl border border-ink-100 bg-white p-8 text-center dark:bg-ink-900 dark:border-ink-800">
+      <p className="text-[17px] font-bold text-ink-900 dark:text-white">{t("no_requests_label")}</p>
       <p className="mt-2 text-[13px] text-ink-500">{t("requests_hint")}</p>
     </div>
   );

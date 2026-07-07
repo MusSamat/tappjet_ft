@@ -53,7 +53,7 @@ export function PasswordStep({ onDone, onSkip, onError }: Props) {
         </label>
         <PasswordInput
           id="password"
-          className="rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 py-3 pr-10 text-[15px] font-800"
+          className="rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 py-3 pr-10 text-[15px] font-800 dark:bg-ink-800 dark:border-ink-700"
           value={password}
           onChange={(e) => setPasswordValue(e.target.value)}
           placeholder={t("password_placeholder")}
@@ -69,7 +69,7 @@ export function PasswordStep({ onDone, onSkip, onError }: Props) {
         </label>
         <PasswordInput
           id="confirm"
-          className="rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 py-3 text-[15px] font-800"
+          className="rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 py-3 text-[15px] font-800 dark:bg-ink-800 dark:border-ink-700"
           value={confirm}
           onChange={(e) => setConfirm(e.target.value)}
           placeholder={t("confirm_password_placeholder")}

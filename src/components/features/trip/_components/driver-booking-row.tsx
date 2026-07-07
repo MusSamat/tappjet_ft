@@ -56,7 +56,7 @@ export function DriverBookingRow({
   const t = useTranslations("trip_actions");
 
   return (
-    <div key={id} className="rounded-2xl border border-ink-100 bg-white p-4">
+    <div key={id} className="rounded-2xl border border-ink-100 bg-white p-4 dark:border-ink-800 dark:bg-ink-900">
       <div className="mb-3 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2.5">
           {passengerId ? (
@@ -71,11 +71,11 @@ export function DriverBookingRow({
             <DriverAvatar name={passenger?.name ?? "?"} src={passenger?.avatarUrl} size="sm" />
           )}
           <div>
-            <p className="text-[14px] font-bold text-ink-900">
+            <p className="text-[14px] font-bold text-ink-900 dark:text-white">
               {passenger?.name ?? t("passenger_fallback")}
             </p>
             {passenger?.rating != null && (
-              <span className="flex items-center gap-0.5 text-[12px] text-ink-500">
+              <span className="flex items-center gap-0.5 text-[12px] text-ink-500 dark:text-ink-400">
                 <Star className="h-3 w-3 fill-accent-400 text-accent-400" />
                 {passenger.rating.toFixed(1)} · {passenger.ratingCount} {t("reviews_short")}
               </span>
@@ -83,7 +83,7 @@ export function DriverBookingRow({
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-[12px] font-bold text-ink-600">{seatsCount} {t("seats_unit")}</span>
+          <span className="text-[12px] font-bold text-ink-600 dark:text-ink-300">{seatsCount} {t("seats_unit")}</span>
           <span className={cn(
             "rounded-full px-2 py-0.5 text-[10px] font-bold",
             bStatus === "accepted"
@@ -96,7 +96,7 @@ export function DriverBookingRow({
       </div>
 
       {comment && (
-        <p className="mb-3 rounded-xl bg-ink-50 px-3 py-2 text-[12px] text-ink-600">
+        <p className="mb-3 rounded-xl bg-ink-50 px-3 py-2 text-[12px] text-ink-600 dark:bg-ink-800 dark:text-ink-300">
           «{comment}»
         </p>
       )}
@@ -113,7 +113,7 @@ export function DriverBookingRow({
                   "rounded-full border-2 px-2.5 py-1 text-[13px] font-bold",
                   rejectReason === r
                     ? "border-coral-400 bg-coral-50 text-coral-700"
-                    : "border-ink-200 text-ink-600",
+                    : "border-ink-200 text-ink-600 dark:border-ink-700 dark:text-ink-300",
                 )}
               >
                 {r}
@@ -125,7 +125,7 @@ export function DriverBookingRow({
               type="button"
               onClick={onCancelReject}
               disabled={rejectPending}
-              className="flex-1 rounded-xl border border-ink-200 py-2 text-[13px] font-bold text-ink-600 disabled:opacity-50"
+              className="flex-1 rounded-xl border border-ink-200 py-2 text-[13px] font-bold text-ink-600 disabled:opacity-50 dark:border-ink-700 dark:text-ink-300"
             >
               {t("cancel_btn")}
             </button>
@@ -156,7 +156,7 @@ export function DriverBookingRow({
               <button
                 type="button"
                 onClick={onStartReject}
-                className="flex items-center gap-1.5 rounded-xl border border-ink-200 px-3 py-2 text-[13px] font-bold text-ink-600 hover:bg-ink-50"
+                className="flex items-center gap-1.5 rounded-xl border border-ink-200 px-3 py-2 text-[13px] font-bold text-ink-600 hover:bg-ink-50 dark:border-ink-700 dark:text-ink-300"
               >
                 <XCircle className="h-3.5 w-3.5" />
                 {t("reject_btn")}

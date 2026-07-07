@@ -56,6 +56,15 @@ export async function listPassengerRequests(
   return data;
 }
 
+/** Per-day open-request counts for a route — calendar availability hints. */
+export async function getRequestsCalendar(from: string, to: string): Promise<Record<string, number>> {
+  const { data } = await api.get<{ data: { date: string; count: number }[] }>(
+    "/passenger-requests/calendar",
+    { params: { from_city: from, to_city: to } },
+  );
+  return Object.fromEntries(data.data.map((d) => [d.date, d.count]));
+}
+
 export async function listMyPassengerRequests(): Promise<PassengerRequestsResult> {
   const { data } = await api.get<PassengerRequestsResult>("/passenger-requests/my");
   return data;

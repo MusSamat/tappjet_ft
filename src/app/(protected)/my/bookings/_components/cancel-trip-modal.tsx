@@ -32,9 +32,9 @@ export function CancelTripModal({ trip, isPending, onConfirm, onClose }: {
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-4">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative max-h-[90dvh] w-full overflow-y-auto rounded-t-[24px] bg-white shadow-2xl sm:max-w-[440px] sm:rounded-3xl">
+      <div className="relative max-h-[90dvh] w-full overflow-y-auto rounded-t-[24px] bg-white shadow-2xl sm:max-w-[440px] sm:rounded-3xl dark:bg-ink-900">
         <div className="flex justify-center pb-1 pt-3 sm:hidden">
-          <div className="h-1 w-10 rounded-full bg-ink-200" />
+          <div className="h-1 w-10 rounded-full bg-ink-200 dark:bg-ink-700" />
         </div>
         <button
           type="button"
@@ -44,13 +44,13 @@ export function CancelTripModal({ trip, isPending, onConfirm, onClose }: {
           <X className="h-4 w-4" />
         </button>
         <div className="px-6 pb-8 pt-4">
-          <h2 className="text-[18px] font-extrabold text-ink-900">{t("cancel_trip_title")}</h2>
+          <h2 className="text-[18px] font-extrabold text-ink-900 dark:text-white">{t("cancel_trip_title")}</h2>
           <p className="mt-1 text-[13px] text-ink-500">
             {trip.originCity} → {trip.destinationCity}
             {trip.departureAt ? ` · ${fmtDate(trip.departureAt)}` : ""}
           </p>
           <div className="mt-4 flex flex-col gap-2">
-            <p className="text-[12px] font-bold text-ink-700">{t("cancel_reason_label")}</p>
+            <p className="text-[12px] font-bold text-ink-700 dark:text-ink-300">{t("cancel_reason_label")}</p>
             <div className="flex flex-wrap gap-2">
               {TRIP_CANCEL_REASONS.map((r) => (
                 <button
@@ -61,7 +61,7 @@ export function CancelTripModal({ trip, isPending, onConfirm, onClose }: {
                     "rounded-full border-2 px-3 py-1.5 text-[12px] font-bold transition-colors",
                     reason === r
                       ? "border-coral-400 bg-coral-50 text-coral-700"
-                      : "border-ink-200 text-ink-700 hover:border-ink-300",
+                      : "border-ink-200 text-ink-700 hover:border-ink-300 dark:border-ink-700 dark:text-ink-300",
                   )}
                 >
                   {r}
@@ -81,7 +81,7 @@ export function CancelTripModal({ trip, isPending, onConfirm, onClose }: {
             <button
               type="button"
               onClick={onClose}
-              className="w-full rounded-2xl border border-ink-200 py-3 text-[15px] font-bold text-ink-700 hover:bg-ink-50"
+              className="w-full rounded-2xl border border-ink-200 py-3 text-[15px] font-bold text-ink-700 hover:bg-ink-50 dark:border-ink-700 dark:text-ink-300"
             >
               {t("keep_trip")}
             </button>
