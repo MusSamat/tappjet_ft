@@ -21,7 +21,7 @@ import { toastSuccess, toastError } from "@/components/layout/quick-toast";
 import { RateModal } from "@/components/features/ratings/rate-modal";
 import { useUiRole } from "@/lib/hooks/use-role-colors";
 import { ROLE_THEME } from "@/lib/role-colors";
-import { Container, QueryError, Segmented } from "@/components/ui";
+import { BackButton, Container, QueryError, Segmented } from "@/components/ui";
 import { BackToTop } from "@/components/ui/back-to-top";
 import { useScrollRestoration } from "@/lib/hooks/use-scroll-restoration";
 import { Confetti } from "@/components/ui/confetti";
@@ -237,6 +237,7 @@ export default function MyBookingsPage() {
       <Container className="py-8">
         {showConfetti && <Confetti onDone={() => setShowConfetti(false)} />}
 
+        <BackButton />
         <div className="mb-4 flex items-center justify-between gap-3">
           <div className="flex min-w-0 items-center gap-2.5">
             <h1 className="shrink-0 text-[26px] font-900 text-ink-900 dark:text-white">{tMy("title")}</h1>

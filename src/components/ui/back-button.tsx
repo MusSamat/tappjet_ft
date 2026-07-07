@@ -2,9 +2,12 @@
 
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
-export function BackButton({ label = "Назад" }: { label?: string }) {
+export function BackButton({ label }: { label?: string }) {
   const router = useRouter();
+  const t = useTranslations("common");
+  label = label ?? t("back");
   return (
     <button
       type="button"

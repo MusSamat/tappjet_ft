@@ -1,5 +1,6 @@
 {
   "common": {
+    "back": "Артка",
     "loading": "Жүктөлүүдө…",
     "optional": "милдеттүү эмес",
     "back_to_top": "Жогоруга"
@@ -713,6 +714,8 @@
   },
   "profile": {
     "settings_btn": "Жөндөөлөр",
+    "theme_light": "Ачык",
+    "theme_dark": "Караңгы",
     "verified_badge": "Верификацияланган",
     "rating_count": "({n} баалоо)",
     "badge_phone": "📱 Телефон ырасталды",
@@ -776,8 +779,6 @@
     "chip_verified": "Ырасталган",
     "nav_history": "Сапарлар тарыхы",
     "nav_settings": "Жөндөөлөр",
-    "lang_title": "Тил · Язык",
-    "theme_title": "Тема",
     "session_section": "Аккаунт жана сессиялар",
     "logout_all": "Бардык түзмөктөрдөн чыгуу"
   },
@@ -969,6 +970,9 @@
     "status_no_show": "Келген жок",
     "status_expired": "Мөөнөтү бүттү",
     "hub_title": "Билдирүүлөр",
+    "notifications_row": "Билдирмелер",
+    "notifications_unread": "{n, plural, other {# жаңы}}",
+    "notifications_none": "Жаңысы жок",
     "hub_empty_hint": "Чат сапар брондолгондон кийин ачылат",
     "hub_placeholder_title": "Чат тандаңыз",
     "hub_placeholder_body": "Жолугушуу жери жана сапар тууралуу сүйлөшүңүз.",

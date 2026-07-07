@@ -94,15 +94,17 @@ export function FiltersBody() {
       <div>
         <SectionLabel size="xs" className="mb-1.5">{t("route_label")}</SectionLabel>
         <div className="flex flex-col gap-1">
-          <CityAutocomplete compact value={fromCity} onChange={(v) => update({ from: v || null })} placeholder={t("from_placeholder")} />
+          {/* Commit only a chosen city — typing emits "" per keystroke and an
+              empty from/to would bounce the user back to route entry. */}
+          <CityAutocomplete compact value={fromCity} onChange={(v) => { if (v) update({ from: v }); }} placeholder={t("from_placeholder")} />
           <div className="flex items-center gap-2">
             <div className="h-px flex-1 bg-ink-100 dark:bg-ink-800" />
-            <button type="button" onClick={() => update({ from: toCity || null, to: fromCity || null })} disabled={!fromCity && !toCity} className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border border-ink-200 text-ink-400 transition-colors hover:border-brand-400 hover:text-brand-600 disabled:opacity-30 dark:border-ink-700" aria-label={t("swap_aria")}>
+            <button type="button" onClick={() => update({ from: toCity || null, to: fromCity || null })} disabled={!fromCity || !toCity} className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border border-ink-200 text-ink-400 transition-colors hover:border-brand-400 hover:text-brand-600 disabled:opacity-30 dark:border-ink-700" aria-label={t("swap_aria")}>
               <ArrowLeftRight className="h-2.5 w-2.5" />
             </button>
             <div className="h-px flex-1 bg-ink-100 dark:bg-ink-800" />
           </div>
-          <CityAutocomplete compact value={toCity} onChange={(v) => update({ to: v || null })} placeholder={t("to_placeholder")} />
+          <CityAutocomplete compact value={toCity} onChange={(v) => { if (v) update({ to: v }); }} placeholder={t("to_placeholder")} />
         </div>
       </div>
 

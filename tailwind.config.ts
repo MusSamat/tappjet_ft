@@ -43,7 +43,9 @@ const ink = {
 };
 
 const config: Config = {
-  content: ["./src/app/**/*.{ts,tsx}", "./src/components/**/*.{ts,tsx}"],
+  // src/lib holds class-name constants too (role-colors.ts: headerGrad etc.) —
+  // without scanning it those classes are purged and headers lose their bg.
+  content: ["./src/app/**/*.{ts,tsx}", "./src/components/**/*.{ts,tsx}", "./src/lib/**/*.{ts,tsx}"],
   darkMode: "class",
   theme: {
     extend: {

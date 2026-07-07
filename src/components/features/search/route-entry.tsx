@@ -1,13 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { ArrowDownUp, CarFront, Circle, MapPin, Search, User } from "lucide-react";
+import { BackButton } from "@/components/ui/back-button";
 import { CityAutocomplete } from "@/components/ui/city-autocomplete";
 import { cn } from "@/lib/utils/cn";
 import { useAuth } from "@/store/auth";
 import { PopularRoutes } from "./popular-routes";
+
+// Last searched route survives navigation — prefills this form on return.
+const LAST_ROUTE_KEY = "tappjet_last_route";
 
 // Route-first entry (Yandex «Межгород» pattern) — the user sets origin +
 // destination BEFORE any list is fetched; submitting navigates to /trips or
@@ -44,14 +48,37 @@ export function RouteEntry({ mode, modeSwitchable = false, initialFrom = "", ini
   const [to, setTo] = useState(initialTo);
   const canGo = from.trim().length > 0 && to.trim().length > 0;
 
+  // Prefill from the last search when opened without an explicit route.
+  useEffect(() => {
+    if (initialFrom || initialTo) return;
+    try {
+      const raw = localStorage.getItem(LAST_ROUTE_KEY);
+      if (!raw) return;
+      const saved = JSON.parse(raw) as { from?: string; to?: string };
+      if (saved.from) setFrom(saved.from);
+      if (saved.to) setTo(saved.to);
+    } catch {
+      /* ignore corrupt storage */
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const submit = () => {
     if (!canGo) return;
+    try {
+      localStorage.setItem(LAST_ROUTE_KEY, JSON.stringify({ from: from.trim(), to: to.trim() }));
+    } catch {
+      /* ignore quota / private mode */
+    }
     const qs = new URLSearchParams({ from: from.trim(), to: to.trim() });
     router.push(`/${m}?${qs.toString()}`);
   };
 
   return (
     <div className="mx-auto w-full max-w-md px-4 py-8 sm:py-12">
+      {/* Gate screens (/trips, /requests without a route) get a way back;
+          the home hero doesn't need one. */}
+      {mode && <BackButton />}
       <h1 className="font-disp text-[26px] font-900 leading-tight text-ink-900 dark:text-white">
         {t("route_title")}
       </h1>

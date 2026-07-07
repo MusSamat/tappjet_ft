@@ -24,6 +24,8 @@ import { extractError } from "@/lib/api/client";
 import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { toastSuccess, toastError } from "@/components/layout/quick-toast";
 import { QueryError } from "@/components/ui/query-error";
+import { BackButton } from "@/components/ui/back-button";
+import { SettingsCard } from "./_components/settings-card";
 import { useAuth } from "@/store/auth";
 import { switchRoleAndReload } from "@/lib/auth/switch-role";
 import { useRoleTheme } from "@/lib/hooks/use-role-colors";
@@ -297,6 +299,7 @@ export default function ProfilePage() {
   return (
     <div className="flex min-h-[calc(100vh-64px)] flex-col bg-ink-50 dark:bg-ink-950">
       <div className="mx-auto w-full max-w-[760px] space-y-3.5 p-3.5 pt-11 md:p-6 lg:hidden">
+        <BackButton />
         {!user?.phoneVerified && (
           <button
             type="button"
@@ -341,6 +344,9 @@ export default function ProfilePage() {
           {trustChips}
           {statStrip}
         </div>
+
+        {/* Quick settings — language & theme, right where users look for them */}
+        <SettingsCard />
 
         {/* Underline tabs */}
         <div className="tabs-scroll flex gap-5 overflow-x-auto border-b border-ink-100 px-1 dark:border-ink-800">
@@ -432,6 +438,9 @@ export default function ProfilePage() {
               </button>
             ))}
           </nav>
+
+          {/* Quick settings — same language & theme card as on mobile */}
+          <SettingsCard />
         </aside>
 
         <section className="space-y-3.5">

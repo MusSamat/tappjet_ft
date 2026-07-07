@@ -4,9 +4,9 @@ import { useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { MessageCircle, Check, X } from "lucide-react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { type AppNotification } from "@/lib/api/notifications";
-import { acceptBooking, rejectBooking } from "@/lib/api/bookings";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { markNotificationRead, type AppNotification } from "@/lib/api/notifications";
+import { acceptBooking, getBooking, rejectBooking } from "@/lib/api/bookings";
 import { Spinner } from "@/components/ui";
 
 type ActionResult = "accepted" | "rejected" | "error" | null;
@@ -26,25 +26,43 @@ export function NotificationActions({ notification }: { notification: AppNotific
 
   const invalidate = () => {
     void queryClient.invalidateQueries({ queryKey: ["bookings"] });
+    void queryClient.invalidateQueries({ queryKey: ["booking", bookingId] });
     void queryClient.invalidateQueries({ queryKey: ["notifications"] });
+  };
+
+  // Acting on the request also settles the notification itself — otherwise it
+  // keeps hanging as "new" with live buttons after a reload.
+  const settle = () => {
+    if (!notification.readAt) void markNotificationRead(notification.id).catch(() => undefined);
+    invalidate();
   };
 
   const { mutate: accept, isPending: accepting } = useMutation({
     mutationFn: () => acceptBooking(bookingId!),
-    onSuccess: () => { setResult("accepted"); invalidate(); },
-    onError: () => { setResult("error"); invalidate(); },
+    onSuccess: () => { setResult("accepted"); settle(); },
+    onError: () => { setResult("error"); settle(); },
   });
 
   const { mutate: decline, isPending: declining } = useMutation({
     mutationFn: () => rejectBooking(bookingId!),
-    onSuccess: () => { setResult("rejected"); invalidate(); },
-    onError: () => { setResult("error"); invalidate(); },
+    onSuccess: () => { setResult("rejected"); settle(); },
+    onError: () => { setResult("error"); settle(); },
+  });
+
+  // Source of truth for the request card: the booking's CURRENT status — a
+  // reload (or a decision made in Telegram) must not resurrect the buttons.
+  const { data: liveBooking } = useQuery({
+    queryKey: ["booking", bookingId],
+    queryFn: () => getBooking(bookingId!),
+    enabled: notification.type === "new_booking_request" && Boolean(bookingId),
+    staleTime: 15_000,
   });
 
   switch (notification.type) {
     case "new_booking_request": {
       if (!bookingId) return null;
-      if (result === "accepted") {
+      const status = liveBooking?.status;
+      if (result === "accepted" || status === "accepted") {
         return (
           <Link href={`/my/bookings/${bookingId}/chat`} className={chatLinkClass}>
             <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" />
@@ -52,10 +70,11 @@ export function NotificationActions({ notification }: { notification: AppNotific
           </Link>
         );
       }
-      if (result === "rejected") {
+      if (result === "rejected" || status === "rejected") {
         return <span className="text-[12px] font-semibold text-ink-500">{t("booking_rejected")}</span>;
       }
-      if (result === "error") {
+      if (result === "error" || (status && status !== "pending" && status !== "viewed")) {
+        // Cancelled / expired / unknown-decided — no actions, just a way in.
         return (
           <Link href={`/my/bookings`} className={softLinkClass}>
             {t("go_to_bookings")}

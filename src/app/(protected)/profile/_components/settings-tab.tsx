@@ -1,14 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { Download, Languages, LogOut, MonitorSmartphone, Palette, Trash2 } from "lucide-react";
+import { Download, LogOut, MonitorSmartphone, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { CarPhotoUploader } from "@/components/features/profile/car-photo-uploader";
 import { ProfileForm } from "@/components/features/profile/profile-form";
 import { PasswordForm } from "@/components/features/profile/password-form";
 import { PhoneChangeForm } from "@/components/features/profile/phone-change-form";
-import { Button, LocaleSwitcher, SectionLabel, Spinner } from "@/components/ui";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { Button, SectionLabel, Spinner } from "@/components/ui";
 import type { UseMutationResult } from "@tanstack/react-query";
 
 interface Props {
@@ -26,25 +25,8 @@ export function SettingsTab({ isDriver, exportMutation, logoutMutation, logoutAl
 
   return (
     <div className="flex flex-col gap-3.5">
-      {/* Language — prominent (§2.7) */}
-      <div className={CARD}>
-        <div className={CARD_HEAD}>
-          <Languages className="h-4 w-4 text-brand-600" aria-hidden="true" />
-          {t("lang_title")}
-        </div>
-        <LocaleSwitcher />
-      </div>
-
-      {/* Theme */}
-      <div className={CARD}>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-[14px] font-900 text-ink-900 dark:text-white">
-            <Palette className="h-4 w-4 text-brand-600" aria-hidden="true" />
-            {t("theme_title")}
-          </div>
-          <ThemeToggle />
-        </div>
-      </div>
+      {/* Language & theme moved to the quick SettingsCard on the profile page
+          itself — no duplicate controls here. */}
 
       {/* Personal data */}
       <div className={CARD}>

@@ -61,6 +61,14 @@ export function FeedHeader({ tab, onOpenFilters }: FeedHeaderProps) {
       else next.set(k, v);
     }
     next.delete("cursor");
+    // Remember the last full route — prefills the search form on return.
+    const nf = next.get("from");
+    const nt = next.get("to");
+    if (nf && nt) {
+      try {
+        localStorage.setItem("tappjet_last_route", JSON.stringify({ from: nf, to: nt }));
+      } catch { /* ignore */ }
+    }
     router.replace(`${pathname}?${next.toString()}`, { scroll: false });
   };
 

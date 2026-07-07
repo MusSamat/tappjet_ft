@@ -7,6 +7,7 @@ import { LogIn, MessageCircle, Plus, Search, Ticket, User, type LucideIcon } fro
 import { useTranslations } from "next-intl";
 import { useKeyboardOpen } from "@/lib/hooks/use-keyboard-open";
 import { useUnreadMessages } from "@/lib/hooks/use-unread-messages";
+import { useUnreadCount } from "@/lib/hooks/use-unread-count";
 import { useRoleTheme } from "@/lib/hooks/use-role-colors";
 import { useAuth } from "@/store/auth";
 import { cn } from "@/lib/utils/cn";
@@ -74,6 +75,9 @@ export function BottomNav() {
   const isDriver = activeMode === "driver";
   const { theme } = useRoleTheme();
   const { data: unreadMessages = 0 } = useUnreadMessages();
+  // Notifications live inside the chat hub now (no floating bell) — the tab
+  // badge is the combined inbox count.
+  const { data: unreadNotifs = 0 } = useUnreadCount();
   const keyboardOpen = useKeyboardOpen();
 
   // Optimistic tab highlight: the tapped tab lights up immediately, before the
@@ -155,7 +159,7 @@ export function BottomNav() {
               active={isActive("/chat", isChat)}
               pillOn={theme.navPillOn}
               textOn={theme.navTextOn}
-              badge={unreadMessages}
+              badge={unreadMessages + unreadNotifs}
               onNavigate={setPendingHref}
             />
             <NavTab

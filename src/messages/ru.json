@@ -1,5 +1,6 @@
 {
   "common": {
+    "back": "Назад",
     "loading": "Загрузка…",
     "optional": "необязательно",
     "back_to_top": "Наверх"
@@ -713,6 +714,8 @@
   },
   "profile": {
     "settings_btn": "Настройки",
+    "theme_light": "Светлая",
+    "theme_dark": "Тёмная",
     "verified_badge": "Верифицирован",
     "rating_count": "({n} оценок)",
     "badge_phone": "📱 Телефон подтверждён",
@@ -776,8 +779,6 @@
     "chip_verified": "Подтверждён",
     "nav_history": "История поездок",
     "nav_settings": "Настройки",
-    "lang_title": "Язык · Тил",
-    "theme_title": "Тема",
     "session_section": "Аккаунт и сессии",
     "logout_all": "Выйти на всех устройствах"
   },
@@ -969,6 +970,9 @@
     "status_no_show": "Не явился",
     "status_expired": "Истекла",
     "hub_title": "Сообщения",
+    "notifications_row": "Уведомления",
+    "notifications_unread": "{n, plural, one {# новое} few {# новых} many {# новых} other {# новых}}",
+    "notifications_none": "Нет новых",
     "hub_empty_hint": "Чат откроется после бронирования поездки",
     "hub_placeholder_title": "Выберите чат",
     "hub_placeholder_body": "Договоритесь о месте встречи и деталях поездки.",
