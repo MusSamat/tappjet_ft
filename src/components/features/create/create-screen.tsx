@@ -22,6 +22,7 @@ import type { ChipAccent } from "@/components/ui";
 import { cn } from "@/lib/utils/cn";
 import { AddPhoneModal } from "@/components/features/auth/add-phone-modal";
 import { CarForm } from "@/components/features/cars/car-form";
+import { VerificationCard } from "@/components/features/driver/verification-card";
 import { RouteCard } from "./route-card";
 import { PickupZones } from "./pickup-zones";
 import { WhenChips } from "./when-chips";
@@ -371,6 +372,7 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
               submitLabel={t("car_add_btn")}
             />
           )}
+          <VerificationCard variant="inline" />
         </div>
       )}
       <WhenChips

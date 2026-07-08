@@ -8,7 +8,6 @@ import {
   CarFront,
   CheckCircle2,
   Clock,
-  Eye,
   Music,
   Sofa,
   Star,
@@ -24,6 +23,7 @@ import { useAuth } from "@/store/auth";
 import { formatDepartureLabel } from "@/lib/utils/date";
 import { cn } from "@/lib/utils/cn";
 import { ContactRevealButton } from "./contact-reveal-button";
+import { ListingMetrics } from "./listing-metrics";
 import { StatusBadge } from "./status-badge";
 import { VerifiedBadge } from "./verified-badge";
 import { DriverAvatar } from "./driver-avatar";
@@ -245,12 +245,8 @@ function TripCardInner({
           {luggage && luggage !== "no" && <Briefcase className="h-3.5 w-3.5" />}
           {wholeCabin ? <Sofa className="h-3.5 w-3.5 text-sky-500" /> : <Music className="h-3.5 w-3.5" />}
         </span>
-        {trip.metrics && (
-          <span className="flex shrink-0 items-center gap-0.5 text-[13px] font-600 text-ink-400">
-            <Eye className="h-3 w-3" aria-hidden="true" />
-            {trip.metrics.views}
-          </span>
-        )}
+
+        {trip.metrics && <ListingMetrics metrics={trip.metrics} className="shrink-0 text-[13px]" />}
         {/* Call-first: one tap → number + dialer. Never on own trips.
             Hidden when the CTA row below renders its own call button. */}
         {!isOwn && trip.id && seatsAvailable > 0 && !showBookButton && (

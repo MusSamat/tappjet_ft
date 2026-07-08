@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Car as CarIcon, Minus, Plus } from "lucide-react";
 import type { CarCreateInput } from "@/lib/api/cars";
+import { isPlateValid, normalizePlate } from "@/lib/utils/plate";
 import { Spinner } from "@/components/ui";
 import { cn } from "@/lib/utils/cn";
 
@@ -34,8 +35,8 @@ export function CarForm({ onSubmit, pending, submitLabel, className }: Props) {
   const [plate, setPlate] = useState("");
   const [seats, setSeats] = useState(4);
 
-  const plateClean = plate.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 15);
-  const valid = make.trim() && model.trim() && plateClean.length >= 4;
+  const plateOk = isPlateValid(plate);
+  const valid = make.trim() && model.trim() && plateOk;
 
   return (
     <div className={cn("space-y-2.5", className)}>
@@ -68,13 +69,22 @@ export function CarForm({ onSubmit, pending, submitLabel, className }: Props) {
         />
         <input
           value={plate}
-          onChange={(e) => setPlate(e.target.value.toUpperCase())}
+          onChange={(e) => setPlate(normalizePlate(e.target.value))}
           placeholder={t("plate_ph")}
           autoCapitalize="characters"
+          autoCorrect="off"
           spellCheck={false}
-          className={cn(FIELD, "uppercase tracking-wider")}
+          maxLength={10}
+          className={cn(
+            FIELD,
+            "uppercase tracking-wider",
+            plate && !plateOk && "border-coral-400 dark:border-coral-400",
+          )}
         />
       </div>
+      {plate && !plateOk && (
+        <p className="text-[13px] font-700 text-coral-500">{t("plate_hint")}</p>
+      )}
       {/* Seats — compact stepper row */}
       <div className="flex h-11 items-center justify-between rounded-xl border-2 border-ink-200 bg-ink-50 px-3 dark:border-ink-700 dark:bg-ink-800">
         <span className="text-[15px] font-700 text-ink-600 dark:text-ink-300">{t("seats_label")}</span>
@@ -108,7 +118,7 @@ export function CarForm({ onSubmit, pending, submitLabel, className }: Props) {
             make: make.trim(),
             model: model.trim(),
             color: color.trim() || undefined,
-            plate: plateClean,
+            plate,
             seatsCount: seats,
           })
         }

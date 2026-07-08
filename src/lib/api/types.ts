@@ -91,5 +91,5 @@ export interface EngagementFields {
   /** Whether the current viewer liked this listing. */
   liked: boolean;
   /** Non-null only when the viewer is the listing's creator. */
-  metrics: { views: number; likes: number } | null;
+  metrics: { views: number; likes: number; contacts?: number } | null;
 }

@@ -20,6 +20,7 @@ import { api, extractError } from "@/lib/api/client";
 import { getDriverStatus } from "@/lib/api/profile";
 import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { compressImage, ImageValidationError } from "@/lib/utils/compress-image";
+import { isPlateValid, normalizePlate } from "@/lib/utils/plate";
 import { useAuth } from "@/store/auth";
 import { Button, Label, NotifCard, Spinner } from "@/components/ui";
 import { AddPhoneModal } from "@/components/features/auth/add-phone-modal";
@@ -159,16 +160,9 @@ export default function DriverVerifyPage() {
   const [year, setYear] = useState("");
   const [color, setColor] = useState("");
   const [plate, setPlate] = useState("");
-  // KG standard (2016+): <01–10>KG<3 digits><3 letters>, e.g. 01KG003ADD
-  const PLATE_RE = /^(0[1-9]|10)KG\d{3}[A-Z]{3}$/;
-  const [plateManual, setPlateManual] = useState(false);
-  const plateValid = plateManual
-    ? /^[A-Z0-9]{4,10}$/.test(plate)
-    : PLATE_RE.test(plate);
-  const onPlateChange = (raw: string) => {
-    // uppercase, latin+digits only, hard cap at the format length (10)
-    setPlate(raw.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 10));
-  };
+  // Единый стандарт номера — общий с гаражом (lib/utils/plate).
+  const plateValid = isPlateValid(plate);
+  const onPlateChange = (raw: string) => setPlate(normalizePlate(raw));
   const [seats, setSeats] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
@@ -428,19 +422,12 @@ export default function DriverVerifyPage() {
                   />
                   {plate && !plateValid && (
                     <p className="mt-1 text-[13px] font-700 text-coral-500">
-                      {plateManual ? t("plate_manual_hint") : t("plate_format_hint")}
+                      {t("plate_format_hint")}
                     </p>
                   )}
                   {fieldErrors.carPlate && plateValid && (
                     <p className="mt-1 text-[13px] font-700 text-coral-500">{fieldErrors.carPlate}</p>
                   )}
-                  <button
-                    type="button"
-                    onClick={() => setPlateManual((v) => !v)}
-                    className="mt-1 text-[12px] font-800 text-brand-600 underline"
-                  >
-                    {plateManual ? t("plate_standard_btn") : t("plate_manual_btn")}
-                  </button>
                 </div>
                 <div className="w-[120px]">
                   <Label htmlFor="seats-count">

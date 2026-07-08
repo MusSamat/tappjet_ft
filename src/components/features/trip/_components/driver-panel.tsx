@@ -92,6 +92,7 @@ export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string
   const router = useRouter();
   const [seatsLocal, setSeatsLocal] = useState<number | null>(null);
   const seatsFree = seatsLocal ?? (trip.seatsAvailable as number | undefined) ?? 0;
+  const tripActive = (trip.status as string | undefined) === "active";
   const seatsMut = useMutation({
     mutationFn: (delta: 1 | -1) => adjustTripSeats(tripId, delta),
     onSuccess: (updated) => {
@@ -164,6 +165,9 @@ export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string
           {/* «Свободно» tile IS the control — stepper right in the number */}
           <div className="rounded-xl bg-ink-50 px-1.5 py-2 text-center dark:bg-ink-800">
             <div className="flex items-center justify-center gap-1.5">
+              {/* Stepper only while the trip is active — a finished trip's
+                  seats are history, and backend rejects the change anyway. */}
+              {tripActive && (
               <button
                 type="button"
                 aria-label={t("seat_taken_phone")}
@@ -174,9 +178,11 @@ export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string
               >
                 <Minus className="h-3.5 w-3.5" aria-hidden="true" />
               </button>
+              )}
               <p className="min-w-[22px] text-[20px] font-extrabold leading-none text-ink-900 dark:text-white">
                 {seatsMut.isPending ? <Spinner size={14} /> : seatsFree}
               </p>
+              {tripActive && (
               <button
                 type="button"
                 aria-label={t("seat_freed")}
@@ -187,6 +193,7 @@ export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string
               >
                 <Plus className="h-3.5 w-3.5" aria-hidden="true" />
               </button>
+              )}
             </div>
             <p className="mt-1 text-[11px] font-bold uppercase text-ink-500 dark:text-ink-400">{t("seats_free")}</p>
           </div>
@@ -200,10 +207,12 @@ export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string
           </div>
         </div>
         {/* One quiet line explains the stepper's job (phone deals) */}
-        <p className="mb-3 flex items-center gap-1.5 text-[12px] font-600 text-ink-400">
-          <Phone className="h-3 w-3 shrink-0" aria-hidden="true" />
-          {t("seats_phone_hint")}
-        </p>
+        {tripActive && (
+          <p className="mb-3 flex items-center gap-1.5 text-[12px] font-600 text-ink-400">
+            <Phone className="h-3 w-3 shrink-0" aria-hidden="true" />
+            {t("seats_phone_hint")}
+          </p>
+        )}
 
         {(trip.status as string | undefined) === "active" && (
           <div className="grid grid-cols-2 gap-2">

@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { memo } from "react";
-import { CalendarClock, ChevronRight, Eye, Hand, MapPin, Star } from "lucide-react";
+import { CalendarClock, ChevronRight, Hand, MapPin, Star } from "lucide-react";
 import { ContactRevealButton } from "@/components/ui/contact-reveal-button";
 import { useAuth } from "@/store/auth";
 import { useTranslations } from "next-intl";
 import type { PassengerRequest } from "@/lib/api/passenger-requests";
 import { DriverAvatar } from "@/components/ui/driver-avatar";
 import { LikeButton } from "@/components/ui/like-button";
+import { ListingMetrics } from "@/components/ui/listing-metrics";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { cn } from "@/lib/utils/cn";
 
@@ -127,15 +128,8 @@ function RequestCardInner({
             </div>
           )}
         </div>
-        {request.metrics && (
-          <span
-            className="flex shrink-0 items-center gap-1 text-[14px] font-700 text-ink-500 dark:text-ink-400"
-            title={t("views_title", { n: request.metrics.views })}
-          >
-            <Eye className="h-3.5 w-3.5" aria-hidden="true" />
-            {request.metrics.views}
-          </span>
-        )}
+
+        {request.metrics && <ListingMetrics metrics={request.metrics} className="shrink-0 text-[13px]" />}
         {!isOpen && <StatusBadge status={request.status} className="shrink-0" />}
         {/* Call-first: one tap → number + dialer. Never on own requests. */}
         {!isOwn && isOpen && (

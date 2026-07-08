@@ -36,6 +36,7 @@ import { BookingModal } from "./booking-modal";
 import { DriverPanel } from "./_components/driver-panel";
 import { ContactRevealButton } from "@/components/ui/contact-reveal-button";
 import { VerifiedBadge } from "@/components/ui/verified-badge";
+import { Eye as EyeIcon, Heart as HeartIcon, Phone as PhoneIcon } from "lucide-react";
 
 // Viewport-agnostic trip detail — design-spec §2.3. Rendered both as the
 // desktop feed right-rail (`variant="rail"`) and the standalone page
@@ -114,6 +115,29 @@ function HeaderSpine() {
         <path d="M7 0 C 11 12, 3 28, 7 40" stroke="#fff" strokeOpacity="0.55" strokeWidth="2.5" strokeDasharray="0.1 6" strokeLinecap="round" fill="none" />
       </svg>
       <span className="h-3.5 w-3.5 shrink-0 rounded-full bg-accent-400" />
+    </div>
+  );
+}
+
+/** Public engagement stats — same tile language as InfoTiles. */
+function StatsRow({ metrics }: { metrics: { views: number; likes: number; contacts?: number } }) {
+  const t = useTranslations("detail");
+  const items = [
+    { icon: EyeIcon, value: metrics.views, label: t("stats_views") },
+    { icon: HeartIcon, value: metrics.likes, label: t("stats_likes") },
+    { icon: PhoneIcon, value: metrics.contacts ?? 0, label: t("stats_contacts") },
+  ];
+  return (
+    <div className="grid grid-cols-3 divide-x divide-ink-100 overflow-hidden rounded-2xl bg-ink-50 dark:divide-ink-700 dark:bg-ink-800">
+      {items.map(({ icon: Icon, value, label }) => (
+        <div key={label} className="flex flex-col items-center gap-0.5 py-2.5">
+          <span className="flex items-center gap-1.5 text-[16px] font-900 text-ink-900 dark:text-white">
+            <Icon className="h-4 w-4 text-brand-600 dark:text-brand-400" aria-hidden="true" />
+            {value}
+          </span>
+          <span className="text-[12px] font-600 text-ink-400">{label}</span>
+        </div>
+      ))}
     </div>
   );
 }
@@ -358,6 +382,7 @@ export function TripDetailView({ trip, variant = "page", autoOpenBook = false, o
 
   const body = (
     <div className="space-y-3 px-5 py-4">
+      {trip.metrics && <StatsRow metrics={trip.metrics} />}
       <InfoTiles model={model} />
       <DriverCard model={model} showMessage={showMessage} onMessage={handleBook} />
       {model.seatsTotal > 0 && <SeatsCard model={model} />}
@@ -455,6 +480,7 @@ export function TripDetailView({ trip, variant = "page", autoOpenBook = false, o
               </div>
             </div>
           </div>
+          {trip.metrics && <StatsRow metrics={trip.metrics} />}
           <InfoTiles model={model} />
           {model.seatsTotal > 0 && <SeatsCard model={model} />}
           {trip.comment && (

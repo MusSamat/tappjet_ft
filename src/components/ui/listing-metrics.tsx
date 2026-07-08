@@ -1,11 +1,11 @@
 "use client";
 
-import { Eye, Heart } from "lucide-react";
+import { Eye, Heart, Phone } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils/cn";
 
 interface ListingMetricsProps {
-  metrics: { views: number; likes: number } | null;
+  metrics: { views: number; likes: number; contacts?: number } | null;
   className?: string;
 }
 
@@ -27,6 +27,10 @@ export function ListingMetrics({ metrics, className }: ListingMetricsProps) {
       <span className="inline-flex items-center gap-1" title={t("likes")}>
         <Heart className="h-3 w-3" aria-hidden="true" />
         {metrics.likes}
+      </span>
+      <span className="inline-flex items-center gap-1" title={t("contacts")}>
+        <Phone className="h-3 w-3" aria-hidden="true" />
+        {metrics.contacts ?? 0}
       </span>
     </div>
   );

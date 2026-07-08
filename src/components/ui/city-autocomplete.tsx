@@ -54,10 +54,12 @@ async function loadPopularCities(): Promise<City[]> {
     // Endpoint orders by priority DESC — the first 7 ARE the popular ones;
     // don't pull the whole 1000-row directory just to slice it.
     popularCache = await getCities(7);
+    return popularCache;
   } catch {
-    popularCache = [];
+    // Don't cache a failure — the next focus retries instead of leaving the
+    // dropdown permanently empty for the session.
+    return [];
   }
-  return popularCache;
 }
 
 export function CityAutocomplete({
@@ -125,12 +127,15 @@ export function CityAutocomplete({
       selectedRef.current = false;
       return;
     }
+    // Popular list is on display (focus, no typing yet) — the search effect
+    // must not stomp it: it re-runs on the showingPopular flip and used to
+    // wipe the results before the user saw them.
+    if (showingPopular) return;
     if (!debouncedQuery.trim()) {
       setResults([]);
-      if (!showingPopular) setOpen(false);
+      setOpen(false);
       return;
     }
-    setShowingPopular(false);
     setLoading(true);
     // Guard against out-of-order responses: a slow reply for an older query
     // must never overwrite results of the newer one.

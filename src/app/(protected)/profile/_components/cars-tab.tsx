@@ -1,17 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { BadgeCheck, Car as CarIcon, Plus, ShieldCheck, Trash2, Users } from "lucide-react";
+import { Car as CarIcon, Plus, Trash2, Users } from "lucide-react";
 import { listMyCars, addCar, deleteCar } from "@/lib/api/cars";
-import { getDriverStatus } from "@/lib/api/profile";
 import { extractError } from "@/lib/api/client";
 import { useFriendlyError } from "@/lib/hooks/use-api-error";
 // tReg kept out on purpose — this card speaks the cars.* namespace only.
 import { toastError, toastSuccess } from "@/components/layout/quick-toast";
 import { CarForm } from "@/components/features/cars/car-form";
+import { VerificationCard } from "@/components/features/driver/verification-card";
 import { Spinner } from "@/components/ui";
 import { QueryError } from "@/components/ui/query-error";
 
@@ -28,14 +27,6 @@ export function CarsTab() {
 
   const carsQuery = useQuery({ queryKey: ["cars", "my"], queryFn: listMyCars, staleTime: 30_000 });
   const { data: cars = [], isLoading } = carsQuery;
-
-  const { data: verification } = useQuery({
-    queryKey: ["driver-status"],
-    queryFn: getDriverStatus,
-    staleTime: 60_000,
-  });
-  const verified = verification?.status === "verified";
-  const verifPending = verification?.status === "pending" || verification?.status === "docs_requested";
 
   const addMut = useMutation({
     mutationFn: addCar,
@@ -131,27 +122,7 @@ export function CarsTab() {
 
       {/* Verification — an optional trust badge, not a gate (Phase 1) */}
       <div className={CARD}>
-        <div className="flex items-center gap-3">
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-brand-50 text-brand-600 dark:bg-brand-500/15 dark:text-brand-300">
-            {verified ? <BadgeCheck className="h-6 w-6" aria-hidden="true" /> : <ShieldCheck className="h-6 w-6" aria-hidden="true" />}
-          </span>
-          <span className="min-w-0 flex-1">
-            <span className="block text-[15px] font-900 text-ink-900 dark:text-white">
-              {verified ? t("verif_done_title") : verifPending ? t("verif_pending_title") : t("verif_title")}
-            </span>
-            <span className="block text-[13px] font-600 text-ink-500 dark:text-ink-400">
-              {verified ? t("verif_done_text") : verifPending ? t("verif_pending_text") : t("verif_text")}
-            </span>
-          </span>
-          {!verified && !verifPending && (
-            <Link
-              href="/profile/driver"
-              className="shrink-0 rounded-full bg-brand-600 px-4 py-2 text-[14px] font-800 text-white transition-colors hover:bg-brand-700"
-            >
-              {t("verif_cta")}
-            </Link>
-          )}
-        </div>
+        <VerificationCard />
       </div>
     </div>
   );
