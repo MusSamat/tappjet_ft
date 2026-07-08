@@ -3,11 +3,10 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { ArrowDownUp, CarFront, Circle, MapPin, Search, User } from "lucide-react";
+import { ArrowDownUp, Circle, MapPin, Search } from "lucide-react";
 import { BackButton } from "@/components/ui/back-button";
 import { CityAutocomplete } from "@/components/ui/city-autocomplete";
 import { IntentToggle } from "./intent-toggle";
-import { cn } from "@/lib/utils/cn";
 import { useAuth } from "@/store/auth";
 import { PopularRoutes } from "./popular-routes";
 

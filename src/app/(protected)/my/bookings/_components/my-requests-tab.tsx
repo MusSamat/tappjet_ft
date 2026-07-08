@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Plus, Users, Star, Shield, ChevronDown, Check, X, MessageCircle } from "lucide-react";
+import { Plus, Users, Star, ChevronDown, Check, X, MessageCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import {
   listMyPassengerRequests,

@@ -99,7 +99,6 @@ const FeedTripRow = memo(function FeedTripRow({
 
 export function SearchLayout({ params, initial }: Props) {
   const t = useTranslations("feed");
-  const role = useUiRole();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [mobileDetailOpen, setMobileDetailOpen] = useState(false);

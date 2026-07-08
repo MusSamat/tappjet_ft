@@ -33,7 +33,6 @@ export function RequestDetailPane({ request }: Props) {
   const t = useTranslations("requests");
   const tFilters = useTranslations("request_filters");
   const authStatus = useAuth((s) => s.status);
-  const activeMode = useAuth((s) => s.activeMode);
   const [showModal, setShowModal] = useState(false);
   const showRating = passenger.rating !== null && passenger.ratingCount >= 3;
   // Phase 1: no roles — any signed-in user may respond (backend требует машину).

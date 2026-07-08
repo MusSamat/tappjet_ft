@@ -10,7 +10,6 @@ import {
   Clock,
   Eye,
   Music,
-  ShieldCheck,
   Sofa,
   Star,
   Zap,
