@@ -23,7 +23,7 @@ export function BookingModal({ open, onOpenChange, tripId, pricePerSeat, seatsAv
   return (
     <Modal open={open} onOpenChange={onOpenChange}>
       <ModalContent className="max-h-[88vh] max-w-[440px] overflow-y-auto">
-        <ModalTitle className="mb-4 text-[18px] font-900">{t("book_modal_title")}</ModalTitle>
+        <ModalTitle className="mb-4 text-[20px] font-900">{t("book_modal_title")}</ModalTitle>
         <BookForm
           tripId={tripId}
           pricePerSeat={pricePerSeat}

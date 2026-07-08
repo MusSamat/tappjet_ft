@@ -39,7 +39,7 @@ export function QuickReplies({ onSend, disabled }: {
               disabled={disabled}
               onClick={() => setTheme(key)}
               className={cn(
-                "inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-2 text-[12px] font-800 text-ink-700 shadow-soft ring-1 ring-ink-100 transition hover:ring-brand-300",
+                "inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-2 text-[13px] font-800 text-ink-700 shadow-soft ring-1 ring-ink-100 transition hover:ring-brand-300",
                 "disabled:opacity-50 dark:bg-ink-900 dark:text-ink-200 dark:ring-ink-700",
               )}
             >
@@ -69,7 +69,7 @@ export function QuickReplies({ onSend, disabled }: {
                   onSend(text);
                   setTheme(null);
                 }}
-                className="rounded-full bg-brand-50 px-3 py-2 text-[12px] font-800 text-brand-700 ring-1 ring-brand-200 transition hover:bg-brand-100 disabled:opacity-50 dark:bg-brand-500/10 dark:text-brand-300 dark:ring-brand-500/30"
+                className="rounded-full bg-brand-50 px-3 py-2 text-[13px] font-800 text-brand-700 ring-1 ring-brand-200 transition hover:bg-brand-100 disabled:opacity-50 dark:bg-brand-500/10 dark:text-brand-300 dark:ring-brand-500/30"
               >
                 {text}
               </button>

@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { Star, X, ArrowRight, Users } from "lucide-react";
+import { Star, X, ArrowRight, Users, CheckCircle2, Minus, Plus, Phone } from "lucide-react";
 import {
   listIncomingBookings,
   acceptBooking,
@@ -13,7 +14,7 @@ import {
   type Booking,
 } from "@/lib/api/bookings";
 import { getPendingRatings } from "@/lib/api/ratings";
-import { cancelTrip, type TripDetail } from "@/lib/api/trips";
+import { adjustTripSeats, cancelTrip, completeTrip, type TripDetail } from "@/lib/api/trips";
 import { extractError } from "@/lib/api/client";
 import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { toastSuccess, toastError } from "@/components/layout/quick-toast";
@@ -85,6 +86,31 @@ export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string
     },
     onError: (e) => toastError(fe(extractError(e))),
   });
+  // Manual ±1 seats («занято по телефону» / «освободилось») — call-first flow.
+  // `trip` arrives as an SSR prop, so the fresh count comes from the mutation
+  // response (local state) + router.refresh() re-syncs the server payload.
+  const router = useRouter();
+  const [seatsLocal, setSeatsLocal] = useState<number | null>(null);
+  const seatsFree = seatsLocal ?? (trip.seatsAvailable as number | undefined) ?? 0;
+  const seatsMut = useMutation({
+    mutationFn: (delta: 1 | -1) => adjustTripSeats(tripId, delta),
+    onSuccess: (updated) => {
+      setSeatsLocal((updated.seatsAvailable as number | undefined) ?? null);
+      qc.invalidateQueries({ queryKey: ["trips"] });
+      router.refresh();
+    },
+    onError: (e) => toastError(fe(extractError(e))),
+  });
+  const completeTripMut = useMutation({
+    mutationFn: () => completeTrip(tripId),
+    onSuccess: () => {
+      toastSuccess(tToasts("trip_completed"));
+      qc.invalidateQueries({ queryKey: ["trips"] });
+      qc.invalidateQueries({ queryKey: ["bookings"] });
+      router.refresh();
+    },
+    onError: (e) => toastError(fe(extractError(e))),
+  });
   const cancelTripMut = useMutation({
     mutationFn: () => cancelTrip(tripId),
     onSuccess: () => {
@@ -123,9 +149,9 @@ export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string
     <div className="flex flex-col gap-3">
       <div className="rounded-2xl border border-ink-200 bg-white p-5 dark:border-ink-800 dark:bg-ink-900">
         <div className="mb-4 flex items-center justify-between">
-          <p className="text-[13px] font-extrabold text-ink-900 dark:text-white">{t("trip_control_title")}</p>
+          <p className="text-[14px] font-extrabold text-ink-900 dark:text-white">{t("trip_control_title")}</p>
           <span className={cn(
-            "rounded-full px-2.5 py-1 text-[11px] font-bold",
+            "rounded-full px-2.5 py-1 text-[12px] font-bold",
             (trip.status as string | undefined) === "active"
               ? "bg-brand-50 text-brand-700"
               : "bg-ink-100 text-ink-600 dark:bg-ink-800 dark:text-ink-300",
@@ -134,32 +160,71 @@ export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string
           </span>
         </div>
 
-        <div className="mb-4 grid grid-cols-3 gap-2">
-          <div className="rounded-xl bg-ink-50 p-2.5 text-center dark:bg-ink-800">
-            <p className="text-[20px] font-extrabold text-ink-900 dark:text-white">
-              {(trip.seatsAvailable as number | undefined) ?? 0}
-            </p>
-            <p className="text-[10px] font-bold uppercase text-ink-500 dark:text-ink-400">{t("seats_free")}</p>
+        <div className="mb-2 grid grid-cols-3 gap-2">
+          {/* «Свободно» tile IS the control — stepper right in the number */}
+          <div className="rounded-xl bg-ink-50 px-1.5 py-2 text-center dark:bg-ink-800">
+            <div className="flex items-center justify-center gap-1.5">
+              <button
+                type="button"
+                aria-label={t("seat_taken_phone")}
+                title={t("seat_taken_phone")}
+                disabled={seatsMut.isPending || seatsFree <= 0}
+                onClick={() => seatsMut.mutate(-1)}
+                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white text-ink-600 shadow-xs ring-1 ring-ink-200 transition-colors hover:bg-ink-100 disabled:opacity-35 dark:bg-ink-900 dark:text-ink-300 dark:ring-ink-700"
+              >
+                <Minus className="h-3.5 w-3.5" aria-hidden="true" />
+              </button>
+              <p className="min-w-[22px] text-[20px] font-extrabold leading-none text-ink-900 dark:text-white">
+                {seatsMut.isPending ? <Spinner size={14} /> : seatsFree}
+              </p>
+              <button
+                type="button"
+                aria-label={t("seat_freed")}
+                title={t("seat_freed")}
+                disabled={seatsMut.isPending}
+                onClick={() => seatsMut.mutate(1)}
+                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white text-brand-600 shadow-xs ring-1 ring-ink-200 transition-colors hover:bg-brand-50 disabled:opacity-35 dark:bg-ink-900 dark:text-brand-300 dark:ring-ink-700"
+              >
+                <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+              </button>
+            </div>
+            <p className="mt-1 text-[11px] font-bold uppercase text-ink-500 dark:text-ink-400">{t("seats_free")}</p>
           </div>
           <div className="rounded-xl bg-accent-50 p-2.5 text-center">
             <p className="text-[20px] font-extrabold text-accent-700">{pendingCount}</p>
-            <p className="text-[10px] font-bold uppercase text-accent-600">{t("seats_pending")}</p>
+            <p className="text-[11px] font-bold uppercase text-accent-600">{t("seats_pending")}</p>
           </div>
           <div className="rounded-xl bg-brand-50 p-2.5 text-center">
             <p className="text-[20px] font-extrabold text-brand-700">{acceptedCount}</p>
-            <p className="text-[10px] font-bold uppercase text-brand-600">{t("seats_accepted")}</p>
+            <p className="text-[11px] font-bold uppercase text-brand-600">{t("seats_accepted")}</p>
           </div>
         </div>
+        {/* One quiet line explains the stepper's job (phone deals) */}
+        <p className="mb-3 flex items-center gap-1.5 text-[12px] font-600 text-ink-400">
+          <Phone className="h-3 w-3 shrink-0" aria-hidden="true" />
+          {t("seats_phone_hint")}
+        </p>
 
         {(trip.status as string | undefined) === "active" && (
-          <button
-            type="button"
-            onClick={() => setCancelTripOpen(true)}
-            className="flex w-full items-center justify-center gap-2 rounded-xl border border-coral-200 py-2.5 text-[13px] font-bold text-coral-600 hover:bg-coral-50"
-          >
-            <X className="h-4 w-4" />
-            {t("cancel_trip_btn")}
-          </button>
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              disabled={completeTripMut.isPending}
+              onClick={() => completeTripMut.mutate()}
+              className="flex h-10 items-center justify-center gap-1.5 rounded-xl bg-brand-600 text-[13px] font-800 text-white transition-colors hover:bg-brand-700 disabled:opacity-50"
+            >
+              {completeTripMut.isPending ? <Spinner size={14} /> : <CheckCircle2 className="h-4 w-4" aria-hidden="true" />}
+              {t("complete_trip_btn")}
+            </button>
+            <button
+              type="button"
+              onClick={() => setCancelTripOpen(true)}
+              className="flex h-10 items-center justify-center gap-1.5 rounded-xl border border-coral-200 text-[13px] font-800 text-coral-600 transition-colors hover:bg-coral-50"
+            >
+              <X className="h-4 w-4" aria-hidden="true" />
+              {t("cancel_trip_btn")}
+            </button>
+          </div>
         )}
       </div>
 
@@ -171,8 +236,8 @@ export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string
         >
           <Star className="h-5 w-5 flex-shrink-0 fill-accent-400 text-accent-400" />
           <div className="flex-1">
-            <p className="text-[13px] font-bold text-ink-900">{t("rate_passenger_title")}</p>
-            <p className="text-[12px] text-ink-600">{pr.counterpartName}</p>
+            <p className="text-[14px] font-bold text-ink-900">{t("rate_passenger_title")}</p>
+            <p className="text-[13px] text-ink-600">{pr.counterpartName}</p>
           </div>
           <ArrowRight className="h-4 w-4 text-brand-600" />
         </Link>
@@ -187,7 +252,7 @@ export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string
       ) : bookings.length === 0 ? (
         <div className="rounded-2xl border border-ink-100 bg-white p-6 text-center dark:border-ink-800 dark:bg-ink-900">
           <Users className="mx-auto mb-2 h-8 w-8 text-ink-300" />
-          <p className="text-[14px] font-bold text-ink-700 dark:text-ink-200">{t("no_requests")}</p>
+          <p className="text-[15px] font-bold text-ink-700 dark:text-ink-200">{t("no_requests")}</p>
         </div>
       ) : (
         bookings.map((b) => {
@@ -221,9 +286,9 @@ export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string
 
       {cancelBookingTarget && (
         <Overlay onClose={() => setCancelBookingTarget(null)}>
-          <h2 className="mb-2 text-[18px] font-extrabold text-ink-900 dark:text-white">{t("cancel_booking_title")}</h2>
+          <h2 className="mb-2 text-[20px] font-extrabold text-ink-900 dark:text-white">{t("cancel_booking_title")}</h2>
           <div className="mt-2 rounded-2xl border border-coral-200 bg-coral-50 p-4">
-            <p className="text-[13px] font-bold text-coral-700">
+            <p className="text-[14px] font-bold text-coral-700">
               {t("cancel_booking_warn")}
             </p>
           </div>
@@ -231,7 +296,7 @@ export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string
             <button
               type="button"
               onClick={() => setCancelBookingTarget(null)}
-              className="flex-1 rounded-xl border border-ink-200 py-2.5 text-[13px] font-bold text-ink-700 dark:border-ink-700 dark:text-ink-200"
+              className="flex-1 rounded-xl border border-ink-200 py-2.5 text-[14px] font-bold text-ink-700 dark:border-ink-700 dark:text-ink-200"
             >
               {t("back_btn")}
             </button>
@@ -239,7 +304,7 @@ export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string
               type="button"
               onClick={() => cancelBookingMut.mutate(cancelBookingTarget)}
               disabled={cancelBookingMut.isPending}
-              className="flex-1 rounded-xl bg-coral-600 py-2.5 text-[13px] font-bold text-white disabled:opacity-50"
+              className="flex-1 rounded-xl bg-coral-600 py-2.5 text-[14px] font-bold text-white disabled:opacity-50"
             >
               {cancelBookingMut.isPending ? t("cancelling") : t("confirm_btn")}
             </button>
@@ -249,9 +314,9 @@ export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string
 
       {cancelTripOpen && (
         <Overlay onClose={() => setCancelTripOpen(false)}>
-          <h2 className="mb-2 text-[18px] font-extrabold text-ink-900 dark:text-white">{t("cancel_trip_title")}</h2>
+          <h2 className="mb-2 text-[20px] font-extrabold text-ink-900 dark:text-white">{t("cancel_trip_title")}</h2>
           <div className="mt-2 rounded-2xl border border-coral-200 bg-coral-50 p-4">
-            <p className="text-[13px] font-bold text-coral-700">
+            <p className="text-[14px] font-bold text-coral-700">
               {t("cancel_trip_warn")}
               {acceptedCount > 0 && ` ${t("cancel_trip_rating_warn")}`}
             </p>
@@ -260,7 +325,7 @@ export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string
             <button
               type="button"
               onClick={() => setCancelTripOpen(false)}
-              className="flex-1 rounded-xl border border-ink-200 py-2.5 text-[13px] font-bold text-ink-700 dark:border-ink-700 dark:text-ink-200"
+              className="flex-1 rounded-xl border border-ink-200 py-2.5 text-[14px] font-bold text-ink-700 dark:border-ink-700 dark:text-ink-200"
             >
               {t("back_btn")}
             </button>
@@ -268,7 +333,7 @@ export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string
               type="button"
               onClick={() => cancelTripMut.mutate()}
               disabled={cancelTripMut.isPending}
-              className="flex-1 rounded-xl bg-coral-600 py-2.5 text-[13px] font-bold text-white disabled:opacity-50"
+              className="flex-1 rounded-xl bg-coral-600 py-2.5 text-[14px] font-bold text-white disabled:opacity-50"
             >
               {cancelTripMut.isPending ? t("cancelling") : t("confirm_btn")}
             </button>

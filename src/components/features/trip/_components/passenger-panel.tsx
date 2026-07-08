@@ -139,10 +139,10 @@ export function PassengerPanel({ trip, tripId }: { trip: TripDetail; tripId: str
     <div className="flex flex-col gap-3">
       <div className="rounded-2xl border border-ink-200 bg-white p-5 dark:border-ink-800 dark:bg-ink-900">
         <div className="mb-4 flex items-center justify-between">
-          <p className="text-[11px] font-bold uppercase tracking-widest text-ink-400">
+          <p className="text-[12px] font-bold uppercase tracking-widest text-ink-400">
             {t("your_booking")}
           </p>
-          <span className={cn("flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold", cfg.bg, cfg.color)}>
+          <span className={cn("flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[12px] font-bold", cfg.bg, cfg.color)}>
             <span className={cn("h-1.5 w-1.5 rounded-full", cfg.dot)} />
             {cfg.label}
           </span>
@@ -150,12 +150,12 @@ export function PassengerPanel({ trip, tripId }: { trip: TripDetail; tripId: str
 
         <div className="mb-4 flex gap-5">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{t("seats_label")}</p>
-            <p className="text-[16px] font-bold text-ink-900 dark:text-white">{myBooking.seatsCount}</p>
+            <p className="text-[11px] font-bold uppercase tracking-widest text-ink-400">{t("seats_label")}</p>
+            <p className="text-[17px] font-bold text-ink-900 dark:text-white">{myBooking.seatsCount}</p>
           </div>
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{t("sum_label")}</p>
-            <p className="text-[16px] font-bold text-brand-700 dark:text-brand-300">
+            <p className="text-[11px] font-bold uppercase tracking-widest text-ink-400">{t("sum_label")}</p>
+            <p className="text-[17px] font-bold text-brand-700 dark:text-brand-300">
               {(myBooking as BookingExt).totalPrice ?? "—"} {t("som")}
             </p>
           </div>
@@ -164,14 +164,14 @@ export function PassengerPanel({ trip, tripId }: { trip: TripDetail; tripId: str
         {status === "accepted" && driverPhone && (
           <a
             href={`tel:${driverPhone}`}
-            className="mb-4 flex items-center gap-2 rounded-xl bg-brand-50 px-3 py-2.5 text-[13px] font-bold text-brand-700 hover:bg-brand-100"
+            className="mb-4 flex items-center gap-2 rounded-xl bg-brand-50 px-3 py-2.5 text-[14px] font-bold text-brand-700 hover:bg-brand-100"
           >
             <Phone className="h-4 w-4" />
             {driverPhone}
           </a>
         )}
         {status === "pending" && (
-          <p className="mb-4 flex items-center gap-2 rounded-xl bg-ink-50 px-3 py-2.5 text-[12px] font-700 text-ink-500 dark:bg-ink-800 dark:text-ink-400">
+          <p className="mb-4 flex items-center gap-2 rounded-xl bg-ink-50 px-3 py-2.5 text-[14px] font-700 text-ink-500 dark:bg-ink-800 dark:text-ink-400">
             <Phone className="h-4 w-4" aria-hidden="true" />
             {t("phone_after_accept")}
           </p>
@@ -182,7 +182,7 @@ export function PassengerPanel({ trip, tripId }: { trip: TripDetail; tripId: str
             <Link href={`/trips/${tripId}/rate/${pendingRating.counterpartId}`}>
               <button
                 type="button"
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-accent-500 py-2.5 text-[13px] font-bold text-[#4A2C00] hover:bg-accent-600"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-accent-500 py-2.5 text-[14px] font-bold text-[#4A2C00] hover:bg-accent-600"
               >
                 <Star className="h-4 w-4" />
                 {t("rate_trip_btn")}
@@ -193,7 +193,7 @@ export function PassengerPanel({ trip, tripId }: { trip: TripDetail; tripId: str
             <Link href={`/my/bookings/${myBooking.id}/chat`}>
               <button
                 type="button"
-                className="flex w-full items-center justify-center gap-2 rounded-xl border border-brand-200 bg-brand-50 py-2.5 text-[13px] font-bold text-brand-700 hover:bg-brand-100"
+                className="flex w-full items-center justify-center gap-2 rounded-xl border border-brand-200 bg-brand-50 py-2.5 text-[14px] font-bold text-brand-700 hover:bg-brand-100"
               >
                 <MessageCircle className="h-4 w-4" />
                 {t("open_chat_btn")}
@@ -204,7 +204,7 @@ export function PassengerPanel({ trip, tripId }: { trip: TripDetail; tripId: str
             <button
               type="button"
               onClick={() => setCancelOpen(true)}
-              className="flex w-full items-center justify-center gap-2 rounded-xl border border-ink-200 py-2.5 text-[13px] font-bold text-ink-600 hover:bg-ink-50 dark:border-ink-700 dark:text-ink-300"
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-ink-200 py-2.5 text-[14px] font-bold text-ink-600 hover:bg-ink-50 dark:border-ink-700 dark:text-ink-300"
             >
               <X className="h-4 w-4" />
               {t("cancel_booking_btn")}

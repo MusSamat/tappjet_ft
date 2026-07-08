@@ -42,7 +42,7 @@ export const BottomSheetTitle = forwardRef<
 >(({ className, ...rest }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    className={cn("text-[16px] font-900 text-ink-900 dark:text-white", className)}
+    className={cn("text-[17px] font-900 text-ink-900 dark:text-white", className)}
     {...rest}
   />
 ));

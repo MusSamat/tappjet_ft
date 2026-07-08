@@ -15,7 +15,7 @@ export function SectionLabel({ children, size = "sm", className }: SectionLabelP
     <div
       className={cn(
         "font-900 uppercase tracking-wider text-ink-400",
-        size === "xs" ? "text-[10px]" : "text-[11px]",
+        size === "xs" ? "text-[11px]" : "text-[12px]",
         className,
       )}
     >
@@ -30,7 +30,7 @@ export function OptionalTag({ className }: { className?: string }) {
   return (
     <span
       className={cn(
-        "rounded-full bg-ink-100 px-2 py-0.5 text-[10px] font-800 text-ink-500 dark:bg-ink-800 dark:text-ink-400",
+        "rounded-full bg-ink-100 px-2 py-0.5 text-[11px] font-800 text-ink-500 dark:bg-ink-800 dark:text-ink-400",
         className,
       )}
     >

@@ -21,7 +21,7 @@ export function RoutePickerStep() {
           🗺️
         </div>
         <h2 className="text-[20px] font-800 text-ink-900 dark:text-white">{t("routes_title")}</h2>
-        <p className="mt-1.5 text-[14px] text-ink-500">{t("routes_subtitle")}</p>
+        <p className="mt-1.5 text-[15px] text-ink-500">{t("routes_subtitle")}</p>
       </div>
       <div className="grid grid-cols-2 gap-3">
         {POPULAR_ROUTES.map(({ from, to }) => (
@@ -34,9 +34,9 @@ export function RoutePickerStep() {
             }}
             className="flex flex-col items-start rounded-2xl border-2 border-ink-200 bg-white p-4 text-left transition-all hover:border-brand-400 hover:shadow-sm active:scale-[0.97] dark:bg-ink-900 dark:border-ink-700"
           >
-            <span className="text-[15px] font-800 text-ink-900 dark:text-white">{from}</span>
-            <span className="mt-0.5 text-[11px] font-700 uppercase tracking-widest text-ink-400">↓</span>
-            <span className="text-[15px] font-800 text-brand-700">{to}</span>
+            <span className="text-[16px] font-800 text-ink-900 dark:text-white">{from}</span>
+            <span className="mt-0.5 text-[13px] font-700 uppercase tracking-widest text-ink-400">↓</span>
+            <span className="text-[16px] font-800 text-brand-700">{to}</span>
           </button>
         ))}
       </div>
@@ -46,7 +46,7 @@ export function RoutePickerStep() {
           localStorage.setItem("tappjet_onboarding_done", "1");
           router.replace("/trips");
         }}
-        className="text-center text-[13px] font-700 text-ink-400 hover:text-brand-700"
+        className="text-center text-[15px] font-700 text-ink-400 hover:text-brand-700"
       >
         {t("other_route")}
       </button>

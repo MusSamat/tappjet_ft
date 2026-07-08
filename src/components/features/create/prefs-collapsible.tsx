@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils/cn";
 // Preferences collapsible — design-spec §2.4: header toggles a hidden chip
 // grid. Chips use the brand ON recipe regardless of role.
 
-export const PREF_KEYS = ["clean", "music", "no_smoking", "ac", "pets", "quiet", "chat"] as const;
+export const PREF_KEYS = ["clean", "music", "no_smoking", "ac", "pets", "quiet", "chat", "women_only"] as const;
 export type PrefKey = (typeof PREF_KEYS)[number];
 
 const EMOJI: Record<PrefKey, string> = {
@@ -21,6 +21,7 @@ const EMOJI: Record<PrefKey, string> = {
   pets: "🐾",
   quiet: "🤫",
   chat: "💬",
+  women_only: "👩",
 };
 
 interface Props {
@@ -47,7 +48,7 @@ export function PrefsCollapsible({ role, prefs, onToggle }: Props) {
       </button>
       {open && (
         <>
-          <p className="mb-3 mt-3 text-[12px] font-700 text-ink-400">
+          <p className="mb-3 mt-3 text-[14px] font-700 text-ink-400">
             {role === "driver" ? t("prefs_hint_driver") : t("prefs_hint_passenger")}
           </p>
           <div className="flex flex-wrap gap-2">

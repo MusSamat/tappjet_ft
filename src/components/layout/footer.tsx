@@ -66,16 +66,16 @@ export function Footer() {
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center gap-2">
               <LogoMark className="h-8 w-8" />
-              <Wordmark className="text-[16px]" />
+              <Wordmark className="text-[17px]" />
             </Link>
-            <p className="mt-3 max-w-[240px] text-[13px] font-500 leading-relaxed text-ink-500 dark:text-ink-400">
+            <p className="mt-3 max-w-[240px] text-[14px] font-500 leading-relaxed text-ink-500 dark:text-ink-400">
               {t("tagline")}
             </p>
             <a
               href="https://t.me/tappjet_support"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-4 inline-flex items-center gap-2 rounded-full bg-brand-50 px-3.5 py-2 text-[12px] font-800 text-brand-700 transition-colors hover:bg-brand-100 dark:bg-brand-500/15 dark:text-brand-300 dark:hover:bg-brand-500/25"
+              className="mt-4 inline-flex items-center gap-2 rounded-full bg-brand-50 px-3.5 py-2 text-[13px] font-800 text-brand-700 transition-colors hover:bg-brand-100 dark:bg-brand-500/15 dark:text-brand-300 dark:hover:bg-brand-500/25"
             >
               <Send className="h-3.5 w-3.5" aria-hidden="true" />
               {t("telegram_support")}
@@ -84,7 +84,7 @@ export function Footer() {
 
           {COLUMNS.map((col) => (
             <nav key={col.title} aria-label={col.title}>
-              <h3 className="text-[11px] font-800 uppercase tracking-wider text-ink-400">
+              <h3 className="text-[12px] font-800 uppercase tracking-wider text-ink-400">
                 {col.title}
               </h3>
               <ul className="mt-3 flex flex-col gap-2.5">
@@ -95,14 +95,14 @@ export function Footer() {
                         href={item.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[13px] font-600 text-ink-600 transition-colors hover:text-brand-700 dark:text-ink-300 dark:hover:text-brand-300"
+                        className="text-[15px] font-600 text-ink-600 transition-colors hover:text-brand-700 dark:text-ink-300 dark:hover:text-brand-300"
                       >
                         {item.label}
                       </a>
                     ) : (
                       <Link
                         href={item.href}
-                        className="text-[13px] font-600 text-ink-600 transition-colors hover:text-brand-700 dark:text-ink-300 dark:hover:text-brand-300"
+                        className="text-[15px] font-600 text-ink-600 transition-colors hover:text-brand-700 dark:text-ink-300 dark:hover:text-brand-300"
                       >
                         {item.label}
                       </Link>
@@ -118,7 +118,7 @@ export function Footer() {
       {/* Bottom bar */}
       <div className="border-t border-ink-100 dark:border-ink-800">
         <div className="container flex flex-col items-center gap-3 py-5 md:flex-row md:justify-between">
-          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[12px] font-600 text-ink-400">
+          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[14px] font-600 text-ink-400">
             <span>© {year} Tappjet</span>
             <span className="hidden md:inline text-ink-300 dark:text-ink-700">·</span>
             <span className="inline-flex items-center gap-1">

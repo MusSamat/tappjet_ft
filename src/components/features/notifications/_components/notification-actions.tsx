@@ -11,8 +11,8 @@ import { Spinner } from "@/components/ui";
 
 type ActionResult = "accepted" | "rejected" | "error" | null;
 
-const chatLinkClass = "inline-flex items-center gap-1.5 rounded-xl bg-brand-600 px-3 py-1.5 text-[12px] font-bold text-white hover:bg-brand-700";
-const softLinkClass = "inline-flex items-center gap-1 text-[12px] font-semibold text-brand-700 hover:underline";
+const chatLinkClass = "inline-flex items-center gap-1.5 rounded-xl bg-brand-600 px-3 py-1.5 text-[13px] font-bold text-white hover:bg-brand-700";
+const softLinkClass = "inline-flex items-center gap-1 text-[14px] font-semibold text-brand-700 hover:underline";
 
 export function NotificationActions({ notification }: { notification: AppNotification }) {
   const t = useTranslations("notif_actions");
@@ -71,7 +71,7 @@ export function NotificationActions({ notification }: { notification: AppNotific
         );
       }
       if (result === "rejected" || status === "rejected") {
-        return <span className="text-[12px] font-semibold text-ink-500">{t("booking_rejected")}</span>;
+        return <span className="text-[14px] font-semibold text-ink-500">{t("booking_rejected")}</span>;
       }
       if (result === "error" || (status && status !== "pending" && status !== "viewed")) {
         // Cancelled / expired / unknown-decided — no actions, just a way in.
@@ -87,7 +87,7 @@ export function NotificationActions({ notification }: { notification: AppNotific
             type="button"
             onClick={() => accept()}
             disabled={accepting || declining}
-            className="inline-flex items-center gap-1.5 rounded-xl bg-brand-600 px-3 py-1.5 text-[12px] font-bold text-white hover:bg-brand-700 disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-brand-600 px-3 py-1.5 text-[13px] font-bold text-white hover:bg-brand-700 disabled:opacity-50"
           >
             {accepting ? <Spinner size={12} /> : <Check className="h-3.5 w-3.5" aria-hidden="true" />}
             {t("accept")}
@@ -96,7 +96,7 @@ export function NotificationActions({ notification }: { notification: AppNotific
             type="button"
             onClick={() => decline()}
             disabled={accepting || declining}
-            className="inline-flex items-center gap-1.5 rounded-xl border border-coral-200 px-3 py-1.5 text-[12px] font-bold text-coral-600 hover:bg-coral-50 disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-coral-200 px-3 py-1.5 text-[13px] font-bold text-coral-600 hover:bg-coral-50 disabled:opacity-50"
           >
             {declining ? <Spinner size={12} /> : <X className="h-3.5 w-3.5" aria-hidden="true" />}
             {t("decline")}

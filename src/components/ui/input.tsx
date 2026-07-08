@@ -12,9 +12,9 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 const ROW_BARE =
-  "flex h-12 w-full rounded-2xl bg-ink-50 px-4 text-[15px] font-800 text-ink-900 outline-none transition-shadow placeholder:font-700 placeholder:text-ink-400 focus:ring-2 focus:ring-brand-500 disabled:cursor-not-allowed disabled:opacity-50 aria-[invalid=true]:ring-2 aria-[invalid=true]:ring-danger-400 dark:bg-ink-800 dark:text-white";
+  "flex h-12 w-full rounded-2xl bg-ink-50 px-4 text-[16px] font-800 text-ink-900 outline-none transition-shadow placeholder:font-700 placeholder:text-ink-400 focus:ring-2 focus:ring-brand-500 disabled:cursor-not-allowed disabled:opacity-50 aria-[invalid=true]:ring-2 aria-[invalid=true]:ring-danger-400 dark:bg-ink-800 dark:text-white";
 const BORDERED_BARE =
-  "flex h-10 w-full rounded-xl border border-ink-200 bg-white px-3 py-2 text-[13px] font-800 text-ink-900 outline-none transition-colors placeholder:text-ink-400 focus:border-brand-500 disabled:cursor-not-allowed disabled:opacity-50 aria-[invalid=true]:border-danger-400 dark:border-ink-700 dark:bg-ink-900 dark:text-white";
+  "flex h-10 w-full rounded-xl border border-ink-200 bg-white px-3 py-2 text-[14px] font-800 text-ink-900 outline-none transition-colors placeholder:text-ink-400 focus:border-brand-500 disabled:cursor-not-allowed disabled:opacity-50 aria-[invalid=true]:border-danger-400 dark:border-ink-700 dark:bg-ink-900 dark:text-white";
 
 const ROW_WRAP =
   "flex items-center gap-2 rounded-2xl bg-ink-50 px-4 py-3 transition-shadow focus-within:ring-2 focus-within:ring-brand-500 dark:bg-ink-800";
@@ -43,7 +43,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           type={type}
           className={cn(
             "w-full bg-transparent font-800 text-ink-900 outline-none placeholder:font-700 placeholder:text-ink-400 disabled:cursor-not-allowed disabled:opacity-50 dark:text-white",
-            variant === "bordered" ? "text-[13px]" : "text-[15px]",
+            variant === "bordered" ? "text-[14px]" : "text-[16px]",
           )}
           {...rest}
         />

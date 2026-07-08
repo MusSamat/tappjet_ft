@@ -9,6 +9,8 @@ export type LuggageOption = "yes" | "small" | "no";
 export interface CreateTripInput {
   originCity: string;
   destinationCity: string;
+  /** Which of the user's cars rides this trip; omitted → newest car. */
+  carId?: string;
   pickupCities?: string[];
   dropoffCities?: string[];
   originAddress: string;

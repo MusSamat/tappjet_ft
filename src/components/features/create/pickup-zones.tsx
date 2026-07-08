@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { UserPlus, Flag, Plus } from "lucide-react";
+import { UserPlus, Flag, Plus, ChevronDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Chip, CityAutocomplete, SectionLabel, OptionalTag } from "@/components/ui";
 import type { ChipAccent } from "@/components/ui";
@@ -40,7 +40,7 @@ function AddPointInline({ addLabel, points, onChange }: {
         onChange={(e) => setText(e.target.value)}
         onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); add(); } }}
         placeholder={t("point_placeholder")}
-        className="min-w-0 flex-1 bg-transparent py-0.5 text-[12px] font-800 text-ink-900 outline-none placeholder:font-700 placeholder:text-ink-400 dark:text-white"
+        className="min-w-0 flex-1 bg-transparent py-0.5 text-[13px] font-800 text-ink-900 outline-none placeholder:font-700 placeholder:text-ink-400 dark:text-white"
       />
       <button
         type="button"
@@ -95,7 +95,7 @@ function Zone({ isDriver, bg, headerColor, headerIcon, headerLabel, addLabel, po
   const Icon = headerIcon === "flag" ? Flag : UserPlus;
   return (
     <div className={cn("rounded-2xl p-3", bg)}>
-      <div className={cn("mb-2 flex items-center gap-1.5 text-[12px] font-900", headerColor)}>
+      <div className={cn("mb-2 flex items-center gap-1.5 text-[13px] font-900", headerColor)}>
         <Icon className="h-3.5 w-3.5" aria-hidden="true" />
         {headerLabel}
       </div>
@@ -133,13 +133,26 @@ export function PickupZones({ role, pickup, dropoff, onPickup, onDropoff }: Prop
   const t = useTranslations("create");
   const isDriver = role === "driver";
   const zoneAccent: ChipAccent = isDriver ? "brand" : "grape";
+  // Collapsed by default (optional block) — open automatically when it has data.
+  const [open, setOpen] = useState(pickup.length > 0 || dropoff.length > 0);
   return (
     <div className="rounded-3xl bg-white p-4 shadow-card dark:bg-ink-900">
-      <div className="mb-1 flex items-center gap-2">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="flex w-full items-center gap-2 text-left"
+      >
         <SectionLabel>{isDriver ? t("pickup_title_driver") : t("pickup_title_passenger")}</SectionLabel>
         <OptionalTag />
-      </div>
-      <p className="mb-3 text-[12px] font-700 text-ink-400">
+        <ChevronDown
+          className={cn("ml-auto h-4 w-4 shrink-0 text-ink-400 transition-transform", open && "rotate-180")}
+          aria-hidden="true"
+        />
+      </button>
+      {open && (
+        <>
+      <p className="mb-3 mt-1 text-[14px] font-700 text-ink-400">
         {isDriver ? t("pickup_hint_driver") : t("pickup_hint_passenger")}
       </p>
       <div className="space-y-2.5">
@@ -166,6 +179,8 @@ export function PickupZones({ role, pickup, dropoff, onPickup, onDropoff }: Prop
           chipAccent="sky"
         />
       </div>
+        </>
+      )}
     </div>
   );
 }

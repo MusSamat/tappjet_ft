@@ -20,6 +20,7 @@ import {
   CarFront,
   Star,
   Quote,
+  X,
 } from "lucide-react";
 import { useUiRole } from "@/lib/hooks/use-role-colors";
 import { useAuth } from "@/store/auth";
@@ -32,6 +33,9 @@ import { DriverAvatar, LikeButton, SeatMeter, SectionLabel } from "@/components/
 import { Button } from "@/components/ui/button";
 import { pushToast } from "@/components/layout/quick-toast";
 import { BookingModal } from "./booking-modal";
+import { DriverPanel } from "./_components/driver-panel";
+import { ContactRevealButton } from "@/components/ui/contact-reveal-button";
+import { VerifiedBadge } from "@/components/ui/verified-badge";
 
 // Viewport-agnostic trip detail — design-spec §2.3. Rendered both as the
 // desktop feed right-rail (`variant="rail"`) and the standalone page
@@ -74,6 +78,8 @@ interface Props {
   variant?: "page" | "rail";
   /** deep-link `?book=1` — open the booking modal on mount */
   autoOpenBook?: boolean;
+  /** Rendered in a sheet: show a close (×) button in the header icon row. */
+  onClose?: () => void;
 }
 
 function useDetailModel(trip: DetailTripData) {
@@ -126,8 +132,8 @@ function InfoTiles({ model }: { model: Model }) {
         return (
           <div key={i} className="rounded-2xl bg-ink-50 p-3 text-center dark:bg-ink-800">
             <Icon className="mx-auto mb-1 h-4 w-4 text-brand-600" aria-hidden="true" />
-            <div className="truncate text-[12px] font-900 text-ink-900 dark:text-white">{tile.value}</div>
-            <div className="text-[11px] font-600 text-ink-400">{tile.sub}</div>
+            <div className="truncate text-[13px] font-900 text-ink-900 dark:text-white">{tile.value}</div>
+            <div className="text-[13px] font-600 text-ink-400">{tile.sub}</div>
           </div>
         );
       })}
@@ -146,11 +152,11 @@ function DriverCard({ model, showMessage, onMessage }: { model: Model; showMessa
     <div className="flex items-center gap-2.5 rounded-2xl bg-white p-3 shadow-xs ring-1 ring-ink-100 dark:bg-ink-800 dark:ring-ink-700">
       <DriverAvatar name={driver.name ?? "?"} src={driver.avatarUrl ?? null} size="lg" />
       <div className="flex min-w-0 flex-1 flex-col">
-        <span className="flex items-center gap-1 text-[14px] font-900 text-ink-900 dark:text-white">
+        <span className="flex items-center gap-1 text-[15px] font-900 text-ink-900 dark:text-white">
           <span className="truncate">{driver.name}</span>
-          {driver.verified && <ShieldCheck className="h-4 w-4 shrink-0 text-brand-600" aria-hidden="true" />}
+          {driver.verified && <VerifiedBadge />}
         </span>
-        <span className="truncate text-[12px] font-600 text-ink-400">{meta}</span>
+        <span className="truncate text-[14px] font-600 text-ink-400">{meta}</span>
       </div>
       {showMessage && (
         <button
@@ -173,7 +179,7 @@ function SeatsCard({ model }: { model: Model }) {
       <SectionLabel className="mb-2">{t("seats_label")}</SectionLabel>
       <div className="flex items-center justify-between">
         <SeatMeter free={seatsAvailable} total={seatsTotal} size="md" />
-        <span className="text-[12px] font-900 text-brand-700 dark:text-brand-300">
+        <span className="text-[13px] font-900 text-brand-700 dark:text-brand-300">
           {t("seats_of", { free: seatsAvailable, total: seatsTotal })}
         </span>
       </div>
@@ -199,7 +205,7 @@ function DetailCta({
   size?: "mobile" | "desktop";
 }) {
   const t = useTranslations("detail");
-  const h = size === "desktop" ? "h-14 text-[16px]" : "h-12 text-[14px]";
+  const h = size === "desktop" ? "h-14 text-[17px]" : "h-12 text-[15px]";
   // Already booked → no duplicate; the CTA becomes an entry to the chat.
   if (role === "passenger" && myBooking) {
     return (
@@ -238,7 +244,7 @@ function DetailCta({
   );
 }
 
-export function TripDetailView({ trip, variant = "page", autoOpenBook = false }: Props) {
+export function TripDetailView({ trip, variant = "page", autoOpenBook = false, onClose }: Props) {
   const router = useRouter();
   const role = useUiRole();
   const model = useDetailModel(trip);
@@ -250,6 +256,8 @@ export function TripDetailView({ trip, variant = "page", autoOpenBook = false }:
   // The detail page is SSR-cached without the viewer's token, so trip.myBooking
   // is always null. Resolve it CLIENT-SIDE (shared cache key with the feed).
   const authed = useAuth((s) => s.status === "authenticated");
+  const viewerId = useAuth((s) => s.user?.id);
+  const isOwner = Boolean(viewerId && trip.driverId === viewerId);
   const { data: myBookings } = useQuery({
     queryKey: ["bookings", "my", "outgoing"],
     queryFn: () => listMyBookings(),
@@ -320,6 +328,12 @@ export function TripDetailView({ trip, variant = "page", autoOpenBook = false }:
               <LikeButton targetType="trip" id={tripId} liked={!!trip.liked} size="sm" />
             </span>
           )}
+          {/* Sheet context: close lives in the card header, no extra bar */}
+          {onClose && (
+            <CircleBtn onClick={onClose} label={t("back")}>
+              <X className="h-4 w-4" aria-hidden="true" />
+            </CircleBtn>
+          )}
         </div>
       </div>
       <div className="flex items-start gap-3">
@@ -327,16 +341,16 @@ export function TripDetailView({ trip, variant = "page", autoOpenBook = false }:
         <div className="min-w-0 flex-1">
           <div className="text-[20px] font-900 leading-tight">{trip.originCity}</div>
           {model.stops.length > 0 && (
-            <div className="truncate text-[12px] font-600 text-white/70">{model.stops.join(" · ")}</div>
+            <div className="truncate text-[14px] font-600 text-white/70">{model.stops.join(" · ")}</div>
           )}
           <div className="mt-2 text-[20px] font-900 leading-tight">{trip.destinationCity}</div>
         </div>
         <div className="shrink-0 text-right">
           <div className="text-[24px] font-900 leading-none">
             {price}
-            <span className="text-[13px]"> {t("som_short")}</span>
+            <span className="text-[14px]"> {t("som_short")}</span>
           </div>
-          <div className="mt-1 text-[11px] font-600 text-white/70">{t("per_seat")}</div>
+          <div className="mt-1 text-[13px] font-600 text-white/70">{t("per_seat")}</div>
         </div>
       </div>
     </div>
@@ -348,7 +362,7 @@ export function TripDetailView({ trip, variant = "page", autoOpenBook = false }:
       <DriverCard model={model} showMessage={showMessage} onMessage={handleBook} />
       {model.seatsTotal > 0 && <SeatsCard model={model} />}
       {trip.comment && (
-        <div className="rounded-2xl bg-accent-50 p-3.5 text-[13px] font-600 text-ink-700 dark:bg-accent-500/10 dark:text-accent-200">
+        <div className="rounded-2xl bg-accent-50 p-3.5 text-[15px] font-600 text-ink-700 dark:bg-accent-500/10 dark:text-accent-200">
           {trip.comment}
         </div>
       )}
@@ -356,7 +370,13 @@ export function TripDetailView({ trip, variant = "page", autoOpenBook = false }:
   );
 
   const cta = (
-    <DetailCta role={role} onBook={handleBook} onSignin={handleSignin} originCity={trip.originCity} destinationCity={trip.destinationCity} myBooking={myBookingRef} />
+    <div className="space-y-2">
+      <DetailCta role={isOwner ? "driver" : authed ? "passenger" : "guest"} onBook={handleBook} onSignin={handleSignin} originCity={trip.originCity} destinationCity={trip.destinationCity} myBooking={myBookingRef} />
+      {/* Call-first flow: phone behind one tap. Never on own trips. */}
+      {(!viewerId || trip.driverId !== viewerId) && tripId && (
+        <ContactRevealButton target="trip" id={tripId} />
+      )}
+    </div>
   );
 
   const bookingModal = (
@@ -388,7 +408,16 @@ export function TripDetailView({ trip, variant = "page", autoOpenBook = false }:
       {/* Mobile */}
       <div className="flex min-h-[calc(100vh-56px)] flex-col lg:hidden">
         {header}
-        <div className="flex-1">{body}</div>
+        <div className="flex-1">
+          {body}
+          {/* Owner: trip management (заявки, ±места, завершить/отменить) lives
+              right on the trip page — not hidden behind a separate screen. */}
+          {isOwner && tripId && (
+            <div className="px-4 pb-4">
+              <DriverPanel trip={trip as never} tripId={tripId} />
+            </div>
+          )}
+        </div>
         <div className="sticky-cta-nav sticky border-t border-ink-200 bg-white p-4 dark:border-ink-800 dark:bg-ink-900">
           {cta}
         </div>
@@ -397,7 +426,7 @@ export function TripDetailView({ trip, variant = "page", autoOpenBook = false }:
       {/* Desktop webDetail 2-col */}
       <div className="mx-auto hidden max-w-[1080px] gap-0 lg:grid lg:grid-cols-[1fr_380px]">
         <div className="space-y-5 p-8">
-          <Link href="/trips" className="inline-flex items-center gap-1.5 text-[13px] font-700 text-ink-500 hover:text-ink-800 dark:text-ink-400">
+          <Link href="/trips" className="inline-flex items-center gap-1.5 text-[15px] font-700 text-ink-500 hover:text-ink-800 dark:text-ink-400">
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
             {t("back_to_feed")}
           </Link>
@@ -412,7 +441,7 @@ export function TripDetailView({ trip, variant = "page", autoOpenBook = false }:
                 <div>
                   <div className="text-[22px] font-900 text-ink-900 dark:text-white">{trip.originCity}</div>
                   {model.stops.length > 0 && (
-                    <div className="mt-0.5 text-[12px] font-600 text-ink-400">{model.stops.join(" · ")}</div>
+                    <div className="mt-0.5 text-[14px] font-600 text-ink-400">{model.stops.join(" · ")}</div>
                   )}
                 </div>
                 <div className="text-[22px] font-900 text-ink-900 dark:text-white">{trip.destinationCity}</div>
@@ -420,9 +449,9 @@ export function TripDetailView({ trip, variant = "page", autoOpenBook = false }:
               <div className="shrink-0 text-right">
                 <div className="text-[32px] font-900 text-brand-700 dark:text-brand-300">
                   {price}
-                  <span className="text-[15px]"> {t("som_short")}</span>
+                  <span className="text-[16px]"> {t("som_short")}</span>
                 </div>
-                <div className="text-[12px] font-medium text-ink-400">{t("per_seat")}</div>
+                <div className="text-[14px] font-medium text-ink-400">{t("per_seat")}</div>
               </div>
             </div>
           </div>
@@ -431,7 +460,7 @@ export function TripDetailView({ trip, variant = "page", autoOpenBook = false }:
           {trip.comment && (
             <div className="flex gap-3 rounded-3xl bg-accent-50 p-5 dark:bg-accent-500/10">
               <Quote className="h-5 w-5 shrink-0 text-accent-600" aria-hidden="true" />
-              <p className="text-[14px] font-600 text-ink-700 dark:text-accent-200">{trip.comment}</p>
+              <p className="text-[15px] font-600 text-ink-700 dark:text-accent-200">{trip.comment}</p>
             </div>
           )}
         </div>
@@ -439,18 +468,18 @@ export function TripDetailView({ trip, variant = "page", autoOpenBook = false }:
         <aside className="flex flex-col gap-4 border-l border-ink-100 bg-white p-6 dark:border-ink-800 dark:bg-ink-900">
           <div className="rounded-3xl bg-ink-50 p-5 text-center dark:bg-ink-800">
             <DriverAvatar name={driver.name ?? "?"} src={driver.avatarUrl ?? null} size="xl" className="mx-auto" />
-            <div className="mt-2 flex items-center justify-center gap-1 text-[15px] font-900 text-ink-900 dark:text-white">
+            <div className="mt-2 flex items-center justify-center gap-1 text-[16px] font-900 text-ink-900 dark:text-white">
               {driver.name}
-              {driver.verified && <ShieldCheck className="h-4 w-4 text-brand-600" aria-hidden="true" />}
+              {driver.verified && <VerifiedBadge />}
             </div>
             {model.rating !== null && model.ratingCount >= 3 && (
-              <div className="mt-0.5 flex items-center justify-center gap-1 text-[12px] font-600 text-ink-400">
+              <div className="mt-0.5 flex items-center justify-center gap-1 text-[14px] font-600 text-ink-400">
                 <Star className="h-3 w-3 fill-accent-400 text-accent-400" aria-hidden="true" />
                 {model.rating.toFixed(1)} · {t("reviews_count", { n: model.ratingCount })}
               </div>
             )}
           </div>
-          <div className="rounded-2xl bg-ink-50 p-4 text-[12px] font-600 text-ink-500 dark:bg-ink-800 dark:text-ink-400">
+          <div className="rounded-2xl bg-ink-50 p-4 text-[14px] font-600 text-ink-500 dark:bg-ink-800 dark:text-ink-400">
             <div className="flex items-center gap-2">
               <Wallet className="h-4 w-4 text-brand-600" aria-hidden="true" />
               {t("trust_pay")}
@@ -462,17 +491,22 @@ export function TripDetailView({ trip, variant = "page", autoOpenBook = false }:
               </div>
             )}
           </div>
-          <div className="mt-auto">
-            <DetailCta
-              role={role}
-              onBook={handleBook}
-              onSignin={handleSignin}
-              originCity={trip.originCity}
-              destinationCity={trip.destinationCity}
-              myBooking={myBookingRef}
-              size="desktop"
-            />
-          </div>
+          {/* Owner: management panel instead of the booking CTA */}
+          {isOwner && tripId ? (
+            <DriverPanel trip={trip as never} tripId={tripId} />
+          ) : (
+            <div className="mt-auto">
+              <DetailCta
+                role={isOwner ? "driver" : authed ? "passenger" : "guest"}
+                onBook={handleBook}
+                onSignin={handleSignin}
+                originCity={trip.originCity}
+                destinationCity={trip.destinationCity}
+                myBooking={myBookingRef}
+                size="desktop"
+              />
+            </div>
+          )}
         </aside>
       </div>
 

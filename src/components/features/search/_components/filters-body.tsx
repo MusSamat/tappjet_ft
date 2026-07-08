@@ -19,7 +19,7 @@ function todayYMD() { return ymdKg(0); }
 function isCustomDate(v: string) { return /^\d{4}-\d{2}-\d{2}$/.test(v); }
 
 const PRICE_INPUT =
-  "h-9 w-full rounded-xl border border-ink-200 bg-white px-3 text-[13px] font-800 text-ink-900 outline-none focus:border-brand-500 dark:border-ink-700 dark:bg-ink-900 dark:text-white";
+  "h-9 w-full rounded-xl border border-ink-200 bg-white px-3 text-[14px] font-800 text-ink-900 outline-none focus:border-brand-500 dark:border-ink-700 dark:bg-ink-900 dark:text-white";
 
 export function FiltersBody() {
   const t = useTranslations("search_filters");
@@ -165,7 +165,7 @@ export function FiltersBody() {
         <SectionLabel size="xs" className="mb-1.5">{t("price_label")}</SectionLabel>
         <div className="flex items-center gap-2">
           <input type="number" inputMode="numeric" min={50} placeholder={t("price_from")} defaultValue={minPrice} onBlur={(e) => update({ min_price: e.target.value || null })} className={PRICE_INPUT} />
-          <span className="text-[12px] text-ink-400">—</span>
+          <span className="text-[13px] text-ink-400">—</span>
           <input type="number" inputMode="numeric" min={50} placeholder={t("price_to")} defaultValue={maxPrice} onBlur={(e) => update({ max_price: e.target.value || null })} className={PRICE_INPUT} />
         </div>
       </div>
@@ -177,7 +177,7 @@ export function FiltersBody() {
           {PREF_ROWS.map(({ key, active, icon: Icon, label }) => (
             <div key={key} className="flex items-center gap-2.5 py-2.5">
               <Icon className={active ? "h-4 w-4 shrink-0 text-brand-600" : "h-4 w-4 shrink-0 text-ink-400"} aria-hidden="true" />
-              <span className="flex-1 text-[12px] font-800 text-ink-700 dark:text-ink-200">{label}</span>
+              <span className="flex-1 text-[13px] font-800 text-ink-700 dark:text-ink-200">{label}</span>
               <Switch checked={active} onCheckedChange={(on) => update({ [key]: on ? "true" : null })} aria-label={label} />
             </div>
           ))}

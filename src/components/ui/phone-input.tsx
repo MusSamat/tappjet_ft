@@ -48,7 +48,7 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
             className,
           )}
         >
-          <span className="select-none text-[15px] font-800 text-ink-500 dark:text-ink-400">{PREFIX}</span>
+          <span className="select-none text-[16px] font-800 text-ink-500 dark:text-ink-400">{PREFIX}</span>
           <input
             ref={ref}
             type="tel"
@@ -59,7 +59,7 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
             onChange={(e) => handleChange(e.target.value)}
             aria-invalid={invalid || undefined}
             disabled={disabled}
-            className="w-full border-none bg-transparent p-0 text-[15px] font-800 text-ink-900 outline-none placeholder:font-700 placeholder:text-ink-400 dark:text-white"
+            className="w-full border-none bg-transparent p-0 text-[16px] font-800 text-ink-900 outline-none placeholder:font-700 placeholder:text-ink-400 dark:text-white"
             {...rest}
           />
         </div>

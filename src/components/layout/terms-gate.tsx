@@ -49,8 +49,8 @@ export function TermsGate() {
   return (
     <div className="fixed inset-0 z-[105] flex items-end justify-center bg-black/50 p-4 sm:items-center">
       <div className="w-full max-w-[420px] rounded-3xl bg-white p-6 shadow-xl dark:bg-ink-900">
-        <h2 className="text-[16px] font-900 text-ink-900 dark:text-white">{t("title")}</h2>
-        <p className="mt-2 text-[13px] font-600 leading-relaxed text-ink-500 dark:text-ink-300">
+        <h2 className="text-[17px] font-900 text-ink-900 dark:text-white">{t("title")}</h2>
+        <p className="mt-2 text-[15px] font-600 leading-relaxed text-ink-500 dark:text-ink-300">
           {t.rich("body", {
             terms: (chunks) => (
               <Link href="/terms" className="font-800 text-brand-600 underline" target="_blank">

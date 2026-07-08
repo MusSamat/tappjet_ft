@@ -26,9 +26,9 @@ export default function ProtectedError({
         <AlertTriangle className="h-8 w-8" aria-hidden="true" />
       </div>
       <h1 className="font-disp text-[20px] font-900 text-ink-900 dark:text-white">{t("page_title")}</h1>
-      <p className="mt-2 max-w-sm text-[13px] font-600 text-ink-500 dark:text-ink-400">{t("page_desc")}</p>
+      <p className="mt-2 max-w-sm text-[15px] font-600 text-ink-500 dark:text-ink-400">{t("page_desc")}</p>
       {error.digest && (
-        <p className="mt-1 font-mono text-[11px] text-ink-400">{t("code", { code: error.digest })}</p>
+        <p className="mt-1 font-mono text-[12px] text-ink-400">{t("code", { code: error.digest })}</p>
       )}
       <div className="mt-6 flex flex-wrap justify-center gap-3">
         <Button variant="brand" size="md" onClick={reset}>

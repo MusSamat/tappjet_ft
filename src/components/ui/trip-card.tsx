@@ -21,8 +21,12 @@ import type { Locale } from "@/i18n.config";
 import type { ReactNode } from "react";
 import type { TripListItem } from "@/lib/api/trips";
 import { usePrefetchTrip } from "@/lib/hooks/use-prefetch-trip";
+import { useAuth } from "@/store/auth";
 import { formatDepartureLabel } from "@/lib/utils/date";
 import { cn } from "@/lib/utils/cn";
+import { ContactRevealButton } from "./contact-reveal-button";
+import { StatusBadge } from "./status-badge";
+import { VerifiedBadge } from "./verified-badge";
 import { DriverAvatar } from "./driver-avatar";
 import { LikeButton } from "./like-button";
 
@@ -46,7 +50,7 @@ interface TripCardProps {
 }
 
 const BADGE_BASE =
-  "inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-900";
+  "inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-900";
 
 function TripCardInner({
   trip,
@@ -98,6 +102,10 @@ function TripCardInner({
   const luggage = trip.luggage as "yes" | "small" | "no" | undefined;
   const stops = trip.pickupCities?.length ? trip.pickupCities.join(" · ") : null;
   const car = driver.car ?? null;
+  // Own-post check by user id — `metrics` is owner-only in the search feed but
+  // not guaranteed in every list, so it can't be the ownership signal.
+  const myId = useAuth((s) => s.user?.id);
+  const isOwn = Boolean(myId && trip.driverId === myId);
 
   // «Сегодня, 06:00» → «Сегодня, 06:00–11:00» when the driver set a window.
   let when = trip.departureAt ? formatDepartureLabel(trip.departureAt, locale) : "";
@@ -176,33 +184,36 @@ function TripCardInner({
 
       {/* Row 0 — type pill + seats badge (Yandex hierarchy: state first) */}
       <div className="mb-2.5 flex flex-wrap items-center gap-1.5 pr-8">
-        <span className="inline-flex items-center gap-1 rounded-full bg-brand-100 px-2 py-0.5 text-[10px] font-900 uppercase tracking-wide text-brand-700 dark:bg-brand-500/20 dark:text-brand-300">
+        <span className="inline-flex items-center gap-1 rounded-full bg-brand-100 px-2 py-0.5 text-[11px] font-900 uppercase tracking-wide text-brand-700 dark:bg-brand-500/20 dark:text-brand-300">
           <CarFront className="h-3 w-3" aria-hidden="true" />
           {t("type_driver")}
         </span>
         {badge}
         {featureBadge}
+        {trip.status && trip.status !== "active" && (
+          <StatusBadge status={trip.status} className="shrink-0" />
+        )}
       </div>
 
       {/* Row 1 — departure time (hero, window-aware) + price */}
       <div className="flex items-start justify-between gap-3 pr-7">
         <div className="min-w-0">
-          <div className="flex items-center gap-1.5 text-[16px] font-900 leading-tight text-ink-900 dark:text-white">
+          <div className="flex items-center gap-1.5 text-[17px] font-900 leading-tight text-ink-900 dark:text-white">
             <Clock className="h-4 w-4 shrink-0 text-brand-600 dark:text-brand-400" aria-hidden="true" />
             <span className="truncate">{when}</span>
           </div>
           {/* Route — thin, small: context, not the hero (route is already chosen) */}
-          <div className="mt-1 truncate text-[12px] font-600 text-ink-500 dark:text-ink-400">
+          <div className="mt-1 truncate text-[14px] font-600 text-ink-500 dark:text-ink-400">
             {trip.originCity ?? ""} → {trip.destinationCity ?? ""}
             {stops && ` · ${t("via", { stops })}`}
           </div>
         </div>
         <div className="shrink-0 text-right">
-          <div className="text-[18px] font-900 leading-none text-brand-700 dark:text-brand-300">
+          <div className="text-[20px] font-900 leading-none text-brand-700 dark:text-brand-300">
             {price.toLocaleString("ru-RU")}
-            <span className="text-[10px]">{t("som")}</span>
+            <span className="text-[11px]">{t("som")}</span>
           </div>
-          <div className="text-[10px] font-600 text-ink-400">{t("per_seat")}</div>
+          <div className="text-[11px] font-600 text-ink-400">{t("per_seat")}</div>
         </div>
       </div>
 
@@ -210,24 +221,22 @@ function TripCardInner({
       <div className="mt-2.5 flex items-center gap-2 border-t border-ink-100 pt-2.5 dark:border-ink-800">
         <DriverAvatar name={driverName} src={driver.avatarUrl ?? null} size="lg" />
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-1 text-[14px] font-800 leading-tight text-ink-900 dark:text-white">
+          <div className="flex items-center gap-1 text-[15px] font-800 leading-tight text-ink-900 dark:text-white">
             <span className="truncate">{driverName}</span>
-            {driver.verified && (
-              <ShieldCheck className="h-3 w-3 shrink-0 text-brand-600" aria-hidden="true" />
-            )}
+            {driver.verified && <VerifiedBadge />}
             {rating !== null && ratingCount >= 3 ? (
               <span className="flex shrink-0 items-center gap-0.5 font-700 text-ink-500 dark:text-ink-400">
                 <Star className="h-3 w-3 fill-accent-400 text-accent-400" aria-hidden="true" />
                 {rating.toFixed(1)}
               </span>
             ) : (
-              <span className="shrink-0 text-[11px] font-800 text-brand-600 dark:text-brand-300">
+              <span className="shrink-0 text-[12px] font-800 text-brand-600 dark:text-brand-300">
                 {t("new")}
               </span>
             )}
           </div>
           {car && (car.make || car.model) && (
-            <div className="mt-0.5 truncate text-[12px] font-600 text-ink-500 dark:text-ink-400">
+            <div className="mt-0.5 truncate text-[14px] font-600 text-ink-500 dark:text-ink-400">
               {[car.make, car.model].filter(Boolean).join(" ")}
               {car.plate && ` · ${car.plate}`}
             </div>
@@ -238,38 +247,55 @@ function TripCardInner({
           {wholeCabin ? <Sofa className="h-3.5 w-3.5 text-sky-500" /> : <Music className="h-3.5 w-3.5" />}
         </span>
         {trip.metrics && (
-          <span className="flex shrink-0 items-center gap-0.5 text-[11px] font-600 text-ink-400">
+          <span className="flex shrink-0 items-center gap-0.5 text-[13px] font-600 text-ink-400">
             <Eye className="h-3 w-3" aria-hidden="true" />
             {trip.metrics.views}
           </span>
+        )}
+        {/* Call-first: one tap → number + dialer. Never on own trips.
+            Hidden when the CTA row below renders its own call button. */}
+        {!isOwn && trip.id && seatsAvailable > 0 && !showBookButton && (
+          <ContactRevealButton variant="icon" target="trip" id={trip.id} />
         )}
       </div>
 
       {/* Direct book CTA (mobile lists) — disabled once the viewer has booked */}
       {showBookButton && trip.id && seatsAvailable > 0 && (
-        booked ? (
-          <div
-            className="mt-2.5 flex w-full items-center justify-center gap-1.5 rounded-xl bg-emerald-50 py-2 text-[13px] font-900 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300"
-            aria-disabled="true"
-          >
-            <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
-            {t("booked")}
-          </div>
-        ) : (
-          <Link
-            href={`/trips/${trip.id}/book`}
-            onClick={(e) => e.stopPropagation()}
-            className="mt-2.5 flex w-full items-center justify-center rounded-xl bg-accent-500 py-2 text-[13px] font-900 text-accent-ink transition-colors hover:bg-accent-400"
-          >
-            {t("book")}
-          </Link>
-        )
+        // Booking (¾) + call (¼) share one row — book is primary, call is the
+        // quick alternative (call-first market).
+        <div className="mt-2.5 flex items-stretch gap-2">
+          {booked ? (
+            <div
+              className="flex flex-[3] items-center justify-center gap-1.5 rounded-xl bg-emerald-50 py-2 text-[14px] font-900 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300"
+              aria-disabled="true"
+            >
+              <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
+              {t("booked")}
+            </div>
+          ) : (
+            <Link
+              href={`/trips/${trip.id}/book`}
+              onClick={(e) => e.stopPropagation()}
+              className="flex flex-[3] items-center justify-center rounded-xl bg-accent-500 py-2 text-[14px] font-900 text-accent-ink transition-colors hover:bg-accent-400"
+            >
+              {t("book")}
+            </Link>
+          )}
+          {!isOwn && (
+            <ContactRevealButton
+              variant="icon"
+              target="trip"
+              id={trip.id}
+              className="h-auto w-auto flex-1 self-stretch rounded-xl"
+            />
+          )}
+        </div>
       )}
     </article>
   );
 
   if (href && !onClick) {
-    return <Link href={href}>{content}</Link>;
+    return <Link href={href} className="block">{content}</Link>;
   }
   return content;
 }

@@ -23,7 +23,7 @@ export function SubmittedScreen() {
           <Clock className="h-9 w-9 text-accent-500" aria-hidden="true" />
         </div>
         <h2 className="text-[24px] font-extrabold text-ink-900 dark:text-white">{t("success_title")}</h2>
-        <p className="mt-2 text-[14px] leading-relaxed text-ink-500">{t("success_desc")}</p>
+        <p className="mt-2 text-[15px] leading-relaxed text-ink-500">{t("success_desc")}</p>
 
         <div className="mx-auto mt-6 max-w-[400px] space-y-2 text-left">
           {steps.map((s, i) => (
@@ -36,7 +36,7 @@ export function SubmittedScreen() {
             >
               <div
                 className={cn(
-                  "flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-[12px] font-bold text-white",
+                  "flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-[13px] font-bold text-white",
                   s.active ? "bg-brand-600" : "bg-ink-200 dark:bg-ink-700",
                 )}
               >
@@ -44,14 +44,14 @@ export function SubmittedScreen() {
               </div>
               <span
                 className={cn(
-                  "text-[14px]",
+                  "text-[15px]",
                   s.active ? "font-bold text-ink-900 dark:text-white" : "font-medium text-ink-500",
                 )}
               >
                 {s.label}
               </span>
               {s.active && (
-                <span className="ml-auto text-[11px] font-semibold text-ink-400">
+                <span className="ml-auto text-[13px] font-semibold text-ink-400">
                   {t("now")}
                 </span>
               )}

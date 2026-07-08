@@ -10,14 +10,14 @@ import { useCalendarCounts } from "@/lib/hooks/use-calendar-counts";
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <p className="mb-1.5 text-[10px] font-bold uppercase tracking-[0.08em] text-ink-500">{label}</p>
+      <p className="mb-1.5 text-[11px] font-bold uppercase tracking-[0.08em] text-ink-500">{label}</p>
       {children}
     </div>
   );
 }
 
 const selectCls =
-  "h-10 w-full rounded-xl border-2 border-ink-200 bg-ink-50 px-3 text-[13px] font-semibold text-ink-900 outline-none focus:border-sky-400 focus:bg-white transition-colors dark:border-ink-700 dark:bg-ink-900 dark:text-white dark:focus:bg-ink-900";
+  "h-10 w-full rounded-xl border-2 border-ink-200 bg-ink-50 px-3 text-[15px] font-semibold text-ink-900 outline-none focus:border-sky-400 focus:bg-white transition-colors dark:border-ink-700 dark:bg-ink-900 dark:text-white dark:focus:bg-ink-900";
 
 export function RequestFilters() {
   const router = useRouter();
@@ -47,7 +47,7 @@ export function RequestFilters() {
 
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-[16px] font-extrabold text-ink-900 dark:text-white">{t("title")}</p>
+      <p className="text-[17px] font-extrabold text-ink-900 dark:text-white">{t("title")}</p>
 
       {/* From/To with swap */}
       <Field label={t("route_label")}>
@@ -106,7 +106,7 @@ export function RequestFilters() {
         <button
           type="button"
           onClick={clear}
-          className="mt-1 text-[12px] font-bold text-ink-400 hover:text-sky-600 transition-colors text-left"
+          className="mt-1 text-[13px] font-bold text-ink-400 hover:text-sky-600 transition-colors text-left"
         >
           {t("reset")}
         </button>

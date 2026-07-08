@@ -99,39 +99,40 @@ export function WhenChips({ date, time, flexible, tomorrow, dayAfter, today, acc
               value={time}
               onChange={onTime}
               ariaLabel={t("time_label")}
-              selectClassName="h-10 rounded-xl border-2 border-ink-200 bg-white px-2 text-[13px] font-bold text-ink-900 outline-none focus:border-brand-400 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
+              selectClassName="h-10 rounded-xl border-2 border-ink-200 bg-white px-2 text-[14px] font-bold text-ink-900 outline-none focus:border-brand-400 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
             />
           )}
 
-          {/* Departure window («выезжаем 06:00–11:00») — driver trips only */}
+          {/* Departure window («выезжаем 06:00–11:00») — one compact line:
+              question-label left, control right; the how-to lives in `title`. */}
           {onTimeEnd && (
-            <div className="space-y-2 pt-1">
+            <div className="flex flex-wrap items-center justify-between gap-2 pt-1" title={t("time_end_hint")}>
               <SectionLabel>{t("time_end_label")}</SectionLabel>
-              <div className="flex flex-wrap items-center gap-2">
+              <span className="flex items-center gap-2">
                 <Chip
                   kind="time"
                   selected={timeEnd !== ""}
                   onClick={() => onTimeEnd(timeEnd ? "" : `${String((parseInt(time, 10) + 3) % 24).padStart(2, "0")}:00`)}
                   icon={<Clock className="h-3.5 w-3.5" aria-hidden="true" />}
                 >
-                  {timeEnd ? `${time}–${timeEnd}` : t("time_end_add")}
+                  {timeEnd ? t("time_end_set", { from: time, to: timeEnd }) : t("time_end_add")}
                 </Chip>
                 {timeEnd && (
                   <TimeSelect24
                     value={timeEnd}
                     onChange={onTimeEnd}
                     ariaLabel={t("time_end_label")}
-                    selectClassName="h-10 rounded-xl border-2 border-ink-200 bg-white px-2 text-[13px] font-bold text-ink-900 outline-none focus:border-brand-400 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
+                    selectClassName="h-10 rounded-xl border-2 border-ink-200 bg-white px-2 text-[14px] font-bold text-ink-900 outline-none focus:border-brand-400 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
                   />
                 )}
-              </div>
+              </span>
             </div>
           )}
         </div>
       )}
 
       {flexible && (
-        <div className="flex items-center gap-1.5 rounded-2xl bg-accent-50 px-3 py-2 text-[12px] font-700 text-accent-700 dark:bg-accent-500/10 dark:text-accent-300">
+        <div className="flex items-center gap-1.5 rounded-2xl bg-accent-50 px-3 py-2 text-[14px] font-700 text-accent-700 dark:bg-accent-500/10 dark:text-accent-300">
           <Zap className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
           {t("flexible_hint")}
         </div>

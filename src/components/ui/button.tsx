@@ -50,10 +50,10 @@ const buttonVariants = cva(
         pill: CTA,
       },
       size: {
-        sm: "h-9 rounded-xl px-4 text-[12px]",
-        md: "h-11 rounded-2xl px-5 text-[13px]",
-        lg: "h-12 rounded-2xl px-6 text-[14px]",
-        xl: "h-14 rounded-2xl px-7 text-[15px]",
+        sm: "h-9 rounded-xl px-4 text-[13px]",
+        md: "h-11 rounded-2xl px-5 text-[14px]",
+        lg: "h-12 rounded-2xl px-6 text-[15px]",
+        xl: "h-14 rounded-2xl px-7 text-[16px]",
       },
       pill: {
         true: "rounded-full px-4",

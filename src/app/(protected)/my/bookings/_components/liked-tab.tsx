@@ -11,7 +11,6 @@ import { CardSkeletonList } from "@/components/ui/card-skeleton";
 import { QueryError } from "@/components/ui/query-error";
 import { TripCard } from "@/components/ui/trip-card";
 import { RequestCard } from "@/components/features/passenger-requests/request-card";
-import type { UiRole } from "@/lib/role-colors";
 import type { TripListItem } from "@/lib/api/trips";
 import type { PassengerRequest } from "@/lib/api/passenger-requests";
 
@@ -25,8 +24,8 @@ function EmptyLiked() {
   return (
     <div className="rounded-3xl border border-ink-100 bg-white p-8 text-center dark:border-ink-800 dark:bg-ink-900">
       <Heart className="mx-auto mb-2 h-8 w-8 text-coral-300" aria-hidden="true" />
-      <p className="text-[15px] font-900 text-ink-900 dark:text-white">{t("liked_empty_title")}</p>
-      <p className="mt-1 text-[13px] font-700 text-ink-500 dark:text-ink-400">{t("liked_empty_hint")}</p>
+      <p className="text-[16px] font-900 text-ink-900 dark:text-white">{t("liked_empty_title")}</p>
+      <p className="mt-1 text-[15px] font-700 text-ink-500 dark:text-ink-400">{t("liked_empty_hint")}</p>
     </div>
   );
 }
@@ -49,14 +48,15 @@ function FilterChips({ value, onChange }: { value: FilterKey; onChange: (v: Filt
   );
 }
 
-export function LikedTab({ role }: { role: UiRole }) {
+// Phase 1: one favourites feed for everyone — liked trips AND liked requests
+// together, each with its status badge; tap opens the item's page.
+export function LikedTab() {
   const router = useRouter();
-  const isDriver = role === "driver";
   const [filter, setFilter] = useState<FilterKey>("all");
 
   const trips = useLikedTrips();
   const requests = useLikedRequests();
-  const q = isDriver ? requests : trips;
+  const q = trips;
 
   const sentinel = useInfiniteScroll({
     hasNextPage: q.hasNextPage,
@@ -80,30 +80,37 @@ export function LikedTab({ role }: { role: UiRole }) {
     return arr;
   }, [requestItems, filter]);
 
-  if (q.isLoading) {
-    return <CardSkeletonList variant={isDriver ? "request" : "trip"} count={3} />;
+  if (trips.isLoading || requests.isLoading) {
+    return <CardSkeletonList variant="trip" count={3} />;
   }
 
   if (q.isError) {
     return <QueryError error={q.error} onRetry={() => void q.refetch()} />;
   }
 
-  const count = isDriver ? sortedRequests.length : sortedTrips.length;
+  const count = sortedTrips.length + sortedRequests.length;
   if (count === 0) return <EmptyLiked />;
 
   return (
     <div className="flex flex-col">
       <FilterChips value={filter} onChange={setFilter} />
-      <div className="flex flex-col gap-2.5">
-        {isDriver
-          ? sortedRequests.map((r: PassengerRequest) => (
-              <RequestCard key={r.id} request={r} onClick={() => router.push(`/requests/${r.id}`)} />
-            ))
-          : sortedTrips.map((tr: TripListItem) => (
-              <TripCard key={tr.id} trip={tr} onClick={() => router.push(`/trips/${tr.id}`)} />
-            ))}
+      <div className="flex flex-col gap-3.5">
+        {[
+          ...sortedTrips.map((tr: TripListItem) => ({
+            key: `t-${tr.id}`,
+            d: new Date(tr.departureAt ?? 0).getTime(),
+            node: <TripCard key={`t-${tr.id}`} trip={tr} onClick={() => router.push(`/trips/${tr.id}`)} />,
+          })),
+          ...sortedRequests.map((r: PassengerRequest) => ({
+            key: `r-${r.id}`,
+            d: new Date(r.departureDate ?? 0).getTime(),
+            node: <RequestCard key={`r-${r.id}`} request={r} onClick={() => router.push(`/requests/${r.id}`)} />,
+          })),
+        ]
+          .sort((a, b) => a.d - b.d)
+          .map((x) => x.node)}
         {q.isFetchingNextPage && (
-          <CardSkeletonList variant={isDriver ? "request" : "trip"} count={2} className="mt-0.5" />
+          <CardSkeletonList variant="trip" count={2} className="mt-0.5" />
         )}
       </div>
       <div ref={sentinel} aria-hidden="true" />

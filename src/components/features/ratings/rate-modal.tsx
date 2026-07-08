@@ -100,7 +100,7 @@ export function RateModal({ rating, onClose }: Props) {
                 </div>
               </div>
               <h2 className="text-[22px] font-extrabold text-ink-900">{t("success_title")}</h2>
-              <p className="mx-auto mt-2 max-w-[280px] text-[14px] text-ink-600">
+              <p className="mx-auto mt-2 max-w-[280px] text-[15px] text-ink-600">
                 {rating.direction === "driver"
                   ? t("success_role_driver")
                   : t("success_role_passenger")}
@@ -144,7 +144,7 @@ export function RateModal({ rating, onClose }: Props) {
                   </button>
                 ))}
               </div>
-              <p className="mb-5 text-center text-[13px] font-semibold text-ink-500">
+              <p className="mb-5 text-center text-[15px] font-semibold text-ink-500">
                 {t(`label_${score}`)}
               </p>
 
@@ -152,7 +152,7 @@ export function RateModal({ rating, onClose }: Props) {
                 <>
                   {/* Tags */}
                   <div className="mb-4">
-                    <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-ink-500">
+                    <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-ink-500">
                       {score >= 4 ? t("liked") : t("disliked")}
                     </p>
                     <div className="flex flex-wrap gap-2">
@@ -162,7 +162,7 @@ export function RateModal({ rating, onClose }: Props) {
                           type="button"
                           onClick={() => toggleTag(value)}
                           className={cn(
-                            "rounded-full border-2 px-3 py-1 text-[12px] font-bold transition-colors",
+                            "rounded-full border-2 px-3 py-1 text-[13px] font-bold transition-colors",
                             tags.includes(value)
                               ? "border-brand-600 bg-brand-50 text-brand-700"
                               : "border-ink-300 text-ink-700 hover:border-brand-400",
@@ -176,7 +176,7 @@ export function RateModal({ rating, onClose }: Props) {
 
                   {/* Comment */}
                   <div className="mb-4">
-                    <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-ink-500">
+                    <p className="mb-1 text-[11px] font-bold uppercase tracking-widest text-ink-500">
                       {t("comment_label")}
                     </p>
                     <Textarea
@@ -186,7 +186,7 @@ export function RateModal({ rating, onClose }: Props) {
                       value={comment}
                       onChange={(e) => setComment(e.target.value.slice(0, MAX_COMMENT))}
                     />
-                    <p className="mt-1 text-right text-[12px] text-ink-400">
+                    <p className="mt-1 text-right text-[13px] text-ink-400">
                       {comment.length}/{MAX_COMMENT}
                     </p>
                   </div>
@@ -198,15 +198,15 @@ export function RateModal({ rating, onClose }: Props) {
                         <path d="M20 13c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V5l8-3 8 3v8z" />
                         <path d="m9 12 2 2 4-4" />
                       </svg>
-                      <span className="text-[13px] font-bold text-ink-900">{t("blind_title")}</span>
+                      <span className="text-[14px] font-bold text-ink-900">{t("blind_title")}</span>
                     </div>
-                    <p className="text-[12px] font-semibold text-ink-500">
+                    <p className="text-[14px] font-semibold text-ink-500">
                       {t("blind_desc", { name: rating.counterpartName.split(" ")[0] })}
                     </p>
                   </div>
 
                   {errMsg && (
-                    <p className="mb-3 rounded-xl bg-coral-50 px-4 py-2 text-[13px] font-semibold text-coral-700">
+                    <p className="mb-3 rounded-xl bg-coral-50 px-4 py-2 text-[15px] font-semibold text-coral-700">
                       {errMsg}
                     </p>
                   )}
@@ -215,7 +215,7 @@ export function RateModal({ rating, onClose }: Props) {
                     type="button"
                     disabled={score === 0 || isPending}
                     onClick={() => mutate()}
-                    className="w-full rounded-2xl bg-accent-500 py-3.5 text-[15px] font-bold text-[#4A2C00] transition-colors hover:bg-accent-600 disabled:opacity-50"
+                    className="w-full rounded-2xl bg-accent-500 py-3.5 text-[16px] font-bold text-[#4A2C00] transition-colors hover:bg-accent-600 disabled:opacity-50"
                   >
                     {isPending ? <Spinner size={18} /> : t("submit")}
                   </button>

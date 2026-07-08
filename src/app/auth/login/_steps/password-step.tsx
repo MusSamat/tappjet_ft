@@ -30,14 +30,14 @@ export function PasswordStep({
   return (
     <>
       <div className="mb-6 text-center">
-        <p className="text-[14px] text-ink-600">{tl("password_step_label")}</p>
-        <p className="mt-1 text-[17px] font-700 text-ink-900 dark:text-white">+996 {displayPhone}</p>
+        <p className="text-[15px] text-ink-600">{tl("password_step_label")}</p>
+        <p className="mt-1 text-[18px] font-700 text-ink-900 dark:text-white">+996 {displayPhone}</p>
       </div>
 
       {hasPassword ? (
         <>
           <div className="mb-4 flex flex-col gap-1.5">
-            <span className="text-[10px] font-700 uppercase tracking-widest text-ink-400">
+            <span className="text-[11px] font-700 uppercase tracking-widest text-ink-400">
               {tl("password_label")}
             </span>
             <div className="relative">
@@ -49,7 +49,7 @@ export function PasswordStep({
                 onKeyDown={(e) => { if (e.key === "Enter" && password) passwordMutation.mutate(); }}
                 placeholder={tl("password_placeholder")}
                 className={cn(
-                  "h-12 w-full rounded-2xl border-2 bg-ink-50 px-3 pr-10 text-[14px] font-600 outline-none transition-colors dark:bg-ink-800",
+                  "h-12 w-full rounded-2xl border-2 bg-ink-50 px-3 pr-10 text-[15px] font-600 outline-none transition-colors dark:bg-ink-800",
                   serverError
                     ? "border-coral-400 text-coral-700"
                     : "border-ink-200 text-ink-900 focus:border-brand-500 dark:border-ink-700 dark:text-white",
@@ -70,20 +70,20 @@ export function PasswordStep({
             type="button"
             disabled={!password || passwordMutation.isPending}
             onClick={() => passwordMutation.mutate()}
-            className="flex h-12 w-full items-center justify-center rounded-2xl bg-accent-500 text-[14px] font-700 text-[#4A2C00] transition-colors hover:bg-accent-600 disabled:opacity-40"
+            className="flex h-12 w-full items-center justify-center rounded-2xl bg-accent-500 text-[15px] font-700 text-[#4A2C00] transition-colors hover:bg-accent-600 disabled:opacity-40"
           >
             {passwordMutation.isPending ? tl("logging_in") : tl("login_btn")}
           </button>
 
           <div className="mt-4 flex flex-col items-center gap-3">
-            <button type="button" onClick={onBack} className="text-[13px] font-700 text-ink-600 hover:text-ink-900">
+            <button type="button" onClick={onBack} className="text-[15px] font-700 text-ink-600 hover:text-ink-900">
               {tl("change_number")}
             </button>
             <button
               type="button"
               disabled={sendMutation.isPending}
               onClick={onOtp}
-              className="text-[12px] font-600 text-ink-500 hover:text-ink-700 disabled:opacity-50"
+              className="text-[14px] font-600 text-ink-500 hover:text-ink-700 disabled:opacity-50"
             >
               {sendMutation.isPending ? tl("sending") : tl("forgot_password")}
             </button>
@@ -92,20 +92,20 @@ export function PasswordStep({
       ) : (
         <>
           <div className="mb-5 rounded-2xl bg-accent-50 px-4 py-3 text-center">
-            <p className="text-[13px] font-600 text-accent-700">{tl("no_password_hint")}</p>
+            <p className="text-[15px] font-600 text-accent-700">{tl("no_password_hint")}</p>
           </div>
 
           <button
             type="button"
             disabled={sendMutation.isPending}
             onClick={onOtp}
-            className="flex h-12 w-full items-center justify-center rounded-2xl bg-accent-500 text-[14px] font-700 text-[#4A2C00] transition-colors hover:bg-accent-600 disabled:opacity-40"
+            className="flex h-12 w-full items-center justify-center rounded-2xl bg-accent-500 text-[15px] font-700 text-[#4A2C00] transition-colors hover:bg-accent-600 disabled:opacity-40"
           >
             {sendMutation.isPending ? tl("sending") : tl("set_password_btn")}
           </button>
 
           <div className="mt-4 flex justify-center">
-            <button type="button" onClick={onBack} className="text-[13px] font-700 text-ink-600 hover:text-ink-900">
+            <button type="button" onClick={onBack} className="text-[15px] font-700 text-ink-600 hover:text-ink-900">
               {tl("change_number")}
             </button>
           </div>

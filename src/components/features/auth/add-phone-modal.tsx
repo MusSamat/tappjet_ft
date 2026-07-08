@@ -193,7 +193,7 @@ export function AddPhoneModal({ open, onClose, onDone }: Props) {
         </ModalHeader>
 
         {error && (
-          <div className="mb-4 rounded-xl bg-danger-50 px-3 py-2 text-[13px] font-700 text-danger-600 dark:bg-danger-500/10 dark:text-danger-400">
+          <div className="mb-4 rounded-xl bg-danger-50 px-3 py-2 text-[15px] font-700 text-danger-600 dark:bg-danger-500/10 dark:text-danger-400">
             {error}
           </div>
         )}
@@ -202,7 +202,7 @@ export function AddPhoneModal({ open, onClose, onDone }: Props) {
           // Inside Telegram: ONLY «Поделиться номером». No manual entry, no OTP —
           // Telegram gives the account's verified number in one tap.
           <div className="space-y-4">
-            <p className="text-[13px] font-700 text-ink-500 dark:text-ink-400">
+            <p className="text-[15px] font-700 text-ink-500 dark:text-ink-400">
               {t("share_tg_body")}
             </p>
             {canRequestContact ? (
@@ -216,7 +216,7 @@ export function AddPhoneModal({ open, onClose, onDone }: Props) {
                 {loading ? <Spinner size={16} /> : t("share_tg_btn")}
               </Button>
             ) : (
-              <p className="rounded-xl bg-accent-50 px-3 py-2.5 text-[12px] font-700 text-accent-700 dark:bg-accent-500/10 dark:text-accent-300">
+              <p className="rounded-xl bg-accent-50 px-3 py-2.5 text-[14px] font-700 text-accent-700 dark:bg-accent-500/10 dark:text-accent-300">
                 {t("update_telegram")}
               </p>
             )}
@@ -224,7 +224,7 @@ export function AddPhoneModal({ open, onClose, onDone }: Props) {
         ) : step === "phone" ? (
           // Web browser: manual number + OTP flow.
           <div className="space-y-4">
-            <p className="text-[13px] font-700 text-ink-500 dark:text-ink-400">
+            <p className="text-[15px] font-700 text-ink-500 dark:text-ink-400">
               {user?.telegramLinked ? t("hint_linked") : t("hint_default")}
             </p>
             <PhoneInput value={phone} onValueChange={setPhone} autoFocus />
@@ -244,7 +244,7 @@ export function AddPhoneModal({ open, onClose, onDone }: Props) {
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-3 rounded-xl bg-[#0088cc]/10 px-4 py-3">
               <Spinner size={16} className="shrink-0 text-[#0088cc]" />
-              <p className="text-[13px] font-700 text-ink-800 dark:text-ink-200">
+              <p className="text-[15px] font-700 text-ink-800 dark:text-ink-200">
                 {t("waiting")}
               </p>
             </div>
@@ -252,14 +252,14 @@ export function AddPhoneModal({ open, onClose, onDone }: Props) {
               href={deepLink}
               target="_blank"
               rel="noreferrer"
-              className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#0088cc] text-[15px] font-800 text-white hover:bg-[#0088cc]/90"
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#0088cc] text-[16px] font-800 text-white hover:bg-[#0088cc]/90"
             >
               {t("open_telegram")}
             </a>
             <button
               type="button"
               onClick={() => { stopPoll(); setStep("phone"); }}
-              className="text-center text-[13px] font-700 text-ink-500 hover:text-ink-700 dark:text-ink-400 dark:hover:text-ink-200"
+              className="text-center text-[15px] font-700 text-ink-500 hover:text-ink-700 dark:text-ink-400 dark:hover:text-ink-200"
             >
               {t("change_number")}
             </button>
@@ -268,7 +268,7 @@ export function AddPhoneModal({ open, onClose, onDone }: Props) {
 
         {step === "otp" && (
           <div className="space-y-4">
-            <p className="text-[13px] font-700 text-ink-500 dark:text-ink-400">
+            <p className="text-[15px] font-700 text-ink-500 dark:text-ink-400">
               {t("otp_sent_to")}{" "}
               <span className="font-800 text-ink-900 dark:text-white">{phone}</span>
             </p>
@@ -294,7 +294,7 @@ export function AddPhoneModal({ open, onClose, onDone }: Props) {
             <button
               type="button"
               onClick={() => { setStep("phone"); setOtp(""); setError(null); }}
-              className="w-full text-center text-[13px] font-700 text-ink-500 hover:text-ink-700 dark:text-ink-400 dark:hover:text-ink-200"
+              className="w-full text-center text-[15px] font-700 text-ink-500 hover:text-ink-700 dark:text-ink-400 dark:hover:text-ink-200"
             >
               {t("change_number")}
             </button>

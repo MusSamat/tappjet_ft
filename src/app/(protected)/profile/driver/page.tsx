@@ -21,7 +21,6 @@ import { getDriverStatus } from "@/lib/api/profile";
 import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { compressImage, ImageValidationError } from "@/lib/utils/compress-image";
 import { useAuth } from "@/store/auth";
-import { switchRoleAndReload } from "@/lib/auth/switch-role";
 import { Button, Label, NotifCard, Spinner } from "@/components/ui";
 import { AddPhoneModal } from "@/components/features/auth/add-phone-modal";
 import { SubmittedScreen } from "./_components/submitted-screen";
@@ -236,7 +235,7 @@ export default function DriverVerifyPage() {
             <Phone className="h-7 w-7 text-brand-600" aria-hidden="true" />
           </span>
           <h1 className="mt-4 text-[20px] font-900 text-ink-900 dark:text-white">{t("gate_phone_title")}</h1>
-          <p className="mt-2 text-[14px] font-600 leading-relaxed text-ink-500">{t("gate_phone_text")}</p>
+          <p className="mt-2 text-[15px] font-600 leading-relaxed text-ink-500">{t("gate_phone_text")}</p>
           <Button variant="brand" size="lg" className="mt-5 w-full max-w-[320px]" onClick={() => setShowAddPhone(true)}>
             {t("gate_phone_cta")}
           </Button>
@@ -260,15 +259,15 @@ export default function DriverVerifyPage() {
     return (
       <div className="mx-auto max-w-[480px] p-6 pt-16 text-center">
         <CheckCircle className="mx-auto h-12 w-12 text-brand-500" aria-hidden="true" />
-        <h1 className="mt-4 text-[18px] font-900 text-ink-900 dark:text-white">{t("already_verified_title")}</h1>
-        <p className="mt-2 text-[13px] font-600 text-ink-500">{t("already_verified_desc")}</p>
+        <h1 className="mt-4 text-[20px] font-900 text-ink-900 dark:text-white">{t("already_verified_title")}</h1>
+        <p className="mt-2 text-[15px] font-600 text-ink-500">{t("already_verified_desc")}</p>
         {/* Not a dead end: verified drivers came here to «switch into driver» —
             give them exactly that, landing on the driver-mode search. */}
         <Button
           variant="primary"
           size="md"
           className="mt-6"
-          onClick={() => switchRoleAndReload("driver", "/")}
+          onClick={() => router.push("/")}
         >
           {t("switch_to_driver")}
         </Button>
@@ -290,19 +289,19 @@ export default function DriverVerifyPage() {
       <button
         type="button"
         onClick={goBack}
-        className="mb-4 inline-flex items-center gap-1 text-[13px] font-bold text-ink-600 hover:text-ink-900"
+        className="mb-4 inline-flex items-center gap-1 text-[14px] font-bold text-ink-600 hover:text-ink-900"
       >
         {t("back")}
       </button>
 
       {driverStatus?.status === "rejected" && (
-        <div className="mb-4 rounded-2xl bg-coral-50 px-4 py-3 text-[13px] font-700 text-coral-700 dark:bg-coral-500/10 dark:text-coral-300">
+        <div className="mb-4 rounded-2xl bg-coral-50 px-4 py-3 text-[15px] font-700 text-coral-700 dark:bg-coral-500/10 dark:text-coral-300">
           {t("rejected_banner", { reason: driverStatus.rejectionReason ?? "—" })}
         </div>
       )}
 
       <h1 className="text-[26px] font-extrabold text-ink-900 dark:text-white">{t("title")}</h1>
-      <p className="mt-1 text-[13px] font-semibold text-ink-500">{t("step", { step })}</p>
+      <p className="mt-1 text-[15px] font-semibold text-ink-500">{t("step", { step })}</p>
 
       <div className="mb-6 mt-4 h-1.5 overflow-hidden rounded-full bg-ink-100 dark:bg-ink-800">
         <div
@@ -323,7 +322,7 @@ export default function DriverVerifyPage() {
       {step === 1 && (
         <>
           <div className="rounded-3xl border border-ink-100 bg-white p-5 shadow-sm dark:bg-ink-900 dark:border-ink-800">
-            <h2 className="mb-4 text-[16px] font-extrabold text-ink-900 dark:text-white">{t("car_section")}</h2>
+            <h2 className="mb-4 text-[17px] font-extrabold text-ink-900 dark:text-white">{t("car_section")}</h2>
             <div className="flex flex-col gap-3">
               <div className="flex gap-2">
                 <div className="flex-1">
@@ -342,7 +341,7 @@ export default function DriverVerifyPage() {
                         setCarMake(e.target.value);
                       }
                     }}
-                    className="mt-1 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[14px] font-semibold text-ink-900 outline-none focus:border-brand-500 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
+                    className="mt-1 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[15px] font-semibold text-ink-900 outline-none focus:border-brand-500 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
                   >
                     {/* NOT disabled: a disabled empty option makes mobile/Telegram
                         WebViews display the first real option (Toyota) while the
@@ -357,11 +356,11 @@ export default function DriverVerifyPage() {
                       value={carMake}
                       onChange={(e) => setCarMake(e.target.value)}
                       placeholder={t("make_other_placeholder")}
-                      className="mt-2 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[14px] font-semibold text-ink-900 outline-none focus:border-brand-500 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
+                      className="mt-2 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[15px] font-semibold text-ink-900 outline-none focus:border-brand-500 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
                     />
                   )}
                   {fieldErrors.carMake && (
-                    <p className="mt-1 text-[11px] font-700 text-coral-500">{fieldErrors.carMake}</p>
+                    <p className="mt-1 text-[13px] font-700 text-coral-500">{fieldErrors.carMake}</p>
                   )}
                 </div>
                 <div className="flex-1">
@@ -372,10 +371,10 @@ export default function DriverVerifyPage() {
                     value={carModel}
                     onChange={(e) => setCarModel(e.target.value)}
                     placeholder={t("model_placeholder")}
-                    className="mt-1 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[14px] font-semibold text-ink-900 outline-none focus:border-brand-500 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
+                    className="mt-1 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[15px] font-semibold text-ink-900 outline-none focus:border-brand-500 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
                   />
                   {fieldErrors.carModel && (
-                    <p className="mt-1 text-[11px] font-700 text-coral-500">{fieldErrors.carModel}</p>
+                    <p className="mt-1 text-[13px] font-700 text-coral-500">{fieldErrors.carModel}</p>
                   )}
                 </div>
               </div>
@@ -390,10 +389,10 @@ export default function DriverVerifyPage() {
                     placeholder={t("year_placeholder")}
                     min={1980}
                     max={new Date().getFullYear() + 1}
-                    className="mt-1 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[14px] font-semibold text-ink-900 outline-none focus:border-brand-500 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
+                    className="mt-1 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[15px] font-semibold text-ink-900 outline-none focus:border-brand-500 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
                   />
                   {fieldErrors.carYear && (
-                    <p className="mt-1 text-[11px] font-700 text-coral-500">{fieldErrors.carYear}</p>
+                    <p className="mt-1 text-[13px] font-700 text-coral-500">{fieldErrors.carYear}</p>
                   )}
                 </div>
                 <div className="flex-1">
@@ -404,10 +403,10 @@ export default function DriverVerifyPage() {
                     value={color}
                     onChange={(e) => setColor(e.target.value)}
                     placeholder={t("color_placeholder")}
-                    className="mt-1 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[14px] font-semibold text-ink-900 outline-none focus:border-brand-500 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
+                    className="mt-1 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[15px] font-semibold text-ink-900 outline-none focus:border-brand-500 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
                   />
                   {fieldErrors.carColor && (
-                    <p className="mt-1 text-[11px] font-700 text-coral-500">{fieldErrors.carColor}</p>
+                    <p className="mt-1 text-[13px] font-700 text-coral-500">{fieldErrors.carColor}</p>
                   )}
                 </div>
               </div>
@@ -425,20 +424,20 @@ export default function DriverVerifyPage() {
                     spellCheck={false}
                     maxLength={10}
                     inputMode="text"
-                    className={`mt-1 w-full rounded-2xl border-2 bg-ink-50 px-3 py-2.5 text-[14px] font-800 uppercase tracking-widest text-ink-900 outline-none focus:border-brand-500 dark:bg-ink-900 dark:text-white ${plate && !plateValid ? "border-coral-400" : "border-ink-200 dark:border-ink-700"}`}
+                    className={`mt-1 w-full rounded-2xl border-2 bg-ink-50 px-3 py-2.5 text-[15px] font-800 uppercase tracking-widest text-ink-900 outline-none focus:border-brand-500 dark:bg-ink-900 dark:text-white ${plate && !plateValid ? "border-coral-400" : "border-ink-200 dark:border-ink-700"}`}
                   />
                   {plate && !plateValid && (
-                    <p className="mt-1 text-[11px] font-700 text-coral-500">
+                    <p className="mt-1 text-[13px] font-700 text-coral-500">
                       {plateManual ? t("plate_manual_hint") : t("plate_format_hint")}
                     </p>
                   )}
                   {fieldErrors.carPlate && plateValid && (
-                    <p className="mt-1 text-[11px] font-700 text-coral-500">{fieldErrors.carPlate}</p>
+                    <p className="mt-1 text-[13px] font-700 text-coral-500">{fieldErrors.carPlate}</p>
                   )}
                   <button
                     type="button"
                     onClick={() => setPlateManual((v) => !v)}
-                    className="mt-1 text-[11px] font-800 text-brand-600 underline"
+                    className="mt-1 text-[12px] font-800 text-brand-600 underline"
                   >
                     {plateManual ? t("plate_standard_btn") : t("plate_manual_btn")}
                   </button>
@@ -454,10 +453,10 @@ export default function DriverVerifyPage() {
                     onChange={(e) => setSeats(e.target.value)}
                     min={1}
                     max={7}
-                    className="mt-1 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[14px] font-semibold text-ink-900 outline-none focus:border-brand-500 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
+                    className="mt-1 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[15px] font-semibold text-ink-900 outline-none focus:border-brand-500 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
                   />
                   {fieldErrors.seatsCount && (
-                    <p className="mt-1 text-[11px] font-700 text-coral-500">{fieldErrors.seatsCount}</p>
+                    <p className="mt-1 text-[13px] font-700 text-coral-500">{fieldErrors.seatsCount}</p>
                   )}
                 </div>
               </div>
@@ -482,11 +481,11 @@ export default function DriverVerifyPage() {
           <div className="rounded-3xl border border-ink-100 bg-white p-5 shadow-sm dark:bg-ink-900 dark:border-ink-800">
             <div className="mb-1 flex items-center gap-2">
               <currentDoc.icon className="h-[18px] w-[18px] text-brand-700" aria-hidden="true" />
-              <h2 className="text-[16px] font-extrabold text-ink-900 dark:text-white">
+              <h2 className="text-[17px] font-extrabold text-ink-900 dark:text-white">
                 {t(`doc_${currentDoc.key}_label`)}
               </h2>
             </div>
-            <p className="mb-4 text-[13px] font-semibold text-ink-500">
+            <p className="mb-4 text-[15px] font-semibold text-ink-500">
               {t(`doc_${currentDoc.key}_desc`)}
             </p>
 
@@ -542,7 +541,7 @@ export default function DriverVerifyPage() {
               ) : (
                 <div className="flex flex-col items-center gap-2 text-ink-400">
                   <Camera className="h-8 w-8" aria-hidden="true" />
-                  <span className="text-[12px] font-bold">{t("upload_btn")}</span>
+                  <span className="text-[13px] font-bold">{t("upload_btn")}</span>
                 </div>
               )}
             </button>
@@ -552,30 +551,30 @@ export default function DriverVerifyPage() {
                 type="button"
                 onClick={() => galleryRef.current?.click()}
                 disabled={compressing}
-                className="mt-2 text-[12px] font-800 text-brand-600 underline disabled:opacity-50"
+                className="mt-2 text-[13px] font-800 text-brand-600 underline disabled:opacity-50"
               >
                 {t("from_gallery")}
               </button>
             ) : (
-              <p className="mt-2 text-[11px] font-semibold text-ink-400">{t("selfie_live_only")}</p>
+              <p className="mt-2 text-[13px] font-semibold text-ink-400">{t("selfie_live_only")}</p>
             )}
 
-            <p className="mt-2 text-[11px] font-semibold text-ink-400">{t("photo_hint")}</p>
+            <p className="mt-2 text-[13px] font-semibold text-ink-400">{t("photo_hint")}</p>
             {docs[currentDoc.key] && !docError && (
-              <p className="mt-1 inline-flex items-center gap-1 text-[12px] font-bold text-brand-700">
+              <p className="mt-1 inline-flex items-center gap-1 text-[13px] font-bold text-brand-700">
                 <CheckCircle className="h-3.5 w-3.5" /> {t("change_btn")}
               </p>
             )}
-            {docError && <p className="mt-2 text-[12px] font-bold text-coral-600">{docError}</p>}
+            {docError && <p className="mt-2 text-[13px] font-bold text-coral-600">{docError}</p>}
           </div>
 
           {currentDoc.key === "selfie" && (
             <div className="mt-4 rounded-2xl bg-ink-50 px-4 py-3 dark:bg-ink-800">
               <div className="mb-1 flex items-center gap-2">
                 <Lock className="h-3.5 w-3.5 flex-shrink-0 text-ink-600" aria-hidden="true" />
-                <span className="text-[13px] font-bold text-ink-900 dark:text-white">{t("privacy_note")}</span>
+                <span className="text-[14px] font-bold text-ink-900 dark:text-white">{t("privacy_note")}</span>
               </div>
-              <p className="text-[12px] font-semibold text-ink-500">{t("privacy_desc")}</p>
+              <p className="text-[14px] font-semibold text-ink-500">{t("privacy_desc")}</p>
             </div>
           )}
 
@@ -607,6 +606,9 @@ export default function DriverVerifyPage() {
               {mutation.isPending ? t("submitting") : t("submit_btn")}
             </Button>
           )}
+          {/* Consent: a verified driver's phone is shown to logged-in users
+              via «Позвонить» on their trips. */}
+          <p className="mt-3 text-center text-[13px] font-600 text-ink-400">{t("consent_phone")}</p>
         </>
       )}
     </div>

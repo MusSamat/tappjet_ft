@@ -25,8 +25,8 @@ export function ProfileCompletion({ user, isDriver }: { user: UserShape; isDrive
   return (
     <div className="rounded-2xl border border-accent-200 bg-accent-50 p-5">
       <div className="mb-3 flex items-center justify-between">
-        <p className="text-[14px] font-extrabold text-ink-900">{t("completion_title", { pct })}</p>
-        <span className="text-[13px] font-bold text-accent-700">{pct}%</span>
+        <p className="text-[15px] font-extrabold text-ink-900">{t("completion_title", { pct })}</p>
+        <span className="text-[14px] font-bold text-accent-700">{pct}%</span>
       </div>
       <div className="mb-4 h-2 w-full overflow-hidden rounded-full bg-accent-100">
         <div
@@ -36,7 +36,7 @@ export function ProfileCompletion({ user, isDriver }: { user: UserShape; isDrive
       </div>
       <div className="flex flex-col gap-1.5">
         {steps.map((step) => (
-          <div key={step.label} className="flex items-center gap-2 text-[13px]">
+          <div key={step.label} className="flex items-center gap-2 text-[14px]">
             <span className={step.done ? "text-brand-600" : "text-ink-300"}>
               {step.done ? "✓" : "○"}
             </span>
@@ -44,7 +44,7 @@ export function ProfileCompletion({ user, isDriver }: { user: UserShape; isDrive
               {step.label}
             </span>
             {!step.done && step.hint && (
-              <span className="rounded-full bg-accent-100 px-1.5 py-0.5 text-[10px] font-bold text-accent-700">
+              <span className="rounded-full bg-accent-100 px-1.5 py-0.5 text-[11px] font-bold text-accent-700">
                 {step.hint}
               </span>
             )}

@@ -16,7 +16,7 @@ export function ListingMetrics({ metrics, className }: ListingMetricsProps) {
   return (
     <div
       className={cn(
-        "inline-flex items-center gap-3 text-[12px] font-semibold text-ink-400",
+        "inline-flex items-center gap-3 text-[14px] font-semibold text-ink-400",
         className,
       )}
     >

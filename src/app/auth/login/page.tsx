@@ -174,21 +174,21 @@ export default function LoginPage() {
         >
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
         </button>
-        <span className="text-[15px] font-900 text-ink-900 dark:text-white">{tl("login_btn")}</span>
+        <span className="text-[16px] font-900 text-ink-900 dark:text-white">{tl("login_btn")}</span>
       </div>
 
       <div className="mx-auto flex w-full max-w-[400px] flex-1 flex-col justify-center px-6 pb-10">
         <div className="mb-7 text-center">
           <AuthLogo />
-          <h1><Wordmark className="text-[18px]" /></h1>
-          <p className="mt-1 text-[13px] font-700 text-ink-400">{tl("password_label")}</p>
+          <h1><Wordmark className="text-[20px]" /></h1>
+          <p className="mt-1 text-[15px] font-700 text-ink-400">{tl("password_label")}</p>
         </div>
 
         {/* Error banner */}
         {serverError && (
           <div className="mb-5 flex items-start gap-2.5 rounded-2xl bg-coral-50 px-4 py-3 dark:bg-coral-500/10">
             <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-coral-500" aria-hidden />
-            <p className="text-[13px] font-800 text-coral-600">{serverError}</p>
+            <p className="text-[14px] font-800 text-coral-600">{serverError}</p>
           </div>
         )}
 
@@ -198,7 +198,7 @@ export default function LoginPage() {
             <SocialButtons />
 
             {AUTH_TELEGRAM_ONLY && (
-              <p className="mt-4 text-center text-[12px] font-700 text-ink-400">
+              <p className="mt-4 text-center text-[14px] font-700 text-ink-400">
                 {tl("telegram_only_hint")}
               </p>
             )}
@@ -209,7 +209,7 @@ export default function LoginPage() {
             <>
             <div className="my-4 flex items-center gap-3">
               <span className="h-px flex-1 bg-ink-200 dark:bg-ink-700" />
-              <span className="text-[11px] font-800 text-ink-400">{tl("or_phone")}</span>
+              <span className="text-[12px] font-800 text-ink-400">{tl("or_phone")}</span>
               <span className="h-px flex-1 bg-ink-200 dark:bg-ink-700" />
             </div>
 
@@ -237,7 +237,7 @@ export default function LoginPage() {
                   onKeyDown={(e) => { if (e.key === "Enter" && canSubmitLogin) loginMutation.mutate(); }}
                   placeholder={tl("password_placeholder")}
                   className={cn(
-                    "h-12 w-full rounded-2xl border-2 bg-ink-50 px-4 pr-10 text-[15px] font-800 outline-none transition-colors dark:bg-ink-800 dark:text-white",
+                    "h-12 w-full rounded-2xl border-2 bg-ink-50 px-4 pr-10 text-[16px] font-800 outline-none transition-colors dark:bg-ink-800 dark:text-white",
                     serverError
                       ? "border-coral-300 text-coral-700"
                       : "border-ink-200 text-ink-900 focus:border-brand-500 dark:border-ink-700",
@@ -260,7 +260,7 @@ export default function LoginPage() {
               type="button"
               disabled={!canSubmitLogin || loginMutation.isPending}
               onClick={() => loginMutation.mutate()}
-              className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 text-[15px] font-900 text-accent-ink shadow-cta transition-colors hover:bg-accent-400 disabled:opacity-40"
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 text-[16px] font-900 text-accent-ink shadow-cta transition-colors hover:bg-accent-400 disabled:opacity-40"
             >
               {loginMutation.isPending ? <><Spinner size={16} />{tl("logging_in")}</> : tl("login_btn")}
             </button>
@@ -271,12 +271,12 @@ export default function LoginPage() {
                 type="button"
                 disabled={tgAutoMutation.isPending || forgotMutation.isPending}
                 onClick={handleForgot}
-                className="flex items-center gap-1.5 text-[13px] font-700 text-ink-500 hover:text-brand-600 disabled:opacity-50"
+                className="flex items-center gap-1.5 text-[15px] font-700 text-ink-500 hover:text-brand-600 disabled:opacity-50"
               >
                 {(tgAutoMutation.isPending || forgotMutation.isPending) && <Spinner size={13} />}
                 {tgAutoMutation.isPending || forgotMutation.isPending ? tl("sending") : tl("forgot_password")}
               </button>
-              <p className="text-[12px] font-700 text-ink-400">
+              <p className="text-[14px] font-700 text-ink-400">
                 {tl("no_account")}{" "}
                 <Link href="/auth/register" className="font-900 text-brand-700 dark:text-brand-300">
                   {tl("register_link")}

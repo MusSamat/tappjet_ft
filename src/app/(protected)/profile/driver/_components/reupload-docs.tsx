@@ -73,8 +73,8 @@ export function ReuploadDocs({ requestedDocs, onDone }: {
 
   return (
     <div className="mx-auto max-w-[480px] p-6 pt-12">
-      <h1 className="text-[18px] font-900 text-ink-900 dark:text-white">{t("reupload_title")}</h1>
-      <p className="mt-2 text-[13px] font-600 text-ink-500">{t("reupload_desc")}</p>
+      <h1 className="text-[20px] font-900 text-ink-900 dark:text-white">{t("reupload_title")}</h1>
+      <p className="mt-2 text-[15px] font-600 text-ink-500">{t("reupload_desc")}</p>
 
       {cameraOpen && activeDoc && (
         <CameraCapture
@@ -95,7 +95,7 @@ export function ReuploadDocs({ requestedDocs, onDone }: {
               onClick={() => pickFile(doc)}
               className="flex w-full items-center justify-between rounded-2xl bg-white p-4 text-left shadow-card disabled:opacity-60 dark:bg-ink-900"
             >
-              <span className="text-[14px] font-800 text-ink-900 dark:text-white">
+              <span className="text-[15px] font-800 text-ink-900 dark:text-white">
                 {t(`doc_${doc}_label`)}
               </span>
               {done ? (
@@ -110,7 +110,7 @@ export function ReuploadDocs({ requestedDocs, onDone }: {
         })}
       </div>
 
-      {error && <p className="mt-3 text-[12px] font-700 text-coral-500">{error}</p>}
+      {error && <p className="mt-3 text-[14px] font-700 text-coral-500">{error}</p>}
 
       {docs.every((d) => uploaded.has(d)) && (
         <Button variant="primary" size="md" className="mt-5 w-full" onClick={onDone}>

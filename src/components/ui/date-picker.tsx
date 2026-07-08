@@ -105,7 +105,7 @@ export function DatePickerModal({
   return (
     <Modal open={open} onOpenChange={onOpenChange}>
       <ModalContent aria-describedby={undefined} className="max-w-[360px] p-4">
-        <ModalTitle className="mb-2 pr-8 text-[16px] font-900 text-ink-900 dark:text-white">
+        <ModalTitle className="mb-2 pr-8 text-[17px] font-900 text-ink-900 dark:text-white">
           {title ?? t("select_date")}
         </ModalTitle>
 
@@ -120,7 +120,7 @@ export function DatePickerModal({
           >
             <ChevronLeft className="h-5 w-5" aria-hidden="true" />
           </button>
-          <span className="text-[15px] font-800 text-ink-900 dark:text-white">
+          <span className="text-[16px] font-800 text-ink-900 dark:text-white">
             {monthLabel} {view.year}
           </span>
           <button
@@ -139,7 +139,7 @@ export function DatePickerModal({
             <div
               key={d}
               className={cn(
-                "text-center text-[11px] font-700",
+                "text-center text-[13px] font-700",
                 i >= 5 ? "text-coral-400" : "text-ink-400",
               )}
             >
@@ -165,7 +165,7 @@ export function DatePickerModal({
                 disabled={disabled}
                 onClick={() => select(day)}
                 className={cn(
-                  "flex w-full flex-col items-center justify-center rounded-xl text-[14px] font-700 transition-colors",
+                  "flex w-full flex-col items-center justify-center rounded-xl text-[15px] font-700 transition-colors",
                   dayCounts ? "h-12" : "h-11",
                   disabled && "cursor-not-allowed opacity-25",
                   selected && "bg-brand-600 font-800 text-white",
@@ -204,7 +204,7 @@ export function DatePickerModal({
             <button
               type="button"
               onClick={() => { onChange(""); onOpenChange(false); }}
-              className="text-[13px] font-700 text-ink-400 transition-colors hover:text-brand-600 dark:hover:text-brand-300"
+              className="text-[15px] font-700 text-ink-400 transition-colors hover:text-brand-600 dark:hover:text-brand-300"
             >
               {t("clear")}
             </button>
@@ -287,7 +287,7 @@ export function DatePicker({
         <span
           className={cn(
             "flex-1 truncate font-semibold",
-            compact ? "text-[12px]" : "text-[14px]",
+            compact ? "text-[13px]" : "text-[15px]",
             displayStr ? "text-ink-900 dark:text-white" : "text-ink-400",
           )}
         >

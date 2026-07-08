@@ -42,8 +42,8 @@ export function LocaleSwitcher() {
           onClick={() => switchTo(locale)}
           className={
             locale === current
-              ? "rounded-lg bg-brand-50 px-3 py-1.5 text-[13px] font-bold text-brand-700 ring-1 ring-brand-300"
-              : "rounded-lg px-3 py-1.5 text-[13px] font-semibold text-ink-500 hover:bg-ink-50 dark:text-ink-400 dark:hover:bg-ink-800"
+              ? "rounded-lg bg-brand-50 px-3 py-1.5 text-[14px] font-bold text-brand-700 ring-1 ring-brand-300"
+              : "rounded-lg px-3 py-1.5 text-[15px] font-semibold text-ink-500 hover:bg-ink-50 dark:text-ink-400 dark:hover:bg-ink-800"
           }
         >
           {t(locale)}

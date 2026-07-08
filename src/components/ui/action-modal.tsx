@@ -64,10 +64,10 @@ export function ActionModal({
         >
           <Icon className="h-8 w-8" />
         </span>
-        <ModalTitle className="text-[17px] font-900 leading-snug">{title}</ModalTitle>
+        <ModalTitle className="text-[18px] font-900 leading-snug">{title}</ModalTitle>
         {children && (
           <ModalDescription asChild>
-            <div className="mx-auto mt-1.5 max-w-[260px] text-[13px] font-700 text-ink-500 dark:text-ink-400">
+            <div className="mx-auto mt-1.5 max-w-[260px] text-[15px] font-700 text-ink-500 dark:text-ink-400">
               {children}
             </div>
           </ModalDescription>

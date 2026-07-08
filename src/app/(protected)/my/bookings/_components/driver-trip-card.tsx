@@ -38,16 +38,16 @@ export function DriverTripCard({ trip, onComplete, completing, onCancel }: {
       <Link href={`/trips/${trip.id}`} className="block">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <p className="text-[16px] font-extrabold text-ink-900 dark:text-white">
+            <p className="text-[17px] font-extrabold text-ink-900 dark:text-white">
               {trip.originCity} → {trip.destinationCity}
             </p>
-            <p className="mt-0.5 text-[12px] text-ink-500">
+            <p className="mt-0.5 text-[13px] text-ink-500">
               {fmtDate(trip.departureAt)} · {trip.pricePerSeat} {t("som")}
             </p>
             <RouteStops pickup={trip.pickupCities} dropoff={trip.dropoffCities} className="mt-1.5" />
           </div>
           <div className="flex items-center gap-2">
-            <span className={cn("rounded-full px-2.5 py-1 text-[11px] font-bold", statusClass)}>
+            <span className={cn("rounded-full px-2.5 py-1 text-[12px] font-bold", statusClass)}>
               {statusLabel}
             </span>
             <ArrowRight className="h-4 w-4 text-ink-400" />
@@ -55,8 +55,8 @@ export function DriverTripCard({ trip, onComplete, completing, onCancel }: {
         </div>
         <div className="mt-3 flex items-end justify-between">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{t("seats_free_label")}</p>
-            <p className="text-[14px] font-bold text-ink-900 dark:text-white">{trip.seatsAvailable}/{trip.seatsTotal}</p>
+            <p className="text-[11px] font-bold uppercase tracking-widest text-ink-400">{t("seats_free_label")}</p>
+            <p className="text-[15px] font-bold text-ink-900 dark:text-white">{trip.seatsAvailable}/{trip.seatsTotal}</p>
           </div>
           {trip.metrics && <ListingMetrics metrics={trip.metrics} />}
         </div>
@@ -68,7 +68,7 @@ export function DriverTripCard({ trip, onComplete, completing, onCancel }: {
               type="button"
               onClick={onComplete}
               disabled={completing}
-              className="flex items-center gap-1.5 rounded-2xl bg-brand-600 px-4 py-2 text-[13px] font-bold text-white hover:bg-brand-700 disabled:opacity-50"
+              className="flex items-center gap-1.5 rounded-2xl bg-brand-600 px-4 py-2 text-[14px] font-bold text-white hover:bg-brand-700 disabled:opacity-50"
             >
               <CheckCircle className="h-4 w-4" />
               {completing ? t("completing") : t("complete_trip_btn")}
@@ -78,7 +78,7 @@ export function DriverTripCard({ trip, onComplete, completing, onCancel }: {
             <button
               type="button"
               onClick={onCancel}
-              className="flex items-center gap-1.5 rounded-2xl border border-ink-200 px-4 py-2 text-[13px] font-bold text-ink-600 hover:border-coral-200 hover:text-coral-600"
+              className="flex items-center gap-1.5 rounded-2xl border border-ink-200 px-4 py-2 text-[14px] font-bold text-ink-600 hover:border-coral-200 hover:text-coral-600"
             >
               <X className="h-4 w-4" />
               {t("cancel_trip_btn")}

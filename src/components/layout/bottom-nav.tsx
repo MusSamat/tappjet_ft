@@ -52,7 +52,7 @@ function NavTab({
       />
       <span
         className={cn(
-          "text-[11px]",
+          "text-[12px]",
           active ? cn("font-900", textOn) : "font-700 text-ink-500",
         )}
       >
@@ -95,9 +95,10 @@ export function BottomNav() {
 
   const isThread = pathname.startsWith("/my/bookings/") && pathname.endsWith("/chat");
   const isChat = isThread || startsWith("/chat");
-  const feedHref = isDriver ? "/requests" : "/trips";
+  const feedHref = "/trips";
   const feedActive = startsWith("/trips") || startsWith("/requests");
-  const createHref = isDriver ? "/trips/create" : "/requests/create";
+  // One create route — the intent (drive / need a ride) is chosen inside the form.
+  const createHref = "/trips/create";
 
   // On-screen keyboard open → hide completely so it never covers the
   // focused input (chat, OTP) or rides on top of the keyboard.
@@ -149,7 +150,7 @@ export function BottomNav() {
               <span className="flex h-[58px] w-[58px] items-center justify-center rounded-full bg-gradient-to-br from-accent-400 to-accent-600 text-accent-ink shadow-cta ring-4 ring-white dark:ring-ink-900">
                 <Plus className="h-7 w-7" strokeWidth={2.6} aria-hidden="true" />
               </span>
-              <span className="text-[11px] font-900 text-accent-600">{t("publish")}</span>
+              <span className="text-[12px] font-900 text-accent-600">{t("publish")}</span>
             </Link>
 
             <NavTab

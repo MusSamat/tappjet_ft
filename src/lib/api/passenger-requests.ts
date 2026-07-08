@@ -65,6 +65,11 @@ export async function getRequestsCalendar(from: string, to: string): Promise<Rec
   return Object.fromEntries(data.data.map((d) => [d.date, d.count]));
 }
 
+export async function getPassengerRequest(id: string): Promise<PassengerRequest> {
+  const { data } = await api.get<PassengerRequest>(`/passenger-requests/${id}`);
+  return data;
+}
+
 export async function listMyPassengerRequests(): Promise<PassengerRequestsResult> {
   const { data } = await api.get<PassengerRequestsResult>("/passenger-requests/my");
   return data;

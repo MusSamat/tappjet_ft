@@ -131,16 +131,16 @@ export function CarPhotoUploader() {
           onChange={handleFile}
         />
         {isSuccess && !isPending && (
-          <p className="text-[12px] font-semibold text-brand-700">{t("photo_updated")}</p>
+          <p className="text-[14px] font-semibold text-brand-700">{t("photo_updated")}</p>
         )}
         {error && (
-          <p className="text-[12px] font-semibold text-coral-600">{t("photo_upload_error")}</p>
+          <p className="text-[14px] font-semibold text-coral-600">{t("photo_upload_error")}</p>
         )}
       </div>
 
       {/* Read-only car info from tech passport */}
       <div className="flex flex-col gap-2">
-        <p className="text-[12px] font-bold uppercase tracking-wide text-ink-400">{t("tech_passport_data")}</p>
+        <p className="text-[13px] font-bold uppercase tracking-wide text-ink-400">{t("tech_passport_data")}</p>
         <div className="grid grid-cols-2 gap-x-6 gap-y-1.5">
           {[
             { label: t("car_make"), value: car.make },
@@ -151,12 +151,12 @@ export function CarPhotoUploader() {
             { label: t("car_seats"), value: String(car.seats) },
           ].map(({ label, value }) => (
             <div key={label}>
-              <p className="text-[10px] font-semibold uppercase tracking-wide text-ink-400">{label}</p>
-              <p className="text-[14px] font-bold text-ink-900 dark:text-white">{value}</p>
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-400">{label}</p>
+              <p className="text-[15px] font-bold text-ink-900 dark:text-white">{value}</p>
             </div>
           ))}
         </div>
-        <p className="mt-1 text-[12px] font-semibold text-ink-400">
+        <p className="mt-1 text-[14px] font-semibold text-ink-400">
           {t("car_data_notice")}
         </p>
       </div>

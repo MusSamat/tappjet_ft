@@ -44,7 +44,7 @@ export function PassengerTab({
   const t = useTranslations("bookings");
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3.5">
       {isLoading ? (
         <CardSkeletonList variant="booking" count={4} />
       ) : (
@@ -61,12 +61,12 @@ export function PassengerTab({
             <div className="rounded-2xl border border-ink-100 bg-white p-8 text-center dark:bg-ink-900 dark:border-ink-800">
               {passengerSubTab === "active" ? (
                 <>
-                  <p className="text-[17px] font-bold text-ink-900 dark:text-white">{t("no_active_trips")}</p>
-                  <p className="mt-2 text-[13px] text-ink-500">{t("no_active_hint")}</p>
+                  <p className="text-[18px] font-bold text-ink-900 dark:text-white">{t("no_active_trips")}</p>
+                  <p className="mt-2 text-[16px] font-600 text-ink-500">{t("no_active_hint")}</p>
                   <Link href="/trips">
                     <button
                       type="button"
-                      className="mt-4 rounded-2xl bg-brand-600 px-6 py-2.5 text-[13px] font-bold text-white hover:bg-brand-700"
+                      className="mt-4 rounded-2xl bg-brand-600 px-6 py-2.5 text-[14px] font-bold text-white hover:bg-brand-700"
                     >
                       {t("find_trip_btn")}
                     </button>
@@ -74,8 +74,8 @@ export function PassengerTab({
                 </>
               ) : (
                 <>
-                  <p className="text-[17px] font-bold text-ink-900 dark:text-white">{t("empty_history")}</p>
-                  <p className="mt-2 text-[13px] text-ink-500">{t("history_hint")}</p>
+                  <p className="text-[18px] font-bold text-ink-900 dark:text-white">{t("empty_history")}</p>
+                  <p className="mt-2 text-[16px] font-600 text-ink-500">{t("history_hint")}</p>
                 </>
               )}
             </div>

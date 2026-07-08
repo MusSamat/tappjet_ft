@@ -148,7 +148,7 @@ export default function NotificationsPage() {
       type="button"
       onClick={() => markAllRead()}
       disabled={markingAll}
-      className="flex items-center gap-1.5 text-[12px] font-800 text-brand-600 hover:text-brand-700 disabled:opacity-50 dark:text-brand-300"
+      className="flex items-center gap-1.5 text-[13px] font-800 text-brand-600 hover:text-brand-700 disabled:opacity-50 dark:text-brand-300"
     >
       <CheckCheck className="h-4 w-4" aria-hidden="true" />
       {t("mark_all_read_btn")}
@@ -175,8 +175,8 @@ export default function NotificationsPage() {
         <QueryError error={query.error} onRetry={() => void query.refetch()} />
       ) : notifications.length === 0 ? (
         <div className="rounded-3xl bg-white p-10 text-center shadow-card dark:bg-ink-900">
-          <p className="text-[17px] font-900 text-ink-900 dark:text-white">{t("empty_title")}</p>
-          <p className="mt-2 text-[13px] font-700 text-ink-500">{t("empty_hint")}</p>
+          <p className="text-[18px] font-900 text-ink-900 dark:text-white">{t("empty_title")}</p>
+          <p className="mt-2 text-[15px] font-700 text-ink-500">{t("empty_hint")}</p>
         </div>
       ) : (
         <>
@@ -202,13 +202,13 @@ export default function NotificationsPage() {
   const settingsCard = (
     <div className="rounded-3xl bg-white p-5 shadow-card dark:bg-ink-900">
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-[15px] font-900 text-ink-900 dark:text-white">{t("settings_title")}</h2>
-        {prefsLoaded && <span className="text-[11px] font-700 text-ink-400">{t("settings_saved")}</span>}
+        <h2 className="text-[16px] font-900 text-ink-900 dark:text-white">{t("settings_title")}</h2>
+        {prefsLoaded && <span className="text-[13px] font-700 text-ink-400">{t("settings_saved")}</span>}
       </div>
       <div className="flex flex-col gap-3.5">
         {NOTIF_SETTINGS.map(({ key, label }) => (
           <div key={key} className="flex items-center justify-between">
-            <span className="text-[14px] font-800 text-ink-900 dark:text-ink-100">{label}</span>
+            <span className="text-[15px] font-800 text-ink-900 dark:text-ink-100">{label}</span>
             <Switch checked={prefs[key] ?? true} onCheckedChange={() => togglePref(key)} aria-label={label} />
           </div>
         ))}
@@ -221,7 +221,7 @@ export default function NotificationsPage() {
       {/* Mobile */}
       <div className="mx-auto w-full max-w-[760px] p-3.5 pt-11 md:p-6 lg:hidden">
         <div className="mb-4 flex items-center justify-between">
-          <h1 className="text-[18px] font-900 text-ink-900 dark:text-white">{t("title")}</h1>
+          <h1 className="text-[20px] font-900 text-ink-900 dark:text-white">{t("title")}</h1>
           {markAllBtn}
         </div>
         {list}
@@ -233,7 +233,7 @@ export default function NotificationsPage() {
         <aside className="space-y-4">
           <div>
             <h1 className="text-[26px] font-900 text-ink-900 dark:text-white">{t("title")}</h1>
-            <p className="mt-1 text-[13px] font-700 text-ink-500">{t("aside_sub")}</p>
+            <p className="mt-1 text-[15px] font-700 text-ink-500">{t("aside_sub")}</p>
           </div>
           <div className="space-y-1 rounded-3xl bg-white p-2 shadow-soft dark:bg-ink-900">
             {FILTERS.map(({ key, label, icon: Icon }) => (
@@ -242,7 +242,7 @@ export default function NotificationsPage() {
                 type="button"
                 onClick={() => setFilter(key)}
                 className={cn(
-                  "flex w-full items-center gap-2.5 rounded-2xl px-4 py-2.5 text-[13px] font-800 transition-colors",
+                  "flex w-full items-center gap-2.5 rounded-2xl px-4 py-2.5 text-[14px] font-800 transition-colors",
                   filter === key
                     ? "bg-brand-50 text-brand-700 dark:bg-brand-500/15 dark:text-brand-300"
                     : "text-ink-600 hover:bg-ink-100 dark:text-ink-300 dark:hover:bg-ink-800",
@@ -251,7 +251,7 @@ export default function NotificationsPage() {
                 <Icon className="h-4 w-4" aria-hidden="true" />
                 <span className="flex-1 text-left">{label}</span>
                 {key === "all" && unreadCount > 0 && (
-                  <span className="rounded-full bg-coral-500 px-1.5 text-[10px] font-900 text-white">{unreadCount}</span>
+                  <span className="rounded-full bg-coral-500 px-1.5 text-[11px] font-900 text-white">{unreadCount}</span>
                 )}
               </button>
             ))}
@@ -261,7 +261,7 @@ export default function NotificationsPage() {
               type="button"
               onClick={() => markAllRead()}
               disabled={markingAll}
-              className="w-full rounded-2xl bg-white py-3 text-[13px] font-900 text-brand-600 shadow-soft disabled:opacity-50 dark:bg-ink-900 dark:text-brand-300"
+              className="w-full rounded-2xl bg-white py-3 text-[14px] font-900 text-brand-600 shadow-soft disabled:opacity-50 dark:bg-ink-900 dark:text-brand-300"
             >
               {t("mark_all_read_btn")}
             </button>

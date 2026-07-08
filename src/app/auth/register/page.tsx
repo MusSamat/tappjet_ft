@@ -72,10 +72,10 @@ export default function RegisterPage() {
           <div className="mb-6 text-center">
             <LogoMark className="mx-auto mb-4 h-16 w-16 rounded-3xl shadow-brandcta" />
             <h1 className="text-[22px] font-900 text-ink-900 dark:text-white">{t("title")}</h1>
-            <p className="mt-1 text-[13px] font-600 text-ink-400">{t("telegram_only_hint")}</p>
+            <p className="mt-1 text-[15px] font-600 text-ink-400">{t("telegram_only_hint")}</p>
           </div>
           <SocialButtons />
-          <p className="mt-5 text-center text-[12px] font-700 text-ink-400">
+          <p className="mt-5 text-center text-[14px] font-700 text-ink-400">
             {t("have_account")}{" "}
             <Link href="/auth/login" className="font-900 text-brand-700 dark:text-brand-300">
               {t("sign_in")}
@@ -102,7 +102,7 @@ export default function RegisterPage() {
         <div className="mb-5 text-center">
           <LogoMark className="mx-auto mb-4 h-16 w-16 rounded-3xl shadow-brandcta" />
           <h1 className="text-[22px] font-900 text-ink-900 dark:text-white">{t("title")}</h1>
-          <p className="mt-1 text-[13px] font-600 text-ink-400">
+          <p className="mt-1 text-[15px] font-600 text-ink-400">
             {t("have_account")}{" "}
             <Link href="/auth/login" className="font-800 text-brand-700 hover:text-brand-800 dark:text-brand-300">
               {t("sign_in")}

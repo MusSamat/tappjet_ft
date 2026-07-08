@@ -71,8 +71,8 @@ function Toast({ item, onDismiss }: { item: ToastItem; onDismiss: () => void }) 
     >
       <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
       <div className="min-w-0 flex-1">
-        <p className="text-[13px] font-800">{item.title}</p>
-        {item.body && <p className="mt-0.5 text-[12px] font-600 text-white/80">{item.body}</p>}
+        <p className="text-[14px] font-800">{item.title}</p>
+        {item.body && <p className="mt-0.5 text-[14px] font-600 text-white/80">{item.body}</p>}
       </div>
       <button
         type="button"

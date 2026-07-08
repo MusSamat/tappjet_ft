@@ -24,7 +24,7 @@ export function RouteStops({ pickup, dropoff, className }: Props) {
       {hasPickup && (
         <span
           title={t("boarding_en_route")}
-          className="inline-flex min-w-0 max-w-full items-center gap-1 rounded-md bg-brand-50 px-1.5 py-0.5 text-[10px] font-bold text-brand-700"
+          className="inline-flex min-w-0 max-w-full items-center gap-1 rounded-md bg-brand-50 px-1.5 py-0.5 text-[11px] font-bold text-brand-700"
         >
           <ArrowDownToLine className="h-2.5 w-2.5 flex-shrink-0" aria-hidden="true" />
           <span className="opacity-60">{t("boarding")}</span>
@@ -34,7 +34,7 @@ export function RouteStops({ pickup, dropoff, className }: Props) {
       {hasDropoff && (
         <span
           title={t("alighting_en_route")}
-          className="inline-flex min-w-0 max-w-full items-center gap-1 rounded-md bg-accent-50 px-1.5 py-0.5 text-[10px] font-bold text-accent-700"
+          className="inline-flex min-w-0 max-w-full items-center gap-1 rounded-md bg-accent-50 px-1.5 py-0.5 text-[11px] font-bold text-accent-700"
         >
           <ArrowUpFromLine className="h-2.5 w-2.5 flex-shrink-0" aria-hidden="true" />
           <span className="opacity-60">{t("alighting")}</span>

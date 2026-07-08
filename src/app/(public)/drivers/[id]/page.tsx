@@ -55,7 +55,7 @@ function StatCard({ icon: Icon, label, value }: { icon: React.ElementType; label
     <div className="flex flex-col items-center gap-1 rounded-3xl border border-ink-100 bg-white p-4 text-center shadow-card dark:border-ink-800 dark:bg-ink-900">
       <Icon className="h-5 w-5 text-brand-500" aria-hidden="true" />
       <span className="font-disp text-[22px] font-900 leading-none text-ink-900 dark:text-white">{value}</span>
-      <span className="text-[11px] font-700 text-ink-500 dark:text-ink-400">{label}</span>
+      <span className="text-[13px] font-700 text-ink-500 dark:text-ink-400">{label}</span>
     </div>
   );
 }
@@ -84,7 +84,7 @@ export default async function UserProfilePage({ params }: Props) {
             <h1 className="font-disp text-[22px] font-900 text-ink-900 dark:text-white">{user.name}</h1>
             {isDriver && <VerifiedBadge />}
             {loyaltyTier && (
-              <span className={`flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-[11px] font-800 ${TIER_COLORS[loyaltyTier] ?? ""}`}>
+              <span className={`flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-[12px] font-800 ${TIER_COLORS[loyaltyTier] ?? ""}`}>
                 <Award className="h-3 w-3" aria-hidden="true" />
                 {loyaltyTier}
               </span>
@@ -95,20 +95,20 @@ export default async function UserProfilePage({ params }: Props) {
             {rating !== null && ratingCount >= 3 ? (
               <RatingStars value={rating} size={15} showValue />
             ) : (
-              <span className="text-[13px] text-ink-500 dark:text-ink-400">
+              <span className="text-[14px] text-ink-500 dark:text-ink-400">
                 {t("new_role", { role: isDriver ? t("driver_role") : t("passenger_role") })}
               </span>
             )}
             {ratingCount > 0 && (
-              <span className="text-[12px] text-ink-500 dark:text-ink-400">· {ratingCount} {t("ratings_count")}</span>
+              <span className="text-[13px] text-ink-500 dark:text-ink-400">· {ratingCount} {t("ratings_count")}</span>
             )}
             {joinYear && (
-              <span className="text-[12px] text-ink-400">· {t("since", { year: joinYear })}</span>
+              <span className="text-[13px] text-ink-400">· {t("since", { year: joinYear })}</span>
             )}
           </div>
 
           <div className="mt-2 flex flex-wrap justify-center gap-1.5 sm:justify-start">
-            <span className={`rounded-full border px-2.5 py-0.5 text-[11px] font-700 ${isDriver ? "border-brand-200 bg-brand-50 text-brand-700 dark:border-brand-500/30 dark:bg-brand-500/15 dark:text-brand-300" : "border-ink-200 bg-ink-50 text-ink-600 dark:border-ink-700 dark:bg-ink-800 dark:text-ink-300"}`}>
+            <span className={`rounded-full border px-2.5 py-0.5 text-[12px] font-700 ${isDriver ? "border-brand-200 bg-brand-50 text-brand-700 dark:border-brand-500/30 dark:bg-brand-500/15 dark:text-brand-300" : "border-ink-200 bg-ink-50 text-ink-600 dark:border-ink-700 dark:bg-ink-800 dark:text-ink-300"}`}>
               {isDriver ? `🚗 ${t("driver_badge")}` : `👤 ${t("passenger_badge")}`}
             </span>
           </div>
@@ -138,43 +138,43 @@ export default async function UserProfilePage({ params }: Props) {
           )}
 
           <div className="p-5">
-            <h2 className="mb-4 flex items-center gap-2 font-disp text-[15px] font-900 text-ink-900 dark:text-white">
+            <h2 className="mb-4 flex items-center gap-2 font-disp text-[16px] font-900 text-ink-900 dark:text-white">
               <Car className="h-4 w-4 text-brand-600" aria-hidden="true" />
               {t("car_section")}
             </h2>
 
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
               <div>
-                <p className="text-[10px] font-800 uppercase tracking-widest text-ink-400">{t("car_make_model")}</p>
-                <p className="mt-0.5 text-[14px] font-800 text-ink-900 dark:text-white">{car.make} {car.model}</p>
+                <p className="text-[11px] font-800 uppercase tracking-widest text-ink-400">{t("car_make_model")}</p>
+                <p className="mt-0.5 text-[15px] font-800 text-ink-900 dark:text-white">{car.make} {car.model}</p>
               </div>
               <div>
                 <div className="flex items-center gap-1">
                   <Calendar className="h-3 w-3 text-ink-400" aria-hidden="true" />
-                  <p className="text-[10px] font-800 uppercase tracking-widest text-ink-400">{t("car_year")}</p>
+                  <p className="text-[11px] font-800 uppercase tracking-widest text-ink-400">{t("car_year")}</p>
                 </div>
-                <p className="mt-0.5 text-[14px] font-800 text-ink-900 dark:text-white">{car.year}</p>
+                <p className="mt-0.5 text-[15px] font-800 text-ink-900 dark:text-white">{car.year}</p>
               </div>
               <div>
                 <div className="flex items-center gap-1">
                   <Palette className="h-3 w-3 text-ink-400" aria-hidden="true" />
-                  <p className="text-[10px] font-800 uppercase tracking-widest text-ink-400">{t("car_color")}</p>
+                  <p className="text-[11px] font-800 uppercase tracking-widest text-ink-400">{t("car_color")}</p>
                 </div>
-                <p className="mt-0.5 text-[14px] font-800 text-ink-900 dark:text-white">{car.color}</p>
+                <p className="mt-0.5 text-[15px] font-800 text-ink-900 dark:text-white">{car.color}</p>
               </div>
               <div>
                 <div className="flex items-center gap-1">
                   <Hash className="h-3 w-3 text-ink-400" aria-hidden="true" />
-                  <p className="text-[10px] font-800 uppercase tracking-widest text-ink-400">{t("car_plate")}</p>
+                  <p className="text-[11px] font-800 uppercase tracking-widest text-ink-400">{t("car_plate")}</p>
                 </div>
-                <p className="mt-0.5 font-mono text-[15px] font-900 tracking-wider text-brand-700 dark:text-brand-300">{car.plate}</p>
+                <p className="mt-0.5 font-mono text-[16px] font-900 tracking-wider text-brand-700 dark:text-brand-300">{car.plate}</p>
               </div>
               <div>
                 <div className="flex items-center gap-1">
                   <Users className="h-3 w-3 text-ink-400" aria-hidden="true" />
-                  <p className="text-[10px] font-800 uppercase tracking-widest text-ink-400">{t("car_seats")}</p>
+                  <p className="text-[11px] font-800 uppercase tracking-widest text-ink-400">{t("car_seats")}</p>
                 </div>
-                <p className="mt-0.5 text-[14px] font-800 text-ink-900 dark:text-white">{car.seats}</p>
+                <p className="mt-0.5 text-[15px] font-800 text-ink-900 dark:text-white">{car.seats}</p>
               </div>
             </div>
           </div>
@@ -183,12 +183,12 @@ export default async function UserProfilePage({ params }: Props) {
 
       {/* Reviews */}
       <section>
-        <h2 className="mb-3 font-disp text-[17px] font-900 text-ink-900 dark:text-white">
+        <h2 className="mb-3 font-disp text-[18px] font-900 text-ink-900 dark:text-white">
           {t("reviews_title")} {ratingCount > 0 && <span className="text-ink-400">({ratingCount})</span>}
         </h2>
         {ratings.length === 0 ? (
           <div className="rounded-3xl border border-ink-100 bg-white p-8 text-center shadow-card dark:border-ink-800 dark:bg-ink-900">
-            <p className="text-[14px] font-700 text-ink-500 dark:text-ink-400">{t("no_reviews")}</p>
+            <p className="text-[15px] font-700 text-ink-500 dark:text-ink-400">{t("no_reviews")}</p>
           </div>
         ) : (
           <ul className="flex flex-col gap-3">
@@ -198,17 +198,17 @@ export default async function UserProfilePage({ params }: Props) {
                   <DriverAvatar name={r.rater?.name ?? "?"} src={r.rater?.avatarUrl ?? null} size="sm" />
                   <div className="flex-1">
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-[14px] font-800 text-ink-900 dark:text-white">{r.rater?.name}</span>
-                      <span className="inline-flex items-center gap-1 text-[12px] font-800 text-accent-600 dark:text-accent-300">
+                      <span className="text-[15px] font-800 text-ink-900 dark:text-white">{r.rater?.name}</span>
+                      <span className="inline-flex items-center gap-1 text-[13px] font-800 text-accent-600 dark:text-accent-300">
                         <Star className="h-3.5 w-3.5 fill-accent-500 stroke-accent-500" aria-hidden="true" />
                         {r.score}
                       </span>
                     </div>
-                    {r.comment && <p className="mt-1 text-[13px] leading-relaxed text-ink-700 dark:text-ink-300">{r.comment}</p>}
+                    {r.comment && <p className="mt-1 text-[14px] leading-relaxed text-ink-700 dark:text-ink-300">{r.comment}</p>}
                     {r.tags && r.tags.length > 0 && (
                       <ul className="mt-2 flex flex-wrap gap-1.5">
                         {r.tags.map((tag) => (
-                          <li key={tag} className="rounded-full bg-brand-50 px-2.5 py-0.5 text-[11px] font-700 text-brand-800 dark:bg-brand-500/15 dark:text-brand-300">
+                          <li key={tag} className="rounded-full bg-brand-50 px-2.5 py-0.5 text-[13px] font-700 text-brand-800 dark:bg-brand-500/15 dark:text-brand-300">
                             {tag}
                           </li>
                         ))}

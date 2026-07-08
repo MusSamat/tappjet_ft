@@ -21,9 +21,9 @@ export function SeatsStepper({ value, min = 1, max = 8, label, hint, counterText
   return (
     <div className="flex items-center justify-between rounded-2xl bg-white p-4 shadow-xs ring-1 ring-ink-100 dark:bg-ink-900 dark:ring-ink-800">
       <div className="flex flex-col gap-1.5">
-        <span className="text-[14px] font-900 text-ink-900 dark:text-white">{label}</span>
+        <span className="text-[15px] font-900 text-ink-900 dark:text-white">{label}</span>
         <SeatMeter free={value} total={Math.max(value, max)} size="sm" />
-        {hint && <span className="text-[11px] font-700 text-ink-500 dark:text-ink-400">{hint}</span>}
+        {hint && <span className="text-[13px] font-700 text-ink-500 dark:text-ink-400">{hint}</span>}
       </div>
       <div className="flex items-center gap-3">
         <button
@@ -31,7 +31,7 @@ export function SeatsStepper({ value, min = 1, max = 8, label, hint, counterText
           onClick={() => onChange(Math.max(min, value - 1))}
           disabled={value <= min}
           aria-label="−"
-          className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-ink-200 text-[18px] font-900 text-ink-600 disabled:opacity-40 dark:border-ink-700 dark:text-ink-300"
+          className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-ink-200 text-[20px] font-900 text-ink-600 disabled:opacity-40 dark:border-ink-700 dark:text-ink-300"
         >
           −
         </button>
@@ -41,7 +41,7 @@ export function SeatsStepper({ value, min = 1, max = 8, label, hint, counterText
           onClick={() => onChange(Math.min(max, value + 1))}
           disabled={value >= max}
           aria-label="+"
-          className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-ink-200 text-[18px] font-900 text-ink-600 disabled:opacity-40 dark:border-ink-700 dark:text-ink-300"
+          className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-ink-200 text-[20px] font-900 text-ink-600 disabled:opacity-40 dark:border-ink-700 dark:text-ink-300"
         >
           +
         </button>

@@ -63,7 +63,7 @@ export function PhoneStep({ phone, onPhone, onNext }: Props) {
         <div className="flex flex-col gap-3 rounded-2xl bg-brand-50 p-4 dark:bg-ink-900">
           <div className="flex items-start gap-2.5">
             <UserCheck className="mt-0.5 h-5 w-5 shrink-0 text-brand-600 dark:text-brand-300" />
-            <p className="text-[15px] text-ink-900 dark:text-white">{t("already_registered")}</p>
+            <p className="text-[16px] text-ink-900 dark:text-white">{t("already_registered")}</p>
           </div>
           <Button
             type="button"

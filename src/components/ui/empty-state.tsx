@@ -53,15 +53,15 @@ export function EmptyState({ icon, iconTone = "brand", title, description, actio
       >
         <Glyph className="h-8 w-8" aria-hidden="true" />
       </div>
-      <p className="text-[15px] font-900 text-ink-900 dark:text-white">{title}</p>
-      {description ? <p className="text-[12px] font-700 text-ink-400">{description}</p> : null}
+      <p className="text-[18px] font-900 text-ink-900 dark:text-white">{title}</p>
+      {description ? <p className="text-[15px] font-700 leading-relaxed text-ink-500 dark:text-ink-400">{description}</p> : null}
       {action ? <EmptyStateCta action={action} /> : null}
     </div>
   );
 }
 
 const CTA_CLASS =
-  "mt-1 inline-flex h-11 items-center justify-center gap-1.5 rounded-2xl bg-brand-600 px-5 text-[13px] font-900 text-white shadow-brandcta transition-colors hover:bg-brand-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2";
+  "mt-1 inline-flex h-11 items-center justify-center gap-1.5 rounded-2xl bg-brand-600 px-5 text-[14px] font-900 text-white shadow-brandcta transition-colors hover:bg-brand-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2";
 
 function EmptyStateCta({ action }: { action: EmptyStateAction }) {
   if (action.href) {

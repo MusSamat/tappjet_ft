@@ -64,7 +64,7 @@ export function StatusBadge({ status, label, className }: StatusBadgeProps) {
   return (
     <span
       className={cn(
-        "inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-[10px] font-900",
+        "inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-[11px] font-900",
         known ? STYLE[status as StatusBadgeStatus] : INK_SOFT,
         className,
       )}

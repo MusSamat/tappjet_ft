@@ -44,16 +44,16 @@ export function PasswordStep({ onDone, onSkip, onError }: Props) {
     >
       <div className="flex items-start gap-3 rounded-2xl bg-sky-100 p-3 text-sky-600">
         <Info className="h-5 w-5 shrink-0" aria-hidden="true" />
-        <p className="text-[12px] font-800">{t("password_info_desc")}</p>
+        <p className="text-[13px] font-800">{t("password_info_desc")}</p>
       </div>
 
       <div className="space-y-1.5">
-        <label htmlFor="password" className="text-[11px] font-900 uppercase tracking-wider text-ink-400">
+        <label htmlFor="password" className="text-[12px] font-900 uppercase tracking-wider text-ink-400">
           {t("password_label")}
         </label>
         <PasswordInput
           id="password"
-          className="rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 py-3 pr-10 text-[15px] font-800 dark:bg-ink-800 dark:border-ink-700"
+          className="rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 py-3 pr-10 text-[16px] font-800 dark:bg-ink-800 dark:border-ink-700"
           value={password}
           onChange={(e) => setPasswordValue(e.target.value)}
           placeholder={t("password_placeholder")}
@@ -64,12 +64,12 @@ export function PasswordStep({ onDone, onSkip, onError }: Props) {
       </div>
 
       <div className="space-y-1.5">
-        <label htmlFor="confirm" className="text-[11px] font-900 uppercase tracking-wider text-ink-400">
+        <label htmlFor="confirm" className="text-[12px] font-900 uppercase tracking-wider text-ink-400">
           {t("confirm_password_label")}
         </label>
         <PasswordInput
           id="confirm"
-          className="rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 py-3 text-[15px] font-800 dark:bg-ink-800 dark:border-ink-700"
+          className="rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 py-3 text-[16px] font-800 dark:bg-ink-800 dark:border-ink-700"
           value={confirm}
           onChange={(e) => setConfirm(e.target.value)}
           placeholder={t("confirm_password_placeholder")}
@@ -84,12 +84,12 @@ export function PasswordStep({ onDone, onSkip, onError }: Props) {
           type="submit"
           variant="submit"
           size="lg"
-          className="text-[15px]"
+          className="text-[16px]"
           disabled={mutation.isPending || !canSubmit}
         >
           {mutation.isPending ? t("saving") : t("done")}
         </Button>
-        <Button type="button" variant="ghost" size="lg" className="text-[13px] font-800 text-ink-400" onClick={onSkip}>
+        <Button type="button" variant="ghost" size="lg" className="text-[14px] font-800 text-ink-400" onClick={onSkip}>
           {t("skip")}
         </Button>
       </div>

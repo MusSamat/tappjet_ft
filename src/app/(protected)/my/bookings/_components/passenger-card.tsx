@@ -41,7 +41,7 @@ export function PassengerCard({ booking, pendingRating, onRate, onCancel }: {
   const status = booking.status as string;
 
   return (
-    <div className="rounded-2xl border border-ink-100 bg-white p-5 transition-shadow hover:shadow-md dark:bg-ink-900 dark:border-ink-800">
+    <div className="rounded-3xl bg-white p-4 shadow-card ring-1 ring-ink-100 transition hover:-translate-y-0.5 hover:shadow-lift dark:bg-ink-900 dark:ring-ink-800">
       <Link href={tripId ? `/trips/${tripId}` : "#"} className="block">
         <div className="flex items-start justify-between gap-3">
           <div className="flex min-w-0 flex-1 items-center gap-3">
@@ -51,10 +51,10 @@ export function PassengerCard({ booking, pendingRating, onRate, onCancel }: {
               size="md"
             />
             <div className="min-w-0">
-              <p className="truncate text-[15px] font-extrabold text-ink-900 dark:text-white">
+              <p className="truncate text-[17px] font-900 text-ink-900 dark:text-white">
                 {trip?.originCity} → {trip?.destinationCity}
               </p>
-              <p className="text-[12px] text-ink-500">
+              <p className="mt-0.5 text-[14px] font-600 text-ink-500 dark:text-ink-400">
                 {trip?.driver?.name ?? t("driver_fallback")} · {fmtDate(trip?.departureAt)}
               </p>
             </div>
@@ -67,12 +67,12 @@ export function PassengerCard({ booking, pendingRating, onRate, onCancel }: {
 
         <div className="mt-3 flex gap-5">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{t("seats_label")}</p>
-            <p className="text-[13px] font-bold text-ink-900 dark:text-white">{booking.seatsCount}</p>
+            <p className="text-[11px] font-bold uppercase tracking-widest text-ink-400">{t("seats_label")}</p>
+            <p className="text-[16px] font-900 text-ink-900 dark:text-white">{booking.seatsCount}</p>
           </div>
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{t("sum_label")}</p>
-            <p className="text-[13px] font-bold text-brand-700">
+            <p className="text-[11px] font-bold uppercase tracking-widest text-ink-400">{t("sum_label")}</p>
+            <p className="text-[16px] font-900 text-brand-700 dark:text-brand-300">
               {booking.totalPrice ?? "—"} {t("som")}
             </p>
           </div>
@@ -88,7 +88,7 @@ export function PassengerCard({ booking, pendingRating, onRate, onCancel }: {
             <Link href={`/my/bookings/${booking.id}/chat`}>
               <button
                 type="button"
-                className="flex items-center gap-1.5 rounded-2xl border border-brand-200 bg-brand-50 px-4 py-2 text-[13px] font-bold text-brand-700 hover:bg-brand-100"
+                className="flex items-center gap-1.5 rounded-2xl border border-brand-200 bg-brand-50 px-4 py-2 text-[14px] font-bold text-brand-700 hover:bg-brand-100"
               >
                 <MessageCircle className="h-4 w-4" />
                 {t("chat_btn")}
@@ -99,7 +99,7 @@ export function PassengerCard({ booking, pendingRating, onRate, onCancel }: {
             <button
               type="button"
               onClick={onRate}
-              className="flex items-center gap-1.5 rounded-2xl bg-accent-500 px-4 py-2 text-[13px] font-bold text-[#4A2C00] hover:bg-accent-600"
+              className="flex items-center gap-1.5 rounded-2xl bg-accent-500 px-4 py-2 text-[14px] font-bold text-[#4A2C00] hover:bg-accent-600"
             >
               <Star className="h-4 w-4" />
               {t("rate_btn")}
@@ -109,7 +109,7 @@ export function PassengerCard({ booking, pendingRating, onRate, onCancel }: {
             <button
               type="button"
               onClick={onCancel}
-              className="flex items-center gap-1.5 rounded-2xl border border-ink-200 px-4 py-2 text-[13px] font-bold text-ink-600 hover:border-coral-200 hover:text-coral-600"
+              className="flex items-center gap-1.5 rounded-2xl border border-ink-200 px-4 py-2 text-[14px] font-bold text-ink-600 hover:border-coral-200 hover:text-coral-600"
             >
               <X className="h-4 w-4" />
               {t("cancel_btn")}

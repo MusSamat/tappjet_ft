@@ -40,14 +40,14 @@ export function ChatHeader({
       <DriverAvatar name={otherName} src={otherAvatarUrl} size="md" />
       <div className="min-w-0">
         <div className="flex items-center gap-1">
-          <p className="truncate text-[14px] font-900 text-ink-900 dark:text-white">{otherName}</p>
+          <p className="truncate text-[15px] font-900 text-ink-900 dark:text-white">{otherName}</p>
           <ShieldCheck className="h-3.5 w-3.5 shrink-0 text-brand-600" aria-hidden="true" />
         </div>
         <p
           className={
             isConfirmed
-              ? "text-[12px] font-700 text-brand-600 dark:text-brand-300"
-              : "text-[12px] font-700 text-ink-500 dark:text-ink-400"
+              ? "text-[14px] font-700 text-brand-600 dark:text-brand-300"
+              : "text-[14px] font-700 text-ink-500 dark:text-ink-400"
           }
         >
           {subtitle}

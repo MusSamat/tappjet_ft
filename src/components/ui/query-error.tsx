@@ -35,7 +35,7 @@ export function QueryError({ error, onRetry, className }: QueryErrorProps) {
       <span className="flex h-14 w-14 items-center justify-center rounded-full bg-danger-100 text-danger-600 dark:bg-danger-500/15 dark:text-danger-400">
         <ServerCrash className="h-7 w-7" aria-hidden="true" />
       </span>
-      <p className="max-w-[320px] text-[13px] font-700 text-ink-500 dark:text-ink-400">
+      <p className="max-w-[320px] text-[15px] font-700 text-ink-500 dark:text-ink-400">
         {fe(extractError(error))}
       </p>
       <Button type="button" variant="ghost" size="sm" onClick={onRetry}>

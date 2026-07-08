@@ -21,7 +21,7 @@ export default async function HomePage() {
           <h2 className="font-disp text-[20px] font-900 text-ink-900 dark:text-white sm:text-[24px]">{t("popular_routes")}</h2>
           <Link
             href="/trips"
-            className="inline-flex items-center gap-1 rounded-full bg-ink-100 px-3.5 py-2 text-[13px] font-800 text-ink-700 hover:bg-ink-200 dark:bg-ink-800 dark:text-ink-200 dark:hover:bg-ink-700"
+            className="inline-flex items-center gap-1 rounded-full bg-ink-100 px-3.5 py-2 text-[14px] font-800 text-ink-700 hover:bg-ink-200 dark:bg-ink-800 dark:text-ink-200 dark:hover:bg-ink-700"
           >
             {t("all_routes")}
             <ArrowRight className="h-3.5 w-3.5" aria-hidden={true} />
@@ -43,15 +43,15 @@ export default async function HomePage() {
                   <span className="h-2 w-2 shrink-0 rounded-full bg-accent-500" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-[15px] font-900 leading-tight text-ink-900 dark:text-white">{r.from}</p>
-                  <p className="my-0.5 text-[11px] font-700 text-ink-400">
+                  <p className="truncate text-[16px] font-900 leading-tight text-ink-900 dark:text-white">{r.from}</p>
+                  <p className="my-0.5 text-[13px] font-700 text-ink-400">
                     {r.tripCount > 0 ? t("active_trips", { n: r.tripCount }) : t("no_trips")}
                   </p>
-                  <p className="truncate text-[15px] font-900 leading-tight text-ink-900 dark:text-white">{r.to}</p>
+                  <p className="truncate text-[16px] font-900 leading-tight text-ink-900 dark:text-white">{r.to}</p>
                 </div>
                 <div className="flex shrink-0 flex-col items-end gap-2 self-stretch">
                   {r.minPrice ? (
-                    <span className="text-[13px] font-900 text-brand-700 dark:text-brand-300">{t("from_price", { n: r.minPrice })}</span>
+                    <span className="text-[14px] font-900 text-brand-700 dark:text-brand-300">{t("from_price", { n: r.minPrice })}</span>
                   ) : (
                     <span aria-hidden={true} />
                   )}
@@ -74,8 +74,8 @@ export default async function HomePage() {
             <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-50 text-brand-600 dark:bg-brand-500/15 dark:text-brand-300">
               <ShieldCheck className="h-6 w-6" aria-hidden={true} />
             </span>
-            <h3 className="mt-3 text-[17px] font-900 text-ink-900 dark:text-white">{t("safety_title")}</h3>
-            <p className="mt-2 text-[13px] font-700 leading-relaxed text-ink-500 dark:text-ink-400">
+            <h3 className="mt-3 text-[18px] font-900 text-ink-900 dark:text-white">{t("safety_title")}</h3>
+            <p className="mt-2 text-[15px] font-700 leading-relaxed text-ink-500 dark:text-ink-400">
               {t("safety_desc")}
             </p>
           </div>

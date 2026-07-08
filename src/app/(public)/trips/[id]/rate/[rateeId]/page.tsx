@@ -100,11 +100,11 @@ export default function RatePage({ params }: Props) {
           </div>
         </div>
         <h1 className="text-[26px] font-extrabold text-ink-900 dark:text-white">{t("success_title")}</h1>
-        <p className="mx-auto mt-3 max-w-[320px] text-[15px] leading-relaxed text-ink-600">
+        <p className="mx-auto mt-3 max-w-[320px] text-[16px] leading-relaxed text-ink-600">
           {t("success_desc")}
         </p>
         <div className="mx-auto mt-6 h-1 w-20 rounded-full bg-accent-300" />
-        <p className="mt-4 text-[12px] font-semibold text-ink-400">{t("success_redirect")}</p>
+        <p className="mt-4 text-[14px] font-semibold text-ink-400">{t("success_redirect")}</p>
       </div>
     );
   }
@@ -142,7 +142,7 @@ export default function RatePage({ params }: Props) {
       <button
         type="button"
         onClick={() => router.push("/my/bookings")}
-        className="mb-4 inline-flex items-center gap-1 text-[13px] font-bold text-ink-600 hover:text-ink-900"
+        className="mb-4 inline-flex items-center gap-1 text-[14px] font-bold text-ink-600 hover:text-ink-900"
       >
         {t("back")}
       </button>
@@ -185,7 +185,7 @@ export default function RatePage({ params }: Props) {
             </button>
           ))}
         </div>
-        <p className="mt-2 text-center text-[13px] font-semibold text-ink-500">
+        <p className="mt-2 text-center text-[15px] font-semibold text-ink-500">
           {[t("label_0"), t("label_1"), t("label_2"), t("label_3"), t("label_4"), t("label_5")][score]}
         </p>
 
@@ -193,7 +193,7 @@ export default function RatePage({ params }: Props) {
           <>
             {/* Tags */}
             <div className="mt-5">
-              <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-ink-500">
+              <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-ink-500">
                 {score >= 4 ? t("liked") : t("disliked")}
               </p>
               <div className="flex flex-wrap gap-2">
@@ -203,7 +203,7 @@ export default function RatePage({ params }: Props) {
                     type="button"
                     onClick={() => toggleTag(value)}
                     className={cn(
-                      "rounded-full border-2 px-3 py-1 text-[12px] font-bold transition-colors",
+                      "rounded-full border-2 px-3 py-1 text-[13px] font-bold transition-colors",
                       tags.includes(value)
                         ? "border-brand-600 bg-brand-50 text-brand-700"
                         : "border-ink-300 text-ink-700 hover:border-brand-400 dark:border-ink-700 dark:text-ink-300",
@@ -217,7 +217,7 @@ export default function RatePage({ params }: Props) {
 
             {/* Comment */}
             <div className="mt-4">
-              <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-ink-500">{t("comment_label")}</p>
+              <p className="mb-1 text-[11px] font-bold uppercase tracking-widest text-ink-500">{t("comment_label")}</p>
               <Textarea
                 rows={3}
                 maxLength={MAX_COMMENT}
@@ -225,22 +225,22 @@ export default function RatePage({ params }: Props) {
                 value={comment}
                 onChange={(e) => setComment(e.target.value.slice(0, MAX_COMMENT))}
               />
-              <p className="mt-1 text-right text-[11px] text-ink-400">{comment.length}/{MAX_COMMENT}</p>
+              <p className="mt-1 text-right text-[12px] text-ink-400">{comment.length}/{MAX_COMMENT}</p>
             </div>
 
             {/* Mutual review notice */}
             <div className="mt-4 rounded-2xl bg-ink-50 p-3 dark:bg-ink-800">
               <div className="flex items-center gap-2 mb-1">
                 <svg className="h-3.5 w-3.5 text-ink-700 flex-shrink-0 dark:text-ink-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V5l8-3 8 3v8z"/><path d="m9 12 2 2 4-4"/></svg>
-                <span className="text-[13px] font-bold text-ink-900 dark:text-white">{t("blind_title")}</span>
+                <span className="text-[14px] font-bold text-ink-900 dark:text-white">{t("blind_title")}</span>
               </div>
-              <p className="text-[12px] font-semibold text-ink-500">
+              <p className="text-[14px] font-semibold text-ink-500">
                 {t("blind_desc", { name: pending.counterpartName.split(" ")[0] })}
               </p>
             </div>
 
             {errMsg && (
-              <p className="mt-3 rounded-xl bg-coral-50 px-4 py-2 text-[13px] font-semibold text-coral-700">{errMsg}</p>
+              <p className="mt-3 rounded-xl bg-coral-50 px-4 py-2 text-[15px] font-semibold text-coral-700">{errMsg}</p>
             )}
 
             <Button

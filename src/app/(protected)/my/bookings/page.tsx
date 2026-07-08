@@ -5,15 +5,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Plus, Eye, User, CarFront } from "lucide-react";
-import {
-  listMyBookings,
-  listIncomingBookings,
-  acceptBooking,
-  rejectBooking,
-  cancelBooking,
-} from "@/lib/api/bookings";
-import { listMyTrips } from "@/lib/api/my-trips";
+import { Plus } from "lucide-react";
+import { listMyBookings, cancelBooking } from "@/lib/api/bookings";
 import { getPendingRatings, type PendingRating } from "@/lib/api/ratings";
 import { extractError } from "@/lib/api/client";
 import { useFriendlyError } from "@/lib/hooks/use-api-error";
@@ -26,25 +19,20 @@ import { BackToTop } from "@/components/ui/back-to-top";
 import { useScrollRestoration } from "@/lib/hooks/use-scroll-restoration";
 import { Confetti } from "@/components/ui/confetti";
 import type { Booking } from "@/lib/api/bookings";
-import { completeTrip, cancelTrip } from "@/lib/api/trips";
-import type { TripListItem } from "@/lib/api/trips";
-import { cn } from "@/lib/utils/cn";
 import { CancelModal } from "./_components/cancel-modal";
-import { CancelTripModal } from "./_components/cancel-trip-modal";
 import { PassengerTab } from "./_components/passenger-tab";
-import { DriverTab } from "./_components/driver-tab";
-import { RequestsTab } from "./_components/requests-tab";
 import { LikedTab } from "./_components/liked-tab";
-import { MyRequestsTab } from "./_components/my-requests-tab";
+import { MyPostsTab } from "./_components/my-posts-tab";
 
-// Role-aware «Мои» hub — design-spec §2.5. Segmented tabs differ by role:
-//   passenger → Активные / Заявки / История / Избранное
-//   driver    → Поездки  / Запросы  / Избранное
+// «Мои» hub (Phase 1, no roles): Объявления (мои поездки + заявки со
+// статусами) / Брони / Избранное / История — один набор для всех.
 
-type Tab = "active" | "my_requests" | "history" | "liked" | "trips" | "requests";
+type Tab = "posts" | "active" | "liked";
 
-const PASSENGER_TABS: Tab[] = ["active", "my_requests", "liked", "history"];
-const DRIVER_TABS: Tab[] = ["trips", "requests", "liked"];
+// One tab set for everyone (Phase 1: no account roles):
+// «Объявления» = my trips + my requests together, with status badges.
+// «История» намеренно не здесь — она живёт в профиле.
+const ALL_TABS: Tab[] = ["posts", "active", "liked"];
 
 type BookingExt = Booking & {
   tripId?: string;
@@ -73,37 +61,26 @@ const HISTORY_STATUSES = new Set([
   "expired",
 ]);
 
-const ROLE_ICON = { guest: Eye, passenger: User, driver: CarFront } as const;
 
 export default function MyBookingsPage() {
   const tMy = useTranslations("my");
-  const tRoles = useTranslations("roles");
   const tToasts = useTranslations("toasts");
   const fe = useFriendlyError();
   const role = useUiRole();
   const theme = ROLE_THEME[role];
-  const isDriver = role === "driver";
   const searchParams = useSearchParams();
 
   const initialTab = ((): Tab => {
     const requested = searchParams.get("tab") as Tab | null;
-    const roleTabs = isDriver ? DRIVER_TABS : PASSENGER_TABS;
-    if (requested && roleTabs.includes(requested)) return requested;
-    return isDriver ? "trips" : "active";
+    if (requested && ALL_TABS.includes(requested)) return requested;
+    return "posts";
   })();
 
   const [tab, setTab] = useState<Tab>(initialTab);
   useScrollRestoration();
   const [rateTarget, setRateTarget] = useState<PendingRating | null>(null);
   const [cancelTarget, setCancelTarget] = useState<BookingExt | null>(null);
-  const [cancelTripTarget, setCancelTripTarget] = useState<TripListItem | null>(null);
   const qc = useQueryClient();
-
-  // Reset the active tab when it isn't valid for the current role (after a switch).
-  useEffect(() => {
-    const roleTabs = isDriver ? DRIVER_TABS : PASSENGER_TABS;
-    setTab((prev) => (roleTabs.includes(prev) ? prev : isDriver ? "trips" : "active"));
-  }, [isDriver]);
 
   const outgoing = useQuery({
     queryKey: ["bookings", "my", "outgoing"],
@@ -112,75 +89,18 @@ export default function MyBookingsPage() {
     placeholderData: keepPreviousData,
   });
 
-  const incoming = useQuery({
-    queryKey: ["bookings", "incoming"],
-    queryFn: () => listIncomingBookings(),
-    enabled: isDriver,
-    staleTime: 30_000,
-    placeholderData: keepPreviousData,
-  });
-
-  const myTrips = useQuery({
-    queryKey: ["trips", "my", "active"],
-    queryFn: () => listMyTrips("active"),
-    enabled: isDriver,
-    staleTime: 30_000,
-  });
-
-  const inTransitTrips = useQuery({
-    queryKey: ["trips", "my", "in_transit"],
-    queryFn: () => listMyTrips("in_transit"),
-    enabled: isDriver,
-    staleTime: 30_000,
-    refetchInterval: 60_000,
-  });
-
   const pendingRatings = useQuery({
     queryKey: ["ratings", "pending"],
     queryFn: getPendingRatings,
     staleTime: 60_000,
   });
 
-  const acceptMut = useMutation({
-    mutationFn: acceptBooking,
-    onSuccess: () => {
-      toastSuccess(tToasts("booking_accepted"));
-      void qc.invalidateQueries({ queryKey: ["bookings"] });
-    },
-    onError: (e) => toastError(fe(extractError(e))),
-  });
-  const rejectMut = useMutation({
-    mutationFn: (id: string) => rejectBooking(id),
-    onSuccess: () => {
-      toastSuccess(tToasts("booking_rejected"));
-      void qc.invalidateQueries({ queryKey: ["bookings"] });
-    },
-    onError: (e) => toastError(fe(extractError(e))),
-  });
   const cancelMut = useMutation({
     mutationFn: (id: string) => cancelBooking(id),
     onSuccess: () => {
       setCancelTarget(null);
       toastSuccess(tToasts("booking_cancelled"));
       void qc.invalidateQueries({ queryKey: ["bookings"] });
-    },
-    onError: (e) => toastError(fe(extractError(e))),
-  });
-  const completeMut = useMutation({
-    mutationFn: (id: string) => completeTrip(id),
-    onSuccess: () => {
-      toastSuccess(tToasts("trip_completed"));
-      void qc.invalidateQueries({ queryKey: ["trips", "my"] });
-      void qc.invalidateQueries({ queryKey: ["bookings"] });
-    },
-    onError: (e) => toastError(fe(extractError(e))),
-  });
-  const cancelTripMut = useMutation({
-    mutationFn: ({ id, reason }: { id: string; reason?: string }) => cancelTrip(id, reason),
-    onSuccess: () => {
-      setCancelTripTarget(null);
-      toastSuccess(tToasts("trip_cancelled"));
-      void qc.invalidateQueries({ queryKey: ["trips", "my"] });
     },
     onError: (e) => toastError(fe(extractError(e))),
   });
@@ -208,29 +128,14 @@ export default function MyBookingsPage() {
     (pendingRatings.data?.data ?? []).map((pr) => [pr.tripId, pr]),
   );
 
-  const activeTrips = [...(inTransitTrips.data?.data ?? []), ...(myTrips.data?.data ?? [])];
 
-  const requestBookings = ((incoming.data?.data ?? []) as BookingExt[]).filter((b) =>
-    (["pending", "viewed", "accepted"] as string[]).includes(b.status as string),
-  );
-  const requestsCount = requestBookings.filter((b) =>
-    (["pending", "viewed"] as string[]).includes(b.status as string),
-  ).length;
 
-  const RoleIcon = ROLE_ICON[role];
 
-  const options = isDriver
-    ? [
-        { value: "trips" as Tab, label: tMy("tab_trips") },
-        { value: "requests" as Tab, label: tMy("tab_requests"), count: incoming.isLoading ? 0 : requestsCount },
-        { value: "liked" as Tab, label: tMy("tab_liked") },
-      ]
-    : [
-        { value: "active" as Tab, label: tMy("tab_active") },
-        { value: "my_requests" as Tab, label: tMy("tab_my_requests") },
-        { value: "liked" as Tab, label: tMy("tab_liked") },
-        { value: "history" as Tab, label: tMy("tab_history") },
-      ];
+  const options = [
+    { value: "posts" as Tab, label: tMy("tab_posts") },
+    { value: "active" as Tab, label: tMy("tab_active") },
+    { value: "liked" as Tab, label: tMy("tab_liked") },
+  ];
 
   return (
     <>
@@ -241,22 +146,16 @@ export default function MyBookingsPage() {
         <div className="mb-4 flex items-center justify-between gap-3">
           <div className="flex min-w-0 items-center gap-2.5">
             <h1 className="shrink-0 text-[26px] font-900 text-ink-900 dark:text-white">{tMy("title")}</h1>
-            <span className={cn("inline-flex min-w-0 items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-900", theme.badge)}>
-              <RoleIcon className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-              <span className="truncate">{tRoles(theme.labelKey)}</span>
-            </span>
           </div>
-          <Link href={isDriver ? "/trips/create" : "/requests/create"} className="shrink-0">
+          <Link href="/trips/create" className="shrink-0">
             <button
               type="button"
-              aria-label={isDriver ? tMy("publish_trip") : tMy("publish_request")}
-              className="flex items-center gap-1.5 whitespace-nowrap rounded-2xl bg-accent-500 px-3 py-2.5 text-[13px] font-900 text-accent-ink shadow-cta hover:bg-accent-400 sm:px-4"
+              aria-label={tMy("publish")}
+              className="flex items-center gap-1.5 whitespace-nowrap rounded-2xl bg-accent-500 px-3 py-2.5 text-[14px] font-900 text-accent-ink shadow-cta hover:bg-accent-400 sm:px-4"
             >
               <Plus className="h-4 w-4 shrink-0" aria-hidden="true" />
               {/* Label from sm up; icon-only on the tightest phones so the header never crowds. */}
-              <span className="hidden sm:inline">
-                {isDriver ? tMy("publish_trip") : tMy("publish_request")}
-              </span>
+              <span className="hidden sm:inline">{tMy("publish")}</span>
             </button>
           </Link>
         </div>
@@ -283,64 +182,9 @@ export default function MyBookingsPage() {
           />
         )}
 
-        {tab === "my_requests" && <MyRequestsTab />}
+        {tab === "posts" && <MyPostsTab />}
 
-        {tab === "history" && outgoing.isError && (
-          <QueryError error={outgoing.error} onRetry={() => void outgoing.refetch()} />
-        )}
-        {tab === "history" && !outgoing.isError && (
-          <PassengerTab
-            isLoading={outgoing.isLoading}
-            passengerSubTab="history"
-            onSubTabChange={() => {}}
-            displayedBookings={historyPassengerBookings}
-            activeCount={activePassengerBookings.length}
-            historyCount={historyPassengerBookings.length}
-            pendingRatingMap={pendingRatingMap}
-            onRate={setRateTarget}
-            onCancel={setCancelTarget}
-            showSubTabs={false}
-          />
-        )}
-
-        {tab === "trips" && (myTrips.isError || inTransitTrips.isError) && (
-          <QueryError
-            error={myTrips.error ?? inTransitTrips.error}
-            onRetry={() => {
-              if (myTrips.isError) void myTrips.refetch();
-              if (inTransitTrips.isError) void inTransitTrips.refetch();
-            }}
-          />
-        )}
-        {tab === "trips" && !myTrips.isError && !inTransitTrips.isError && (
-          <DriverTab
-            isLoading={myTrips.isLoading || inTransitTrips.isLoading}
-            driverSubTab="active"
-            onSubTabChange={() => {}}
-            displayedTrips={activeTrips}
-            activeCount={activeTrips.length}
-            historyCount={0}
-            completingId={completeMut.isPending ? (completeMut.variables as string | undefined) : undefined}
-            onComplete={(id) => completeMut.mutate(id)}
-            onCancel={setCancelTripTarget}
-            showSubTabs={false}
-          />
-        )}
-
-        {tab === "requests" && incoming.isError && (
-          <QueryError error={incoming.error} onRetry={() => void incoming.refetch()} />
-        )}
-        {tab === "requests" && !incoming.isError && (
-          <RequestsTab
-            isLoading={incoming.isLoading}
-            bookings={requestBookings}
-            onAccept={(id) => acceptMut.mutate(id)}
-            onReject={(id) => rejectMut.mutate(id)}
-            actionPending={acceptMut.isPending || rejectMut.isPending}
-          />
-        )}
-
-        {tab === "liked" && <LikedTab role={role} />}
+        {tab === "liked" && <LikedTab />}
       </Container>
       <BackToTop showOnDesktop />
 
@@ -352,14 +196,6 @@ export default function MyBookingsPage() {
           isPending={cancelMut.isPending}
           onConfirm={() => cancelMut.mutate(cancelTarget.id!)}
           onClose={() => setCancelTarget(null)}
-        />
-      )}
-      {cancelTripTarget && (
-        <CancelTripModal
-          trip={cancelTripTarget}
-          isPending={cancelTripMut.isPending}
-          onConfirm={(reason) => cancelTripMut.mutate({ id: cancelTripTarget.id!, reason })}
-          onClose={() => setCancelTripTarget(null)}
         />
       )}
     </>

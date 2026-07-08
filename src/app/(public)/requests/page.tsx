@@ -44,7 +44,7 @@ function RequestsEmpty() {
       />
       {/* Escape hatch: try another day without leaving the results screen */}
       <div>
-        <p className="mb-2 text-[12px] font-800 text-ink-500 dark:text-ink-400">{t("empty_try_date")}</p>
+        <p className="mb-2 text-[13px] font-800 text-ink-500 dark:text-ink-400">{t("empty_try_date")}</p>
         <div className="flex flex-wrap gap-2">
           <DateQuickChips />
         </div>
@@ -147,7 +147,7 @@ export default function RequestsPage() {
   const list = (onSelect: (id: string) => void, mobile: boolean) => (
     <div className="space-y-2.5">
       {nearby && (
-        <div className="rounded-2xl bg-accent-50 px-4 py-2.5 text-[12px] font-700 text-accent-700 dark:bg-accent-500/10 dark:text-accent-300">
+        <div className="rounded-2xl bg-accent-50 px-4 py-2.5 text-[14px] font-700 text-accent-700 dark:bg-accent-500/10 dark:text-accent-300">
           {t("nearby_notice")}
         </div>
       )}
@@ -163,7 +163,7 @@ export default function RequestsPage() {
       {isFetchingNextPage && <CardSkeletonList variant="request" count={3} />}
       <div ref={sentinel} className="flex h-8 items-center justify-center">
         {!hasNextPage && requests.length > 5 && (
-          <span className="text-[11px] font-800 text-ink-400">{t("no_more")}</span>
+          <span className="text-[12px] font-800 text-ink-400">{t("no_more")}</span>
         )}
       </div>
     </div>
@@ -183,7 +183,7 @@ export default function RequestsPage() {
           <div className="overflow-y-auto bg-ink-50 px-6 py-5 dark:bg-ink-950">
             <div className="mb-4">
               <h1 className="font-disp text-[22px] font-900 text-ink-900 dark:text-white">{heading}</h1>
-              <p className="mt-1 text-[12px] font-800 text-ink-500 dark:text-ink-400">
+              <p className="mt-1 text-[13px] font-800 text-ink-500 dark:text-ink-400">
                 {isLoading ? t("loading") : t("count", { n: requests.length })}
               </p>
             </div>
@@ -200,7 +200,7 @@ export default function RequestsPage() {
               <RequestDetailPane request={selectedRequest} />
             ) : (
               <div className="flex h-full items-center justify-center">
-                <p className="text-[13px] font-800 text-ink-500">{t("select_request")}</p>
+                <p className="text-[14px] font-800 text-ink-500">{t("select_request")}</p>
               </div>
             )}
           </div>
@@ -233,7 +233,7 @@ export default function RequestsPage() {
           className={`search-sheet sheet-nav-pad fixed bottom-0 left-0 right-0 z-40 max-h-[85vh] overflow-y-auto rounded-t-4xl bg-white dark:bg-ink-900${mobileFiltersOpen ? " open" : ""}`}
         >
           <div className="flex items-center justify-between border-b border-ink-100 px-5 py-4 dark:border-ink-800">
-            <h2 className="text-[16px] font-900 text-ink-900 dark:text-white">{t("filters_title")}</h2>
+            <h2 className="text-[17px] font-900 text-ink-900 dark:text-white">{t("filters_title")}</h2>
             <button
               type="button"
               onClick={() => setMobileFiltersOpen(false)}
@@ -249,7 +249,7 @@ export default function RequestsPage() {
             <button
               type="button"
               onClick={() => setMobileFiltersOpen(false)}
-              className="h-12 w-full rounded-2xl bg-accent-500 text-[15px] font-900 text-accent-ink shadow-cta transition-colors hover:bg-accent-400"
+              className="h-12 w-full rounded-2xl bg-accent-500 text-[16px] font-900 text-accent-ink shadow-cta transition-colors hover:bg-accent-400"
             >
               {t("show_btn")}
             </button>
@@ -261,7 +261,7 @@ export default function RequestsPage() {
           className={`search-sheet sheet-nav-pad fixed bottom-0 left-0 right-0 z-40 max-h-[90vh] overflow-y-auto rounded-t-4xl bg-white dark:bg-ink-900${mobileDetailOpen ? " open" : ""}`}
         >
           <div className="flex items-center justify-between border-b border-ink-100 px-5 py-4 dark:border-ink-800">
-            <h2 className="text-[16px] font-900 text-ink-900 dark:text-white">{t("request_label")}</h2>
+            <h2 className="text-[17px] font-900 text-ink-900 dark:text-white">{t("request_label")}</h2>
             <button
               type="button"
               onClick={() => setMobileDetailOpen(false)}
@@ -270,7 +270,8 @@ export default function RequestsPage() {
               <X className="h-4 w-4" aria-hidden />
             </button>
           </div>
-          <div className="px-5 py-5">
+          {/* Edge-to-edge in the sheet — matches the trips detail sheet */}
+          <div className="px-2 pb-5 pt-2">
             {selectedRequest && <RequestDetailPane request={selectedRequest} />}
           </div>
         </div>

@@ -60,7 +60,7 @@ function DaySeparator({ iso }: { iso?: string }) {
           }).format(d);
   return (
     <div className="my-2 flex justify-center">
-      <span className="rounded-full bg-ink-200/60 px-3 py-1 text-[11px] font-700 text-ink-500 dark:bg-ink-800 dark:text-ink-400">
+      <span className="rounded-full bg-ink-200/60 px-3 py-1 text-[13px] font-700 text-ink-500 dark:bg-ink-800 dark:text-ink-400">
         {label}
       </span>
     </div>
@@ -126,10 +126,10 @@ export function ChatMessages({
                   <span className="flex h-16 w-16 items-center justify-center rounded-full bg-white text-ink-400 shadow-soft dark:bg-ink-800">
                     <MessageCircle className="h-8 w-8" aria-hidden="true" />
                   </span>
-                  <p className="text-[15px] font-900 text-ink-700 dark:text-ink-200">
+                  <p className="text-[16px] font-900 text-ink-700 dark:text-ink-200">
                     {t("empty_title")}
                   </p>
-                  <p className="max-w-[260px] text-[13px] font-700 text-ink-400">
+                  <p className="max-w-[260px] text-[15px] font-700 text-ink-400">
                     {t("empty_hint")}
                   </p>
                 </>
@@ -158,7 +158,7 @@ export function ChatMessages({
                 );
               })}
               {typingUserId && typingUserId !== myId && (
-                <div className="mt-1 text-[12px] font-semibold text-ink-400">
+                <div className="mt-1 text-[14px] font-semibold text-ink-400">
                   {otherName} {t("typing")}
                 </div>
               )}
@@ -182,34 +182,34 @@ export function ChatMessages({
 
       {/* Composer zone — pinned at the bottom of the chat column, never scrolls away */}
       {isReadOnly ? (
-        <div className="shrink-0 border-t border-ink-200 bg-ink-50 px-5 py-3 pb-[calc(12px+env(safe-area-inset-bottom))] text-center text-[12px] font-semibold text-ink-400 dark:border-ink-800 dark:bg-ink-900">
+        <div className="shrink-0 border-t border-ink-200 bg-ink-50 px-5 py-3 pb-[calc(12px+env(safe-area-inset-bottom))] text-center text-[14px] font-semibold text-ink-400 dark:border-ink-800 dark:bg-ink-900">
           {t("read_only")}
         </div>
       ) : driverBlocked ? (
-        <div className="shrink-0 border-t border-ink-200 bg-ink-50 px-5 py-3 pb-[calc(12px+env(safe-area-inset-bottom))] text-center text-[12px] font-semibold text-ink-400 dark:border-ink-800 dark:bg-ink-900">
+        <div className="shrink-0 border-t border-ink-200 bg-ink-50 px-5 py-3 pb-[calc(12px+env(safe-area-inset-bottom))] text-center text-[14px] font-semibold text-ink-400 dark:border-ink-800 dark:bg-ink-900">
           {t("driver_wait_note")}
         </div>
       ) : preBooking ? (
         <div className="shrink-0 border-t border-ink-100 bg-white px-4 py-3 pb-[calc(12px+env(safe-area-inset-bottom))] dark:border-ink-800 dark:bg-ink-900">
           {sendError && (
-            <div className="mb-2 rounded-xl bg-coral-50 px-3 py-2 text-[12px] font-semibold text-coral-700">
+            <div className="mb-2 rounded-xl bg-coral-50 px-3 py-2 text-[14px] font-semibold text-coral-700">
               {sendError}
             </div>
           )}
           <QuickReplies onSend={onSend} />
-          <p className="mt-2 text-center text-[11px] font-600 text-ink-400">
+          <p className="mt-2 text-center text-[13px] font-600 text-ink-400">
             {tTpl("templates_hint")}
           </p>
         </div>
       ) : (
         <div className="shrink-0 border-t border-ink-100 bg-white dark:border-ink-800 dark:bg-ink-900">
           {sendError && (
-            <div className="mx-4 mt-2 rounded-xl bg-coral-50 px-3 py-2 text-[12px] font-semibold text-coral-700">
+            <div className="mx-4 mt-2 rounded-xl bg-coral-50 px-3 py-2 text-[14px] font-semibold text-coral-700">
               {sendError}
             </div>
           )}
           <MessageComposer onSend={onSend} onTyping={onTyping} />
-          <p className="px-5 pb-[calc(10px+env(safe-area-inset-bottom))] text-center text-[11px] font-600 text-ink-400">
+          <p className="px-5 pb-[calc(10px+env(safe-area-inset-bottom))] text-center text-[13px] font-600 text-ink-400">
             🔒 {t("safety_note")}
           </p>
         </div>

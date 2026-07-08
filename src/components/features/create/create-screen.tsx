@@ -3,15 +3,17 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, CarFront, User, PartyPopper, ShieldCheck, Clock, Phone } from "lucide-react";
+import { ArrowLeft, CarFront, User, PartyPopper, ShieldCheck, Phone } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { createTrip, type CreateTripInput } from "@/lib/api/trips-create";
 import { createPassengerRequest, type CreatePassengerRequestInput } from "@/lib/api/passenger-requests";
-import { getDriverStatus } from "@/lib/api/profile";
+import { addCar, listMyCars } from "@/lib/api/cars";
 import { extractError } from "@/lib/api/client";
 import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { useAuth } from "@/store/auth";
-import { useRoleTheme } from "@/lib/hooks/use-role-colors";
+import { ROLE_THEME } from "@/lib/role-colors";
+import { Chip } from "@/components/ui/chip";
+import { IntentToggle } from "@/components/features/search/intent-toggle";
 import { saveDeferredAction } from "@/lib/auth/deferred-action";
 import { Spinner } from "@/components/ui";
 import { Button } from "@/components/ui/button";
@@ -19,6 +21,7 @@ import { ActionModal } from "@/components/ui/action-modal";
 import type { ChipAccent } from "@/components/ui";
 import { cn } from "@/lib/utils/cn";
 import { AddPhoneModal } from "@/components/features/auth/add-phone-modal";
+import { CarForm } from "@/components/features/cars/car-form";
 import { RouteCard } from "./route-card";
 import { PickupZones } from "./pickup-zones";
 import { WhenChips } from "./when-chips";
@@ -88,11 +91,18 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
   const router = useRouter();
   const qc = useQueryClient();
   const t = useTranslations("create");
+  const tCars = useTranslations("cars");
   const fe = useFriendlyError();
   const status = useAuth((s) => s.status);
   const user = useAuth((s) => s.user);
-  const { role, theme } = useRoleTheme();
-  const isDriver = role === "driver";
+  // Phase 1: no account roles — the user picks the intent right here.
+  const activeMode = useAuth((s) => s.activeMode);
+  const [intent, setIntent] = useState<"driver" | "passenger">(
+    activeMode === "driver" ? "driver" : "passenger",
+  );
+  const isDriver = intent === "driver";
+  const role = intent;
+  const theme = ROLE_THEME[intent];
   const draftKey = isDriver ? "tappjet_trip_draft" : "tappjet_req_draft";
   const chipAccent: ChipAccent = isDriver ? "brand" : "grape";
 
@@ -143,17 +153,29 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
       return next;
     });
 
-  // Driver-verification gate (backend enforces verificationStatus === 'verified').
-  const { data: driverStatus, isLoading: driverLoading } = useQuery({
-    queryKey: ["driver-status"],
-    queryFn: getDriverStatus,
-    enabled: isDriver && status === "authenticated" && Boolean(user?.phoneVerified),
-    staleTime: 60_000,
+  // Phase 1: publishing needs a car, not verification. The user's garage:
+  const { data: cars = [], isLoading: carsLoading } = useQuery({
+    queryKey: ["cars", "my"],
+    queryFn: listMyCars,
+    enabled: isDriver && status === "authenticated",
+    staleTime: 30_000,
+  });
+  const [carId, setCarId] = useState<string | null>(null);
+  const [addingCar, setAddingCar] = useState(false);
+  const selectedCar = cars.find((c) => c.id === carId) ?? cars[cars.length - 1] ?? null;
+  const addCarMut = useMutation({
+    mutationFn: addCar,
+    onSuccess: (c) => {
+      setCarId(c.id);
+      setAddingCar(false);
+      void qc.invalidateQueries({ queryKey: ["cars", "my"] });
+    },
+    onError: (e) => setCreateError(fe(extractError(e))),
   });
 
   // Default seats to the car's capacity from the driver profile («Мест» in the
   // account) — unless the user or a saved draft already chose a count.
-  const carSeats = driverStatus?.car?.seats;
+  const carSeats = selectedCar?.seatsCount;
   useEffect(() => {
     if (!isDriver || !carSeats || seatsCustomized.current) return;
     setDraft((prev) => ({ ...prev, seats: Math.min(Math.max(carSeats, 1), 7) }));
@@ -181,6 +203,7 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
           pickupCities: draft.pickup,
           dropoffCities: draft.dropoff,
           originAddress: draft.originCity,
+          carId: selectedCar?.id,
           departureAt: departureAt(),
           departureWindowEnd: departureWindowEnd(),
           departureFlexible: draft.flexible,
@@ -197,6 +220,7 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
             animals: draft.prefs.pets,
             quiet: draft.prefs.quiet,
             chat: draft.prefs.chat,
+            women_only: draft.prefs.women_only,
           },
         };
         const trip = await createTrip(input);
@@ -232,7 +256,9 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
     Boolean(draft.originCity && draft.destinationCity && draft.originCity !== draft.destinationCity) &&
     (draft.flexible || Boolean(draft.date)) &&
     draft.seats >= 1 &&
-    (!isDriver || draft.price >= 50);
+    (!isDriver || draft.price >= 50) &&
+    // Driver intent needs a car (Phase 1 gate — inline form adds one below).
+    (!isDriver || Boolean(selectedCar));
 
   if (status === "loading" || status === "idle" || status === "anonymous") {
     return (
@@ -252,7 +278,7 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
             <Phone className="h-7 w-7" aria-hidden="true" />
           </div>
           <h1 className="text-[20px] font-900 text-ink-900 dark:text-white">{t("gate_phone_title")}</h1>
-          <p className="max-w-[380px] text-[13px] font-600 text-ink-500 dark:text-ink-400">
+          <p className="max-w-[380px] text-[15px] font-600 text-ink-500 dark:text-ink-400">
             {isDriver ? t("gate_phone_text_driver") : t("gate_phone_text")}
           </p>
           <Button variant="brand" size="lg" className="mt-2 w-full max-w-[320px]" onClick={() => setShowAddPhone(true)}>
@@ -260,35 +286,6 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
           </Button>
         </div>
         <AddPhoneModal open={showAddPhone} onClose={() => setShowAddPhone(false)} onDone={() => setShowAddPhone(false)} />
-      </div>
-    );
-  }
-
-  // Driver not yet verified — block the form (mirrors backend 403).
-  if (isDriver && user?.phoneVerified && (driverLoading || (driverStatus && driverStatus.status !== "verified"))) {
-    const pending = driverStatus?.status === "pending" || driverStatus?.status === "docs_requested";
-    return (
-      <div className="mx-auto max-w-[560px] px-4 py-8">
-        {driverLoading ? (
-          <div className="flex min-h-[40vh] items-center justify-center">
-            <Spinner size={28} />
-          </div>
-        ) : (
-          <div className="flex flex-col items-center gap-4 rounded-3xl border border-ink-100 bg-white px-6 py-10 text-center dark:border-ink-800 dark:bg-ink-900">
-            <div className={cn("flex h-14 w-14 items-center justify-center rounded-2xl", pending ? "bg-accent-50 text-accent-600" : "bg-brand-50 text-brand-600")}>
-              {pending ? <Clock className="h-7 w-7" /> : <ShieldCheck className="h-7 w-7" />}
-            </div>
-            <h1 className="text-[20px] font-900 text-ink-900 dark:text-white">
-              {pending ? t("gate_pending_title") : t("gate_unverified_title")}
-            </h1>
-            <p className="max-w-[380px] text-[13px] font-600 text-ink-500 dark:text-ink-400">
-              {pending ? t("gate_pending_text") : t("gate_unverified_text")}
-            </p>
-            <Button variant="brand" size="lg" className="mt-2 w-full max-w-[320px]" onClick={() => router.push("/profile/driver")}>
-              {pending ? t("gate_pending_cta") : t("gate_cta")}
-            </Button>
-          </div>
-        )}
       </div>
     );
   }
@@ -318,9 +315,12 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
 
   const form = (
     <div className="space-y-3.5">
-      <p className="text-[13px] font-700 text-ink-600 dark:text-ink-400">
+      {/* Intent — chosen right here, no account role (Phase 1) */}
+      <IntentToggle value={intent} onChange={setIntent} />
+      <p className="text-[15px] font-700 text-ink-600 dark:text-ink-400">
         {isDriver ? t("intro_driver") : t("intro_passenger")}
       </p>
+
       <RouteCard
         origin={draft.originCity}
         destination={draft.destinationCity}
@@ -328,6 +328,51 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
         onDestination={(v) => patch({ destinationCity: v })}
         iconAccent={theme.iconAccent}
       />
+      {/* Driver intent: the trip rides on a car — pick from the garage or add
+          a new one right here (it is saved to «Мои авто»). */}
+      {isDriver && status === "authenticated" && !carsLoading && (
+        <div className="rounded-2xl bg-white p-4 shadow-xs ring-1 ring-ink-100 dark:bg-ink-900 dark:ring-ink-800">
+          {cars.length === 0 ? (
+            <>
+              <p className="text-[16px] font-900 text-ink-900 dark:text-white">{t("car_need_title")}</p>
+              <p className="mb-3 mt-0.5 text-[14px] font-600 text-ink-500 dark:text-ink-400">{t("car_need_text")}</p>
+            </>
+          ) : (
+            <>
+            <p className="text-[16px] font-900 text-ink-900 dark:text-white">{tCars("pick_title")}</p>
+            <p className="mb-2.5 mt-0.5 text-[14px] font-600 text-ink-500 dark:text-ink-400">{tCars("pick_hint")}</p>
+            <div className="no-scrollbar mb-1 flex items-center gap-2 overflow-x-auto">
+              {cars.map((c) => (
+                <Chip
+                  key={c.id}
+                  kind="filter"
+                  selected={!addingCar && selectedCar?.id === c.id}
+                  onClick={() => {
+                    setAddingCar(false);
+                    setCarId(c.id);
+                  }}
+                >
+                  {c.make} {c.model} · {c.plate}
+                </Chip>
+              ))}
+              {cars.length < 5 && (
+                <Chip kind="filter" selected={addingCar} onClick={() => setAddingCar((v) => !v)}>
+                  + {tCars("add_another")}
+                </Chip>
+              )}
+            </div>
+            </>
+          )}
+          {(cars.length === 0 || addingCar) && (
+            <CarForm
+              className="mt-2"
+              onSubmit={(i) => addCarMut.mutate(i)}
+              pending={addCarMut.isPending}
+              submitLabel={t("car_add_btn")}
+            />
+          )}
+        </div>
+      )}
       <WhenChips
         date={draft.date}
         time={draft.time}
@@ -378,15 +423,17 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
           <button type="button" onClick={() => router.back()} aria-label={t("back")} className="mb-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/20">
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           </button>
-          <h1 className="text-[15px] font-900">{isDriver ? t("title_driver") : t("title_passenger")}</h1>
-          <p className="text-[12px] font-700 text-white/90">{isDriver ? t("subtitle_driver") : t("subtitle_passenger")}</p>
+          <h1 className="text-[16px] font-900">{isDriver ? t("title_driver") : t("title_passenger")}</h1>
+          <p className="text-[14px] font-700 text-white/90">{isDriver ? t("subtitle_driver") : t("subtitle_passenger")}</p>
         </div>
         <div className="flex-1 space-y-3.5 px-4 py-4">{form}</div>
         <div className="space-y-3.5 px-4 pb-4">
           <PrefsCollapsible role={role} prefs={draft.prefs} onToggle={(k) => patch({ prefs: { ...draft.prefs, [k]: !draft.prefs[k] } })} />
           <div className="rounded-2xl bg-white p-4 shadow-card dark:bg-ink-900">
-            <p className="mb-3 text-center text-[12px] font-700 text-ink-500 dark:text-ink-400">{isDriver ? t("note_driver") : t("note_passenger")}</p>
-            {createError && <p className="mb-3 rounded-xl bg-coral-50 px-4 py-2 text-[13px] font-700 text-coral-700 dark:bg-coral-500/10">{createError}</p>}
+            <p className="mb-1.5 text-center text-[14px] font-700 text-ink-500 dark:text-ink-400">{isDriver ? t("note_driver") : t("note_passenger")}</p>
+            {/* Consent: publishing exposes the phone to logged-in users. */}
+            <p className="mb-3 text-center text-[13px] font-600 text-ink-400">{t("consent_phone")}</p>
+            {createError && <p className="mb-3 rounded-xl bg-coral-50 px-4 py-2 text-[15px] font-700 text-coral-700 dark:bg-coral-500/10">{createError}</p>}
             {submitBtn}
           </div>
         </div>
@@ -396,9 +443,9 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
       <div className="mx-auto hidden max-w-[1080px] gap-8 bg-ink-50 p-8 lg:grid lg:grid-cols-[330px_1fr] dark:bg-ink-950">
         <aside className="space-y-4">
           <h2 className="text-[26px] font-900 text-ink-900 dark:text-white">{isDriver ? t("web_title_driver") : t("web_title_passenger")}</h2>
-          <p className="text-[14px] font-700 text-ink-600 dark:text-ink-400">{isDriver ? t("web_sub_driver") : t("web_sub_passenger")}</p>
+          <p className="text-[15px] font-700 text-ink-600 dark:text-ink-400">{isDriver ? t("web_sub_driver") : t("web_sub_passenger")}</p>
           <div className="rounded-3xl bg-brand-50 p-4 dark:bg-brand-500/10">
-            <div className="flex items-start gap-2.5 text-[12px] font-700 text-ink-700 dark:text-ink-300">
+            <div className="flex items-start gap-2.5 text-[14px] font-700 text-ink-700 dark:text-ink-300">
               <ShieldCheck className="h-4 w-4 shrink-0 text-brand-600" aria-hidden="true" />
               {t("web_trust")}
             </div>
@@ -408,7 +455,9 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
           <div className="space-y-3.5">
             {form}
             <PrefsCollapsible role={role} prefs={draft.prefs} onToggle={(k) => patch({ prefs: { ...draft.prefs, [k]: !draft.prefs[k] } })} />
-            {createError && <p className="rounded-xl bg-coral-50 px-4 py-2 text-[13px] font-700 text-coral-700 dark:bg-coral-500/10">{createError}</p>}
+            {createError && <p className="rounded-xl bg-coral-50 px-4 py-2 text-[15px] font-700 text-coral-700 dark:bg-coral-500/10">{createError}</p>}
+            {/* Consent: publishing exposes the phone to logged-in users. */}
+            <p className="text-center text-[13px] font-600 text-ink-400">{t("consent_phone")}</p>
             {submitBtn}
           </div>
         </div>

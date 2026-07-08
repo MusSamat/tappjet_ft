@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { ArrowDownUp, CarFront, Circle, MapPin, Search, User } from "lucide-react";
 import { BackButton } from "@/components/ui/back-button";
 import { CityAutocomplete } from "@/components/ui/city-autocomplete";
+import { IntentToggle } from "./intent-toggle";
 import { cn } from "@/lib/utils/cn";
 import { useAuth } from "@/store/auth";
 import { PopularRoutes } from "./popular-routes";
@@ -82,73 +83,15 @@ export function RouteEntry({ mode, modeSwitchable = false, initialFrom = "", ini
       <h1 className="font-disp text-[26px] font-900 leading-tight text-ink-900 dark:text-white">
         {t("route_title")}
       </h1>
-      <p className="mt-1.5 text-[13px] font-700 text-ink-500 dark:text-ink-400">{t("route_hint")}</p>
+      <p className="mt-1.5 text-[15px] font-700 text-ink-500 dark:text-ink-400">{t("route_hint")}</p>
 
-      {/* Intent toggle — only when switchable and the viewer is a verified
-          driver. Compact two-line cards: bold identity + small action. */}
-      {modeSwitchable && isDriver && (
-        <div className="mt-5 grid grid-cols-2 gap-2">
-          <button
-            type="button"
-            onClick={() => setM("trips")}
-            aria-pressed={m === "trips"}
-            className={cn(
-              "flex items-center gap-2.5 rounded-2xl border-2 px-3 py-2.5 text-left transition-colors",
-              m === "trips"
-                ? "border-brand-500 bg-brand-50 dark:border-brand-500 dark:bg-brand-500/15"
-                : "border-ink-200 bg-white dark:border-ink-700 dark:bg-ink-900",
-            )}
-          >
-            <span
-              className={cn(
-                "flex h-8 w-8 shrink-0 items-center justify-center rounded-xl",
-                m === "trips"
-                  ? "bg-brand-600 text-white"
-                  : "bg-ink-100 text-ink-400 dark:bg-ink-800 dark:text-ink-400",
-              )}
-            >
-              <User className="h-4 w-4" aria-hidden="true" />
-            </span>
-            <span className="min-w-0">
-              <span className={cn("block truncate text-[13px] font-900 leading-tight", m === "trips" ? "text-brand-700 dark:text-brand-300" : "text-ink-700 dark:text-ink-300")}>
-                {t("mode_trips_title")}
-              </span>
-              <span className="block truncate text-[11px] font-600 text-ink-500 dark:text-ink-400">
-                {t("mode_trips_sub")}
-              </span>
-            </span>
-          </button>
-          <button
-            type="button"
-            onClick={() => setM("requests")}
-            aria-pressed={m === "requests"}
-            className={cn(
-              "flex items-center gap-2.5 rounded-2xl border-2 px-3 py-2.5 text-left transition-colors",
-              m === "requests"
-                ? "border-grape-500 bg-grape-50 dark:border-grape-500 dark:bg-grape-500/15"
-                : "border-ink-200 bg-white dark:border-ink-700 dark:bg-ink-900",
-            )}
-          >
-            <span
-              className={cn(
-                "flex h-8 w-8 shrink-0 items-center justify-center rounded-xl",
-                m === "requests"
-                  ? "bg-grape-500 text-white"
-                  : "bg-ink-100 text-ink-400 dark:bg-ink-800 dark:text-ink-400",
-              )}
-            >
-              <CarFront className="h-4 w-4" aria-hidden="true" />
-            </span>
-            <span className="min-w-0">
-              <span className={cn("block truncate text-[13px] font-900 leading-tight", m === "requests" ? "text-grape-600 dark:text-grape-300" : "text-ink-700 dark:text-ink-300")}>
-                {t("mode_requests_title")}
-              </span>
-              <span className="block truncate text-[11px] font-600 text-ink-500 dark:text-ink-400">
-                {t("mode_requests_sub")}
-              </span>
-            </span>
-          </button>
-        </div>
+      {/* Intent toggle — the same two-line switch as in the create form */}
+      {modeSwitchable && (
+        <IntentToggle
+          className="mt-5"
+          value={m === "trips" ? "passenger" : "driver"}
+          onChange={(v) => setM(v === "passenger" ? "trips" : "requests")}
+        />
       )}
 
       {/* Route card — origin (teal) → destination (amber) with a swap control */}
@@ -189,7 +132,7 @@ export function RouteEntry({ mode, modeSwitchable = false, initialFrom = "", ini
         type="button"
         onClick={submit}
         disabled={!canGo}
-        className="mt-5 flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 text-[15px] font-900 text-accent-ink shadow-cta transition-colors hover:bg-accent-400 disabled:opacity-40"
+        className="mt-5 flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 text-[16px] font-900 text-accent-ink shadow-cta transition-colors hover:bg-accent-400 disabled:opacity-40"
       >
         <Search className="h-4 w-4" aria-hidden="true" />
         {m === "requests" ? t("find_passenger") : t("find_trip")}

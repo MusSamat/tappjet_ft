@@ -272,10 +272,10 @@ export function ChatPanel({ bookingId }: Props) {
         {/* Pre-booking banner */}
         {isPreBooking && (
           <div className="mx-5 mt-3 shrink-0 rounded-2xl border border-accent-100 bg-accent-50 px-3 py-2.5">
-            <p className="text-[12px] font-extrabold text-accent-700">
+            <p className="text-[13px] font-extrabold text-accent-700">
               🔒 {t("pre_book_note")}
             </p>
-            <p className="mt-0.5 text-[12px] font-semibold text-accent-700">
+            <p className="mt-0.5 text-[14px] font-semibold text-accent-700">
               {t("pre_book_hint")}
             </p>
           </div>
@@ -284,10 +284,10 @@ export function ChatPanel({ bookingId }: Props) {
         {/* Trip summary bar */}
         {rawBooking?.trip && (
           <div className="flex shrink-0 items-center justify-between border-b border-brand-100 bg-brand-50 px-5 py-2">
-            <div className="flex items-center gap-1.5 text-[12px] font-semibold text-brand-700">
+            <div className="flex items-center gap-1.5 text-[14px] font-semibold text-brand-700">
               {rawBooking.trip.car && <><Car className="h-3.5 w-3.5" aria-hidden="true" /> {rawBooking.trip.car}</>}
             </div>
-            <span className="text-[12px] font-bold text-brand-700">
+            <span className="text-[13px] font-bold text-brand-700">
               {isReadOnly ? t("archived") : isPreBooking ? t("pending") : t("booked")}
             </span>
           </div>

@@ -132,7 +132,7 @@ export function TelegramStep({ phone, onVerified, onBack, onError }: Props) {
               ? t("telegram_start_title")
               : t("telegram_title")}
         </p>
-        <p className="mt-1.5 text-[13px] font-700 leading-relaxed text-ink-500">
+        <p className="mt-1.5 text-[15px] font-700 leading-relaxed text-ink-500">
           {isDeepLink ? t("telegram_start_hint") : t("telegram_hint")}{" "}
           <span className="font-900 text-brand-700">@tappjet_bot</span>
         </p>
@@ -143,7 +143,7 @@ export function TelegramStep({ phone, onVerified, onBack, onError }: Props) {
           href={deepLink}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-[13px] font-900 text-brand-700"
+          className="text-[14px] font-900 text-brand-700"
         >
           {t("telegram_open_btn")}
         </a>
@@ -169,13 +169,13 @@ export function TelegramStep({ phone, onVerified, onBack, onError }: Props) {
       </Button>
 
       {resendIn > 0 ? (
-        <p className="text-[12px] font-700 text-ink-400">{t("resend_after", { n: resendIn })}</p>
+        <p className="text-[14px] font-700 text-ink-400">{t("resend_after", { n: resendIn })}</p>
       ) : (
         <button
           type="button"
           onClick={handleResend}
           disabled={sendMutation.isPending}
-          className="text-[12px] font-900 text-brand-700"
+          className="text-[13px] font-900 text-brand-700"
         >
           {sendMutation.isPending ? t("sending") : t("resend_btn")}
         </button>
@@ -184,7 +184,7 @@ export function TelegramStep({ phone, onVerified, onBack, onError }: Props) {
       <button
         type="button"
         onClick={onBack}
-        className="text-[13px] font-700 text-ink-400 hover:text-ink-600"
+        className="text-[15px] font-700 text-ink-400 hover:text-ink-600"
       >
         {t("change")}
       </button>

@@ -18,7 +18,7 @@ interface Props {
 }
 
 const CARD = "rounded-3xl bg-white p-5 shadow-card dark:bg-ink-900";
-const CARD_HEAD = "mb-4 flex items-center gap-2 text-[14px] font-900 text-ink-900 dark:text-white";
+const CARD_HEAD = "mb-4 flex items-center gap-2 text-[15px] font-900 text-ink-900 dark:text-white";
 
 export function SettingsTab({ isDriver, exportMutation, logoutMutation, logoutAllMutation }: Props) {
   const t = useTranslations("profile");
@@ -81,7 +81,7 @@ export function SettingsTab({ isDriver, exportMutation, logoutMutation, logoutAl
 
           <button
             type="button"
-            className="flex items-center justify-center gap-2 rounded-2xl px-3 py-2.5 text-[13px] font-800 text-ink-500 hover:bg-ink-50 dark:hover:bg-ink-800"
+            className="flex items-center justify-center gap-2 rounded-2xl px-3 py-2.5 text-[14px] font-800 text-ink-500 hover:bg-ink-50 dark:hover:bg-ink-800"
             onClick={() => exportMutation.mutate()}
             disabled={exportMutation.isPending}
           >
@@ -91,7 +91,7 @@ export function SettingsTab({ isDriver, exportMutation, logoutMutation, logoutAl
 
           <Link
             href="/profile/delete"
-            className="flex items-center justify-center gap-2 rounded-2xl px-3 py-2.5 text-[13px] font-800 text-coral-600 hover:bg-coral-50 dark:hover:bg-coral-500/10"
+            className="flex items-center justify-center gap-2 rounded-2xl px-3 py-2.5 text-[14px] font-800 text-coral-600 hover:bg-coral-50 dark:hover:bg-coral-500/10"
           >
             <Trash2 className="h-4 w-4" aria-hidden="true" />
             {t("delete_btn")}

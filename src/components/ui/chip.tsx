@@ -65,40 +65,40 @@ export const Chip = forwardRef<HTMLButtonElement, ChipProps>(
     switch (kind) {
       case "filter":
         cls = cn(
-          "rounded-full border px-3 py-1.5 text-[12px] font-800",
+          "rounded-full border px-3 py-1.5 text-[14px] font-800",
           selected ? TINT_ON[accent] : FILTER_OFF,
         );
         break;
       case "quick":
         cls = cn(
-          "rounded-full px-3 py-1.5 text-[12px] font-800",
+          "rounded-full px-3 py-1.5 text-[14px] font-800",
           selected ? FILL_ON[accent] : OUTLINE2_OFF,
         );
         break;
       case "time":
         cls = cn(
-          "rounded-full px-3 py-1.5 text-[12px]",
+          "rounded-full px-3 py-1.5 text-[14px]",
           selected ? "bg-accent-500 font-900 text-accent-ink" : cn(OUTLINE2_OFF, "font-800"),
         );
         break;
       case "date":
         cls = cn(
-          "rounded-full text-[12px] font-800",
+          "rounded-full text-[14px] font-800",
           selected ? cn("px-3.5 py-1.5", DATE_ON[accent]) : cn("px-3 py-1.5", OUTLINE2_OFF),
         );
         break;
       case "pref":
         cls = cn(
-          "rounded-full border-2 px-3 py-1.5 text-[12px] font-800",
+          "rounded-full border-2 px-3 py-1.5 text-[14px] font-800",
           selected ? TINT_ON[accent] : "border-ink-200 text-ink-600 dark:border-ink-700 dark:text-ink-300",
         );
         break;
       case "removable":
         cls =
-          "rounded-full bg-white px-2.5 py-1 text-[12px] font-800 text-ink-800 shadow-xs dark:bg-ink-900 dark:text-ink-100";
+          "rounded-full bg-white px-2.5 py-1 text-[14px] font-800 text-ink-800 shadow-xs dark:bg-ink-900 dark:text-ink-100";
         break;
       case "add":
-        cls = cn("rounded-full border border-dashed px-2.5 py-1 text-[12px] font-800", ADD[accent]);
+        cls = cn("rounded-full border border-dashed px-2.5 py-1 text-[14px] font-800", ADD[accent]);
         break;
     }
 

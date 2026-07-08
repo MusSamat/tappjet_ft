@@ -39,8 +39,8 @@ export function RequestsTab({ isLoading, bookings, onAccept, onReject, actionPen
         <CardSkeletonList variant="request" />
       ) : bookings.length === 0 ? (
         <div className="rounded-2xl border border-ink-100 bg-white p-8 text-center dark:bg-ink-900 dark:border-ink-800">
-          <p className="text-[17px] font-bold text-ink-900 dark:text-white">{t("no_requests_label")}</p>
-          <p className="mt-2 text-[13px] text-ink-500">{t("requests_hint")}</p>
+          <p className="text-[18px] font-bold text-ink-900 dark:text-white">{t("no_requests_label")}</p>
+          <p className="mt-2 text-[16px] font-600 text-ink-500">{t("requests_hint")}</p>
         </div>
       ) : (
         bookings.map((b) => (

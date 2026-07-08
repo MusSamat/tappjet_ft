@@ -99,10 +99,10 @@ function TripRow({ trip, locale }: { trip: TripListItem; locale: Locale }) {
         className="flex items-center justify-between gap-3 rounded-3xl border border-ink-100 bg-white p-4 shadow-card transition-colors hover:border-brand-200 dark:border-ink-800 dark:bg-ink-900"
       >
         <div className="min-w-0">
-          <p className="truncate font-disp text-[15px] font-900 text-ink-900 dark:text-white">
+          <p className="truncate font-disp text-[16px] font-900 text-ink-900 dark:text-white">
             {trip.originCity} → {trip.destinationCity}
           </p>
-          <p className="mt-0.5 text-[12px] text-ink-500 dark:text-ink-400">
+          <p className="mt-0.5 text-[13px] text-ink-500 dark:text-ink-400">
             {trip.departureAt ? formatDepartureLabel(trip.departureAt, locale) : ""}
             {typeof trip.seatsAvailable === "number" && (
               <span className="ml-2 inline-flex items-center gap-1">
@@ -112,7 +112,7 @@ function TripRow({ trip, locale }: { trip: TripListItem; locale: Locale }) {
             )}
           </p>
         </div>
-        <span className="flex-shrink-0 font-disp text-[15px] font-900 text-brand-700 dark:text-brand-300">
+        <span className="flex-shrink-0 font-disp text-[16px] font-900 text-brand-700 dark:text-brand-300">
           {typeof trip.pricePerSeat === "number" ? formatPrice(trip.pricePerSeat) : "—"}
         </span>
       </Link>
@@ -176,17 +176,17 @@ export default async function RouteLandingPage({ params }: Props) {
         <h1 className="font-disp text-[26px] font-900 leading-tight text-ink-900 dark:text-white">
           {t("h1", { from, to })}
         </h1>
-        <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-ink-600 dark:text-ink-300">
+        <p className="mt-2 max-w-2xl text-[16px] leading-relaxed text-ink-600 dark:text-ink-300">
           {t("intro", { from, to })}
         </p>
         <div className="mt-3 flex flex-wrap gap-2">
           {count > 0 && (
-            <span className="rounded-full border border-ink-200 bg-ink-50 px-3 py-1 text-[12px] font-700 text-ink-700 dark:border-ink-700 dark:bg-ink-800 dark:text-ink-200">
+            <span className="rounded-full border border-ink-200 bg-ink-50 px-3 py-1 text-[14px] font-700 text-ink-700 dark:border-ink-700 dark:bg-ink-800 dark:text-ink-200">
               {t("count", { count })}
             </span>
           )}
           {minPrice != null && (
-            <span className="rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-[12px] font-800 text-brand-700 dark:border-brand-500/30 dark:bg-brand-500/15 dark:text-brand-300">
+            <span className="rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-[13px] font-800 text-brand-700 dark:border-brand-500/30 dark:bg-brand-500/15 dark:text-brand-300">
               {t("price_from", { price: formatPrice(minPrice) })}
             </span>
           )}
@@ -194,12 +194,12 @@ export default async function RouteLandingPage({ params }: Props) {
       </header>
 
       <section className="mb-8">
-        <h2 className="mb-3 font-disp text-[18px] font-900 text-ink-900 dark:text-white">
+        <h2 className="mb-3 font-disp text-[20px] font-900 text-ink-900 dark:text-white">
           {t("trips_title", { from, to })}
         </h2>
         {trips.length === 0 ? (
           <div className="rounded-3xl border border-ink-100 bg-white p-8 text-center shadow-card dark:border-ink-800 dark:bg-ink-900">
-            <p className="text-[14px] font-700 text-ink-500 dark:text-ink-400">{t("no_trips")}</p>
+            <p className="text-[15px] font-700 text-ink-500 dark:text-ink-400">{t("no_trips")}</p>
           </div>
         ) : (
           <ul className="flex flex-col gap-3">
@@ -210,7 +210,7 @@ export default async function RouteLandingPage({ params }: Props) {
         )}
         <Link
           href={`/trips?from=${encodeURIComponent(pair.from.nameRu)}&to=${encodeURIComponent(pair.to.nameRu)}`}
-          className="mt-4 inline-flex items-center gap-1.5 text-[14px] font-800 text-brand-700 hover:underline dark:text-brand-300"
+          className="mt-4 inline-flex items-center gap-1.5 text-[15px] font-800 text-brand-700 hover:underline dark:text-brand-300"
         >
           {t("view_all", { from, to })}
           <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -218,7 +218,7 @@ export default async function RouteLandingPage({ params }: Props) {
       </section>
 
       <section className="mb-8">
-        <h2 className="mb-3 font-disp text-[18px] font-900 text-ink-900 dark:text-white">
+        <h2 className="mb-3 font-disp text-[20px] font-900 text-ink-900 dark:text-white">
           {t("faq_title")}
         </h2>
         <ul className="flex flex-col gap-3">
@@ -227,8 +227,8 @@ export default async function RouteLandingPage({ params }: Props) {
               key={f.q}
               className="rounded-3xl border border-ink-100 bg-white p-4 shadow-card dark:border-ink-800 dark:bg-ink-900"
             >
-              <h3 className="text-[14px] font-800 text-ink-900 dark:text-white">{f.q}</h3>
-              <p className="mt-1.5 text-[13px] leading-relaxed text-ink-600 dark:text-ink-300">
+              <h3 className="text-[15px] font-800 text-ink-900 dark:text-white">{f.q}</h3>
+              <p className="mt-1.5 text-[14px] leading-relaxed text-ink-600 dark:text-ink-300">
                 {f.a}
               </p>
             </li>
@@ -237,7 +237,7 @@ export default async function RouteLandingPage({ params }: Props) {
       </section>
 
       <section>
-        <h2 className="mb-3 font-disp text-[18px] font-900 text-ink-900 dark:text-white">
+        <h2 className="mb-3 font-disp text-[20px] font-900 text-ink-900 dark:text-white">
           {t("related_title")}
         </h2>
         <ul className="flex flex-wrap gap-2">
@@ -245,7 +245,7 @@ export default async function RouteLandingPage({ params }: Props) {
             <li key={p.slug}>
               <Link
                 href={`/route/${p.slug}`}
-                className="inline-flex items-center gap-1 rounded-full border border-ink-200 bg-white px-3 py-1.5 text-[13px] font-700 text-ink-700 transition-colors hover:border-brand-200 hover:text-brand-700 dark:border-ink-700 dark:bg-ink-900 dark:text-ink-200"
+                className="inline-flex items-center gap-1 rounded-full border border-ink-200 bg-white px-3 py-1.5 text-[15px] font-700 text-ink-700 transition-colors hover:border-brand-200 hover:text-brand-700 dark:border-ink-700 dark:bg-ink-900 dark:text-ink-200"
               >
                 {cityName(p.from, locale)} → {cityName(p.to, locale)}
               </Link>

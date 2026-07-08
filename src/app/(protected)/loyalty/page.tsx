@@ -88,20 +88,20 @@ export default function LoyaltyPage() {
               <div>
                 <div className="flex items-center gap-2">
                   <Award className={cn("h-5 w-5", cfg.textColor)} aria-hidden="true" />
-                  <span className={cn("text-[12px] font-800 uppercase tracking-widest", cfg.textColor)}>
+                  <span className={cn("text-[13px] font-800 uppercase tracking-widest", cfg.textColor)}>
                     {t(`tiers.${tier}`)}
                   </span>
                 </div>
                 <p className="mt-2 leading-none">
                   <span className="font-disp text-[40px] font-900 text-ink-900 dark:text-white">{status?.points ?? 0}</span>
-                  <span className="ml-2 text-[16px] font-700 text-ink-500 dark:text-ink-400">{t("points_suffix")}</span>
+                  <span className="ml-2 text-[17px] font-700 text-ink-500 dark:text-ink-400">{t("points_suffix")}</span>
                 </p>
               </div>
             </div>
 
             {status?.nextTier && status.pointsToNextTier != null && (
               <div className="mt-5">
-                <div className="mb-2 flex justify-between text-[12px] font-700">
+                <div className="mb-2 flex justify-between text-[14px] font-700">
                   <span className="text-ink-600 dark:text-ink-300">
                     {t("to_next_tier", { tier: t(`tiers.${status.nextTier as Tier}`) })}
                   </span>
@@ -117,7 +117,7 @@ export default function LoyaltyPage() {
             )}
 
             {!status?.nextTier && (
-              <p className={cn("mt-4 text-[13px] font-800", cfg.textColor)}>
+              <p className={cn("mt-4 text-[14px] font-800", cfg.textColor)}>
                 {t("max_tier_reached")}
               </p>
             )}
@@ -125,7 +125,7 @@ export default function LoyaltyPage() {
 
           {/* ── Tier roadmap ── */}
           <div className="mb-4 rounded-3xl border border-ink-100 bg-white p-5 shadow-card dark:border-ink-800 dark:bg-ink-900">
-            <h2 className="mb-5 font-disp text-[15px] font-900 text-ink-900 dark:text-white">{t("tiers_section")}</h2>
+            <h2 className="mb-5 font-disp text-[16px] font-900 text-ink-900 dark:text-white">{t("tiers_section")}</h2>
             <div className="relative flex items-start">
               {/* Track line */}
               <div className="absolute left-[18px] right-[18px] top-[18px] h-0.5 bg-ink-200 dark:bg-ink-700" />
@@ -156,7 +156,7 @@ export default function LoyaltyPage() {
                       )} aria-hidden="true" />
                     </div>
                     <span className={cn(
-                      "text-center text-[10px] font-800 leading-tight",
+                      "text-center text-[11px] font-800 leading-tight",
                       isDone   ? "text-brand-700 dark:text-brand-300" :
                       isActive ? tcfg.textColor :
                                  "text-ink-400",
@@ -171,15 +171,15 @@ export default function LoyaltyPage() {
 
           {/* ── How to earn ── */}
           <div className="mb-4 rounded-3xl border border-ink-100 bg-white p-5 shadow-card dark:border-ink-800 dark:bg-ink-900">
-            <h2 className="mb-4 font-disp text-[15px] font-900 text-ink-900 dark:text-white">{t("how_to_earn_section")}</h2>
+            <h2 className="mb-4 font-disp text-[16px] font-900 text-ink-900 dark:text-white">{t("how_to_earn_section")}</h2>
             <div className="flex flex-col divide-y divide-ink-100 dark:divide-ink-800">
               {(["driver", "passenger", "five_stars"] as const).map((key, idx) => (
                 <div key={key} className="flex items-center justify-between py-3 first:pt-0 last:pb-0">
                   <div className="flex items-center gap-3">
                     <span className="text-[20px]" aria-hidden="true">{HOW_TO_EARN_ICONS[idx]}</span>
-                    <span className="text-[13px] font-700 text-ink-700 dark:text-ink-200">{t(`earn.${key}`)}</span>
+                    <span className="text-[15px] font-700 text-ink-700 dark:text-ink-200">{t(`earn.${key}`)}</span>
                   </div>
-                  <span className="text-[14px] font-900 text-brand-700 dark:text-brand-300">{HOW_TO_EARN_POINTS[idx]}</span>
+                  <span className="text-[15px] font-900 text-brand-700 dark:text-brand-300">{HOW_TO_EARN_POINTS[idx]}</span>
                 </div>
               ))}
             </div>
@@ -188,7 +188,7 @@ export default function LoyaltyPage() {
           {/* ── Transaction history ── */}
           <div className="rounded-3xl border border-ink-100 bg-white shadow-card dark:border-ink-800 dark:bg-ink-900">
             <div className="border-b border-ink-100 px-5 py-4 dark:border-ink-800">
-              <h2 className="font-disp text-[15px] font-900 text-ink-900 dark:text-white">{t("history_section")}</h2>
+              <h2 className="font-disp text-[16px] font-900 text-ink-900 dark:text-white">{t("history_section")}</h2>
             </div>
 
             {txQuery.isLoading ? (
@@ -203,28 +203,28 @@ export default function LoyaltyPage() {
               />
             ) : transactions.length === 0 ? (
               <div className="py-12 text-center">
-                <p className="text-[14px] font-700 text-ink-600 dark:text-ink-300">{t("empty_title")}</p>
-                <p className="mt-1 text-[12px] text-ink-400">{t("empty_hint")}</p>
+                <p className="text-[15px] font-700 text-ink-600 dark:text-ink-300">{t("empty_title")}</p>
+                <p className="mt-1 text-[13px] text-ink-400">{t("empty_hint")}</p>
               </div>
             ) : (
               <div className="divide-y divide-ink-100 dark:divide-ink-800">
                 {transactions.map((tx) => (
                   <div key={tx.id} className="flex items-center justify-between px-5 py-3.5">
                     <div className="min-w-0 flex-1">
-                      <p className="text-[13px] font-700 text-ink-900 dark:text-white">
+                      <p className="text-[15px] font-700 text-ink-900 dark:text-white">
                         {sourceLabels[tx.source] ?? tx.source}
                       </p>
                       {tx.note && (
-                        <p className="truncate text-[11px] text-ink-500 dark:text-ink-400">{tx.note}</p>
+                        <p className="truncate text-[12px] text-ink-500 dark:text-ink-400">{tx.note}</p>
                       )}
-                      <p className="text-[11px] text-ink-400">
+                      <p className="text-[12px] text-ink-400">
                         {new Date(tx.createdAt).toLocaleDateString("ru-RU", {
                           day: "numeric", month: "short", year: "numeric",
                         })}
                       </p>
                     </div>
                     <span className={cn(
-                      "ml-3 flex-shrink-0 text-[16px] font-900",
+                      "ml-3 flex-shrink-0 text-[17px] font-900",
                       tx.points > 0 ? "text-brand-600 dark:text-brand-400" : "text-coral-500",
                     )}>
                       {tx.points > 0 ? "+" : ""}{tx.points}

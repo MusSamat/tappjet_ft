@@ -83,7 +83,7 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
           <Clock className="h-9 w-9 text-accent-500" aria-hidden="true" />
         </div>
         <h2 className="text-[22px] font-extrabold text-ink-900 dark:text-white">{t("request_sent")}</h2>
-        <p className="mx-auto mt-2 max-w-[340px] text-[14px] leading-relaxed text-ink-500 dark:text-ink-400">
+        <p className="mx-auto mt-2 max-w-[340px] text-[15px] leading-relaxed text-ink-500 dark:text-ink-400">
           {t("waiting_hint")}
         </p>
 
@@ -96,9 +96,9 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
         <div className="mx-auto mt-5 max-w-[400px] rounded-2xl border border-brand-100 bg-brand-50 px-4 py-3 text-left">
           <div className="flex items-center gap-2 mb-1">
             <MessageCircle className="h-3.5 w-3.5 text-brand-700 flex-shrink-0" aria-hidden="true" />
-            <span className="text-[13px] font-extrabold text-brand-800">{t("chat_title")}</span>
+            <span className="text-[14px] font-extrabold text-brand-800">{t("chat_title")}</span>
           </div>
-          <p className="text-[12px] leading-relaxed text-brand-700">
+          <p className="text-[13px] leading-relaxed text-brand-700">
             {t("chat_hint")}
           </p>
         </div>
@@ -119,7 +119,7 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
           )}
         </div>
 
-        <p className="mt-4 flex items-center justify-center gap-1.5 text-[12px] text-ink-400">
+        <p className="mt-4 flex items-center justify-center gap-1.5 text-[13px] text-ink-400">
           <Bell className="h-3.5 w-3.5" aria-hidden="true" />
           {t("notif_hint")}
         </p>
@@ -152,8 +152,8 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
           <div className="flex min-w-0 items-center gap-2">
             <Users className="h-4 w-4 shrink-0 text-ink-400" aria-hidden="true" />
             <div className="min-w-0">
-              <p className="text-[14px] font-bold leading-tight text-ink-900 dark:text-white">{t("seats_label")}</p>
-              <p className="truncate text-[11px] font-semibold text-ink-400">{t("available", { n: seatsAvailable })}</p>
+              <p className="text-[15px] font-bold leading-tight text-ink-900 dark:text-white">{t("seats_label")}</p>
+              <p className="truncate text-[13px] font-semibold text-ink-400">{t("available", { n: seatsAvailable })}</p>
             </div>
           </div>
           <div className="flex shrink-0 items-center gap-2.5">
@@ -162,7 +162,7 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
               onClick={() => setSeats((s) => Math.max(1, s - 1))}
               aria-label={t("seat_minus")}
               disabled={seats <= 1 || disabled}
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-ink-300 text-[18px] font-bold text-ink-900 hover:bg-ink-100 disabled:opacity-40 dark:border-ink-700 dark:text-white dark:hover:bg-ink-800"
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-ink-300 text-[20px] font-bold text-ink-900 hover:bg-ink-100 disabled:opacity-40 dark:border-ink-700 dark:text-white dark:hover:bg-ink-800"
             >
               −
             </button>
@@ -172,7 +172,7 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
               onClick={() => setSeats((s) => Math.min(max, s + 1))}
               aria-label={t("seat_plus")}
               disabled={seats >= max || disabled}
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-ink-300 text-[18px] font-bold text-ink-900 hover:bg-ink-100 disabled:opacity-40 dark:border-ink-700 dark:text-white dark:hover:bg-ink-800"
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-ink-300 text-[20px] font-bold text-ink-900 hover:bg-ink-100 disabled:opacity-40 dark:border-ink-700 dark:text-white dark:hover:bg-ink-800"
             >
               +
             </button>
@@ -182,8 +182,8 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
           <div className="flex min-w-0 items-center gap-2">
             <Wallet className="h-4 w-4 shrink-0 text-brand-500" aria-hidden="true" />
             <div className="min-w-0">
-              <p className="text-[14px] font-bold leading-tight text-ink-900 dark:text-white">{t("pay_to_driver")}</p>
-              <p className="truncate text-[11px] font-semibold text-ink-400">{t("price_breakdown", { price: String(pricePerSeat), seats })}</p>
+              <p className="text-[15px] font-bold leading-tight text-ink-900 dark:text-white">{t("pay_to_driver")}</p>
+              <p className="truncate text-[13px] font-semibold text-ink-400">{t("price_breakdown", { price: String(pricePerSeat), seats })}</p>
             </div>
           </div>
           <span className="shrink-0 text-[20px] font-extrabold text-brand-700">{formatPrice(total)}</span>
@@ -192,7 +192,7 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
 
       {/* Comment — compact: chips + 2-row textarea */}
       <div className="flex flex-col gap-1.5">
-        <span className="flex items-center gap-1.5 text-[12px] font-bold text-ink-500 dark:text-ink-400">
+        <span className="flex items-center gap-1.5 text-[13px] font-bold text-ink-500 dark:text-ink-400">
           <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" />
           {t("comment_label")}
         </span>
@@ -202,7 +202,7 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
               key={chip}
               type="button"
               onClick={() => setComment((prev) => (prev ? `${prev}, ${chip.toLowerCase()}` : chip))}
-              className="rounded-full border border-ink-200 bg-ink-50 px-2.5 py-1 text-[12px] font-semibold text-ink-600 transition-colors hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700 dark:border-ink-700 dark:bg-ink-800 dark:text-ink-300"
+              className="rounded-full border border-ink-200 bg-ink-50 px-2.5 py-1 text-[14px] font-semibold text-ink-600 transition-colors hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700 dark:border-ink-700 dark:bg-ink-800 dark:text-ink-300"
             >
               {chip}
             </button>
@@ -220,7 +220,7 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
       {/* Warning — one compact line */}
       <div className="flex items-center gap-2 rounded-xl border border-accent-100 bg-accent-50 px-3 py-2">
         <AlertTriangle className="h-3.5 w-3.5 flex-shrink-0 text-accent-600" aria-hidden="true" />
-        <span className="text-[12px] font-semibold text-accent-700">{t("warning_hint")}</span>
+        <span className="text-[14px] font-semibold text-accent-700">{t("warning_hint")}</span>
       </div>
 
       <div className="flex gap-2">

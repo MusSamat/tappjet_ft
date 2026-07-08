@@ -23,8 +23,8 @@ export function ChatSidebar({ activeBookingId }: { activeBookingId: string }) {
   return (
     <div className="flex h-full flex-col overflow-hidden border-r border-ink-200 bg-white dark:bg-ink-900 dark:border-ink-800">
       <div className="px-5 pb-3 pt-5">
-        <p className="text-[17px] font-extrabold text-ink-900 dark:text-white">{t("title")}</p>
-        <p className="mt-0.5 text-[12px] font-semibold text-ink-500">
+        <p className="text-[18px] font-extrabold text-ink-900 dark:text-white">{t("title")}</p>
+        <p className="mt-0.5 text-[14px] font-semibold text-ink-500">
           {active.length > 0 ? t("active_count", { n: active.length }) : t("no_active")}
         </p>
       </div>
@@ -37,7 +37,7 @@ export function ChatSidebar({ activeBookingId }: { activeBookingId: string }) {
         )}
         {isError && <QueryError error={error} onRetry={() => void refetch()} className="m-4" />}
         {!isLoading && !isError && summaries.length === 0 && (
-          <p className="px-4 py-8 text-center text-[13px] font-semibold text-ink-400">{t("no_chats")}</p>
+          <p className="px-4 py-8 text-center text-[15px] font-semibold text-ink-400">{t("no_chats")}</p>
         )}
 
         {active.map((s) => (
@@ -48,7 +48,7 @@ export function ChatSidebar({ activeBookingId }: { activeBookingId: string }) {
           <>
             <div className="mx-4 my-2 flex items-center gap-2">
               <div className="h-px flex-1 bg-ink-100 dark:bg-ink-800" />
-              <span className="text-[10px] font-bold uppercase tracking-widest text-ink-400">{t("archive")}</span>
+              <span className="text-[11px] font-bold uppercase tracking-widest text-ink-400">{t("archive")}</span>
               <div className="h-px flex-1 bg-ink-100 dark:bg-ink-800" />
             </div>
             {closed.map((s) => (

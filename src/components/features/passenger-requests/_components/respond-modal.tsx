@@ -19,7 +19,7 @@ interface Props {
   onClose: () => void;
 }
 
-const FIELD_LABEL = "mb-1.5 text-[10px] font-bold uppercase tracking-widest text-sky-600";
+const FIELD_LABEL = "mb-1.5 text-[11px] font-bold uppercase tracking-widest text-sky-600";
 
 export function RespondModal({ request, onClose }: Props) {
   const qc = useQueryClient();
@@ -60,8 +60,8 @@ export function RespondModal({ request, onClose }: Props) {
       <ModalContent className="max-w-[480px] p-0">
         <div className="p-5">
           <ModalHeader>
-            <ModalTitle className="text-[16px] font-extrabold">{t("respond_title")}</ModalTitle>
-            <ModalDescription className="text-[12px] text-ink-500">
+            <ModalTitle className="text-[17px] font-extrabold">{t("respond_title")}</ModalTitle>
+            <ModalDescription className="text-[13px] text-ink-500">
               {request.originCity} → {request.destinationCity}
             </ModalDescription>
           </ModalHeader>
@@ -75,7 +75,7 @@ export function RespondModal({ request, onClose }: Props) {
                 value={price}
                 onChange={(e) => setPrice(e.target.value.replace(/\D/g, "").slice(0, 6))}
                 placeholder={t("price_placeholder")}
-                className="h-12 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 text-[16px] font-bold text-ink-900 outline-none focus:border-sky-400 focus:bg-white dark:border-ink-700 dark:bg-ink-800 dark:text-white"
+                className="h-12 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 text-[17px] font-bold text-ink-900 outline-none focus:border-sky-400 focus:bg-white dark:border-ink-700 dark:bg-ink-800 dark:text-white"
               />
             </div>
 
@@ -89,7 +89,7 @@ export function RespondModal({ request, onClose }: Props) {
                   min={request.departureDate.split("T")[0]}
                   value={date}
                   onChange={setDate}
-                  triggerClassName="h-12 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 text-[14px] dark:bg-ink-800 dark:border-ink-700"
+                  triggerClassName="h-12 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 text-[15px] dark:bg-ink-800 dark:border-ink-700"
                 />
               </div>
               <div className="min-w-0">
@@ -99,7 +99,7 @@ export function RespondModal({ request, onClose }: Props) {
             </div>
 
             <div>
-              <p className="mb-1.5 text-[10px] font-bold uppercase tracking-widest text-ink-400">
+              <p className="mb-1.5 text-[11px] font-bold uppercase tracking-widest text-ink-400">
                 {t("message_label")}
               </p>
               <textarea
@@ -108,12 +108,12 @@ export function RespondModal({ request, onClose }: Props) {
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder={t("message_placeholder")}
-                className="w-full resize-none rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 py-3 text-[13px] text-ink-900 outline-none focus:border-sky-400 focus:bg-white placeholder:text-ink-400 dark:border-ink-700 dark:bg-ink-800 dark:text-white"
+                className="w-full resize-none rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 py-3 text-[14px] text-ink-900 outline-none focus:border-sky-400 focus:bg-white placeholder:text-ink-400 dark:border-ink-700 dark:bg-ink-800 dark:text-white"
               />
             </div>
 
             {error && (
-              <div className="rounded-2xl bg-coral-50 px-4 py-3 text-[13px] font-semibold text-coral-700 dark:bg-coral-500/10 dark:text-coral-300">
+              <div className="rounded-2xl bg-coral-50 px-4 py-3 text-[15px] font-semibold text-coral-700 dark:bg-coral-500/10 dark:text-coral-300">
                 {error}
               </div>
             )}

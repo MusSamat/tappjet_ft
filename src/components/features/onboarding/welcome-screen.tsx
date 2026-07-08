@@ -35,19 +35,19 @@ export function WelcomeScreen({ onGuest }: WelcomeScreenProps) {
         </span>
 
         <div>
-          <p className="text-[14px] font-900 text-accent-300">{t("title")}</p>
+          <p className="text-[15px] font-900 text-accent-300">{t("title")}</p>
           <h1 className="font-disp mt-1 text-[22px] font-900 leading-tight text-white">{t("subtitle")}</h1>
         </div>
 
         {/* Feature chips */}
         <div className="flex flex-wrap justify-center gap-1.5">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1.5 text-[12px] font-800 ring-1 ring-white/20">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1.5 text-[13px] font-800 ring-1 ring-white/20">
             <ShieldCheck className="h-4 w-4" aria-hidden="true" /> {t("chip_verified")}
           </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1.5 text-[12px] font-800 ring-1 ring-white/20">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1.5 text-[13px] font-800 ring-1 ring-white/20">
             <Wallet className="h-4 w-4" aria-hidden="true" /> {t("chip_cheap")}
           </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1.5 text-[12px] font-800 ring-1 ring-white/20">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1.5 text-[13px] font-800 ring-1 ring-white/20">
             <MessageCircle className="h-4 w-4" aria-hidden="true" /> {t("chip_chat")}
           </span>
         </div>
@@ -63,7 +63,7 @@ export function WelcomeScreen({ onGuest }: WelcomeScreenProps) {
         <button
           type="button"
           onClick={onGuest}
-          className="flex h-13 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 py-3.5 text-[15px] font-900 text-accent-ink shadow-cta transition-colors hover:bg-accent-400"
+          className="flex h-13 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 py-3.5 text-[16px] font-900 text-accent-ink shadow-cta transition-colors hover:bg-accent-400"
         >
           {t("cta_start")} <ArrowRight className="h-5 w-5" aria-hidden="true" />
         </button>

@@ -27,12 +27,12 @@ function FiltersHeader() {
 
   return (
     <div className="mb-3 flex items-center justify-between">
-      <span className="text-[15px] font-900 text-ink-900 dark:text-white">{t("title")}</span>
+      <span className="text-[16px] font-900 text-ink-900 dark:text-white">{t("title")}</span>
       {hasActive && (
         <button
           type="button"
           onClick={reset}
-          className="text-[13px] font-800 text-brand-600 hover:text-brand-700 dark:text-brand-300"
+          className="text-[14px] font-800 text-brand-600 hover:text-brand-700 dark:text-brand-300"
         >
           {t("reset")}
         </button>

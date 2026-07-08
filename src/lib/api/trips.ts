@@ -71,6 +71,12 @@ export async function getTrip(id: string): Promise<TripDetail> {
   return data;
 }
 
+/** Manual ±1 seat adjust — phone deals happen off-platform («занято по телефону»). */
+export async function adjustTripSeats(id: string, delta: 1 | -1): Promise<TripDetail> {
+  const { data } = await api.post<TripDetail>(`/trips/${id}/seats`, { delta });
+  return data;
+}
+
 export async function cancelTrip(id: string, reason?: string): Promise<void> {
   await api.delete(`/trips/${id}`, reason ? { data: { reason } } : undefined);
 }

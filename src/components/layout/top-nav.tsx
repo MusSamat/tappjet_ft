@@ -15,7 +15,6 @@ import { useUnreadCount } from "@/lib/hooks/use-unread-count";
 import { useUnreadMessages } from "@/lib/hooks/use-unread-messages";
 import { useRoleTheme } from "@/lib/hooks/use-role-colors";
 import { normalizeMediaUrl } from "@/lib/utils/media-url";
-import { RoleSwitcher } from "@/components/features/role-mode/role-switcher";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { LogoMark, Wordmark } from "@/components/ui/logo-mark";
 import { cn } from "@/lib/utils/cn";
@@ -62,18 +61,12 @@ function UserDropdown({ onClose }: { onClose: () => void }) {
   return (
     <div className="absolute right-0 top-[calc(100%+8px)] z-50 w-56 overflow-hidden rounded-2xl border border-ink-100 bg-white shadow-lift dark:border-ink-800 dark:bg-ink-900">
       <div className="border-b border-ink-100 px-4 py-3 dark:border-ink-800">
-        <p className="truncate text-[14px] font-900 text-ink-900 dark:text-white">{user?.name}</p>
-        <p className="truncate text-[12px] font-700 text-ink-400">{user?.phone}</p>
-        <p className={cn("mt-0.5 text-[12px] font-800", theme.textOn)}>
+        <p className="truncate text-[15px] font-900 text-ink-900 dark:text-white">{user?.name}</p>
+        <p className="truncate text-[14px] font-700 text-ink-400">{user?.phone}</p>
+        <p className={cn("mt-0.5 text-[13px] font-800", theme.textOn)}>
           {activeMode === "driver" ? t("driver_label") : t("passenger_label")}
         </p>
       </div>
-
-      {user?.roles?.includes("driver") && (
-        <div className="flex justify-center border-b border-ink-100 px-4 py-2.5 dark:border-ink-800">
-          <RoleSwitcher />
-        </div>
-      )}
 
       <div className="py-1">
         {links.map(({ href, label, icon: Icon }) => (
@@ -81,7 +74,7 @@ function UserDropdown({ onClose }: { onClose: () => void }) {
             key={href + label}
             href={href}
             onClick={onClose}
-            className="flex items-center gap-3 px-4 py-2.5 text-[13px] font-800 text-ink-700 hover:bg-ink-50 dark:text-ink-200 dark:hover:bg-ink-800"
+            className="flex items-center gap-3 px-4 py-2.5 text-[14px] font-800 text-ink-700 hover:bg-ink-50 dark:text-ink-200 dark:hover:bg-ink-800"
           >
             <Icon className="h-4 w-4 text-ink-400" aria-hidden="true" />
             {label}
@@ -91,7 +84,7 @@ function UserDropdown({ onClose }: { onClose: () => void }) {
           <Link
             href="/profile/driver"
             onClick={onClose}
-            className="flex items-center gap-3 px-4 py-2.5 text-[13px] font-800 text-grape-700 hover:bg-grape-50 dark:text-grape-300 dark:hover:bg-grape-500/10"
+            className="flex items-center gap-3 px-4 py-2.5 text-[14px] font-800 text-grape-700 hover:bg-grape-50 dark:text-grape-300 dark:hover:bg-grape-500/10"
           >
             <CarFront className="h-4 w-4 text-grape-600 dark:text-grape-400" aria-hidden="true" />
             {t("become_driver")}
@@ -104,7 +97,7 @@ function UserDropdown({ onClose }: { onClose: () => void }) {
           type="button"
           onClick={() => logoutMut.mutate()}
           disabled={logoutMut.isPending}
-          className="flex w-full items-center gap-3 px-4 py-2.5 text-[13px] font-800 text-danger-600 hover:bg-danger-50 dark:hover:bg-danger-500/10"
+          className="flex w-full items-center gap-3 px-4 py-2.5 text-[14px] font-800 text-danger-600 hover:bg-danger-50 dark:hover:bg-danger-500/10"
         >
           <LogOut className="h-4 w-4" aria-hidden="true" />
           {logoutMut.isPending ? t("logging_out") : t("logout")}
@@ -171,7 +164,7 @@ export function TopNav() {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
           <LogoMark className="h-8 w-8" />
-          <Wordmark className="text-[15px]" />
+          <Wordmark className="text-[16px]" />
         </Link>
 
         {/* Nav links */}
@@ -183,7 +176,7 @@ export function TopNav() {
                 key={href}
                 href={href}
                 className={cn(
-                  "rounded-full px-3.5 py-2 text-[13px] font-800 transition-colors",
+                  "rounded-full px-3.5 py-2 text-[14px] font-800 transition-colors",
                   active
                     ? cn(theme.navPillOn, theme.navTextOn, "font-900")
                     : "text-ink-600 hover:bg-ink-100 dark:text-ink-300 dark:hover:bg-ink-800",
@@ -201,7 +194,7 @@ export function TopNav() {
             <>
               <Link
                 href={createHref}
-                className="flex items-center gap-1.5 rounded-full bg-accent-500 px-4 py-1.5 text-[12px] font-900 text-accent-ink shadow-cta transition-colors hover:bg-accent-400"
+                className="flex items-center gap-1.5 rounded-full bg-accent-500 px-4 py-1.5 text-[13px] font-900 text-accent-ink shadow-cta transition-colors hover:bg-accent-400"
               >
                 <Plus className="h-4 w-4" aria-hidden="true" />
                 {t("create_btn")}
@@ -227,7 +220,7 @@ export function TopNav() {
                   aria-label={t("user_menu_aria")}
                   aria-expanded={dropOpen}
                   className={cn(
-                    "flex h-8 w-8 items-center justify-center overflow-hidden rounded-full text-[12px] font-900",
+                    "flex h-8 w-8 items-center justify-center overflow-hidden rounded-full text-[13px] font-900",
                     theme.badge,
                   )}
                 >
@@ -251,7 +244,7 @@ export function TopNav() {
               <ThemeToggle />
               <Link
                 href="/auth/login"
-                className="rounded-full bg-accent-500 px-4 py-1.5 text-[12px] font-900 text-accent-ink shadow-cta transition-colors hover:bg-accent-400"
+                className="rounded-full bg-accent-500 px-4 py-1.5 text-[13px] font-900 text-accent-ink shadow-cta transition-colors hover:bg-accent-400"
               >
                 {t("sign_in_btn")}
               </Link>

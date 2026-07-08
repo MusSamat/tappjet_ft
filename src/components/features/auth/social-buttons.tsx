@@ -120,7 +120,7 @@ export function SocialButtons({ onDone }: Props) {
           </a>
           <button
             type="button"
-            className="text-center text-[12px] font-700 text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300"
+            className="text-center text-[14px] font-700 text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300"
             onClick={() => {
               openTelegramDeepLink(tgBotLink.deepLink);
             }}

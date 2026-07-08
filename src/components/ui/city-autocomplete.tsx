@@ -167,21 +167,21 @@ export function CityAutocomplete({
     setActiveIdx(-1);
   };
 
-  const handleFocus = async () => {
+  const handleFocus = async (e?: React.FocusEvent<HTMLInputElement>) => {
     if (userTypingRef.current && results.length > 0) {
       setOpen(true);
       return;
     }
-    // Show popular cities when focusing on an empty input
-    if (!query.trim()) {
-      const popular = await loadPopularCities();
-      if (popular.length > 0) {
-        setResults(popular);
-        setShowingPopular(true);
-        setOpen(true);
-        setActiveIdx(-1);
-        calcPopup();
-      }
+    // Filled field: select the text so the first keystroke replaces it.
+    if (query.trim()) e?.target.select();
+    // Focus (empty OR already-filled) → popular cities; editing → live search.
+    const popular = await loadPopularCities();
+    if (popular.length > 0) {
+      setResults(popular);
+      setShowingPopular(true);
+      setOpen(true);
+      setActiveIdx(-1);
+      calcPopup();
     }
   };
 
@@ -209,7 +209,7 @@ export function CityAutocomplete({
       {label && (
         <label
           htmlFor={inputId}
-          className="mb-1 block text-[11px] font-bold uppercase tracking-wide text-ink-500"
+          className="mb-1 block text-[12px] font-bold uppercase tracking-wide text-ink-500"
         >
           {label}
         </label>
@@ -266,7 +266,7 @@ export function CityAutocomplete({
           aria-activedescendant={activeIdx >= 0 ? `${inputId}-opt-${activeIdx}` : undefined}
           className={cn(
             "w-full bg-transparent font-semibold text-ink-900 outline-none dark:text-white",
-            compact ? "py-1.5 text-[12px]" : "py-2 text-[14px]",
+            compact ? "py-1.5 text-[14px]" : "py-2 text-[17px]",
             borderless ? "pr-3" : "rounded-2xl border border-ink-200 bg-white pl-9 pr-3 focus:border-brand-500 dark:border-ink-700 dark:bg-ink-900",
             noMatch && !borderless && "border-coral-400 focus:border-coral-400",
             "placeholder:text-ink-400",
@@ -282,7 +282,7 @@ export function CityAutocomplete({
       </div>
 
       {noMatch && (
-        <p className="mt-1 text-[11px] font-semibold text-coral-500" role="alert">
+        <p className="mt-1 text-[13px] font-semibold text-coral-500" role="alert">
           {query.trim() && results.length === 0 ? t("no_matches") : t("pick_from_list")}
         </p>
       )}
@@ -297,7 +297,7 @@ export function CityAutocomplete({
         >
           {showingPopular && (
             <li className="border-b border-ink-100 px-4 py-2 dark:border-ink-800">
-              <span className="text-[10px] font-bold uppercase tracking-wide text-ink-400">
+              <span className="text-[11px] font-bold uppercase tracking-wide text-ink-400">
                 {t("popular_cities")}
               </span>
             </li>
@@ -320,8 +320,8 @@ export function CityAutocomplete({
             >
               <MapPin className="h-3 w-3 flex-shrink-0 text-ink-400" aria-hidden="true" />
               <div className="min-w-0">
-                <p className={cn("font-bold text-ink-900 dark:text-white", compact ? "text-[12px]" : "text-[13px]")}>{city.nameRu}</p>
-                <p className="text-[11px] font-semibold text-ink-400">{getSubtitle(city, locale)}</p>
+                <p className={cn("font-bold text-ink-900 dark:text-white", compact ? "text-[14px]" : "text-[16px]")}>{city.nameRu}</p>
+                <p className="text-[14px] font-semibold text-ink-400">{getSubtitle(city, locale)}</p>
               </div>
             </li>
           ))}

@@ -104,7 +104,7 @@ export function CameraCapture({ kind, onCapture, onClose }: Props) {
   if (failed) {
     return (
       <div className="fixed inset-0 z-[120] flex flex-col items-center justify-center gap-4 bg-black/90 p-6 text-center">
-        <p className="text-[14px] font-700 text-white">{t("no_camera")}</p>
+        <p className="text-[15px] font-700 text-white">{t("no_camera")}</p>
         <input
           ref={fallbackRef}
           type="file"
@@ -119,7 +119,7 @@ export function CameraCapture({ kind, onCapture, onClose }: Props) {
         <Button variant="primary" size="md" onClick={() => fallbackRef.current?.click()}>
           {t("open_camera")}
         </Button>
-        <button type="button" onClick={onClose} className="text-[13px] font-700 text-white/70">
+        <button type="button" onClick={onClose} className="text-[15px] font-700 text-white/70">
           {t("cancel")}
         </button>
       </div>
@@ -163,7 +163,7 @@ export function CameraCapture({ kind, onCapture, onClose }: Props) {
                   className="absolute left-1/2 top-[44%] -translate-x-1/2 -translate-y-1/2 rounded-[50%] border-[3px] border-white/90"
                   style={{ width: "68vw", maxWidth: 340, aspectRatio: "3/4" }}
                 />
-                <p className="absolute inset-x-6 top-[8%] text-center text-[14px] font-800 text-white drop-shadow">
+                <p className="absolute inset-x-6 top-[8%] text-center text-[15px] font-800 text-white drop-shadow">
                   {t("selfie_hint")}
                 </p>
               </>
@@ -213,7 +213,7 @@ export function CameraCapture({ kind, onCapture, onClose }: Props) {
                   <path d="M42 90 L42 100 Q42 104 48 104 L60 104 Q66 104 66 100 L66 92" />
                   <path d="M134 92 L134 100 Q134 104 140 104 L152 104 Q158 104 158 100 L158 90" />
                 </svg>
-                <p className="absolute inset-x-6 top-[8%] text-center text-[14px] font-800 text-white drop-shadow">
+                <p className="absolute inset-x-6 top-[8%] text-center text-[15px] font-800 text-white drop-shadow">
                   {t("car_hint")}
                 </p>
               </>
@@ -240,7 +240,7 @@ export function CameraCapture({ kind, onCapture, onClose }: Props) {
                   className="absolute left-1/2 top-[42%] w-[88%] -translate-x-1/2 -translate-y-1/2 rounded-2xl border-[3px] border-white/90"
                   style={{ aspectRatio: "1.586" }}
                 />
-                <p className="absolute inset-x-6 top-[10%] text-center text-[14px] font-800 text-white drop-shadow">
+                <p className="absolute inset-x-6 top-[10%] text-center text-[15px] font-800 text-white drop-shadow">
                   {t("doc_hint")}
                 </p>
               </>

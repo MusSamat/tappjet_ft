@@ -42,8 +42,8 @@ export function ReviewCard({
         <DriverAvatar name={review.rater.name} src={review.rater.avatarUrl} size="md" />
         <div className="flex-1">
           <div className="flex items-center justify-between">
-            <span className="text-[14px] font-bold text-ink-900 dark:text-white">{review.rater.name}</span>
-            <span className="text-[11px] text-ink-400">
+            <span className="text-[15px] font-bold text-ink-900 dark:text-white">{review.rater.name}</span>
+            <span className="text-[12px] text-ink-400">
               {formatShortDate(review.createdAt, locale)}
             </span>
           </div>
@@ -51,7 +51,7 @@ export function ReviewCard({
             <RatingStars value={review.score} size={12} />
           </div>
           {review.comment && (
-            <p className="mt-2 text-[13px] leading-relaxed text-ink-700 dark:text-ink-300">{review.comment}</p>
+            <p className="mt-2 text-[14px] leading-relaxed text-ink-700 dark:text-ink-300">{review.comment}</p>
           )}
         </div>
       </div>

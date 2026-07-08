@@ -46,8 +46,8 @@ export function BecomeDriverBanner() {
           <CarFront className="h-5 w-5" aria-hidden="true" />
         </span>
         <span className="min-w-0 flex-1">
-          <span className="block text-[14px] font-900">{t("become_driver_title")}</span>
-          <span className="block truncate text-[12px] font-600 text-white/80">{t("become_driver_sub")}</span>
+          <span className="block text-[15px] font-900">{t("become_driver_title")}</span>
+          <span className="block truncate text-[14px] font-600 text-white/80">{t("become_driver_sub")}</span>
         </span>
         <ChevronRight className="h-5 w-5 shrink-0 text-white/80" aria-hidden="true" />
       </Link>

@@ -7,7 +7,6 @@ import { CityAutocomplete } from "@/components/ui/city-autocomplete";
 import { Segmented } from "@/components/ui/segmented";
 import { Chip } from "@/components/ui/chip";
 import { DateQuickChips } from "./date-quick-chips";
-import { useUiRole } from "@/lib/hooks/use-role-colors";
 
 // Mobile feed header — design-spec §2.2: map hero band + overlaid search
 // card, «Найти поездку / Найти пассажира» segmented, filter chips row.
@@ -47,7 +46,6 @@ export function FeedHeader({ tab, onOpenFilters }: FeedHeaderProps) {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
-  const role = useUiRole();
 
   const from = params.get("from") ?? params.get("from_city") ?? "";
   const to = params.get("to") ?? params.get("to_city") ?? "";
@@ -129,10 +127,9 @@ export function FeedHeader({ tab, onOpenFilters }: FeedHeaderProps) {
         </div>
       </div>
 
-      {/* Segmented: find trip / find passenger — guests only. Passengers are
-          pinned to the trips feed (booking) and drivers to the requests feed
-          (responding), so the opposite-role browse tab is hidden for them. */}
-      {role === "guest" && (
+      {/* Segmented: browse driver trips ⇄ passenger requests — for everyone
+          (Phase 1: no account roles, only intent). */}
+      {(
         <div className="px-4 pt-3">
           <Segmented<FeedTab>
             value={tab}

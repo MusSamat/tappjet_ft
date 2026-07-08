@@ -49,18 +49,18 @@ export function ChatRow({ s, isActive }: { s: ChatSummary; isActive: boolean }) 
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline justify-between gap-1">
           <span className={cn(
-            "truncate text-[14px] font-bold",
+            "truncate text-[15px] font-bold",
             isActive ? "text-brand-900" : isClosed ? "text-ink-500" : hasUnread ? "text-ink-900 dark:text-white" : "text-ink-700 dark:text-ink-300",
           )}>
             {s.otherName}
           </span>
           {isClosed ? (
-            <span className="flex-shrink-0 text-[10px] font-bold uppercase tracking-wide text-ink-400">
+            <span className="flex-shrink-0 text-[11px] font-bold uppercase tracking-wide text-ink-400">
               {closedLabel}
             </span>
           ) : s.lastMessageAt ? (
             <span className={cn(
-              "flex-shrink-0 text-[12px] font-semibold",
+              "flex-shrink-0 text-[14px] font-semibold",
               hasUnread ? "text-brand-600" : "text-ink-400",
             )}>
               {formatTime(s.lastMessageAt)}
@@ -68,7 +68,7 @@ export function ChatRow({ s, isActive }: { s: ChatSummary; isActive: boolean }) 
           ) : null}
         </div>
         <p className={cn(
-          "truncate text-[12px] font-semibold",
+          "truncate text-[14px] font-semibold",
           isClosed ? "text-ink-400" : "text-ink-500",
         )}>
           {s.route}

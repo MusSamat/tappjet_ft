@@ -19,6 +19,7 @@ import { extractError } from "@/lib/api/client";
 import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { toastSuccess, toastError } from "@/components/layout/quick-toast";
 import { RequestCard } from "@/components/features/passenger-requests/request-card";
+import { VerifiedBadge } from "@/components/ui/verified-badge";
 import { DriverAvatar } from "@/components/ui/driver-avatar";
 import { Spinner } from "@/components/ui";
 import { CardSkeletonList } from "@/components/ui/card-skeleton";
@@ -68,18 +69,18 @@ function OfferCard({
         <DriverAvatar name={response.driver.name} src={response.driver.avatarUrl} size="md" />
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5">
-            <span className="text-[14px] font-bold text-ink-900 dark:text-white">{response.driver.name}</span>
-            {response.driver.verified && <Shield className="h-3.5 w-3.5 text-brand-500" aria-hidden />}
+            <span className="text-[15px] font-bold text-ink-900 dark:text-white">{response.driver.name}</span>
+            {response.driver.verified && <VerifiedBadge />}
             {response.driver.rating !== null && (
               <div className="flex items-center gap-0.5">
                 <Star className="h-3 w-3 fill-accent-400 text-accent-400" aria-hidden />
-                <span className="text-[11px] font-bold text-ink-600">{response.driver.rating.toFixed(1)}</span>
+                <span className="text-[12px] font-bold text-ink-600">{response.driver.rating.toFixed(1)}</span>
               </div>
             )}
           </div>
           <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5">
-            <span className="text-[18px] font-extrabold text-sky-600">{response.price} {t("som")}</span>
-            <span className="text-[12px] text-ink-500">
+            <span className="text-[20px] font-extrabold text-sky-600">{response.price} {t("som")}</span>
+            <span className="text-[13px] text-ink-500">
               {new Date(response.departureTime).toLocaleString("ru-RU", {
                 weekday: "short",
                 day: "numeric",
@@ -90,7 +91,7 @@ function OfferCard({
             </span>
           </div>
           {response.message && (
-            <p className="mt-1.5 text-[12px] leading-relaxed text-ink-600">«{response.message}»</p>
+            <p className="mt-1.5 text-[13px] leading-relaxed text-ink-600">«{response.message}»</p>
           )}
         </div>
 
@@ -118,14 +119,14 @@ function OfferCard({
         )}
         {isAccepted && (
           <div className="flex flex-shrink-0 flex-col items-end gap-1.5">
-            <span className="rounded-full bg-brand-100 px-2.5 py-1 text-[11px] font-bold text-brand-700">
+            <span className="rounded-full bg-brand-100 px-2.5 py-1 text-[12px] font-bold text-brand-700">
               {t("accepted")}
             </span>
             {/* Accepting an offer creates the booking — this is the only path to
                 the driver chat for the request flow. */}
             {response.bookingId && (
               <Link href={`/my/bookings/${response.bookingId}/chat`}>
-                <span className="flex items-center gap-1 rounded-full border border-brand-200 bg-brand-50 px-2.5 py-1 text-[11px] font-bold text-brand-700 hover:bg-brand-100">
+                <span className="flex items-center gap-1 rounded-full border border-brand-200 bg-brand-50 px-2.5 py-1 text-[12px] font-bold text-brand-700 hover:bg-brand-100">
                   <MessageCircle className="h-3.5 w-3.5" />
                   {t("chat_btn")}
                 </span>
@@ -134,7 +135,7 @@ function OfferCard({
           </div>
         )}
         {isDeclined && (
-          <span className="flex-shrink-0 rounded-full bg-ink-100 px-2.5 py-1 text-[11px] font-bold text-ink-500">
+          <span className="flex-shrink-0 rounded-full bg-ink-100 px-2.5 py-1 text-[12px] font-bold text-ink-500">
             {t("rejected")}
           </span>
         )}
@@ -144,7 +145,7 @@ function OfferCard({
 }
 
 // ── Request with expandable offers ────────────────────────────────────
-function RequestWithOffers({
+export function RequestWithOffers({
   request,
   onCancel,
   cancelLoading,
@@ -182,7 +183,7 @@ function RequestWithOffers({
           onClick={() => setExpanded((v) => !v)}
           className="flex items-center justify-between rounded-2xl border border-dashed border-sky-200 bg-sky-50 px-4 py-2.5 text-left hover:border-sky-300 hover:bg-sky-100 transition-colors"
         >
-          <span className="text-[12px] font-bold text-sky-700">
+          <span className="text-[13px] font-bold text-sky-700">
             {expanded
               ? t("hide_offers")
               : pending.length > 0
@@ -200,7 +201,7 @@ function RequestWithOffers({
           ) : responsesQuery.isError ? (
             <QueryError error={responsesQuery.error} onRetry={() => void responsesQuery.refetch()} />
           ) : !responses?.length ? (
-            <p className="py-3 text-center text-[12px] font-semibold text-ink-400">
+            <p className="py-3 text-center text-[14px] font-semibold text-ink-400">
               {t("no_offers")}
             </p>
           ) : (
@@ -258,12 +259,12 @@ export function MyRequestsTab() {
         <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-sky-100">
           <Users className="h-8 w-8 text-sky-400" />
         </div>
-        <p className="text-[16px] font-bold text-ink-700 dark:text-ink-300">{t("empty_title")}</p>
-        <p className="mt-1 mb-5 text-[13px] text-ink-500">{t("empty_hint")}</p>
+        <p className="text-[17px] font-bold text-ink-700 dark:text-ink-300">{t("empty_title")}</p>
+        <p className="mt-1 mb-5 text-[16px] font-600 text-ink-500">{t("empty_hint")}</p>
         <Link href="/requests/create">
           <button
             type="button"
-            className="flex items-center gap-2 rounded-2xl bg-sky-600 px-6 py-2.5 text-[14px] font-bold text-white hover:bg-sky-700"
+            className="flex items-center gap-2 rounded-2xl bg-sky-600 px-6 py-2.5 text-[15px] font-bold text-white hover:bg-sky-700"
           >
             <Plus className="h-4 w-4" />
             {t("create_label")}
@@ -277,7 +278,7 @@ export function MyRequestsTab() {
     <div className="space-y-8">
       {open.length > 0 && (
         <section>
-          <h2 className="mb-3 text-[13px] font-bold uppercase tracking-widest text-sky-600">
+          <h2 className="mb-3 text-[14px] font-bold uppercase tracking-widest text-sky-600">
             {t("open_count", { n: open.length })}
           </h2>
           <div className="flex flex-col gap-4">
@@ -295,7 +296,7 @@ export function MyRequestsTab() {
 
       {past.length > 0 && (
         <section>
-          <h2 className="mb-3 text-[13px] font-bold uppercase tracking-widest text-ink-400">
+          <h2 className="mb-3 text-[14px] font-bold uppercase tracking-widest text-ink-400">
             {t("history_count", { n: past.length })}
           </h2>
           <div className="flex flex-col gap-3">

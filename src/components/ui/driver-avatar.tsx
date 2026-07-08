@@ -20,10 +20,10 @@ interface DriverAvatarProps {
 }
 
 const sizeClasses = {
-  xs: "h-6 w-6 text-[10px]",
-  sm: "h-8 w-8 text-[11px]",
-  md: "h-10 w-10 text-[15px]",
-  lg: "h-14 w-14 text-[18px]",
+  xs: "h-6 w-6 text-[11px]",
+  sm: "h-8 w-8 text-[12px]",
+  md: "h-10 w-10 text-[16px]",
+  lg: "h-14 w-14 text-[20px]",
   xl: "h-16 w-16 text-[21px]",
 } as const;
 

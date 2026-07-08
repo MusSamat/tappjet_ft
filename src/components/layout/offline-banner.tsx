@@ -54,7 +54,7 @@ export function OfflineBanner() {
       role="status"
       aria-live="polite"
       className={cn(
-        "fixed inset-x-0 top-0 z-50 flex items-center justify-center gap-2 px-4 py-2 text-[12px] font-800 text-white md:top-16",
+        "fixed inset-x-0 top-0 z-50 flex items-center justify-center gap-2 px-4 py-2 text-[13px] font-800 text-white md:top-16",
         offline ? "bg-ink-800 dark:bg-ink-700" : "bg-brand-600",
       )}
     >
