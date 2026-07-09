@@ -23,13 +23,16 @@ type Post =
   | { kind: "request"; createdAt: string; request: PassengerRequest };
 
 async function fetchMyPosts(): Promise<Post[]> {
-  const [active, past, cancelled, requests] = await Promise.all([
+  const [active, inTransit, past, cancelled, requests] = await Promise.all([
     listMyTrips("active", undefined, 30),
+    // in_transit = status 'active' but departureAt already passed — a separate
+    // backend bucket; without it a departed-but-not-completed trip vanishes here.
+    listMyTrips("in_transit", undefined, 30),
     listMyTrips("past", undefined, 30),
     listMyTrips("cancelled", undefined, 30),
     listMyPassengerRequests(),
   ]);
-  const trips: Post[] = [...active.data, ...past.data, ...cancelled.data].map((trip) => ({
+  const trips: Post[] = [...active.data, ...inTransit.data, ...past.data, ...cancelled.data].map((trip) => ({
     kind: "trip",
     createdAt: String(trip.createdAt ?? ""),
     trip,

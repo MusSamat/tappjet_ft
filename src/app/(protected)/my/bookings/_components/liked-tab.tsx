@@ -56,12 +56,16 @@ export function LikedTab() {
 
   const trips = useLikedTrips();
   const requests = useLikedRequests();
-  const q = trips;
 
+  // Both feeds are shown merged, so the single sentinel must page BOTH — wiring
+  // it only to `trips` left liked requests stuck on their first page.
   const sentinel = useInfiniteScroll({
-    hasNextPage: q.hasNextPage,
-    isFetchingNextPage: q.isFetchingNextPage,
-    fetchNextPage: q.fetchNextPage,
+    hasNextPage: Boolean(trips.hasNextPage || requests.hasNextPage),
+    isFetchingNextPage: trips.isFetchingNextPage || requests.isFetchingNextPage,
+    fetchNextPage: () => {
+      if (trips.hasNextPage) void trips.fetchNextPage();
+      if (requests.hasNextPage) void requests.fetchNextPage();
+    },
   });
 
   const tripItems = useMemo(() => trips.data?.pages.flatMap((p) => p.data) ?? [], [trips.data]);
@@ -84,8 +88,14 @@ export function LikedTab() {
     return <CardSkeletonList variant="trip" count={3} />;
   }
 
-  if (q.isError) {
-    return <QueryError error={q.error} onRetry={() => void q.refetch()} />;
+  if (trips.isError || requests.isError) {
+    const errored = trips.isError ? trips : requests;
+    return (
+      <QueryError
+        error={errored.error}
+        onRetry={() => { void trips.refetch(); void requests.refetch(); }}
+      />
+    );
   }
 
   const count = sortedTrips.length + sortedRequests.length;
@@ -109,7 +119,7 @@ export function LikedTab() {
         ]
           .sort((a, b) => a.d - b.d)
           .map((x) => x.node)}
-        {q.isFetchingNextPage && (
+        {(trips.isFetchingNextPage || requests.isFetchingNextPage) && (
           <CardSkeletonList variant="trip" count={2} className="mt-0.5" />
         )}
       </div>
