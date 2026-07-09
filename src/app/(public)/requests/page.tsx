@@ -12,6 +12,7 @@ import { RequestFilters } from "@/components/features/passenger-requests/request
 import { FeedHeader } from "@/components/features/search/feed-header";
 import { RouteEntry } from "@/components/features/search/route-entry";
 import { DateQuickChips } from "@/components/features/search/date-quick-chips";
+import { SmartDateNav } from "@/components/features/search/smart-date-nav";
 import { EmptyState } from "@/components/ui/empty-state";
 import { CardSkeletonList } from "@/components/ui/card-skeleton";
 import { QueryError } from "@/components/ui/query-error";
@@ -210,6 +211,7 @@ export default function RequestsPage() {
       {/* ===== MOBILE / TABLET (<1024px): feed header + card list ===== */}
       <div className="lg:hidden">
         <BackToTop />
+        <SmartDateNav kind="requests" />
         <FeedHeader tab="requests" onOpenFilters={() => setMobileFiltersOpen(true)} />
 
         <div className="px-4 pb-3">

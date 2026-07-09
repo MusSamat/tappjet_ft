@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import { searchTrips, type SearchTripsParams } from "@/lib/api/trips";
+import { searchTrips } from "@/lib/api/trips";
+import { buildTripSearchParams } from "@/lib/trip-search-params";
 import { SearchLayout } from "@/components/features/search/search-layout";
 import { RouteEntry } from "@/components/features/search/route-entry";
 
@@ -14,48 +15,10 @@ function str(v: string | string[] | undefined): string | undefined {
   return Array.isArray(v) ? v[0] : v;
 }
 
-function num(v: string | string[] | undefined): number | undefined {
-  const s = str(v);
-  if (!s) return undefined;
-  const n = Number(s);
-  return Number.isFinite(n) ? n : undefined;
-}
-
-// Chips write YYYY-MM-DD; the API wants a full ISO datetime. Anchor the day at
-// local Kyrgyzstan midnight (fixed UTC+6, no DST) so the 24h window matches
-// the calendar day the user tapped. "today" is a legacy alias.
-function normalizeDate(v: string | undefined): string | undefined {
-  if (!v || v === "any") return undefined; // «any» = explicit no-date-filter
-  const ymd =
-    v === "today"
-      ? new Date(Date.now() + 6 * 3_600_000).toISOString().slice(0, 10)
-      : /^\d{4}-\d{2}-\d{2}$/.test(v)
-        ? v
-        : null;
-  // Unknown tokens (legacy «tomorrow»/«weekend» links) → drop, don't 400.
-  return ymd ? `${ymd}T00:00:00+06:00` : undefined;
-}
-
-function paramsFromSearch(sp: Props["searchParams"]): SearchTripsParams {
-  const from = str(sp.from) ?? str(sp.from_city);
-  const to = str(sp.to) ?? str(sp.to_city);
-  return {
-    ...(from ? { from_city: from } : {}),
-    ...(to ? { to_city: to } : {}),
-    // Default to today (Yandex-style) — the results screen always has a day selected.
-    date: normalizeDate(str(sp.date) ?? "today"),
-    seats: num(sp.seats),
-    min_price: num(sp.min_price),
-    max_price: num(sp.max_price),
-    min_rating: num(sp.min_rating),
-    ...(str(sp.only_verified) === "true" ? { only_verified: true } : {}),
-    ...(str(sp.women_only) === "true" ? { women_only: true } : {}),
-    ...(str(sp.no_smoking) === "true" ? { no_smoking: true } : {}),
-    ...(str(sp.pets) === "true" ? { pets: true } : {}),
-    luggage: (str(sp.luggage) as SearchTripsParams["luggage"]) ?? undefined,
-    sort: (str(sp.sort) as SearchTripsParams["sort"]) ?? undefined,
-    limit: 20,
-  };
+// Shared builder (same logic as SearchLayout's client-side filtering) fed by the
+// Next server-searchParams record.
+function paramsFromSearch(sp: Props["searchParams"]) {
+  return buildTripSearchParams((k) => str(sp[k]) ?? null);
 }
 
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
@@ -95,5 +58,5 @@ export default async function TripsPage({ searchParams }: Props) {
     initial = { data: [], nextCursor: null };
   }
 
-  return <SearchLayout params={params} initial={initial} />;
+  return <SearchLayout initial={initial} />;
 }

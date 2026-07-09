@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useTransition } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { FiltersBody } from "./_components/filters-body";
@@ -15,6 +15,7 @@ function FiltersHeader() {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
+  const [, startTransition] = useTransition();
 
   const hasActive = FILTER_KEYS.some((k) => params.has(k));
 
@@ -22,7 +23,7 @@ function FiltersHeader() {
     const next = new URLSearchParams(params);
     FILTER_KEYS.forEach((k) => next.delete(k));
     next.delete("cursor");
-    router.replace(`${pathname}?${next.toString()}`, { scroll: false });
+    startTransition(() => router.replace(`${pathname}?${next.toString()}`, { scroll: false }));
   }, [params, pathname, router]);
 
   return (

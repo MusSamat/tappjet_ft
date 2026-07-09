@@ -1,9 +1,12 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback, memo } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo, memo } from "react";
+import { useSearchParams } from "next/navigation";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { searchTrips, type SearchTripsParams, type TripSearchResult, type TripListItem } from "@/lib/api/trips";
+import { buildTripSearchParams } from "@/lib/trip-search-params";
+import { SmartDateNav } from "./smart-date-nav";
 import { X } from "lucide-react";
 import { TripCard } from "@/components/ui/trip-card";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -24,7 +27,6 @@ import { DateQuickChips } from "./date-quick-chips";
 import { BecomeDriverBanner } from "@/components/features/driver/become-driver-banner";
 
 interface Props {
-  params: SearchTripsParams;
   initial: TripSearchResult;
 }
 
@@ -97,14 +99,23 @@ const FeedTripRow = memo(function FeedTripRow({
   );
 });
 
-export function SearchLayout({ params, initial }: Props) {
+export function SearchLayout({ initial }: Props) {
   const t = useTranslations("feed");
+  // Filters live in the URL. Reading them CLIENT-side (not via a server prop)
+  // means a filter change refetches here instantly — no blocking SSR round-trip
+  // (the old freeze). The filter controls wrap their router.replace in a
+  // transition so the URL/params update optimistically; see search-filters.tsx.
+  const searchParams = useSearchParams();
+  const params = useMemo<SearchTripsParams>(
+    () => buildTripSearchParams((k) => searchParams.get(k)),
+    [searchParams],
+  );
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [mobileDetailOpen, setMobileDetailOpen] = useState(false);
   const listColRef = useRef<HTMLDivElement>(null);
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isError, error, refetch } = useInfiniteQuery({
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isError, error, refetch, isPlaceholderData, isFetching } = useInfiniteQuery({
     queryKey: ["trips", params],
     queryFn: ({ pageParam }) => searchTrips({ ...params, cursor: pageParam }),
     initialPageParam: undefined as string | undefined,
@@ -117,6 +128,9 @@ export function SearchLayout({ params, initial }: Props) {
   });
 
   const trips = data?.pages.flatMap((p) => p.data) ?? [];
+  // Showing the previous page's cards while the new filter's results load —
+  // dim them so the change is felt instantly instead of looking frozen.
+  const filtering = isPlaceholderData && isFetching;
 
   // Which of these trips the viewer already booked — one query, so cards show a
   // «Забронировано» badge and the user isn't confused about which they've sent.
@@ -161,7 +175,7 @@ export function SearchLayout({ params, initial }: Props) {
   const nearby = data?.pages[0]?.nearby === true;
 
   const tripList = (onSelect: (id: string) => void, mobile: boolean) => (
-    <div className="space-y-2.5">
+    <div className={`space-y-2.5 transition-opacity duration-150 ${filtering ? "opacity-50" : ""}`}>
       {nearby && (
         <div className="rounded-2xl bg-accent-50 px-4 py-2.5 text-[14px] font-700 text-accent-700 dark:bg-accent-500/10 dark:text-accent-300">
           {t("nearby_notice")}
@@ -239,6 +253,7 @@ export function SearchLayout({ params, initial }: Props) {
       {/* ===== MOBILE/TABLET (<1024px): feed header + card list ===== */}
       <div className="lg:hidden">
         <BackToTop />
+        <SmartDateNav kind="trips" />
         <FeedHeader tab="trips" onOpenFilters={() => setMobileFiltersOpen(true)} />
 
         <div className="px-4 pb-3">

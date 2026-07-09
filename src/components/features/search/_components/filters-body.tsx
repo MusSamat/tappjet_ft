@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useTransition } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { ArrowLeftRight, ShieldCheck, UserCheck, CigaretteOff, PawPrint, type LucideIcon } from "lucide-react";
@@ -26,6 +26,7 @@ export function FiltersBody() {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
+  const [, startTransition] = useTransition();
 
   const SORT_OPTIONS = [
     { value: "time",        label: t("sort_time") },
@@ -76,7 +77,7 @@ export function FiltersBody() {
         else next.set(k, v);
       }
       next.delete("cursor");
-      router.replace(`${pathname}?${next.toString()}`, { scroll: false });
+      startTransition(() => router.replace(`${pathname}?${next.toString()}`, { scroll: false }));
     },
     [params, pathname, router],
   );

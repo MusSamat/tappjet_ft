@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Calendar } from "lucide-react";
@@ -23,6 +23,7 @@ export function DateQuickChips({ accent = "accent" as const }) {
   const pathname = usePathname();
   const params = useSearchParams();
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [, startTransition] = useTransition();
 
   // Availability per day for the current route — fetched when the calendar
   // opens so each date shows how many trips/requests it has.
@@ -44,7 +45,7 @@ export function DateQuickChips({ accent = "accent" as const }) {
     if (v) next.set("date", v);
     else next.delete("date");
     next.delete("cursor");
-    router.replace(`${pathname}?${next.toString()}`, { scroll: false });
+    startTransition(() => router.replace(`${pathname}?${next.toString()}`, { scroll: false }));
   };
 
   // Hardcoded month names — toLocaleDateString("ru-RU") falls back to English
