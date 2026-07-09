@@ -1306,7 +1306,7 @@
     "posts_empty_title": "Пока нет объявлений",
     "posts_empty_desc": "Опубликуйте поездку или заявку — они появятся здесь со статусами.",
     "tab_active": "Брони",
-    "tab_my_requests": "Заявки",
+    "tab_my_requests": "Мои заявки",
     "tab_history": "История",
     "tab_liked": "Избранное",
     "tab_trips": "Поездки",
@@ -1322,7 +1322,9 @@
     "verify_nudge_title": "У вас уже {n} завершённых поездок 🎉",
     "verify_nudge_text": "Пройдите верификацию — получите значок ✓, доверие пассажиров и больше звонков",
     "verify_nudge_cta": "Получить ✓",
-    "verify_nudge_title_generic": "Получите значок проверенного водителя ✓"
+    "verify_nudge_title_generic": "Получите значок проверенного водителя ✓",
+    "tab_bookings": "Брони",
+    "tab_my_trips": "Мои поездки"
   },
   "toasts": {
     "booking_accepted": "Бронь подтверждена",

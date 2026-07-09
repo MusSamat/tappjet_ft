@@ -23,16 +23,16 @@ import { CancelModal } from "./_components/cancel-modal";
 import { PassengerTab } from "./_components/passenger-tab";
 import { LikedTab } from "./_components/liked-tab";
 import { MyPostsTab } from "./_components/my-posts-tab";
+import { MyRequestsTab } from "./_components/my-requests-tab";
 
 // «Мои» hub (Phase 1, no roles): Объявления (мои поездки + заявки со
 // статусами) / Брони / Избранное / История — один набор для всех.
 
-type Tab = "posts" | "active" | "liked";
-
-// One tab set for everyone (Phase 1: no account roles):
-// «Объявления» = my trips + my requests together, with status badges.
-// «История» намеренно не здесь — она живёт в профиле.
-const ALL_TABS: Tab[] = ["posts", "active", "liked"];
+// Role-adaptive hub — the active mode decides the tab set:
+//   passenger: Брони · Мои заявки · Избранное
+//   driver:    Мои поездки · Избранное  (incoming bookings are managed per-trip)
+// History lives in the profile, not here.
+type Tab = "bookings" | "requests" | "trips" | "liked";
 
 type BookingExt = Booking & {
   tripId?: string;
@@ -67,13 +67,25 @@ export default function MyBookingsPage() {
   const tToasts = useTranslations("toasts");
   const fe = useFriendlyError();
   const role = useUiRole();
+  const isDriver = role === "driver";
   const theme = ROLE_THEME[role];
   const searchParams = useSearchParams();
 
+  const tabOptions: { value: Tab; label: string }[] = isDriver
+    ? [
+        { value: "trips", label: tMy("tab_my_trips") },
+        { value: "liked", label: tMy("tab_liked") },
+      ]
+    : [
+        { value: "bookings", label: tMy("tab_bookings") },
+        { value: "requests", label: tMy("tab_my_requests") },
+        { value: "liked", label: tMy("tab_liked") },
+      ];
+
   const initialTab = ((): Tab => {
     const requested = searchParams.get("tab") as Tab | null;
-    if (requested && ALL_TABS.includes(requested)) return requested;
-    return "posts";
+    const allowed = tabOptions.map((o) => o.value);
+    return requested && allowed.includes(requested) ? requested : tabOptions[0]!.value;
   })();
 
   const [tab, setTab] = useState<Tab>(initialTab);
@@ -131,12 +143,6 @@ export default function MyBookingsPage() {
 
 
 
-  const options = [
-    { value: "posts" as Tab, label: tMy("tab_posts") },
-    { value: "active" as Tab, label: tMy("tab_active") },
-    { value: "liked" as Tab, label: tMy("tab_liked") },
-  ];
-
   return (
     <>
       <Container className="py-8">
@@ -147,7 +153,7 @@ export default function MyBookingsPage() {
           <div className="flex min-w-0 items-center gap-2.5">
             <h1 className="shrink-0 text-[26px] font-900 text-ink-900 dark:text-white">{tMy("title")}</h1>
           </div>
-          <Link href="/trips/create" className="shrink-0">
+          <Link href={isDriver ? "/trips/create" : "/requests/create"} className="shrink-0">
             <button
               type="button"
               aria-label={tMy("publish")}
@@ -161,13 +167,14 @@ export default function MyBookingsPage() {
         </div>
 
         <div className="mb-4">
-          <Segmented options={options} value={tab} onChange={setTab} textOn={theme.textOn} />
+          <Segmented options={tabOptions} value={tab} onChange={setTab} textOn={theme.textOn} />
         </div>
 
-        {tab === "active" && outgoing.isError && (
+        {/* Passenger · Брони (outgoing bookings) */}
+        {tab === "bookings" && outgoing.isError && (
           <QueryError error={outgoing.error} onRetry={() => void outgoing.refetch()} />
         )}
-        {tab === "active" && !outgoing.isError && (
+        {tab === "bookings" && !outgoing.isError && (
           <PassengerTab
             isLoading={outgoing.isLoading}
             passengerSubTab="active"
@@ -182,8 +189,13 @@ export default function MyBookingsPage() {
           />
         )}
 
-        {tab === "posts" && <MyPostsTab />}
+        {/* Passenger · Мои заявки (my requests + offers received) */}
+        {tab === "requests" && <MyRequestsTab />}
 
+        {/* Driver · Мои поездки */}
+        {tab === "trips" && <MyPostsTab show="trips" />}
+
+        {/* Both · Избранное */}
         {tab === "liked" && <LikedTab />}
       </Container>
       <BackToTop showOnDesktop />

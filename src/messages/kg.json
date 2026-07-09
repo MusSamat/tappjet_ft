@@ -1306,7 +1306,7 @@
     "posts_empty_title": "Азырынча жарыя жок",
     "posts_empty_desc": "Сапар же арыз жарыялаңыз — алар бул жерде статустары менен көрүнөт.",
     "tab_active": "Брондор",
-    "tab_my_requests": "Арыздар",
+    "tab_my_requests": "Арыздарым",
     "tab_history": "Тарых",
     "tab_liked": "Тандалмалар",
     "tab_trips": "Сапарлар",
@@ -1322,7 +1322,9 @@
     "verify_nudge_title": "Сизде {n} аяктаган сапар бар 🎉",
     "verify_nudge_text": "Верификациядан өтүңүз — ✓ белгисин, жүргүнчүлөрдүн ишенимин жана көбүрөөк чалууларды аласыз",
     "verify_nudge_cta": "✓ алуу",
-    "verify_nudge_title_generic": "Текшерилген айдоочу ✓ белгисин алыңыз"
+    "verify_nudge_title_generic": "Текшерилген айдоочу ✓ белгисин алыңыз",
+    "tab_bookings": "Брондор",
+    "tab_my_trips": "Сапарларым"
   },
   "toasts": {
     "booking_accepted": "Брондоо ырасталды",

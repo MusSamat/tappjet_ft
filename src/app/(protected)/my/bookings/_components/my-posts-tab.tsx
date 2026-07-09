@@ -45,7 +45,7 @@ async function fetchMyPosts(): Promise<Post[]> {
   return [...trips, ...reqs].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }
 
-export function MyPostsTab() {
+export function MyPostsTab({ show = "both" }: { show?: "trips" | "requests" | "both" }) {
   const t = useTranslations("my");
   const { data: posts, isLoading } = useQuery({
     queryKey: ["my-posts"],
@@ -75,14 +75,22 @@ export function MyPostsTab() {
 
   if (isLoading) return <CardSkeletonList variant="trip" count={3} />;
 
-  if (!posts || posts.length === 0) {
+  // Role-scoped view: driver hub shows only trips, passenger hub only requests.
+  const visible = (posts ?? []).filter((p) =>
+    show === "both" ? true : show === "trips" ? p.kind === "trip" : p.kind === "request",
+  );
+
+  if (visible.length === 0) {
     return (
       <EmptyState
         icon="route"
         iconTone="brand"
         title={t("posts_empty_title")}
         description={t("posts_empty_desc")}
-        action={{ label: t("publish"), href: "/trips/create" }}
+        action={{
+          label: t("publish"),
+          href: show === "requests" ? "/requests/create" : "/trips/create",
+        }}
         className="bg-white shadow-card ring-1 ring-ink-100 dark:bg-ink-900 dark:ring-ink-800"
       />
     );
@@ -113,7 +121,7 @@ export function MyPostsTab() {
           </span>
         </Link>
       )}
-      {posts.map((p) =>
+      {visible.map((p) =>
         p.kind === "trip" ? (
           <TripCard key={`t-${p.trip.id}`} trip={p.trip} href={`/trips/${p.trip.id}`} />
         ) : (
