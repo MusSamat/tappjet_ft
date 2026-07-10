@@ -6,7 +6,6 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { searchTrips, type SearchTripsParams, type TripSearchResult, type TripListItem } from "@/lib/api/trips";
 import { buildTripSearchParams } from "@/lib/trip-search-params";
-import { SmartDateNav } from "./smart-date-nav";
 import { X } from "lucide-react";
 import { TripCard } from "@/components/ui/trip-card";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -253,7 +252,6 @@ export function SearchLayout({ initial }: Props) {
       {/* ===== MOBILE/TABLET (<1024px): feed header + card list ===== */}
       <div className="lg:hidden">
         <BackToTop />
-        <SmartDateNav kind="trips" />
         <FeedHeader tab="trips" onOpenFilters={() => setMobileFiltersOpen(true)} />
 
         <div className="px-4 pb-3">

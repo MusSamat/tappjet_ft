@@ -6,7 +6,7 @@ import { ArrowDownUp, CarFront, Circle, MapPin, SlidersHorizontal, User } from "
 import { CityAutocomplete } from "@/components/ui/city-autocomplete";
 import { Segmented } from "@/components/ui/segmented";
 import { Chip } from "@/components/ui/chip";
-import { DateQuickChips } from "./date-quick-chips";
+import { SmartDateNav } from "./smart-date-nav";
 
 // Mobile feed header — design-spec §2.2: map hero band + overlaid search
 // card, «Найти поездку / Найти пассажира» segmented, filter chips row.
@@ -154,7 +154,9 @@ export function FeedHeader({ tab, onOpenFilters }: FeedHeaderProps) {
         >
           {t("filters")}
         </Chip>
-        <DateQuickChips />
+        {/* Date stepper pill (‹ Сегодня · N ›) — replaces the today/tomorrow/
+            pick chips; a custom date lives in the filters sheet calendar. */}
+        <SmartDateNav kind={tab} />
         {tab === "trips" && (
           <Chip
             kind="quick"
