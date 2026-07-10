@@ -121,16 +121,11 @@ export function RequestsFeed() {
   const sentinel = useInfiniteScroll({ hasNextPage, isFetchingNextPage, fetchNextPage });
   useScrollRestoration();
 
-  const handleSelectDesktop = useCallback((id: string) => setSelectedId(id), []);
-  const handleSelectMobile = useCallback((id: string) => {
+  // Card tap → open the detail sheet (same on all widths now).
+  const handleSelect = useCallback((id: string) => {
     setSelectedId(id);
     setMobileDetailOpen(true);
   }, []);
-
-  const heading =
-    filters.from_city && filters.to_city
-      ? `${filters.from_city} → ${filters.to_city}`
-      : t("page_title");
 
   const nearby = data?.pages[0]?.nearby === true;
 
@@ -138,135 +133,96 @@ export function RequestsFeed() {
     return <RouteEntry mode="requests" modeSwitchable initialFrom={filters.from_city} initialTo={filters.to_city} />;
   }
 
-  const list = (onSelect: (id: string) => void, mobile: boolean) => (
-    <div className="space-y-2.5">
-      {nearby && (
-        <div className="rounded-2xl bg-accent-50 px-4 py-2.5 text-[14px] font-700 text-accent-700 dark:bg-accent-500/10 dark:text-accent-300">
-          {t("nearby_notice")}
-        </div>
-      )}
-      {requests.map((req, i) => (
-        <FeedRequestRow
-          key={req.id}
-          request={req}
-          index={i}
-          active={!mobile && selectedId === req.id}
-          onSelect={onSelect}
-        />
-      ))}
-      {isFetchingNextPage && <CardSkeletonList variant="request" count={3} />}
-      <div ref={sentinel} className="flex h-8 items-center justify-center">
-        {!hasNextPage && requests.length > 5 && (
-          <span className="text-[12px] font-800 text-ink-400">{t("no_more")}</span>
-        )}
-      </div>
-    </div>
-  );
-
   return (
     <>
-      {/* ===== DESKTOP (≥1024px): 3-column master-detail ===== */}
-      <div className="hidden lg:flex lg:justify-center" style={{ height: "calc(100vh - 64px)" }}>
-        <div className="grid w-full max-w-[1500px] lg:grid-cols-[260px_1fr_380px]">
-          {/* LEFT: Filters */}
-          <div className="overflow-y-auto border-r border-ink-100 bg-white p-4 dark:border-ink-800 dark:bg-ink-900">
-            <RequestFilters />
-          </div>
+      <BackToTop showOnDesktop />
 
-          {/* MIDDLE: List */}
-          <div className="overflow-y-auto bg-ink-50 px-6 py-5 dark:bg-ink-950">
-            <div className="mb-4">
-              <h1 className="font-disp text-[22px] font-900 text-ink-900 dark:text-white">{heading}</h1>
-              <p className="mt-1 text-[13px] font-800 text-ink-500 dark:text-ink-400">
-                {isLoading ? t("loading") : t("count", { n: requests.length })}
-              </p>
-            </div>
-            {isLoading ? (
-              <CardSkeletonList variant="request" />
-            ) : isError ? (
-              <QueryError error={error} onRetry={() => void refetch()} />
-            ) : requests.length === 0 ? <RequestsEmpty /> : list(handleSelectDesktop, false)}
-          </div>
-
-          {/* RIGHT: Detail — pane owns its padding + sticky CTA footer */}
-          <div className="overflow-y-auto border-l border-ink-100 bg-white dark:border-ink-800 dark:bg-ink-900">
-            {selectedRequest ? (
-              <RequestDetailPane request={selectedRequest} />
-            ) : (
-              <div className="flex h-full items-center justify-center p-6">
-                <p className="text-[14px] font-800 text-ink-500">{t("select_request")}</p>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* ===== MOBILE / TABLET (<1024px): feed header + card list ===== */}
-      <div className="lg:hidden">
-        <BackToTop />
+      {/* ONE structure for all widths (same concept as the trips feed): header
+          on top → results grid (1 col mobile, 2 cols ≥md) → centered sheets. */}
+      <div className="mx-auto w-full max-w-[900px]">
         <FeedHeader tab="requests" onOpenFilters={() => setMobileFiltersOpen(true)} />
 
-        <div className="px-4 pb-3">
+        <div className="px-4 pb-6">
           {isLoading ? (
             <CardSkeletonList variant="request" />
           ) : isError ? (
             <QueryError error={error} onRetry={() => void refetch()} />
-          ) : requests.length === 0 ? <RequestsEmpty /> : list(handleSelectMobile, true)}
+          ) : requests.length === 0 ? (
+            <RequestsEmpty />
+          ) : (
+            <>
+              {nearby && (
+                <div className="mb-2.5 rounded-2xl bg-accent-50 px-4 py-2.5 text-[14px] font-700 text-accent-700 dark:bg-accent-500/10 dark:text-accent-300">
+                  {t("nearby_notice")}
+                </div>
+              )}
+              <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
+                {requests.map((req, i) => (
+                  <FeedRequestRow key={req.id} request={req} index={i} active={false} onSelect={handleSelect} />
+                ))}
+              </div>
+              {isFetchingNextPage && <CardSkeletonList variant="request" count={2} className="mt-2.5" />}
+              <div ref={sentinel} className="flex h-8 items-center justify-center">
+                {!hasNextPage && requests.length > 5 && (
+                  <span className="text-[12px] font-800 text-ink-400">{t("no_more")}</span>
+                )}
+              </div>
+            </>
+          )}
         </div>
+      </div>
 
-        {/* Backdrop */}
-        {(mobileFiltersOpen || mobileDetailOpen) && (
-          <div
-            className="fixed inset-0 z-30 bg-black/40"
-            onClick={() => { setMobileFiltersOpen(false); setMobileDetailOpen(false); }}
-          />
-        )}
-
-        {/* Filters bottom sheet */}
+      {/* Backdrop */}
+      {(mobileFiltersOpen || mobileDetailOpen) && (
         <div
-          className={`search-sheet sheet-nav-pad fixed bottom-0 left-0 right-0 z-40 max-h-[85vh] overflow-y-auto rounded-t-4xl bg-white dark:bg-ink-900${mobileFiltersOpen ? " open" : ""}`}
-        >
-          <div className="flex items-center justify-between border-b border-ink-100 px-5 py-4 dark:border-ink-800">
-            <h2 className="text-[17px] font-900 text-ink-900 dark:text-white">{t("filters_title")}</h2>
-            <button
-              type="button"
-              onClick={() => setMobileFiltersOpen(false)}
-              className="flex h-8 w-8 items-center justify-center rounded-full bg-ink-100 text-ink-500 hover:bg-ink-200 dark:bg-ink-800 dark:text-ink-300"
-            >
-              <X className="h-4 w-4" aria-hidden />
-            </button>
-          </div>
-          <div className="px-5 py-5">
-            <RequestFilters />
-          </div>
-          <div className="border-t border-ink-100 px-5 py-4 dark:border-ink-800">
-            <button
-              type="button"
-              onClick={() => setMobileFiltersOpen(false)}
-              className="h-12 w-full rounded-2xl bg-accent-500 text-[16px] font-900 text-accent-ink shadow-cta transition-colors hover:bg-accent-400"
-            >
-              {t("show_btn")}
-            </button>
-          </div>
-        </div>
+          className="fixed inset-0 z-30 bg-black/40"
+          onClick={() => { setMobileFiltersOpen(false); setMobileDetailOpen(false); }}
+        />
+      )}
 
-        {/* Detail bottom sheet */}
-        <div
-          className={`search-sheet sheet-nav-pad fixed bottom-0 left-0 right-0 z-40 max-h-[90vh] overflow-y-auto rounded-t-4xl bg-white dark:bg-ink-900${mobileDetailOpen ? " open" : ""}`}
-        >
-          <div className="flex items-center justify-between border-b border-ink-100 px-5 py-4 dark:border-ink-800">
-            <h2 className="text-[17px] font-900 text-ink-900 dark:text-white">{t("request_label")}</h2>
-            <button
-              type="button"
-              onClick={() => setMobileDetailOpen(false)}
-              className="flex h-8 w-8 items-center justify-center rounded-full bg-ink-100 text-ink-500 hover:bg-ink-200 dark:bg-ink-800 dark:text-ink-300"
-            >
-              <X className="h-4 w-4" aria-hidden />
-            </button>
-          </div>
-          {/* Edge-to-edge in the sheet — the pane owns padding + sticky CTA */}
-          {selectedRequest && <RequestDetailPane request={selectedRequest} />}
+      {/* Filters sheet — full-width on mobile, centered + width-capped on desktop */}
+      <div
+        className={`search-sheet sheet-nav-pad fixed bottom-0 left-0 right-0 z-40 mx-auto max-h-[85vh] w-full max-w-[520px] overflow-y-auto rounded-t-4xl bg-white dark:bg-ink-900${mobileFiltersOpen ? " open" : ""}`}
+      >
+        <div className="flex items-center justify-between border-b border-ink-100 px-5 py-4 dark:border-ink-800">
+          <h2 className="text-[17px] font-900 text-ink-900 dark:text-white">{t("filters_title")}</h2>
+          <button
+            type="button"
+            onClick={() => setMobileFiltersOpen(false)}
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-ink-100 text-ink-500 hover:bg-ink-200 dark:bg-ink-800 dark:text-ink-300"
+          >
+            <X className="h-4 w-4" aria-hidden />
+          </button>
         </div>
+        <div className="px-5 py-5">
+          <RequestFilters />
+        </div>
+        <div className="border-t border-ink-100 px-5 py-4 dark:border-ink-800">
+          <button
+            type="button"
+            onClick={() => setMobileFiltersOpen(false)}
+            className="h-12 w-full rounded-2xl bg-accent-500 text-[16px] font-900 text-accent-ink shadow-cta transition-colors hover:bg-accent-400"
+          >
+            {t("show_btn")}
+          </button>
+        </div>
+      </div>
+
+      {/* Detail sheet */}
+      <div
+        className={`search-sheet sheet-nav-pad fixed bottom-0 left-0 right-0 z-40 mx-auto max-h-[90vh] w-full max-w-[520px] overflow-y-auto rounded-t-4xl bg-white dark:bg-ink-900${mobileDetailOpen ? " open" : ""}`}
+      >
+        <div className="flex items-center justify-between border-b border-ink-100 px-5 py-4 dark:border-ink-800">
+          <h2 className="text-[17px] font-900 text-ink-900 dark:text-white">{t("request_label")}</h2>
+          <button
+            type="button"
+            onClick={() => setMobileDetailOpen(false)}
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-ink-100 text-ink-500 hover:bg-ink-200 dark:bg-ink-800 dark:text-ink-300"
+          >
+            <X className="h-4 w-4" aria-hidden />
+          </button>
+        </div>
+        {selectedRequest && <RequestDetailPane request={selectedRequest} />}
       </div>
     </>
   );
