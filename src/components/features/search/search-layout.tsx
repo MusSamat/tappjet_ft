@@ -22,7 +22,6 @@ import { SearchFilters } from "./search-filters";
 import { TripDetailView, type DetailTripData } from "@/components/features/trip/trip-detail";
 import { PopularRoutes } from "./popular-routes";
 import { FeedHeader } from "./feed-header";
-import { DateQuickChips } from "./date-quick-chips";
 import { BecomeDriverBanner } from "@/components/features/driver/become-driver-banner";
 
 interface Props {
@@ -55,13 +54,6 @@ function FeedEmpty({ params }: { params: SearchTripsParams }) {
         action={action}
         className="bg-white shadow-card ring-1 ring-ink-100 dark:bg-ink-900 dark:ring-ink-800"
       />
-      {/* Escape hatch: try another day without leaving the results screen */}
-      <div>
-        <p className="mb-2 text-[13px] font-800 text-ink-500 dark:text-ink-400">{t("empty_try_date")}</p>
-        <div className="flex flex-wrap gap-2">
-          <DateQuickChips />
-        </div>
-      </div>
       <PopularRoutes />
     </div>
   );
@@ -74,14 +66,12 @@ const FeedTripRow = memo(function FeedTripRow({
   trip,
   index,
   active,
-  showBook,
   booked,
   onSelect,
 }: {
   trip: TripListItem;
   index: number;
   active: boolean;
-  showBook: boolean;
   booked: boolean;
   onSelect: (id: string) => void;
 }) {
@@ -91,7 +81,6 @@ const FeedTripRow = memo(function FeedTripRow({
         trip={trip}
         active={active}
         onClick={() => onSelect(trip.id ?? "")}
-        showBookButton={showBook}
         booked={booked}
       />
     </div>
@@ -186,7 +175,6 @@ export function SearchLayout({ initial }: Props) {
           trip={trip}
           index={i}
           active={!mobile && selectedId === trip.id}
-          showBook={mobile}
           booked={bookedTripIds.has(trip.id ?? "")}
           onSelect={onSelect}
         />

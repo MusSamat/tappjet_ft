@@ -11,7 +11,6 @@ import { RequestDetailPane } from "@/components/features/passenger-requests/requ
 import { RequestFilters } from "@/components/features/passenger-requests/request-filters";
 import { FeedHeader } from "@/components/features/search/feed-header";
 import { RouteEntry } from "@/components/features/search/route-entry";
-import { DateQuickChips } from "@/components/features/search/date-quick-chips";
 import { EmptyState } from "@/components/ui/empty-state";
 import { CardSkeletonList } from "@/components/ui/card-skeleton";
 import { QueryError } from "@/components/ui/query-error";
@@ -42,13 +41,6 @@ function RequestsEmpty() {
         action={action}
         className="bg-white shadow-card ring-1 ring-ink-100 dark:bg-ink-900 dark:ring-ink-800"
       />
-      {/* Escape hatch: try another day without leaving the results screen */}
-      <div>
-        <p className="mb-2 text-[13px] font-800 text-ink-500 dark:text-ink-400">{t("empty_try_date")}</p>
-        <div className="flex flex-wrap gap-2">
-          <DateQuickChips />
-        </div>
-      </div>
     </div>
   );
 }

@@ -460,7 +460,7 @@ export function DesignSystemShowcase() {
               trip={{ ...DEMO_TRIP, id: "demo3", seatsAvailable: 0, pickupCities: [] }}
               wholeCabin
             />
-            <TripCard trip={{ ...DEMO_TRIP, id: "demo4" }} wholeCabin showBookButton />
+            <TripCard trip={{ ...DEMO_TRIP, id: "demo4" }} wholeCabin />
             <RequestCard request={DEMO_REQUEST} href="/requests/demo-r1" />
             <RequestCard
               request={{

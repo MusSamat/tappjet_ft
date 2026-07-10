@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import {
-  CheckCircle2,
   ChevronRight,
   Sofa,
   Star,
@@ -14,20 +13,18 @@ import { memo, useCallback, useEffect, useRef } from "react";
 import type { Locale } from "@/i18n.config";
 import type { TripListItem } from "@/lib/api/trips";
 import { usePrefetchTrip } from "@/lib/hooks/use-prefetch-trip";
-import { useAuth } from "@/store/auth";
 import { formatDepartureLabel } from "@/lib/utils/date";
 import { cn } from "@/lib/utils/cn";
-import { ContactRevealButton } from "./contact-reveal-button";
-import { ListingMetrics } from "./listing-metrics";
 import { StatusBadge } from "./status-badge";
 import { VerifiedBadge } from "./verified-badge";
 import { DriverAvatar } from "./driver-avatar";
 import { LikeButton } from "./like-button";
 
-// Ride card — «Card F» (Tappjet Card F.html): big departure time on the left,
-// vertical route spine, cities, price with «с» superscript; below — a compact
-// driver strip (avatar · name ★rating · car) with instant/seats at the right,
-// and a minimal «Подробнее ›» tap hint (opening the detail works as before).
+// Ride card — «Card F» (Tappjet Card F.html): info-only, no action buttons.
+// Big departure time on the left, vertical route spine, cities, like + price
+// at the right; below — a compact driver strip (avatar · name ★rating · car)
+// with instant/seats at the right, and a minimal «Подробнее ›» tap hint —
+// booking/calling live on the trip detail, which opens on tap as before.
 
 interface TripCardProps {
   trip: TripListItem;
@@ -35,8 +32,6 @@ interface TripCardProps {
   className?: string;
   active?: boolean;
   onClick?: () => void;
-  /** Show a direct "Забронировать" button — use on mobile list where there's no detail pane */
-  showBookButton?: boolean;
   /** «Мгновенно» badge — pass when the trip supports instant booking */
   instant?: boolean;
   /** «Весь салон» badge + sofa amenity */
@@ -51,7 +46,6 @@ function TripCardInner({
   className,
   active,
   onClick,
-  showBookButton,
   instant,
   wholeCabin,
   booked,
@@ -93,10 +87,6 @@ function TripCardInner({
   const price = trip.pricePerSeat ?? 0;
   const stops = trip.pickupCities?.length ? trip.pickupCities.join(" · ") : null;
   const car = driver.car ?? null;
-  // Own-post check by user id — `metrics` is owner-only in the search feed but
-  // not guaranteed in every list, so it can't be the ownership signal.
-  const myId = useAuth((s) => s.user?.id);
-  const isOwn = Boolean(myId && trip.driverId === myId);
 
   // «Сегодня, 06:00» → time hero «06:00» + small date «Сегодня» (Card F puts
   // the big time on the left; the date rides underneath so mixed-date lists —
@@ -131,26 +121,15 @@ function TripCardInner({
       tabIndex={onClick ? 0 : undefined}
       onKeyDown={onClick ? (e) => { if (e.key === "Enter" || e.key === " ") onClick(); } : undefined}
     >
-      {/* Heart — absolute top-right */}
-      {trip.id && (
-        <LikeButton
-          targetType="trip"
-          id={trip.id}
-          liked={!!trip.liked}
-          size="sm"
-          className="absolute right-1.5 top-1.5 z-10 bg-transparent text-coral-400 hover:bg-transparent"
-        />
-      )}
-
       {/* Row 0 — only when the trip left the active state («Мои» lists) */}
       {inactive && trip.status && (
-        <div className="mb-2 flex items-center gap-1.5 pr-8">
+        <div className="mb-2 flex items-center gap-1.5">
           <StatusBadge status={trip.status} className="shrink-0" />
         </div>
       )}
 
-      {/* Row 1 — Card F: big departure time · route spine · cities · price */}
-      <div className="flex items-stretch gap-3 pr-7">
+      {/* Row 1 — Card F: big departure time · route spine · cities · ♥ price */}
+      <div className="flex items-stretch gap-3">
         <div className="flex min-w-[52px] shrink-0 flex-col">
           <span className="text-[10px] font-800 uppercase tracking-wide text-ink-400">
             {t("depart_label")}
@@ -181,12 +160,24 @@ function TripCardInner({
             {trip.destinationCity ?? ""}
           </p>
         </div>
-        <div className="shrink-0 self-start text-right">
-          <p className="font-disp whitespace-nowrap text-[18px] font-700 leading-none text-brand-700 dark:text-brand-300">
-            {price.toLocaleString("ru-RU")}
-            <span className="font-sans text-[11px] font-700">{t("som")}</span>
-          </p>
-          <p className="text-[11px] font-600 text-ink-400">{t("per_seat")}</p>
+        {/* Like sits right before the price, with a gap */}
+        <div className="flex shrink-0 items-start gap-2 self-start">
+          {trip.id && (
+            <LikeButton
+              targetType="trip"
+              id={trip.id}
+              liked={!!trip.liked}
+              size="sm"
+              className="-mt-1 bg-transparent text-coral-400 hover:bg-transparent"
+            />
+          )}
+          <div className="text-right">
+            <p className="font-disp whitespace-nowrap text-[18px] font-700 leading-none text-brand-700 dark:text-brand-300">
+              {price.toLocaleString("ru-RU")}
+              <span className="font-sans text-[11px] font-700">{t("som")}</span>
+            </p>
+            <p className="text-[11px] font-600 text-ink-400">{t("per_seat")}</p>
+          </div>
         </div>
       </div>
 
@@ -231,12 +222,6 @@ function TripCardInner({
               {seatsAvailable}
             </span>
           )}
-          {trip.metrics && <ListingMetrics metrics={trip.metrics} className="shrink-0 text-[13px]" />}
-          {/* Call-first: one tap → number + dialer. Never on own trips.
-              Hidden when the CTA row below renders its own call button. */}
-          {!isOwn && trip.id && seatsAvailable > 0 && !showBookButton && (
-            <ContactRevealButton variant="icon" target="trip" id={trip.id} />
-          )}
         </span>
       </div>
 
@@ -249,38 +234,6 @@ function TripCardInner({
         <ChevronRight className="h-3.5 w-3.5" />
       </div>
 
-      {/* Direct book CTA (mobile lists) — disabled once the viewer has booked */}
-      {showBookButton && trip.id && seatsAvailable > 0 && (
-        // Booking (¾) + call (¼) share one row — book is primary, call is the
-        // quick alternative (call-first market).
-        <div className="mt-2.5 flex items-stretch gap-2">
-          {booked ? (
-            <div
-              className="flex flex-[3] items-center justify-center gap-1.5 rounded-xl bg-emerald-50 py-2 text-[14px] font-900 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300"
-              aria-disabled="true"
-            >
-              <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
-              {t("booked")}
-            </div>
-          ) : (
-            <Link
-              href={`/trips/${trip.id}/book`}
-              onClick={(e) => e.stopPropagation()}
-              className="flex flex-[3] items-center justify-center rounded-xl bg-accent-500 py-2 text-[14px] font-900 text-accent-ink transition-colors hover:bg-accent-400"
-            >
-              {t("book")}
-            </Link>
-          )}
-          {!isOwn && (
-            <ContactRevealButton
-              variant="icon"
-              target="trip"
-              id={trip.id}
-              className="h-auto w-auto flex-1 self-stretch rounded-xl"
-            />
-          )}
-        </div>
-      )}
     </article>
   );
 
