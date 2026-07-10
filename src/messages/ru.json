@@ -58,7 +58,9 @@
     "booked": "Заявка отправлена",
     "type_driver": "Водитель",
     "type_passenger": "Пассажир",
-    "responded": "Вы откликнулись"
+    "responded": "Вы откликнулись",
+    "depart_label": "Отпр.",
+    "details_hint": "Подробнее"
   },
   "status": {
     "active": "Активна",

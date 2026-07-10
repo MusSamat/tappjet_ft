@@ -58,7 +58,9 @@
     "booked": "Арыз жөнөтүлдү",
     "type_driver": "Айдоочу",
     "type_passenger": "Жүргүнчү",
-    "responded": "Жооп бердиңиз"
+    "responded": "Жооп бердиңиз",
+    "depart_label": "Жөн.",
+    "details_hint": "Толугураак"
   },
   "status": {
     "active": "Активдүү",
