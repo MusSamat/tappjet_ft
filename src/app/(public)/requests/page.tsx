@@ -186,12 +186,12 @@ export default function RequestsPage() {
             ) : requests.length === 0 ? <RequestsEmpty /> : list(handleSelectDesktop, false)}
           </div>
 
-          {/* RIGHT: Detail */}
-          <div className="overflow-y-auto border-l border-ink-100 bg-white px-6 py-5 dark:border-ink-800 dark:bg-ink-900">
+          {/* RIGHT: Detail — pane owns its padding + sticky CTA footer */}
+          <div className="overflow-y-auto border-l border-ink-100 bg-white dark:border-ink-800 dark:bg-ink-900">
             {selectedRequest ? (
               <RequestDetailPane request={selectedRequest} />
             ) : (
-              <div className="flex h-full items-center justify-center">
+              <div className="flex h-full items-center justify-center p-6">
                 <p className="text-[14px] font-800 text-ink-500">{t("select_request")}</p>
               </div>
             )}
@@ -262,10 +262,8 @@ export default function RequestsPage() {
               <X className="h-4 w-4" aria-hidden />
             </button>
           </div>
-          {/* Edge-to-edge in the sheet — matches the trips detail sheet */}
-          <div className="px-2 pb-5 pt-2">
-            {selectedRequest && <RequestDetailPane request={selectedRequest} />}
-          </div>
+          {/* Edge-to-edge in the sheet — the pane owns padding + sticky CTA */}
+          {selectedRequest && <RequestDetailPane request={selectedRequest} />}
         </div>
       </div>
     </>

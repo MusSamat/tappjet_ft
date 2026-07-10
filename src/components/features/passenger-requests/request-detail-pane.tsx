@@ -42,8 +42,11 @@ export function RequestDetailPane({ request }: Props) {
 
   return (
     <>
-      <div className="flex flex-col gap-5">
-        {/* Type + engagement: metrics (creator only) + like */}
+      {/* Symmetric with the trip detail: scrollable body + sticky CTA footer so
+          «Откликнуться»/«Позвонить» are always in view, above the bottom nav. */}
+      <div className="flex flex-col">
+      <div className="flex flex-1 flex-col gap-4 px-4 py-4">
+        {/* Type + engagement: metrics (creator only, icons-only) + like */}
         <div className="flex items-center justify-between gap-2">
           <ListingTypeBadge type="request" />
           <div className="flex items-center gap-2">
@@ -171,9 +174,10 @@ export function RequestDetailPane({ request }: Props) {
             </div>
           </div>
         )}
+      </div>
 
-        {/* CTA */}
-        <div className="mt-1">
+        {/* Sticky CTA footer — visible without scrolling, clears the bottom nav */}
+        <div className="sticky-cta-nav sticky z-10 border-t border-ink-100 bg-white p-4 dark:border-ink-800 dark:bg-ink-900">
           {isGuest ? (
             <Link
               href="/auth/login"
