@@ -7,6 +7,7 @@ import { CityAutocomplete } from "@/components/ui/city-autocomplete";
 import { Segmented } from "@/components/ui/segmented";
 import { Chip } from "@/components/ui/chip";
 import { SmartDateNav } from "./smart-date-nav";
+import { useAuth } from "@/store/auth";
 
 // Mobile feed header — design-spec §2.2: map hero band + overlaid search
 // card, «Найти поездку / Найти пассажира» segmented, filter chips row.
@@ -45,6 +46,7 @@ export function FeedHeader({ tab, onOpenFilters }: FeedHeaderProps) {
   const t = useTranslations("feed");
   const router = useRouter();
   const pathname = usePathname();
+  const setActiveMode = useAuth((s) => s.setActiveMode);
   const params = useSearchParams();
 
   const from = params.get("from") ?? params.get("from_city") ?? "";
@@ -70,6 +72,13 @@ export function FeedHeader({ tab, onOpenFilters }: FeedHeaderProps) {
 
   const switchTab = (next: FeedTab) => {
     if (next === tab) return;
+    // Unified home `/`: swap the feed in place by switching the active role —
+    // the / page re-renders the other feed, keeping the route in the URL.
+    if (pathname === "/") {
+      setActiveMode(next === "requests" ? "driver" : "passenger");
+      return;
+    }
+    // Legacy /trips ⇄ /requests routes: navigate, carrying the route.
     const qs = new URLSearchParams();
     if (from) qs.set("from", from);
     if (to) qs.set("to", to);

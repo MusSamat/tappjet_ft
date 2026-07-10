@@ -37,12 +37,6 @@ export function markOnboardingSeen(): void {
   }
 }
 
-// Redirect-to-welcome issued but the URL hasn't caught up yet. Module-level on
-// purpose: React dev/StrictMode re-runs the effect on the SAME pathname — the
-// second run must not see "already seen" and override the pending welcome
-// redirect with the TMA home redirect (a race the browser test caught).
-let welcomeRedirectInFlight = false;
-
 export function OnboardingGate() {
   const router = useRouter();
   const pathname = usePathname();
@@ -52,7 +46,6 @@ export function OnboardingGate() {
     // not depend on which button the user taps (the bottom nav is visible on
     // the welcome page too; leaving through it used to bounce straight back).
     if (pathname === "/onboarding" || pathname.startsWith("/onboarding/")) {
-      welcomeRedirectInFlight = false;
       markOnboardingSeen();
       return;
     }
@@ -61,16 +54,13 @@ export function OnboardingGate() {
     if (!hasSeen()) {
       // Mark BEFORE redirecting: exactly one welcome, guaranteed — even if
       // the user leaves it via nav, deep link, or the back button.
-      welcomeRedirectInFlight = true;
       markOnboardingSeen();
       router.replace("/onboarding");
       return;
     }
 
-    // TMA has no use for the web landing page — trips feed IS the home there.
-    if (!welcomeRedirectInFlight && pathname === "/" && detectRuntime() === "telegram") {
-      router.replace("/trips");
-    }
+    // `/` is now the unified search feed (role-aware) — no redirect needed;
+    // TMA and web both use it as home.
   }, [pathname, router]);
 
   return null;

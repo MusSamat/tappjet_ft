@@ -22,11 +22,16 @@ import { SearchFilters } from "./search-filters";
 import { TripDetailView, type DetailTripData } from "@/components/features/trip/trip-detail";
 import { PopularRoutes } from "./popular-routes";
 import { FeedHeader } from "./feed-header";
+import { RouteEntry } from "./route-entry";
 import { BecomeDriverBanner } from "@/components/features/driver/become-driver-banner";
 
 interface Props {
-  initial: TripSearchResult;
+  /** SSR-seeded first page (from /trips). Omitted on the unified home `/`,
+   *  where results are fetched client-side. */
+  initial?: TripSearchResult;
 }
+
+const EMPTY_RESULT: TripSearchResult = { data: [], nextCursor: null };
 
 /** Role-aware feed empty state (spec §2.2 recommends one; copy in feed.empty_*). */
 function FeedEmpty({ params }: { params: SearchTripsParams }) {
@@ -98,6 +103,8 @@ export function SearchLayout({ initial }: Props) {
     () => buildTripSearchParams((k) => searchParams.get(k)),
     [searchParams],
   );
+  // Route-first: only fetch/show results once both cities are set.
+  const hasRoute = Boolean(params.from_city && params.to_city);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [mobileDetailOpen, setMobileDetailOpen] = useState(false);
@@ -108,10 +115,11 @@ export function SearchLayout({ initial }: Props) {
     queryFn: ({ pageParam }) => searchTrips({ ...params, cursor: pageParam }),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (last) => last.nextCursor ?? undefined,
+    enabled: hasRoute,
     // keepPreviousData behaviour (no list flash/collapse when params change),
     // falling back to the SSR-seeded first page on the very first mount.
     placeholderData: (prev) =>
-      prev ?? { pages: [initial], pageParams: [undefined as string | undefined] },
+      prev ?? { pages: [initial ?? EMPTY_RESULT], pageParams: [undefined as string | undefined] },
     staleTime: 0,
   });
 
@@ -188,6 +196,19 @@ export function SearchLayout({ initial }: Props) {
     </div>
   );
 
+  // Route-first gate (used on the unified home `/`; on /trips the page already
+  // gates, so this never triggers there).
+  if (!hasRoute) {
+    return (
+      <RouteEntry
+        mode="trips"
+        modeSwitchable
+        initialFrom={params.from_city}
+        initialTo={params.to_city}
+      />
+    );
+  }
+
   return (
     <>
       {/* ===== DESKTOP (≥1024px): 3-column master-detail (spec §1.3/§2.2) ===== */}
@@ -217,11 +238,13 @@ export function SearchLayout({ initial }: Props) {
                 {t("trips_count", { n: trips.length })}
               </p>
             </div>
-            {trips.length === 0
-              ? isError
-                ? <QueryError error={error} onRetry={() => void refetch()} />
-                : <FeedEmpty params={params} />
-              : tripList(handleSelectDesktop, false)}
+            {isFetching && trips.length === 0
+              ? <CardSkeletonList variant="trip" />
+              : trips.length === 0
+                ? isError
+                  ? <QueryError error={error} onRetry={() => void refetch()} />
+                  : <FeedEmpty params={params} />
+                : tripList(handleSelectDesktop, false)}
           </div>
 
           {/* Right rail: detail pane */}
@@ -244,11 +267,13 @@ export function SearchLayout({ initial }: Props) {
 
         <div className="px-4 pb-3">
           <BecomeDriverBanner />
-          {trips.length === 0
-            ? isError
-              ? <QueryError error={error} onRetry={() => void refetch()} />
-              : <FeedEmpty params={params} />
-            : tripList(handleSelectMobile, true)}
+          {isFetching && trips.length === 0
+            ? <CardSkeletonList variant="trip" />
+            : trips.length === 0
+              ? isError
+                ? <QueryError error={error} onRetry={() => void refetch()} />
+                : <FeedEmpty params={params} />
+              : tripList(handleSelectMobile, true)}
         </div>
 
         {(mobileFiltersOpen || mobileDetailOpen) && (

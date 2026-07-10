@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { ArrowDownUp, Circle, MapPin, Search } from "lucide-react";
 import { BackButton } from "@/components/ui/back-button";
@@ -36,8 +36,10 @@ interface Props {
 export function RouteEntry({ mode, modeSwitchable = false, initialFrom = "", initialTo = "", showPopular }: Props) {
   const t = useTranslations("feed");
   const router = useRouter();
+  const pathname = usePathname();
   const user = useAuth((s) => s.user);
   const activeMode = useAuth((s) => s.activeMode);
+  const setActiveMode = useAuth((s) => s.setActiveMode);
   // Driver role is granted only after admin verification — safe intent gate.
   const isDriver = user?.roles?.includes("driver") ?? false;
 
@@ -71,7 +73,14 @@ export function RouteEntry({ mode, modeSwitchable = false, initialFrom = "", ini
       /* ignore quota / private mode */
     }
     const qs = new URLSearchParams({ from: from.trim(), to: to.trim() });
-    router.push(`/${m}?${qs.toString()}`);
+    // Unified home `/`: stay on `/`, switch the role to match the chosen intent
+    // so the home renders the right feed. Legacy routes navigate to /trips|/requests.
+    if (pathname === "/") {
+      setActiveMode(m === "requests" ? "driver" : "passenger");
+      router.push(`/?${qs.toString()}`);
+    } else {
+      router.push(`/${m}?${qs.toString()}`);
+    }
   };
 
   return (
