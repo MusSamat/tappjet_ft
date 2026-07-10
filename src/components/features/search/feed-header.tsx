@@ -2,10 +2,10 @@
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { ArrowDownUp, CarFront, Circle, MapPin, SlidersHorizontal, User } from "lucide-react";
+import { ArrowDownUp, Circle, MapPin, SlidersHorizontal } from "lucide-react";
 import { CityAutocomplete } from "@/components/ui/city-autocomplete";
-import { Segmented } from "@/components/ui/segmented";
 import { Chip } from "@/components/ui/chip";
+import { IntentToggle } from "./intent-toggle";
 import { SmartDateNav } from "./smart-date-nav";
 import { useAuth } from "@/store/auth";
 
@@ -88,16 +88,21 @@ export function FeedHeader({ tab, onOpenFilters }: FeedHeaderProps) {
 
   return (
     <div>
-      {/* Map hero band + overlaid search card */}
-      <div className="relative">
-        <div
-          className="h-32 w-full"
-          style={{ background: "linear-gradient(135deg,#D0FBEF,#E0E7FF)" }}
-        >
-          <MapRoute />
-        </div>
-        <div className="relative z-10 -mt-[72px] px-4">
-          <div className="rounded-2xl bg-white p-2 shadow-lift dark:bg-ink-900">
+      {/* Decorative map band */}
+      <div
+        className="h-24 w-full"
+        style={{ background: "linear-gradient(135deg,#D0FBEF,#E0E7FF)" }}
+      >
+        <MapRoute />
+      </div>
+
+      {/* Role toggle FIRST, then the point inputs — pulled up over the band. */}
+      <div className="relative z-10 -mt-9 space-y-2.5 px-4">
+        <IntentToggle
+          value={tab === "requests" ? "driver" : "passenger"}
+          onChange={(v) => switchTab(v === "driver" ? "requests" : "trips")}
+        />
+        <div className="rounded-2xl bg-white p-2 shadow-lift dark:bg-ink-900">
             <div className="flex items-center gap-2 pl-2">
               <Circle className="h-3.5 w-3.5 shrink-0 text-brand-600" aria-hidden="true" />
               <CityAutocomplete
@@ -132,24 +137,10 @@ export function FeedHeader({ tab, onOpenFilters }: FeedHeaderProps) {
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Sticky control bar — the route card + hero scroll away, but the intent
-          toggle and filters/date stay pinned to the top while browsing the list. */}
+      {/* Sticky control bar: filters + date pill stay pinned while scrolling
+          (the role toggle + route inputs above scroll away). */}
       <div className="sticky top-0 z-20 border-b border-ink-100 bg-ink-50/90 backdrop-blur-md dark:border-ink-800 dark:bg-ink-950/90">
-        {/* Segmented: browse driver trips ⇄ passenger requests (intent/role). */}
-        <div className="px-4 pt-3">
-          <Segmented<FeedTab>
-            value={tab}
-            onChange={switchTab}
-            tone={tab === "requests" ? "grape" : "brand"}
-            options={[
-              { value: "trips", label: t("find_trip"), icon: <CarFront className="h-4 w-4" aria-hidden="true" /> },
-              { value: "requests", label: t("find_passenger"), icon: <User className="h-4 w-4" aria-hidden="true" /> },
-            ]}
-          />
-        </div>
-
         {/* Chips row: filters + the date stepper pill (‹ Сегодня · N ›) — a
             custom date lives in the filters sheet calendar. */}
         <div className="no-scrollbar flex items-center gap-2 overflow-x-auto px-4 py-3">
