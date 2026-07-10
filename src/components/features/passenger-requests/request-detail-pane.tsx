@@ -176,8 +176,8 @@ export function RequestDetailPane({ request }: Props) {
         )}
       </div>
 
-        {/* Sticky CTA footer — visible without scrolling, clears the bottom nav */}
-        <div className="sticky-cta-nav sticky z-10 border-t border-ink-100 bg-white p-4 dark:border-ink-800 dark:bg-ink-900">
+        {/* CTA at the END — plain footer, not floating over the info. */}
+        <div className="border-t border-ink-100 bg-white p-4 dark:border-ink-800 dark:bg-ink-900">
           {isGuest ? (
             <Link
               href="/auth/login"

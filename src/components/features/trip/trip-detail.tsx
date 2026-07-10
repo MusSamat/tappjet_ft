@@ -436,14 +436,12 @@ export function TripDetailView({ trip, variant = "page", autoOpenBook = false, o
   // ---- RAIL (desktop feed right rail + mobile detail sheet) ----
   if (variant === "rail") {
     return (
-      // No overflow-hidden on the root — it would break the sticky CTA below
-      // (the nearest scroll container is the sheet / rail column outside).
-      <div className="flex flex-col rounded-3xl ring-1 ring-ink-100 dark:ring-ink-800">
-        <div className="overflow-hidden rounded-t-3xl">{header}</div>
+      <div className="flex flex-col overflow-hidden rounded-3xl ring-1 ring-ink-100 dark:ring-ink-800">
+        {header}
         {body}
-        {/* Book + call always in view: stick to the sheet's visible bottom,
-            above the floating bottom nav on mobile (bottom:0 on md+). */}
-        <div className="sticky-cta-nav sticky z-10 rounded-b-3xl border-t border-ink-100 bg-white p-4 dark:border-ink-800 dark:bg-ink-900">
+        {/* Book + call at the END of the content — plain footer, not floating
+            over the info (the compact body keeps them in reach without scroll). */}
+        <div className="border-t border-ink-100 bg-white p-4 dark:border-ink-800 dark:bg-ink-900">
           {cta}
         </div>
         {bookingModal}
