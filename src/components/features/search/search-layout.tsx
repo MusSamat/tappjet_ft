@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo, memo } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { searchTrips, type SearchTripsParams, type TripSearchResult, type TripListItem } from "@/lib/api/trips";
@@ -23,7 +23,8 @@ import { SearchFilters } from "./search-filters";
 import { TripDetailView, type DetailTripData } from "@/components/features/trip/trip-detail";
 import { PopularRoutes } from "./popular-routes";
 import { FeedHeader } from "./feed-header";
-import { RouteEntry } from "./route-entry";
+import { FeedEntryHints } from "./feed-entry-hints";
+import { addRecentRoute } from "@/lib/recent-routes";
 import { BecomeDriverBanner } from "@/components/features/driver/become-driver-banner";
 
 interface Props {
@@ -165,18 +166,18 @@ export function SearchLayout({ initial }: Props) {
 
   const nearby = data?.pages[0]?.nearby === true;
 
-  // Route-first gate (used on the unified home `/`; on /trips the page already
-  // gates, so this never triggers there).
-  if (!hasRoute) {
-    return (
-      <RouteEntry
-        mode="trips"
-        modeSwitchable
-        initialFrom={params.from_city}
-        initialTo={params.to_city}
-      />
-    );
-  }
+  // Pick a route from the entry hints — updates the URL on THIS page (no
+  // navigation), so only the body swaps to results (header stays put).
+  const router = useRouter();
+  const pathname = usePathname();
+  const pickRoute = (f: string, tt: string) => {
+    addRecentRoute(f, tt);
+    const next = new URLSearchParams(searchParams);
+    next.set("from", f);
+    next.set("to", tt);
+    next.delete("cursor");
+    router.replace(`${pathname}?${next.toString()}`, { scroll: false });
+  };
 
   return (
     <>
@@ -190,7 +191,9 @@ export function SearchLayout({ initial }: Props) {
 
         <div className="px-4 pb-6">
           <BecomeDriverBanner />
-          {isFetching && trips.length === 0 ? (
+          {!hasRoute ? (
+            <FeedEntryHints onPick={pickRoute} />
+          ) : isFetching && trips.length === 0 ? (
             <CardSkeletonList variant="trip" />
           ) : trips.length === 0 ? (
             isError ? (

@@ -3,14 +3,15 @@
 import { useInfiniteQuery, keepPreviousData } from "@tanstack/react-query";
 import { useState, useEffect, useCallback, memo } from "react";
 import { useTranslations } from "next-intl";
-import { useSearchParams } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { X } from "lucide-react";
 import { listPassengerRequests, type PassengerRequest } from "@/lib/api/passenger-requests";
 import { RequestCard } from "@/components/features/passenger-requests/request-card";
 import { RequestDetailPane } from "@/components/features/passenger-requests/request-detail-pane";
 import { RequestFilters } from "@/components/features/passenger-requests/request-filters";
 import { FeedHeader } from "@/components/features/search/feed-header";
-import { RouteEntry } from "@/components/features/search/route-entry";
+import { FeedEntryHints } from "@/components/features/search/feed-entry-hints";
+import { addRecentRoute } from "@/lib/recent-routes";
 import { EmptyState } from "@/components/ui/empty-state";
 import { CardSkeletonList } from "@/components/ui/card-skeleton";
 import { QueryError } from "@/components/ui/query-error";
@@ -129,9 +130,18 @@ export function RequestsFeed() {
 
   const nearby = data?.pages[0]?.nearby === true;
 
-  if (!hasRoute) {
-    return <RouteEntry mode="requests" modeSwitchable initialFrom={filters.from_city} initialTo={filters.to_city} />;
-  }
+  // Pick a route from the entry hints — update the URL on THIS page (no nav),
+  // so only the body swaps to results while the header stays put.
+  const router = useRouter();
+  const pathname = usePathname();
+  const pickRoute = (f: string, tt: string) => {
+    addRecentRoute(f, tt);
+    const next = new URLSearchParams(params);
+    next.set("from", f);
+    next.set("to", tt);
+    next.delete("cursor");
+    router.replace(`${pathname}?${next.toString()}`, { scroll: false });
+  };
 
   return (
     <>
@@ -143,7 +153,9 @@ export function RequestsFeed() {
         <FeedHeader tab="requests" onOpenFilters={() => setMobileFiltersOpen(true)} />
 
         <div className="px-4 pb-6">
-          {isLoading ? (
+          {!hasRoute ? (
+            <FeedEntryHints onPick={pickRoute} />
+          ) : isLoading ? (
             <CardSkeletonList variant="request" />
           ) : isError ? (
             <QueryError error={error} onRetry={() => void refetch()} />

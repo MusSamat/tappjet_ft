@@ -3,7 +3,6 @@ import { getTranslations } from "next-intl/server";
 import { searchTrips } from "@/lib/api/trips";
 import { buildTripSearchParams } from "@/lib/trip-search-params";
 import { SearchLayout } from "@/components/features/search/search-layout";
-import { RouteEntry } from "@/components/features/search/route-entry";
 
 export const revalidate = 0;
 
@@ -45,17 +44,16 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 export default async function TripsPage({ searchParams }: Props) {
   const params = paramsFromSearch(searchParams);
 
-  // Route-first: don't fetch or show any trips until origin AND destination are
-  // both set — mirror the «Межгород» flow (route entry → variants).
-  if (!params.from_city || !params.to_city) {
-    return <RouteEntry mode="trips" modeSwitchable initialFrom={params.from_city} initialTo={params.to_city} />;
-  }
-
+  // One page: SearchLayout keeps the search header always visible and shows the
+  // entry hints (recent/popular) until both cities are set — no separate gate
+  // screen. SSR-seed the first page only when a route is present.
   let initial;
-  try {
-    initial = await searchTrips(params);
-  } catch {
-    initial = { data: [], nextCursor: null };
+  if (params.from_city && params.to_city) {
+    try {
+      initial = await searchTrips(params);
+    } catch {
+      initial = { data: [], nextCursor: null };
+    }
   }
 
   return <SearchLayout initial={initial} />;
