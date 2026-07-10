@@ -116,9 +116,9 @@ export function DatePickerModal({
             onClick={prevMonth}
             disabled={prevDisabled}
             aria-label={t("prev_month")}
-            className="flex h-11 w-11 items-center justify-center rounded-xl text-ink-500 transition-colors hover:bg-ink-100 disabled:cursor-not-allowed disabled:opacity-25 dark:text-ink-300 dark:hover:bg-ink-800"
+            className="flex h-14 w-14 items-center justify-center rounded-2xl bg-ink-100 text-ink-700 transition-colors hover:bg-ink-200 active:scale-95 disabled:cursor-not-allowed disabled:opacity-25 dark:bg-ink-800 dark:text-ink-200 dark:hover:bg-ink-700"
           >
-            <ChevronLeft className="h-5 w-5" aria-hidden="true" />
+            <ChevronLeft className="h-7 w-7" aria-hidden="true" />
           </button>
           <span className="text-[16px] font-800 text-ink-900 dark:text-white">
             {monthLabel} {view.year}
@@ -127,9 +127,9 @@ export function DatePickerModal({
             type="button"
             onClick={nextMonth}
             aria-label={t("next_month")}
-            className="flex h-11 w-11 items-center justify-center rounded-xl text-ink-500 transition-colors hover:bg-ink-100 dark:text-ink-300 dark:hover:bg-ink-800"
+            className="flex h-14 w-14 items-center justify-center rounded-2xl bg-ink-100 text-ink-700 transition-colors hover:bg-ink-200 active:scale-95 dark:bg-ink-800 dark:text-ink-200 dark:hover:bg-ink-700"
           >
-            <ChevronRight className="h-5 w-5" aria-hidden="true" />
+            <ChevronRight className="h-7 w-7" aria-hidden="true" />
           </button>
         </div>
 
