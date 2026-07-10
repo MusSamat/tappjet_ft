@@ -49,8 +49,6 @@ export function FeedHeader({ tab, onOpenFilters }: FeedHeaderProps) {
 
   const from = params.get("from") ?? params.get("from_city") ?? "";
   const to = params.get("to") ?? params.get("to_city") ?? "";
-  const sort = params.get("sort") ?? "";
-  const cheaperOn = sort === "price_asc";
 
   const update = (patch: Record<string, string | null>) => {
     const next = new URLSearchParams(params);
@@ -143,8 +141,9 @@ export function FeedHeader({ tab, onOpenFilters }: FeedHeaderProps) {
         </div>
       )}
 
-      {/* Chips row */}
-      <div className="no-scrollbar flex gap-2 overflow-x-auto px-4 py-3">
+      {/* Chips row: filters + the date stepper pill (‹ Сегодня · N ›) — a
+          custom date lives in the filters sheet calendar. */}
+      <div className="no-scrollbar flex items-center gap-2 overflow-x-auto px-4 py-3">
         <Chip
           kind="quick"
           selected
@@ -154,19 +153,7 @@ export function FeedHeader({ tab, onOpenFilters }: FeedHeaderProps) {
         >
           {t("filters")}
         </Chip>
-        {/* Date stepper pill (‹ Сегодня · N ›) — replaces the today/tomorrow/
-            pick chips; a custom date lives in the filters sheet calendar. */}
         <SmartDateNav kind={tab} />
-        {tab === "trips" && (
-          <Chip
-            kind="quick"
-            selected={cheaperOn}
-            accent="accent"
-            onClick={() => update({ sort: cheaperOn ? null : "price_asc" })}
-          >
-            {t("cheaper")}
-          </Chip>
-        )}
       </div>
     </div>
   );

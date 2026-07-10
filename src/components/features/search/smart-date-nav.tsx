@@ -64,21 +64,26 @@ export function SmartDateNav({ kind }: { kind: "trips" | "requests" }) {
   };
 
   const grape = kind === "requests";
-  const arrowCls =
-    "flex h-7 w-7 items-center justify-center rounded-full text-ink-600 hover:bg-ink-100 disabled:opacity-25 disabled:hover:bg-transparent dark:text-ink-300 dark:hover:bg-ink-800";
+  // Big tappable arrow tiles — visible buttons, not bare icons.
+  const arrowCls = cn(
+    "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-ink-100 text-ink-700 transition-colors active:scale-95 disabled:opacity-25 dark:bg-ink-800 dark:text-ink-300",
+    grape
+      ? "hover:bg-grape-100 hover:text-grape-700 disabled:hover:bg-ink-100 dark:hover:bg-grape-500/15 dark:hover:text-grape-300 dark:disabled:hover:bg-ink-800"
+      : "hover:bg-brand-100 hover:text-brand-700 disabled:hover:bg-ink-100 dark:hover:bg-brand-500/15 dark:hover:text-brand-300 dark:disabled:hover:bg-ink-800",
+  );
 
   return (
     <div
       className={cn(
-        "flex shrink-0 items-center rounded-full border border-ink-200 bg-white p-0.5 transition-opacity dark:border-ink-700 dark:bg-ink-900",
+        "flex shrink-0 items-center gap-1 rounded-2xl border border-ink-200 bg-white p-1 shadow-xs transition-opacity dark:border-ink-700 dark:bg-ink-900",
         pending && "opacity-60",
       )}
     >
       <button type="button" disabled={!prev} onClick={() => prev && go(prev)} aria-label={t("date_nav_earlier")} className={arrowCls}>
-        <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+        <ChevronLeft className="h-5 w-5" aria-hidden="true" />
       </button>
 
-      <span className="flex items-center gap-1 whitespace-nowrap px-1 text-[13px] font-900 text-ink-900 dark:text-white">
+      <span className="flex items-center gap-1 whitespace-nowrap px-1.5 text-[13px] font-900 text-ink-900 dark:text-white">
         <CalendarDays
           className={cn("h-3.5 w-3.5", grape ? "text-grape-500" : "text-brand-500")}
           aria-hidden="true"
@@ -101,7 +106,7 @@ export function SmartDateNav({ kind }: { kind: "trips" | "requests" }) {
       </span>
 
       <button type="button" disabled={!next} onClick={() => next && go(next)} aria-label={t("date_nav_later")} className={arrowCls}>
-        <ChevronRight className="h-4 w-4" aria-hidden="true" />
+        <ChevronRight className="h-5 w-5" aria-hidden="true" />
       </button>
     </div>
   );
