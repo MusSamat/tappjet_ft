@@ -1190,7 +1190,8 @@
     "empty_requests_cta_driver": "Опубликовать поездку",
     "nearby_notice": "Точных совпадений нет — показаны поездки из соседних сёл этого района",
     "date_nav_earlier": "Раньше",
-    "date_nav_later": "Позже"
+    "date_nav_later": "Позже",
+    "recent_searches": "Недавние поиски"
   },
   "detail": {
     "book_modal_title": "Бронирование",

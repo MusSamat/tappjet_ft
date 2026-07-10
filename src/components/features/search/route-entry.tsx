@@ -3,12 +3,13 @@
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { ArrowDownUp, Circle, MapPin, Search } from "lucide-react";
+import { ArrowDownUp, ArrowRight, Circle, Clock, MapPin, Search } from "lucide-react";
 import { BackButton } from "@/components/ui/back-button";
 import { CityAutocomplete } from "@/components/ui/city-autocomplete";
 import { IntentToggle } from "./intent-toggle";
 import { useAuth } from "@/store/auth";
 import { PopularRoutes } from "./popular-routes";
+import { getRecentRoutes, addRecentRoute, type RecentRoute } from "@/lib/recent-routes";
 
 // Last searched route survives navigation — prefills this form on return.
 const LAST_ROUTE_KEY = "tappjet_last_route";
@@ -50,6 +51,10 @@ export function RouteEntry({ mode, modeSwitchable = false, initialFrom = "", ini
   const [to, setTo] = useState(initialTo);
   const canGo = from.trim().length > 0 && to.trim().length > 0;
 
+  // Recent searches (last 3) — loaded client-side to avoid a hydration mismatch.
+  const [recent, setRecent] = useState<RecentRoute[]>([]);
+  useEffect(() => setRecent(getRecentRoutes()), []);
+
   // Prefill from the last search when opened without an explicit route.
   useEffect(() => {
     if (initialFrom || initialTo) return;
@@ -65,14 +70,17 @@ export function RouteEntry({ mode, modeSwitchable = false, initialFrom = "", ini
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const submit = () => {
-    if (!canGo) return;
+  const go = (fromRaw: string, toRaw: string) => {
+    const f = fromRaw.trim();
+    const tt = toRaw.trim();
+    if (!f || !tt) return;
     try {
-      localStorage.setItem(LAST_ROUTE_KEY, JSON.stringify({ from: from.trim(), to: to.trim() }));
+      localStorage.setItem(LAST_ROUTE_KEY, JSON.stringify({ from: f, to: tt }));
     } catch {
       /* ignore quota / private mode */
     }
-    const qs = new URLSearchParams({ from: from.trim(), to: to.trim() });
+    addRecentRoute(f, tt);
+    const qs = new URLSearchParams({ from: f, to: tt });
     // Unified home `/`: stay on `/`, switch the role to match the chosen intent
     // so the home renders the right feed. Legacy routes navigate to /trips|/requests.
     if (pathname === "/") {
@@ -82,6 +90,7 @@ export function RouteEntry({ mode, modeSwitchable = false, initialFrom = "", ini
       router.push(`/${m}?${qs.toString()}`);
     }
   };
+  const submit = () => go(from, to);
 
   return (
     <div className="mx-auto w-full max-w-md px-4 py-8 sm:py-12">
@@ -146,6 +155,30 @@ export function RouteEntry({ mode, modeSwitchable = false, initialFrom = "", ini
         {m === "requests" ? t("find_passenger") : t("find_trip")}
       </button>
 
+      {/* Recent searches (last 3) — one tap re-runs the search. */}
+      {recent.length > 0 && (
+        <div className="mt-7">
+          <p className="mb-2 text-[13px] font-800 text-ink-500 dark:text-ink-400">{t("recent_searches")}</p>
+          <div className="flex flex-col gap-2">
+            {recent.map((r, i) => (
+              <button
+                key={`${r.from}-${r.to}-${i}`}
+                type="button"
+                onClick={() => go(r.from, r.to)}
+                className="flex items-center gap-2.5 rounded-2xl border border-ink-200 bg-white p-3 text-left transition-colors hover:border-brand-300 hover:bg-brand-50/40 dark:border-ink-700 dark:bg-ink-900 dark:hover:border-brand-500/40"
+              >
+                <Clock className="h-4 w-4 shrink-0 text-ink-400" aria-hidden="true" />
+                <span className="min-w-0 flex-1 truncate text-[14px] font-800 text-ink-900 dark:text-white">
+                  {r.from} <span className="text-ink-400">→</span> {r.to}
+                </span>
+                <ArrowRight className="h-4 w-4 shrink-0 text-ink-400" aria-hidden="true" />
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Favorites / popular routes — the fallback when there's no recent search. */}
       {(showPopular ?? m === "trips") && (
         <div className="mt-8">
           <PopularRoutes />

@@ -1190,7 +1190,8 @@
     "empty_requests_cta_driver": "Сапар жарыялоо",
     "nearby_notice": "Так дал келгендер жок — ушул райондун жакынкы айылдарынан сапарлар көрсөтүлдү",
     "date_nav_earlier": "Мурда",
-    "date_nav_later": "Кийин"
+    "date_nav_later": "Кийин",
+    "recent_searches": "Акыркы издөөлөр"
   },
   "detail": {
     "book_modal_title": "Брондоо",
