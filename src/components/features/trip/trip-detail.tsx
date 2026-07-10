@@ -377,15 +377,33 @@ export function TripDetailView({ trip, variant = "page", autoOpenBook = false, o
           <div className="mt-1 text-[13px] font-600 text-white/70">{t("per_seat")}</div>
         </div>
       </div>
+      {/* Owner engagement stats — icons only, bottom-right of the header */}
+      {trip.metrics && (
+        <div className="mt-3 flex items-center justify-end gap-3 text-[12px] font-800 text-white/85">
+          <span className="flex items-center gap-1" title={t("stats_views")}>
+            <EyeIcon className="h-3.5 w-3.5" aria-hidden="true" />
+            {trip.metrics.views}
+          </span>
+          <span className="flex items-center gap-1" title={t("stats_likes")}>
+            <HeartIcon className="h-3.5 w-3.5" aria-hidden="true" />
+            {trip.metrics.likes}
+          </span>
+          <span className="flex items-center gap-1" title={t("stats_contacts")}>
+            <PhoneIcon className="h-3.5 w-3.5" aria-hidden="true" />
+            {(trip.metrics as { contacts?: number }).contacts ?? 0}
+          </span>
+        </div>
+      )}
     </div>
   );
 
+  // Compact body: driver (name · photo · car) straight after the header, then
+  // the info tiles; stats moved into the header, the seats card folded into
+  // the seats tile — everything above the fold so the CTA needs no scrolling.
   const body = (
     <div className="space-y-3 px-5 py-4">
-      {trip.metrics && <StatsRow metrics={trip.metrics} />}
-      <InfoTiles model={model} />
       <DriverCard model={model} showMessage={showMessage} onMessage={handleBook} />
-      {model.seatsTotal > 0 && <SeatsCard model={model} />}
+      <InfoTiles model={model} />
       {trip.comment && (
         <div className="rounded-2xl bg-accent-50 p-3.5 text-[15px] font-600 text-ink-700 dark:bg-accent-500/10 dark:text-accent-200">
           {trip.comment}
@@ -415,13 +433,19 @@ export function TripDetailView({ trip, variant = "page", autoOpenBook = false, o
     />
   );
 
-  // ---- RAIL (desktop feed right rail): self-contained mobile markup ----
+  // ---- RAIL (desktop feed right rail + mobile detail sheet) ----
   if (variant === "rail") {
     return (
-      <div className="flex flex-col overflow-hidden rounded-3xl ring-1 ring-ink-100 dark:ring-ink-800">
-        {header}
+      // No overflow-hidden on the root — it would break the sticky CTA below
+      // (the nearest scroll container is the sheet / rail column outside).
+      <div className="flex flex-col rounded-3xl ring-1 ring-ink-100 dark:ring-ink-800">
+        <div className="overflow-hidden rounded-t-3xl">{header}</div>
         {body}
-        <div className="border-t border-ink-100 bg-white p-4 dark:border-ink-800 dark:bg-ink-900">{cta}</div>
+        {/* Book + call always in view: stick to the sheet's visible bottom,
+            above the floating bottom nav on mobile (bottom:0 on md+). */}
+        <div className="sticky-cta-nav sticky z-10 rounded-b-3xl border-t border-ink-100 bg-white p-4 dark:border-ink-800 dark:bg-ink-900">
+          {cta}
+        </div>
         {bookingModal}
       </div>
     );
