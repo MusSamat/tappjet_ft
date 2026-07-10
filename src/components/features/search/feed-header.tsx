@@ -134,9 +134,10 @@ export function FeedHeader({ tab, onOpenFilters }: FeedHeaderProps) {
         </div>
       </div>
 
-      {/* Segmented: browse driver trips ⇄ passenger requests — for everyone
-          (Phase 1: no account roles, only intent). */}
-      {(
+      {/* Sticky control bar — the route card + hero scroll away, but the intent
+          toggle and filters/date stay pinned to the top while browsing the list. */}
+      <div className="sticky top-0 z-20 border-b border-ink-100 bg-ink-50/90 backdrop-blur-md dark:border-ink-800 dark:bg-ink-950/90">
+        {/* Segmented: browse driver trips ⇄ passenger requests (intent/role). */}
         <div className="px-4 pt-3">
           <Segmented<FeedTab>
             value={tab}
@@ -148,21 +149,21 @@ export function FeedHeader({ tab, onOpenFilters }: FeedHeaderProps) {
             ]}
           />
         </div>
-      )}
 
-      {/* Chips row: filters + the date stepper pill (‹ Сегодня · N ›) — a
-          custom date lives in the filters sheet calendar. */}
-      <div className="no-scrollbar flex items-center gap-2 overflow-x-auto px-4 py-3">
-        <Chip
-          kind="quick"
-          selected
-          accent="brand"
-          icon={<SlidersHorizontal className="h-3.5 w-3.5" aria-hidden="true" />}
-          onClick={onOpenFilters}
-        >
-          {t("filters")}
-        </Chip>
-        <SmartDateNav kind={tab} />
+        {/* Chips row: filters + the date stepper pill (‹ Сегодня · N ›) — a
+            custom date lives in the filters sheet calendar. */}
+        <div className="no-scrollbar flex items-center gap-2 overflow-x-auto px-4 py-3">
+          <Chip
+            kind="quick"
+            selected
+            accent="brand"
+            icon={<SlidersHorizontal className="h-3.5 w-3.5" aria-hidden="true" />}
+            onClick={onOpenFilters}
+          >
+            {t("filters")}
+          </Chip>
+          <SmartDateNav kind={tab} />
+        </div>
       </div>
     </div>
   );
