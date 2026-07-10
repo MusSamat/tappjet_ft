@@ -1,10 +1,11 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { ChevronLeft, ChevronRight, CalendarDays } from "lucide-react";
+import { ChevronLeft, ChevronRight, CalendarDays, Calendar } from "lucide-react";
 import { useCalendarCounts } from "@/lib/hooks/use-calendar-counts";
+import { DatePickerModal } from "@/components/ui/date-picker";
 import { cn } from "@/lib/utils/cn";
 
 // Date stepper pill — replaces the «Сегодня / Завтра / Выбрать» chips in the
@@ -30,6 +31,7 @@ export function SmartDateNav({ kind }: { kind: "trips" | "requests" }) {
   const pathname = usePathname();
   const sp = useSearchParams();
   const [pending, startTransition] = useTransition();
+  const [pickerOpen, setPickerOpen] = useState(false);
 
   const from = sp.get("from") ?? "";
   const to = sp.get("to") ?? "";
@@ -73,6 +75,7 @@ export function SmartDateNav({ kind }: { kind: "trips" | "requests" }) {
   );
 
   return (
+    <>
     <div
       className={cn(
         "flex shrink-0 items-center gap-1 rounded-2xl border border-ink-200 bg-white p-1 shadow-xs transition-opacity dark:border-ink-700 dark:bg-ink-900",
@@ -108,6 +111,27 @@ export function SmartDateNav({ kind }: { kind: "trips" | "requests" }) {
       <button type="button" disabled={!next} onClick={() => next && go(next)} aria-label={t("date_nav_later")} className={arrowCls}>
         <ChevronRight className="h-5 w-5" aria-hidden="true" />
       </button>
+
+      {/* Calendar — pick any date; the modal shows how many rides each day has. */}
+      <button
+        type="button"
+        onClick={() => setPickerOpen(true)}
+        aria-label={t("pick_date")}
+        className={cn(arrowCls, "ml-0.5")}
+      >
+        <Calendar className="h-5 w-5" aria-hidden="true" />
+      </button>
     </div>
+
+    <DatePickerModal
+      open={pickerOpen}
+      onOpenChange={setPickerOpen}
+      value={/^\d{4}-\d{2}-\d{2}$/.test(current) ? current : ""}
+      onChange={(v) => { if (v) go(v); }}
+      min={today}
+      title={t("pick_date")}
+      dayCounts={counts}
+    />
+    </>
   );
 }
