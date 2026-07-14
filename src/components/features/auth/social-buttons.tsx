@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { initTelegramBotLogin, getTelegramBotLoginStatus, claimTelegramBotLogin } from "@/lib/api/auth";
 import { isFullAuthResult } from "@/lib/api/types";
 import { consumeDeferredAction, routeForIntent } from "@/lib/auth/deferred-action";
+import { toTelegramAppLink } from "@/lib/utils/open-telegram";
 import { useAuth } from "@/store/auth";
 import { Send } from "lucide-react";
 import { NotifCard, Spinner } from "@/components/ui";
@@ -136,6 +137,10 @@ export function SocialButtons({ onDone }: Props) {
     startPolling(token);
   };
 
+  // Prefer the tg:// app scheme — opens Telegram directly even where the t.me
+  // domain is DNS-blocked; https is the fallback for users without the app.
+  const appLink = deepLink ? toTelegramAppLink(deepLink) : null;
+
   return (
     <div className="flex flex-col gap-3">
       {error && (
@@ -152,12 +157,22 @@ export function SocialButtons({ onDone }: Props) {
           </div>
           {deepLink && (
             <a
-              href={deepLink}
+              href={appLink ?? deepLink}
               target="_blank"
               rel="noreferrer"
               className="text-center text-[14px] font-700 text-brand-600 hover:text-brand-700 dark:text-brand-400"
             >
               {t("open_again")}
+            </a>
+          )}
+          {appLink && deepLink && (
+            <a
+              href={deepLink}
+              target="_blank"
+              rel="noreferrer"
+              className="text-center text-[12px] font-600 text-ink-400 underline hover:text-ink-600 dark:hover:text-ink-200"
+            >
+              {t("open_via_browser")}
             </a>
           )}
           <p className="text-center text-[13px] font-600 text-ink-500 dark:text-ink-400">
@@ -166,7 +181,7 @@ export function SocialButtons({ onDone }: Props) {
         </div>
       ) : deepLink ? (
         <a
-          href={deepLink}
+          href={appLink ?? deepLink}
           target="_blank"
           rel="noreferrer"
           onClick={armLogin}

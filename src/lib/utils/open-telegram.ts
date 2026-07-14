@@ -27,3 +27,25 @@ export function openTelegramDeepLink(deepLink: string): void {
     window.open(deepLink, "_blank", "noopener,noreferrer");
   }
 }
+
+/**
+ * Convert an https t.me deep-link into the native `tg://` scheme, which opens
+ * the installed Telegram APP directly — bypassing the `t.me` DOMAIN. Crucial in
+ * regions (e.g. KG mobile carriers) where `t.me` is DNS-blocked
+ * (ERR_NAME_NOT_RESOLVED) even though the Telegram app itself still connects.
+ *   https://t.me/<bot>?start=<payload>  →  tg://resolve?domain=<bot>&start=<payload>
+ * Returns null if the input isn't a recognizable t.me bot link (caller falls
+ * back to the original https link, e.g. for users without the app installed).
+ */
+export function toTelegramAppLink(httpsLink: string): string | null {
+  try {
+    const u = new URL(httpsLink);
+    if (!/(^|\.)t\.me$/i.test(u.hostname)) return null;
+    const bot = u.pathname.replace(/^\/+/, "");
+    if (!bot) return null;
+    const start = u.searchParams.get("start");
+    return `tg://resolve?domain=${bot}${start ? `&start=${encodeURIComponent(start)}` : ""}`;
+  } catch {
+    return null;
+  }
+}
