@@ -28,6 +28,26 @@ export type TripDetail = components["schemas"]["TripDetail"] & {
   dropoffCities?: string[];
 } & EngagementFields;
 
+// Lean card DTO returned by GET /trips (search/browse) — a strict subset of
+// TripListItem carrying only what the ride card renders. The full trip is
+// fetched via getTrip() when a card is opened. Keep in sync with the backend
+// TripCardItem schema and the TripCard component.
+export type TripCardItem = Pick<
+  TripListItem,
+  | "id"
+  | "driverId"
+  | "driver"
+  | "originCity"
+  | "destinationCity"
+  | "pickupCities"
+  | "departureAt"
+  | "departureWindowEnd"
+  | "seatsAvailable"
+  | "pricePerSeat"
+  | "status"
+  | "liked"
+>;
+
 export interface SearchTripsParams {
   from_city?: string;
   to_city?: string;
@@ -49,7 +69,7 @@ export interface SearchTripsParams {
 export interface TripSearchResult {
   /** true = exact city had no results; page shows same-raion (sub-city) matches */
   nearby?: boolean;
-  data: TripListItem[];
+  data: TripCardItem[];
   nextCursor: string | null;
 }
 

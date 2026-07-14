@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useMemo, memo } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { searchTrips, getTrip, type SearchTripsParams, type TripSearchResult, type TripListItem } from "@/lib/api/trips";
+import { searchTrips, getTrip, type SearchTripsParams, type TripSearchResult, type TripCardItem } from "@/lib/api/trips";
 import { buildTripSearchParams } from "@/lib/trip-search-params";
 import { cn } from "@/lib/utils/cn";
 import { X } from "lucide-react";
@@ -76,7 +76,7 @@ const FeedTripRow = memo(function FeedTripRow({
   booked,
   onSelect,
 }: {
-  trip: TripListItem;
+  trip: TripCardItem;
   index: number;
   active: boolean;
   booked: boolean;
@@ -144,7 +144,7 @@ export function SearchLayout({ initial }: Props) {
       .map((b) => (b as { tripId?: string }).tripId)
       .filter(Boolean) as string[],
   );
-  const selectedTrip: TripListItem | null = trips.find((t) => t.id === selectedId) ?? trips[0] ?? null;
+  const selectedTrip: TripCardItem | null = trips.find((t) => t.id === selectedId) ?? trips[0] ?? null;
 
   // Full detail is fetched by id when the sheet opens (the card already
   // prefetched ["trip", id], so this is instant). The list item is the

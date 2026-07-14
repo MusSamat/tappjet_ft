@@ -19,7 +19,7 @@ async function activeTripUrls(): Promise<MetadataRoute.Sitemap> {
         if (!t.id) continue;
         out.push({
           url: `${SITE_URL}/trips/${t.id}`,
-          lastModified: t.createdAt ? new Date(t.createdAt) : undefined,
+          // Search DTO is card-lean (no createdAt); lastmod omitted for trip URLs.
           changeFrequency: "daily",
           priority: 0.6,
         });

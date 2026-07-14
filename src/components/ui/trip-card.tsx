@@ -11,7 +11,7 @@ import {
 import { useLocale, useTranslations } from "next-intl";
 import { memo, useCallback, useEffect, useRef } from "react";
 import type { Locale } from "@/i18n.config";
-import type { TripListItem } from "@/lib/api/trips";
+import type { TripCardItem } from "@/lib/api/trips";
 import { usePrefetchTrip } from "@/lib/hooks/use-prefetch-trip";
 import { formatDepartureLabel } from "@/lib/utils/date";
 import { cn } from "@/lib/utils/cn";
@@ -27,7 +27,7 @@ import { LikeButton } from "./like-button";
 // booking/calling live on the trip detail, which opens on tap as before.
 
 interface TripCardProps {
-  trip: TripListItem;
+  trip: TripCardItem;
   href?: string;
   className?: string;
   active?: boolean;

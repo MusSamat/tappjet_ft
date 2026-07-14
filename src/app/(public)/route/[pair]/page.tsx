@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { ArrowRight, Users } from "lucide-react";
 import type { Locale } from "@/i18n.config";
-import { searchTrips, type TripListItem } from "@/lib/api/trips";
+import { searchTrips, type TripCardItem } from "@/lib/api/trips";
 import { formatDepartureLabel, formatPrice } from "@/lib/utils/date";
 import {
   ROUTE_PAIRS,
@@ -31,7 +31,7 @@ function cityName(city: RouteCity, locale: Locale): string {
 }
 
 interface RouteStats {
-  trips: TripListItem[];
+  trips: TripCardItem[];
   count: number;
   minPrice: number | null;
 }
@@ -91,7 +91,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-function TripRow({ trip, locale }: { trip: TripListItem; locale: Locale }) {
+function TripRow({ trip, locale }: { trip: TripCardItem; locale: Locale }) {
   return (
     <li>
       <Link

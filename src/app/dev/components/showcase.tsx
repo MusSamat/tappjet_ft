@@ -442,9 +442,7 @@ export function DesignSystemShowcase() {
                 originCity: "Бишкек",
                 destinationCity: "Каракол",
                 pricePerSeat: 600,
-                priceNegotiable: false,
                 seatsAvailable: 1,
-                luggage: "no",
                 liked: true,
                 driver: {
                   id: "d2",
