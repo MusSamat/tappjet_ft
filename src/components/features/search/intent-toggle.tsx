@@ -43,7 +43,7 @@ export function IntentToggle({ value, onChange, className }: Props) {
           <User className="h-4 w-4" aria-hidden="true" />
         </span>
         <span className="min-w-0">
-          <span className={cn("block truncate text-[14px] font-900 leading-tight", value === "passenger" ? "text-brand-700 dark:text-brand-300" : "text-ink-700 dark:text-ink-300")}>
+          <span className={cn("block truncate text-[14px] font-900 leading-tight", value === "passenger" ? "text-brand-700 dark:text-brand-100" : "text-ink-700 dark:text-ink-300")}>
             {t("mode_trips_title")}
           </span>
           <span className="block truncate text-[13px] font-600 text-ink-500 dark:text-ink-400">
@@ -73,7 +73,7 @@ export function IntentToggle({ value, onChange, className }: Props) {
           <CarFront className="h-4 w-4" aria-hidden="true" />
         </span>
         <span className="min-w-0">
-          <span className={cn("block truncate text-[14px] font-900 leading-tight", value === "driver" ? "text-grape-600 dark:text-grape-300" : "text-ink-700 dark:text-ink-300")}>
+          <span className={cn("block truncate text-[14px] font-900 leading-tight", value === "driver" ? "text-grape-600 dark:text-grape-100" : "text-ink-700 dark:text-ink-300")}>
             {t("mode_requests_title")}
           </span>
           <span className="block truncate text-[13px] font-600 text-ink-500 dark:text-ink-400">
