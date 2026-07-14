@@ -28,16 +28,16 @@ export function IntentToggle({ value, onChange, className }: Props) {
         className={cn(
           "flex items-center gap-2.5 rounded-2xl border-2 px-3 py-2.5 text-left transition-colors",
           value === "passenger"
-            ? "border-brand-500 bg-brand-50 dark:border-brand-600 dark:bg-brand-600"
-            : "border-ink-200 bg-white dark:border-ink-700 dark:bg-ink-900",
+            ? "border-brand-500 bg-brand-50 dark:border-brand-400 dark:bg-ink-800"
+            : "border-ink-200 bg-white dark:border-ink-700 dark:bg-ink-800",
         )}
       >
         <span
           className={cn(
             "flex h-8 w-8 shrink-0 items-center justify-center rounded-xl",
             value === "passenger"
-              ? "bg-brand-600 text-white dark:bg-white/20"
-              : "bg-ink-100 text-ink-400 dark:bg-ink-800 dark:text-ink-400",
+              ? "bg-brand-600 text-white"
+              : "bg-ink-100 text-ink-400 dark:bg-ink-700 dark:text-ink-300",
           )}
         >
           <User className="h-4 w-4" aria-hidden="true" />
@@ -46,7 +46,7 @@ export function IntentToggle({ value, onChange, className }: Props) {
           <span className={cn("block truncate text-[14px] font-900 leading-tight", value === "passenger" ? "text-brand-700 dark:text-white" : "text-ink-700 dark:text-ink-300")}>
             {t("mode_trips_title")}
           </span>
-          <span className={cn("block truncate text-[13px] font-600", value === "passenger" ? "text-ink-600 dark:text-white/80" : "text-ink-500 dark:text-ink-400")}>
+          <span className={cn("block truncate text-[13px] font-600", value === "passenger" ? "text-ink-600 dark:text-ink-300" : "text-ink-500 dark:text-ink-400")}>
             {t("mode_trips_sub")}
           </span>
         </span>
@@ -58,16 +58,16 @@ export function IntentToggle({ value, onChange, className }: Props) {
         className={cn(
           "flex items-center gap-2.5 rounded-2xl border-2 px-3 py-2.5 text-left transition-colors",
           value === "driver"
-            ? "border-grape-500 bg-grape-50 dark:border-grape-600 dark:bg-grape-600"
-            : "border-ink-200 bg-white dark:border-ink-700 dark:bg-ink-900",
+            ? "border-grape-500 bg-grape-50 dark:border-grape-400 dark:bg-ink-800"
+            : "border-ink-200 bg-white dark:border-ink-700 dark:bg-ink-800",
         )}
       >
         <span
           className={cn(
             "flex h-8 w-8 shrink-0 items-center justify-center rounded-xl",
             value === "driver"
-              ? "bg-grape-500 text-white dark:bg-white/20"
-              : "bg-ink-100 text-ink-400 dark:bg-ink-800 dark:text-ink-400",
+              ? "bg-grape-500 text-white"
+              : "bg-ink-100 text-ink-400 dark:bg-ink-700 dark:text-ink-300",
           )}
         >
           <CarFront className="h-4 w-4" aria-hidden="true" />
@@ -76,7 +76,7 @@ export function IntentToggle({ value, onChange, className }: Props) {
           <span className={cn("block truncate text-[14px] font-900 leading-tight", value === "driver" ? "text-grape-600 dark:text-white" : "text-ink-700 dark:text-ink-300")}>
             {t("mode_requests_title")}
           </span>
-          <span className={cn("block truncate text-[13px] font-600", value === "driver" ? "text-ink-600 dark:text-white/80" : "text-ink-500 dark:text-ink-400")}>
+          <span className={cn("block truncate text-[13px] font-600", value === "driver" ? "text-ink-600 dark:text-ink-300" : "text-ink-500 dark:text-ink-400")}>
             {t("mode_requests_sub")}
           </span>
         </span>
