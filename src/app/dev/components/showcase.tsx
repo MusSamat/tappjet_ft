@@ -466,7 +466,6 @@ export function DesignSystemShowcase() {
                 id: "demo-r2",
                 status: "closed",
                 flexible: false,
-                comment: null,
                 passenger: { ...DEMO_REQUEST.passenger, rating: null, ratingCount: 0 },
               }}
             />

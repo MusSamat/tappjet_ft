@@ -2,14 +2,13 @@
 
 import Link from "next/link";
 import { memo } from "react";
-import { CalendarClock, ChevronRight, Hand, MapPin, Star } from "lucide-react";
+import { CalendarClock, ChevronRight, Hand, Star } from "lucide-react";
 import { ContactRevealButton } from "@/components/ui/contact-reveal-button";
 import { useAuth } from "@/store/auth";
 import { useTranslations } from "next-intl";
-import type { PassengerRequest } from "@/lib/api/passenger-requests";
+import type { PassengerRequestCardItem } from "@/lib/api/passenger-requests";
 import { DriverAvatar } from "@/components/ui/driver-avatar";
 import { LikeButton } from "@/components/ui/like-button";
-import { ListingMetrics } from "@/components/ui/listing-metrics";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { cn } from "@/lib/utils/cn";
 
@@ -17,7 +16,7 @@ import { cn } from "@/lib/utils/cn";
 // «ищет» tag, ink-50 route block with grape spine, meta row + chevron.
 
 interface RequestCardProps {
-  request: PassengerRequest;
+  request: PassengerRequestCardItem;
   href?: string;
   className?: string;
   onClick?: () => void;
@@ -121,15 +120,8 @@ function RequestCardInner({
               </span>
             )}
           </div>
-          {request.comment && (
-            <div className="mt-0.5 flex min-w-0 items-center gap-1 text-[13px] font-600 text-ink-400">
-              <MapPin className="h-3 w-3 shrink-0" aria-hidden="true" />
-              <span className="truncate">{request.comment}</span>
-            </div>
-          )}
         </div>
 
-        {request.metrics && <ListingMetrics metrics={request.metrics} className="shrink-0 text-[13px]" />}
         {!isOpen && <StatusBadge status={request.status} className="shrink-0" />}
         {/* Call-first: one tap → number + dialer. Never on own requests. */}
         {!isOwn && isOpen && (

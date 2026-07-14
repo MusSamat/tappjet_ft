@@ -1,11 +1,16 @@
 "use client";
 
-import { useInfiniteQuery, keepPreviousData } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery, keepPreviousData } from "@tanstack/react-query";
 import { useState, useEffect, useCallback, memo } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { X } from "lucide-react";
-import { listPassengerRequests, type PassengerRequest } from "@/lib/api/passenger-requests";
+import {
+  listPassengerRequests,
+  getPassengerRequest,
+  type PassengerRequest,
+  type PassengerRequestCardItem,
+} from "@/lib/api/passenger-requests";
 import { RequestCard } from "@/components/features/passenger-requests/request-card";
 import { RequestDetailPane } from "@/components/features/passenger-requests/request-detail-pane";
 import { RequestFilters } from "@/components/features/passenger-requests/request-filters";
@@ -54,7 +59,7 @@ const FeedRequestRow = memo(function FeedRequestRow({
   active,
   onSelect,
 }: {
-  request: PassengerRequest;
+  request: PassengerRequestCardItem;
   index: number;
   active: boolean;
   onSelect: (id: string) => void;
@@ -107,8 +112,18 @@ export function RequestsFeed() {
   });
 
   const requests = data?.pages.flatMap((p) => p.data) ?? [];
-  const selectedRequest: PassengerRequest | null =
+  const selectedRequest: PassengerRequestCardItem | null =
     requests.find((r) => r.id === selectedId) ?? requests[0] ?? null;
+
+  // Browse items are card-lean (no comment/metrics) — fetch the full request
+  // when the detail sheet opens; the lean card seeds it as placeholder.
+  const { data: detailRequest } = useQuery({
+    queryKey: ["passenger-request", selectedId],
+    queryFn: () => getPassengerRequest(selectedId as string),
+    enabled: mobileDetailOpen && Boolean(selectedId),
+    staleTime: 60_000,
+    placeholderData: () => (selectedRequest ?? undefined) as never,
+  });
 
   useEffect(() => {
     if (requests.length && !selectedId) setSelectedId(requests[0]?.id ?? null);
@@ -234,7 +249,9 @@ export function RequestsFeed() {
             <X className="h-4 w-4" aria-hidden />
           </button>
         </div>
-        {selectedRequest && <RequestDetailPane request={selectedRequest} />}
+        {(detailRequest || selectedRequest) && (
+          <RequestDetailPane request={(detailRequest ?? selectedRequest) as PassengerRequest} />
+        )}
       </div>
     </>
   );

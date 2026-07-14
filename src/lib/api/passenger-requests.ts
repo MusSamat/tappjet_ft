@@ -24,6 +24,25 @@ export interface PassengerRequest extends EngagementFields {
   };
 }
 
+// Lean browse card DTO returned by GET /passenger-requests — a strict subset of
+// PassengerRequest carrying only what the request card renders. The full request
+// (comment, metrics) is fetched via getPassengerRequest() when a card opens.
+// Keep in sync with the backend PassengerRequestCardItem schema + RequestCard.
+export type PassengerRequestCardItem = Pick<
+  PassengerRequest,
+  | "id"
+  | "passengerId"
+  | "originCity"
+  | "destinationCity"
+  | "seatsNeeded"
+  | "departureDate"
+  | "flexible"
+  | "status"
+  | "liked"
+  | "myResponse"
+  | "passenger"
+>;
+
 export interface ListPassengerRequestsParams {
   from_city?: string;
   to_city?: string;
@@ -40,6 +59,13 @@ export interface PassengerRequestsResult {
   nextCursor: string | null;
 }
 
+/** Browse result — lean card items (GET /passenger-requests). */
+export interface PassengerRequestsBrowseResult {
+  nearby?: boolean;
+  data: PassengerRequestCardItem[];
+  nextCursor: string | null;
+}
+
 export interface CreatePassengerRequestInput {
   originCity: string;
   destinationCity: string;
@@ -51,8 +77,8 @@ export interface CreatePassengerRequestInput {
 
 export async function listPassengerRequests(
   params: ListPassengerRequestsParams = {},
-): Promise<PassengerRequestsResult> {
-  const { data } = await api.get<PassengerRequestsResult>("/passenger-requests", { params });
+): Promise<PassengerRequestsBrowseResult> {
+  const { data } = await api.get<PassengerRequestsBrowseResult>("/passenger-requests", { params });
   return data;
 }
 
