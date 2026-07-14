@@ -23,14 +23,18 @@ type Post =
   | { kind: "request"; createdAt: string; request: PassengerRequest };
 
 async function fetchMyPosts(): Promise<Post[]> {
+  // Resilient: one failing bucket (or the requests call) must NOT reject the
+  // whole query and hide everything else — that showed the «нет объявлений»
+  // empty state even when the driver had trips.
+  const emptyRes = { data: [], nextCursor: null };
   const [active, inTransit, past, cancelled, requests] = await Promise.all([
-    listMyTrips("active", undefined, 30),
+    listMyTrips("active", undefined, 30).catch(() => emptyRes),
     // in_transit = status 'active' but departureAt already passed — a separate
     // backend bucket; without it a departed-but-not-completed trip vanishes here.
-    listMyTrips("in_transit", undefined, 30),
-    listMyTrips("past", undefined, 30),
-    listMyTrips("cancelled", undefined, 30),
-    listMyPassengerRequests(),
+    listMyTrips("in_transit", undefined, 30).catch(() => emptyRes),
+    listMyTrips("past", undefined, 30).catch(() => emptyRes),
+    listMyTrips("cancelled", undefined, 30).catch(() => emptyRes),
+    listMyPassengerRequests().catch(() => ({ data: [] })),
   ]);
   const trips: Post[] = [...active.data, ...inTransit.data, ...past.data, ...cancelled.data].map((trip) => ({
     kind: "trip",

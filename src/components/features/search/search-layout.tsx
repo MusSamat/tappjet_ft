@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useMemo, memo } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { searchTrips, type SearchTripsParams, type TripSearchResult, type TripListItem } from "@/lib/api/trips";
+import { searchTrips, getTrip, type SearchTripsParams, type TripSearchResult, type TripListItem } from "@/lib/api/trips";
 import { buildTripSearchParams } from "@/lib/trip-search-params";
 import { cn } from "@/lib/utils/cn";
 import { X } from "lucide-react";
@@ -146,6 +146,18 @@ export function SearchLayout({ initial }: Props) {
   );
   const selectedTrip: TripListItem | null = trips.find((t) => t.id === selectedId) ?? trips[0] ?? null;
 
+  // Full detail is fetched by id when the sheet opens (the card already
+  // prefetched ["trip", id], so this is instant). The list item is the
+  // placeholder meanwhile — this lets the list payload stay lean while the
+  // detail always has the complete info.
+  const { data: detailTrip } = useQuery({
+    queryKey: ["trip", selectedId],
+    queryFn: () => getTrip(selectedId as string),
+    enabled: mobileDetailOpen && Boolean(selectedId),
+    staleTime: 60_000,
+    placeholderData: () => (selectedTrip ?? undefined) as never,
+  });
+
   useEffect(() => {
     if (trips.length && !selectedId) setSelectedId(trips[0]?.id ?? null);
   }, [trips.length]);
@@ -272,9 +284,9 @@ export function SearchLayout({ initial }: Props) {
         className={`search-sheet sheet-nav-pad fixed bottom-0 left-0 right-0 z-40 mx-auto max-h-[90vh] w-full max-w-[520px] overflow-y-auto rounded-t-4xl bg-white dark:bg-ink-900${mobileDetailOpen ? " open" : ""}`}
       >
         <div className="pb-5">
-          {selectedTrip && (
+          {(detailTrip || selectedTrip) && (
             <TripDetailView
-              trip={selectedTrip as DetailTripData}
+              trip={(detailTrip ?? selectedTrip) as DetailTripData}
               variant="rail"
               onClose={() => setMobileDetailOpen(false)}
             />
