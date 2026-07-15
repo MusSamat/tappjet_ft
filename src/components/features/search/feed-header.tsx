@@ -97,7 +97,7 @@ export function FeedHeader({ tab, onOpenFilters }: FeedHeaderProps) {
       </div>
 
       {/* Role toggle FIRST, then the point inputs — pulled up over the band. */}
-      <div className="relative z-10 -mt-9 space-y-2.5 px-4">
+      <div className="relative z-10 -mt-9 space-y-2.5 px-4 pb-4">
         <IntentToggle
           value={tab === "requests" ? "driver" : "passenger"}
           onChange={(v) => switchTab(v === "driver" ? "requests" : "trips")}
