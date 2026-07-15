@@ -61,6 +61,23 @@ export function ContactRevealButton({ target, id, className, variant = "full" }:
   };
 
   if (variant === "icon") {
+    // Once revealed, show the number as a real tel: link so it works even when
+    // the programmatic auto-dial doesn't fire (desktop / restrictive webviews).
+    if (contact) {
+      return (
+        <a
+          href={`tel:${contact.phone}`}
+          onClick={(e) => e.stopPropagation()}
+          className={cn(
+            "flex h-10 shrink-0 items-center gap-1.5 rounded-full bg-brand-50 px-3 text-[13px] font-800 text-brand-700 transition-colors hover:bg-brand-100 dark:bg-brand-500/15 dark:text-brand-300 dark:hover:bg-brand-500/25",
+            className,
+          )}
+        >
+          <Phone className="h-[15px] w-[15px]" aria-hidden="true" />
+          {contact.phone}
+        </a>
+      );
+    }
     // Compact round button for cards. The card itself is clickable — stop the
     // event so a call tap never opens the detail page.
     return (
