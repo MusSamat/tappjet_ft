@@ -46,7 +46,7 @@ export function RequestFilters() {
   const hasFilters = from || to || date || seats;
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-5">
       <p className="text-[17px] font-extrabold text-ink-900 dark:text-white">{t("title")}</p>
 
       {/* From/To with swap */}

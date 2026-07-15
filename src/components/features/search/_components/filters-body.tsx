@@ -90,7 +90,7 @@ export function FiltersBody() {
   ];
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-5">
       {/* Route */}
       <div>
         <SectionLabel size="xs" className="mb-1.5">{t("route_label")}</SectionLabel>

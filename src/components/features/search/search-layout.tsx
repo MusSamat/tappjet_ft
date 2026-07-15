@@ -265,7 +265,7 @@ export function SearchLayout({ initial }: Props) {
             <X className="h-4 w-4" aria-hidden="true" />
           </button>
         </div>
-        <div className="px-5 py-5">
+        <div className="px-5 py-6">
           <SearchFilters />
         </div>
         <div className="border-t border-ink-100 px-5 py-4 dark:border-ink-800">

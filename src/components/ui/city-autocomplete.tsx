@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useId, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { useTranslations, useLocale } from "next-intl";
 import { MapPin } from "lucide-react";
 import { searchCities, getCities, type City } from "@/lib/api/cities";
@@ -292,7 +293,7 @@ export function CityAutocomplete({
         </p>
       )}
 
-      {open && results.length > 0 && (
+      {open && results.length > 0 && typeof document !== "undefined" && createPortal(
         <ul
           ref={listRef}
           id={`${inputId}-list`}
@@ -330,7 +331,8 @@ export function CityAutocomplete({
               </div>
             </li>
           ))}
-        </ul>
+        </ul>,
+        document.body,
       )}
     </div>
   );
