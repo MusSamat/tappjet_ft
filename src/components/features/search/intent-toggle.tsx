@@ -26,7 +26,7 @@ export function IntentToggle({ value, onChange, className }: Props) {
         onClick={() => onChange("passenger")}
         aria-pressed={value === "passenger"}
         className={cn(
-          "flex items-center gap-2.5 rounded-2xl border-2 px-3 py-2.5 text-left transition-colors",
+          "flex items-center gap-2.5 rounded-3xl border-[3px] px-3 py-2.5 text-left transition-colors",
           value === "passenger"
             ? "border-brand-500 bg-brand-50 dark:border-brand-400 dark:bg-ink-800"
             : "border-ink-200 bg-white dark:border-ink-700 dark:bg-ink-800",
@@ -56,7 +56,7 @@ export function IntentToggle({ value, onChange, className }: Props) {
         onClick={() => onChange("driver")}
         aria-pressed={value === "driver"}
         className={cn(
-          "flex items-center gap-2.5 rounded-2xl border-2 px-3 py-2.5 text-left transition-colors",
+          "flex items-center gap-2.5 rounded-3xl border-[3px] px-3 py-2.5 text-left transition-colors",
           value === "driver"
             ? "border-grape-500 bg-grape-50 dark:border-grape-400 dark:bg-ink-800"
             : "border-ink-200 bg-white dark:border-ink-700 dark:bg-ink-800",
