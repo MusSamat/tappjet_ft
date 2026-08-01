@@ -59,6 +59,19 @@ export async function loginWithPassword(phone: string, password: string): Promis
   return data;
 }
 
+// Classical registration — verifies the Telegram OTP and creates the account
+// with name/surname/password in one call. Returns a full session.
+export async function register(input: {
+  phone: string;
+  code: string;
+  name: string;
+  surname: string;
+  password: string;
+}): Promise<AuthResult> {
+  const { data } = await api.post<AuthResult>("/auth/register", { ...input, channel: "web" });
+  return data;
+}
+
 export async function loginWithGoogle(idToken: string): Promise<AnyAuthResult> {
   const { data } = await api.post<AnyAuthResult>("/auth/google", { idToken, channel: "web" });
   return data;

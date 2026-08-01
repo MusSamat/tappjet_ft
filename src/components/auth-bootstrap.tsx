@@ -131,9 +131,14 @@ export function AuthBootstrap() {
       return true;
     };
 
+    // Classical auth only: silent Telegram Mini App login is disabled — users
+    // sign in with phone + password (see /auth/login). Flag kept so the flow can
+    // be re-enabled without restoring deleted code.
+    const ALLOW_TELEGRAM_SILENT_LOGIN = false;
+
     if (!sessionLikely) {
-      // No prior session — attempt Telegram Mini App silent login if running inside Telegram.
-      if (!tryTelegramSilentLogin()) setStatus("anonymous");
+      // No prior session — attempt Telegram Mini App silent login if enabled.
+      if (!(ALLOW_TELEGRAM_SILENT_LOGIN && tryTelegramSilentLogin())) setStatus("anonymous");
       return;
     }
 

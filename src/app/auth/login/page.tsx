@@ -8,22 +8,18 @@ import { ArrowLeft, Eye, EyeOff, AlertTriangle } from "lucide-react";
 import {
   loginWithPassword,
   resetPassword,
-  initTelegramLink,
   sendTelegramOtp,
   verifyOtp,
 } from "@/lib/api/auth";
 import { extractError } from "@/lib/api/client";
 import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { consumeDeferredAction, routeForIntent } from "@/lib/auth/deferred-action";
-import { openTelegramDeepLink } from "@/lib/utils/open-telegram";
 import { useAuth } from "@/store/auth";
 import { useTranslations } from "next-intl";
 import { LogoMark, Wordmark, PhoneInput, Spinner, type OtpInputHandle } from "@/components/ui";
 import { OtpStep } from "./_steps/otp-step";
 import { ResetStep } from "./_steps/reset-step";
 import { cn } from "@/lib/utils/cn";
-import { SocialButtons } from "@/components/features/auth/social-buttons";
-import { AUTH_TELEGRAM_ONLY } from "@/lib/auth/telegram-only";
 
 type Step = "login" | "otp" | "reset";
 
@@ -49,8 +45,6 @@ export default function LoginPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [otp, setOtp] = useState("");
-  const [otpChannel, setOtpChannel] = useState<"dm" | "deeplink">("dm");
-  const [deepLink, setDeepLink] = useState("");
   const [serverError, setServerError] = useState<string | null>(null);
   const [resendSeconds, setResendSeconds] = useState(0);
 
@@ -95,16 +89,11 @@ export default function LoginPage() {
     onError: (e) => setServerError(fe(extractError(e))),
   });
 
-  // ── Forgot password: initTelegramLink works for ALL users ─────────────
-  const forgotMutation = useMutation({
-    mutationFn: () => initTelegramLink(phone),
-    onSuccess: ({ deepLink: dl }) => {
+  // ── Forgot password: DM the OTP over Telegram (Dexatel) to the phone ───
+  const sendOtpMutation = useMutation({
+    mutationFn: () => sendTelegramOtp(phone),
+    onSuccess: () => {
       setServerError(null);
-      setOtpChannel("deeplink");
-      setDeepLink(dl);
-      // Opening the deep-link triggers the bot's /start → auto-sends the OTP.
-      // Past an await → no gesture context; window.open is popup-blocked on mobile.
-      openTelegramDeepLink(dl);
       setResendSeconds(60);
       setOtp("");
       setStep("otp");
@@ -113,28 +102,13 @@ export default function LoginPage() {
     onError: (e) => setServerError(fe(extractError(e))),
   });
 
-  // Auto-send: DM the code straight to the user's Telegram (no "open bot").
-  // Falls back to the deep-link flow if the bot can't DM (not linked / not started).
-  const tgAutoMutation = useMutation({
-    mutationFn: () => sendTelegramOtp(phone),
-    onSuccess: () => {
-      setServerError(null);
-      setOtpChannel("dm");
-      setResendSeconds(60);
-      setOtp("");
-      setStep("otp");
-      setTimeout(() => otpRef.current?.focus(), 100);
-    },
-    onError: () => { forgotMutation.mutate(); },
-  });
-
   const handleForgot = () => {
     if (!FULL_PHONE_RE.test(phone)) {
       setServerError(tl("enter_phone_first"));
       return;
     }
     setServerError(null);
-    tgAutoMutation.mutate();
+    sendOtpMutation.mutate();
   };
 
   // ── Verify OTP ─────────────────────────────────────────────────────────
@@ -195,24 +169,6 @@ export default function LoginPage() {
         {/* ── Step: main login ── */}
         {step === "login" && (
           <>
-            <SocialButtons />
-
-            {AUTH_TELEGRAM_ONLY && (
-              <p className="mt-4 text-center text-[14px] font-700 text-ink-400">
-                {tl("telegram_only_hint")}
-              </p>
-            )}
-
-            {/* Legacy phone + password login — hidden during the Telegram-only
-                testing period (see AUTH_TELEGRAM_ONLY). */}
-            {!AUTH_TELEGRAM_ONLY && (
-            <>
-            <div className="my-4 flex items-center gap-3">
-              <span className="h-px flex-1 bg-ink-200 dark:bg-ink-700" />
-              <span className="text-[12px] font-800 text-ink-400">{tl("or_phone")}</span>
-              <span className="h-px flex-1 bg-ink-200 dark:bg-ink-700" />
-            </div>
-
             {/* Phone */}
             <div className="mb-3">
               <PhoneInput
@@ -269,12 +225,16 @@ export default function LoginPage() {
             <div className="mt-5 flex flex-col items-center gap-3">
               <button
                 type="button"
-                disabled={tgAutoMutation.isPending || forgotMutation.isPending}
+                disabled={sendOtpMutation.isPending || resendSeconds > 0}
                 onClick={handleForgot}
                 className="flex items-center gap-1.5 text-[15px] font-700 text-ink-500 hover:text-brand-600 disabled:opacity-50"
               >
-                {(tgAutoMutation.isPending || forgotMutation.isPending) && <Spinner size={13} />}
-                {tgAutoMutation.isPending || forgotMutation.isPending ? tl("sending") : tl("forgot_password")}
+                {sendOtpMutation.isPending && <Spinner size={13} />}
+                {sendOtpMutation.isPending
+                  ? tl("sending")
+                  : resendSeconds > 0
+                    ? tl("resend_in", { n: resendSeconds })
+                    : tl("forgot_password")}
               </button>
               <p className="text-[14px] font-700 text-ink-400">
                 {tl("no_account")}{" "}
@@ -283,8 +243,6 @@ export default function LoginPage() {
                 </Link>
               </p>
             </div>
-            </>
-            )}
           </>
         )}
 
@@ -297,10 +255,8 @@ export default function LoginPage() {
             otpRef={otpRef}
             serverError={serverError}
             verifyMutation={verifyMutation}
-            sendMutation={forgotMutation}
+            sendMutation={sendOtpMutation}
             resendSeconds={resendSeconds}
-            channel={otpChannel}
-            deepLink={deepLink}
             onChange={(code) => { setOtp(code); setServerError(null); }}
             onComplete={() => verifyMutation.mutate()}
             onBack={() => { setStep("login"); setOtp(""); otpRef.current?.clear(); setServerError(null); }}
@@ -309,7 +265,7 @@ export default function LoginPage() {
               setOtp("");
               otpRef.current?.clear();
               setServerError(null);
-              tgAutoMutation.mutate();
+              sendOtpMutation.mutate();
             }}
           />
         )}

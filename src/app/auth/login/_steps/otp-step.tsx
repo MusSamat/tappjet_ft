@@ -11,10 +11,6 @@ interface Props {
   verifyMutation: { isPending: boolean; mutate: () => void };
   sendMutation: { isPending: boolean };
   resendSeconds: number;
-  /** How the code was delivered: DM straight to Telegram vs deep-link "Start". */
-  channel: "dm" | "deeplink";
-  /** Bot deep-link — offered as a manual fallback when the popup was blocked. */
-  deepLink: string;
   onChange: (code: string) => void;
   onComplete: () => void;
   onBack: () => void;
@@ -23,7 +19,7 @@ interface Props {
 
 export function OtpStep({
   tl, displayPhone, otp, otpRef, serverError, verifyMutation,
-  sendMutation, resendSeconds, channel, deepLink, onChange, onComplete, onBack, onResend,
+  sendMutation, resendSeconds, onChange, onComplete, onBack, onResend,
 }: Props) {
   return (
     <>
@@ -33,21 +29,10 @@ export function OtpStep({
       <div className="mb-2 text-center">
         <p className="text-[18px] font-700 text-ink-600 dark:text-ink-300">{tl("otp_reset_sent")}</p>
         <p className="mt-1 text-[15px] font-600 text-brand-700 dark:text-brand-300">
-          {channel === "deeplink" ? tl("otp_telegram_hint") : tl("otp_dm_hint")}
+          {tl("otp_dm_hint")}
         </p>
         <p className="mt-1 text-[18px] font-700 text-ink-900 dark:text-white">+996 {displayPhone}</p>
       </div>
-
-      {channel === "deeplink" && deepLink && (
-        <a
-          href={deepLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mb-3 block text-center text-[14px] font-800 text-brand-700 dark:text-brand-300"
-        >
-          {tl("otp_open_bot")}
-        </a>
-      )}
 
       <p className="mb-4 text-center text-[14px] font-600 text-accent-700">{tl("otp_reset_hint")}</p>
 
@@ -61,17 +46,15 @@ export function OtpStep({
         />
       </div>
 
+      {/* Confirm is always usable once 6 digits are entered — the countdown only
+          throttles RESEND (1 code / minute), never verification. */}
       <button
         type="button"
-        disabled={otp.length < 6 || verifyMutation.isPending || resendSeconds > 0}
+        disabled={otp.length < 6 || verifyMutation.isPending}
         onClick={() => verifyMutation.mutate()}
         className="flex h-12 w-full items-center justify-center rounded-2xl bg-accent-500 text-[16px] font-900 text-accent-ink shadow-cta transition-colors hover:bg-accent-400 disabled:opacity-40"
       >
-        {verifyMutation.isPending
-          ? tl("verifying")
-          : resendSeconds > 0
-            ? tl("wait_seconds", { n: resendSeconds })
-            : tl("confirm_btn")}
+        {verifyMutation.isPending ? tl("verifying") : tl("confirm_btn")}
       </button>
 
       <div className="mt-4 flex flex-col items-center gap-2">
