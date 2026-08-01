@@ -59,7 +59,7 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
             onChange={(e) => handleChange(e.target.value)}
             aria-invalid={invalid || undefined}
             disabled={disabled}
-            className="w-full border-none bg-transparent p-0 text-[16px] font-800 text-ink-900 outline-none placeholder:font-700 placeholder:text-ink-400 dark:text-white"
+            className="w-full border-none bg-transparent p-0 text-[16px] font-800 text-ink-900 outline-none placeholder:font-500 placeholder:text-ink-300 dark:text-white dark:placeholder:text-ink-500"
             {...rest}
           />
         </div>

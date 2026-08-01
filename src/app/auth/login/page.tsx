@@ -62,12 +62,29 @@ export default function LoginPage() {
     return () => clearInterval(t);
   }, [resendSeconds]);
 
-  // Prefill phone handed over from the register flow (?phone=+996...).
+  const [autoReset, setAutoReset] = useState(false);
+
+  // Prefill phone handed over from the register flow (?phone=+996...). When the
+  // register screen bounced an existing account here with ?reset=1, kick off the
+  // password-reset (send OTP) automatically.
   // window.location instead of useSearchParams — no Suspense boundary needed.
   useEffect(() => {
-    const p = new URLSearchParams(window.location.search).get("phone");
-    if (p && FULL_PHONE_RE.test(p)) setPhone(p);
+    const params = new URLSearchParams(window.location.search);
+    const p = params.get("phone");
+    if (p && FULL_PHONE_RE.test(p)) {
+      setPhone(p);
+      if (params.get("reset") === "1") setAutoReset(true);
+    }
   }, []);
+
+  // Fire the reset once the prefilled phone has landed in state.
+  useEffect(() => {
+    if (autoReset && step === "login" && FULL_PHONE_RE.test(phone) && resendSeconds === 0) {
+      setAutoReset(false);
+      handleForgot();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoReset, phone, step]);
 
   // Already authenticated (e.g. Telegram Mini App silent login) → no OTP needed.
   // Only fires on the untouched login step, never mid password-reset flow.
@@ -285,10 +302,6 @@ export default function LoginPage() {
             newPasswordRef={newPasswordRef}
             canReset={canReset}
             resetMutation={resetMutation}
-            onSkip={() => {
-              const intent = consumeDeferredAction();
-              router.replace(intent ? routeForIntent(intent) : "/");
-            }}
           />
         )}
       </div>

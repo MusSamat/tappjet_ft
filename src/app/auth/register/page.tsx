@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { ArrowLeft, Eye, EyeOff, AlertTriangle } from "lucide-react";
-import { register, sendTelegramOtp } from "@/lib/api/auth";
+import { ArrowLeft, Eye, EyeOff, AlertTriangle, Send } from "lucide-react";
+import { checkPhone, register, sendTelegramOtp } from "@/lib/api/auth";
 import { extractError } from "@/lib/api/client";
 import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { consumeDeferredAction, routeForIntent } from "@/lib/auth/deferred-action";
@@ -21,7 +21,7 @@ import {
 } from "@/components/ui";
 import { cn } from "@/lib/utils/cn";
 
-type Step = "phone" | "details";
+type Step = "phone" | "otp" | "details";
 
 const FULL_PHONE_RE = /^\+996\d{9}$/;
 
@@ -40,13 +40,13 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+  const [existing, setExisting] = useState(false);
   const [resendSeconds, setResendSeconds] = useState(0);
 
   const otpRef = useRef<OtpInputHandle>(null);
 
   const displayPhone = phone.replace(/^\+996/, "");
-  const canSubmit =
-    otp.length === 6 && name.trim().length > 0 && surname.trim().length > 0 && password.length >= 8;
+  const canSubmit = name.trim().length > 0 && surname.trim().length > 0 && password.length >= 8;
 
   useEffect(() => {
     if (resendSeconds <= 0) return;
@@ -54,7 +54,6 @@ export default function RegisterPage() {
     return () => clearInterval(id);
   }, [resendSeconds]);
 
-  // Already authenticated → nothing to register.
   useEffect(() => {
     if (status === "authenticated" && step === "phone") {
       const intent = consumeDeferredAction();
@@ -67,21 +66,37 @@ export default function RegisterPage() {
     router.replace(intent ? routeForIntent(intent) : "/");
   };
 
-  // ── Send the Telegram OTP (Dexatel) to the phone ───────────────────────
-  const sendOtpMutation = useMutation({
-    mutationFn: () => sendTelegramOtp(phone),
-    onSuccess: () => {
+  // ── Step 1: check the number is free, then send the Telegram OTP ────────
+  const startMutation = useMutation({
+    mutationFn: async () => {
+      const info = await checkPhone(phone);
+      if (info.exists) return { taken: true as const };
+      await sendTelegramOtp(phone);
+      return { taken: false as const };
+    },
+    onSuccess: (r) => {
+      if (r.taken) {
+        setExisting(true);
+        return;
+      }
       setServerError(null);
       setResendSeconds(60);
       setOtp("");
       otpRef.current?.clear();
-      setStep("details");
+      setStep("otp");
       setTimeout(() => otpRef.current?.focus(), 100);
     },
     onError: (e) => setServerError(fe(extractError(e))),
   });
 
-  // ── Create the account ─────────────────────────────────────────────────
+  // Resend on the OTP step (no re-check needed — we already know it's free).
+  const resendMutation = useMutation({
+    mutationFn: () => sendTelegramOtp(phone),
+    onSuccess: () => { setServerError(null); setResendSeconds(60); },
+    onError: (e) => setServerError(fe(extractError(e))),
+  });
+
+  // ── Final: create the account ───────────────────────────────────────────
   const registerMutation = useMutation({
     mutationFn: () =>
       register({ phone, code: otp, name: name.trim(), surname: surname.trim(), password }),
@@ -89,20 +104,16 @@ export default function RegisterPage() {
       setSession(result);
       goHome();
     },
-    onError: (e) => {
-      setServerError(fe(extractError(e)));
-      setOtp("");
-      otpRef.current?.clear();
-    },
+    onError: (e) => setServerError(fe(extractError(e))),
   });
 
-  const handleSendCode = () => {
+  const handleStart = () => {
     if (!FULL_PHONE_RE.test(phone)) {
       setServerError(t("err_phone_invalid"));
       return;
     }
     setServerError(null);
-    sendOtpMutation.mutate();
+    startMutation.mutate();
   };
 
   return (
@@ -111,7 +122,11 @@ export default function RegisterPage() {
       <div className="flex items-center gap-3 px-4 pb-2 pt-6">
         <button
           type="button"
-          onClick={() => (step === "details" ? setStep("phone") : router.back())}
+          onClick={() => {
+            if (step === "details") setStep("otp");
+            else if (step === "otp") setStep("phone");
+            else router.back();
+          }}
           aria-label={t("back_btn")}
           className="flex h-9 w-9 items-center justify-center rounded-full bg-ink-100 text-ink-700 hover:bg-ink-200 dark:bg-ink-800 dark:text-ink-200"
         >
@@ -125,7 +140,7 @@ export default function RegisterPage() {
           <LogoMark className="mx-auto mb-4 h-16 w-16 rounded-3xl shadow-brandcta" />
           <h1><Wordmark className="text-[20px]" /></h1>
           <p className="mt-1 text-[15px] font-700 text-ink-400">
-            {step === "phone" ? t("phone_hint") : t("details_hint")}
+            {step === "phone" ? t("phone_hint") : step === "otp" ? t("code_hint") : t("details_hint")}
           </p>
         </div>
 
@@ -139,45 +154,65 @@ export default function RegisterPage() {
         {/* ── Step 1: phone ── */}
         {step === "phone" && (
           <>
-            <div className="mb-5">
-              <PhoneInput
-                value={phone}
-                onValueChange={(v) => { setPhone(v); setServerError(null); }}
-                invalid={false}
-                placeholder="700 123 456"
-                onKeyDown={(e) => { if (e.key === "Enter" && FULL_PHONE_RE.test(phone)) handleSendCode(); }}
-              />
-            </div>
+            {existing ? (
+              <div className="rounded-2xl border-2 border-brand-200 bg-brand-50 p-5 text-center dark:border-brand-500/30 dark:bg-brand-500/10">
+                <p className="text-[16px] font-900 text-ink-900 dark:text-white">{t("already_registered_title")}</p>
+                <p className="mt-1 text-[14px] font-600 text-ink-500">{t("already_registered_desc")}</p>
+                <Link
+                  href={`/auth/login?phone=${encodeURIComponent(phone)}&reset=1`}
+                  className="mt-4 flex h-12 w-full items-center justify-center rounded-2xl bg-accent-500 text-[15px] font-900 text-accent-ink shadow-cta hover:bg-accent-400"
+                >
+                  {t("restore_password")}
+                </Link>
+                <Link
+                  href={`/auth/login?phone=${encodeURIComponent(phone)}`}
+                  className="mt-3 inline-block text-[14px] font-800 text-brand-700 dark:text-brand-300"
+                >
+                  {t("sign_in")}
+                </Link>
+              </div>
+            ) : (
+              <>
+                <div className="mb-5">
+                  <PhoneInput
+                    value={phone}
+                    onValueChange={(v) => { setPhone(v); setServerError(null); }}
+                    invalid={false}
+                    onKeyDown={(e) => { if (e.key === "Enter" && FULL_PHONE_RE.test(phone)) handleStart(); }}
+                  />
+                </div>
 
-            <button
-              type="button"
-              disabled={!FULL_PHONE_RE.test(phone) || sendOtpMutation.isPending || resendSeconds > 0}
-              onClick={handleSendCode}
-              className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 text-[16px] font-900 text-accent-ink shadow-cta transition-colors hover:bg-accent-400 disabled:opacity-40"
-            >
-              {sendOtpMutation.isPending
-                ? <><Spinner size={16} />{t("sending")}</>
-                : resendSeconds > 0
-                  ? t("resend_in", { n: resendSeconds })
-                  : t("send_code_btn")}
-            </button>
+                {/* Telegram-blue: this button triggers Telegram delivery. */}
+                <button
+                  type="button"
+                  disabled={!FULL_PHONE_RE.test(phone) || startMutation.isPending}
+                  onClick={handleStart}
+                  className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#0088CC] text-[16px] font-900 text-white shadow-cta transition-colors hover:bg-[#0077B5] disabled:opacity-40"
+                >
+                  {startMutation.isPending
+                    ? <><Spinner size={16} />{t("sending")}</>
+                    : <><Send className="h-4 w-4" />{t("send_code_btn")}</>}
+                </button>
 
-            <p className="mt-5 text-center text-[14px] font-700 text-ink-400">
-              {t("have_account")}{" "}
-              <Link href="/auth/login" className="font-900 text-brand-700 dark:text-brand-300">
-                {t("sign_in")}
-              </Link>
-            </p>
+                <p className="mt-5 text-center text-[14px] font-700 text-ink-400">
+                  {t("have_account")}{" "}
+                  <Link href="/auth/login" className="font-900 text-brand-700 dark:text-brand-300">
+                    {t("sign_in")}
+                  </Link>
+                </p>
+              </>
+            )}
           </>
         )}
 
-        {/* ── Step 2: code + profile + password ── */}
-        {step === "details" && (
+        {/* ── Step 2: OTP code only ── */}
+        {step === "otp" && (
           <>
-            <p className="mb-2 text-center text-[15px] font-600 text-brand-700 dark:text-brand-300">
+            <p className="mb-2 flex items-center justify-center gap-1.5 text-center text-[15px] font-700 text-[#0088CC]">
+              <Send className="h-4 w-4" />
               {t("otp_dm_hint")}
             </p>
-            <p className="mb-4 text-center text-[16px] font-800 text-ink-900 dark:text-white">
+            <p className="mb-5 text-center text-[16px] font-800 text-ink-900 dark:text-white">
               +996 {displayPhone}
             </p>
 
@@ -186,55 +221,69 @@ export default function RegisterPage() {
                 ref={otpRef}
                 length={6}
                 onChange={(code) => { setOtp(code); setServerError(null); }}
+                onComplete={() => setStep("details")}
                 invalid={!!serverError}
               />
             </div>
 
-            {/* Resend */}
-            <div className="mb-5 text-center">
+            {/* Resend — throttled to one code / minute. */}
+            <div className="mb-6 text-center">
               {resendSeconds > 0 ? (
                 <p className="text-[13px] text-ink-400">{t("resend_in", { n: resendSeconds })}</p>
               ) : (
                 <button
                   type="button"
-                  onClick={() => sendOtpMutation.mutate()}
-                  disabled={sendOtpMutation.isPending}
+                  onClick={() => resendMutation.mutate()}
+                  disabled={resendMutation.isPending}
                   className="text-[14px] font-700 text-brand-600 hover:text-brand-700 dark:text-brand-300"
                 >
-                  {sendOtpMutation.isPending ? t("sending") : t("resend_btn")}
+                  {resendMutation.isPending ? t("sending") : t("resend_btn")}
                 </button>
               )}
             </div>
 
-            {/* Name + surname */}
-            <div className="mb-3 grid grid-cols-2 gap-3">
+            <button
+              type="button"
+              disabled={otp.length !== 6}
+              onClick={() => setStep("details")}
+              className="flex h-12 w-full items-center justify-center rounded-2xl bg-accent-500 text-[16px] font-900 text-accent-ink shadow-cta transition-colors hover:bg-accent-400 disabled:opacity-40"
+            >
+              {t("continue_btn")}
+            </button>
+          </>
+        )}
+
+        {/* ── Step 3: profile + password (separate page) ── */}
+        {step === "details" && (
+          <>
+            <LabeledField label={t("name_label")}>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => { setName(e.target.value); setServerError(null); }}
-                placeholder={t("name_label")}
                 autoComplete="given-name"
+                autoFocus
                 className="h-12 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 text-[16px] font-800 text-ink-900 outline-none transition-colors focus:border-brand-500 dark:border-ink-700 dark:bg-ink-800 dark:text-white"
               />
+            </LabeledField>
+
+            <LabeledField label={t("surname_label")}>
               <input
                 type="text"
                 value={surname}
                 onChange={(e) => { setSurname(e.target.value); setServerError(null); }}
-                placeholder={t("surname_label")}
                 autoComplete="family-name"
                 className="h-12 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 text-[16px] font-800 text-ink-900 outline-none transition-colors focus:border-brand-500 dark:border-ink-700 dark:bg-ink-800 dark:text-white"
               />
-            </div>
+            </LabeledField>
 
-            {/* Password */}
-            <div className="mb-5">
+            <LabeledField label={t("password_label")}>
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => { setPassword(e.target.value); setServerError(null); }}
                   onKeyDown={(e) => { if (e.key === "Enter" && canSubmit) registerMutation.mutate(); }}
-                  placeholder={t("password_placeholder")}
                   autoComplete="new-password"
                   className="h-12 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-4 pr-10 text-[16px] font-800 text-ink-900 outline-none transition-colors focus:border-brand-500 dark:border-ink-700 dark:bg-ink-800 dark:text-white"
                 />
@@ -251,20 +300,28 @@ export default function RegisterPage() {
               <p className={cn("mt-1.5 text-[12px] font-600", password.length > 0 && password.length < 8 ? "text-coral-500" : "text-ink-400")}>
                 {t("password_rule")}
               </p>
-            </div>
+            </LabeledField>
 
-            {/* Submit */}
             <button
               type="button"
               disabled={!canSubmit || registerMutation.isPending}
               onClick={() => registerMutation.mutate()}
-              className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 text-[16px] font-900 text-accent-ink shadow-cta transition-colors hover:bg-accent-400 disabled:opacity-40"
+              className="mt-2 flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 text-[16px] font-900 text-accent-ink shadow-cta transition-colors hover:bg-accent-400 disabled:opacity-40"
             >
               {registerMutation.isPending ? <><Spinner size={16} />{t("creating")}</> : t("create_btn")}
             </button>
           </>
         )}
       </div>
+    </div>
+  );
+}
+
+function LabeledField({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="mb-4">
+      <label className="mb-1.5 block text-[12px] font-800 uppercase tracking-wide text-ink-400">{label}</label>
+      {children}
     </div>
   );
 }

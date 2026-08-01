@@ -16,13 +16,12 @@ interface Props {
   newPasswordRef: React.RefObject<HTMLInputElement>;
   canReset: boolean;
   resetMutation: { isPending: boolean; mutate: () => void };
-  onSkip: () => void;
 }
 
 export function ResetStep({
   tl, newPassword, setNewPassword, confirmPassword, setConfirmPassword,
   serverError: _serverError, setServerError, showNewPassword, setShowNewPassword,
-  newPasswordRef, canReset, resetMutation, onSkip,
+  newPasswordRef, canReset, resetMutation,
 }: Props) {
   return (
     <>
@@ -81,14 +80,6 @@ export function ResetStep({
         className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 text-[16px] font-700 text-[#4A2C00] shadow-cta transition-colors hover:bg-accent-400 disabled:opacity-40"
       >
         {resetMutation.isPending ? tl("saving") : tl("save_password")}
-      </button>
-
-      <button
-        type="button"
-        onClick={onSkip}
-        className="mt-3 w-full text-center text-[14px] font-800 text-ink-400 hover:text-ink-700"
-      >
-        {tl("skip_btn")}
       </button>
     </>
   );
