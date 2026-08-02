@@ -44,6 +44,29 @@
     outline: none;
     box-shadow: none;
   }
+  /* Neutralize the browser autofill background (Chrome's pale-yellow / Safari's
+     tint) so autofilled login/register fields keep the app's field colors in
+     both light and dark mode. The box-shadow inset trick is the only reliable
+     way to override -webkit-autofill; it follows the input's border-radius. */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-text-fill-color: #1c1917; /* ink-900 */
+    caret-color: #1c1917;
+    -webkit-box-shadow: 0 0 0 1000px #fafaf9 inset; /* ink-50 */
+    box-shadow: 0 0 0 1000px #fafaf9 inset;
+    transition: background-color 9999s ease-in-out 0s;
+  }
+  .dark input:-webkit-autofill,
+  .dark input:-webkit-autofill:hover,
+  .dark input:-webkit-autofill:focus,
+  .dark input:-webkit-autofill:active {
+    -webkit-text-fill-color: #ffffff;
+    caret-color: #ffffff;
+    -webkit-box-shadow: 0 0 0 1000px #292524 inset; /* ink-800 */
+    box-shadow: 0 0 0 1000px #292524 inset;
+  }
   /* Prevent mobile Safari's focus auto-zoom (and the horizontal layout shift
      it causes): the browser zooms when a focused control's computed
      font-size < 16px. !important is required to beat utility classes like

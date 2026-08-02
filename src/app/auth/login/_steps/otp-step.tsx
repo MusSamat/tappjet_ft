@@ -59,7 +59,7 @@ export function OtpStep({
 
       <div className="mt-4 flex flex-col items-center gap-2">
         <button type="button" onClick={onBack} className="text-[15px] font-700 text-ink-600 hover:text-ink-900 dark:text-ink-300">
-          {tl("back_btn")}
+          {tl("change_number")}
         </button>
         {resendSeconds > 0 ? (
           <p className="text-[13px] text-ink-400">{tl("resend_in", { n: resendSeconds })}</p>

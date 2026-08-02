@@ -11,7 +11,8 @@ import {
   sendTelegramOtp,
   verifyOtp,
 } from "@/lib/api/auth";
-import { extractError } from "@/lib/api/client";
+import { extractError, setAccessToken } from "@/lib/api/client";
+import type { AuthResult } from "@/lib/api/types";
 import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { consumeDeferredAction, routeForIntent } from "@/lib/auth/deferred-action";
 import { useAuth } from "@/store/auth";
@@ -21,7 +22,7 @@ import { OtpStep } from "./_steps/otp-step";
 import { ResetStep } from "./_steps/reset-step";
 import { cn } from "@/lib/utils/cn";
 
-type Step = "login" | "otp" | "reset";
+type Step = "login" | "forgot" | "otp" | "reset";
 
 const FULL_PHONE_RE = /^\+996\d{9}$/;
 
@@ -81,7 +82,7 @@ export default function LoginPage() {
   useEffect(() => {
     if (autoReset && step === "login" && FULL_PHONE_RE.test(phone) && resendSeconds === 0) {
       setAutoReset(false);
-      handleForgot();
+      sendResetCode();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autoReset, phone, step]);
@@ -119,7 +120,9 @@ export default function LoginPage() {
     onError: (e) => setServerError(fe(extractError(e))),
   });
 
-  const handleForgot = () => {
+  // Send the reset code (used by the phone-only "forgot" step and the ?reset=1
+  // deep-link). The login step never sends directly — it switches to "forgot".
+  const sendResetCode = () => {
     if (!FULL_PHONE_RE.test(phone)) {
       setServerError(tl("enter_phone_first"));
       return;
@@ -128,11 +131,20 @@ export default function LoginPage() {
     sendOtpMutation.mutate();
   };
 
+  // Holds the OTP-verified session until the new password is actually set. We do
+  // NOT flip the auth store to "authenticated" here — that would let the user
+  // reach protected pages mid-reset. We only set the API access token (so the
+  // reset call is authorized) and commit the full session after reset succeeds.
+  const pendingAuth = useRef<AuthResult | null>(null);
+
   // ── Verify OTP ─────────────────────────────────────────────────────────
   const verifyMutation = useMutation({
     mutationFn: () => verifyOtp(phone, otp),
     onSuccess: (result) => {
-      setSession(result);
+      pendingAuth.current = result;
+      // Authorize the reset call only — no session hint yet, so a reload mid-reset
+      // lands as anonymous instead of auto-logging-in with the OLD password.
+      setAccessToken(result.accessToken ?? null);
       setStep("reset");
       setTimeout(() => newPasswordRef.current?.focus(), 100);
     },
@@ -147,6 +159,8 @@ export default function LoginPage() {
   const resetMutation = useMutation({
     mutationFn: () => resetPassword(newPassword),
     onSuccess: () => {
+      // Password is set — NOW grant the full session and let the user in.
+      if (pendingAuth.current) setSession(pendingAuth.current);
       const intent = consumeDeferredAction();
       router.replace(intent ? routeForIntent(intent) : "/");
     },
@@ -159,20 +173,29 @@ export default function LoginPage() {
       <div className="flex items-center gap-3 px-4 pb-2 pt-6">
         <button
           type="button"
-          onClick={() => router.back()}
+          onClick={() => {
+            setServerError(null);
+            if (step === "forgot") setStep("login");
+            else if (step === "otp") setStep("forgot");
+            else router.back();
+          }}
           aria-label={tl("back_btn")}
           className="flex h-9 w-9 items-center justify-center rounded-full bg-ink-100 text-ink-700 hover:bg-ink-200 dark:bg-ink-800 dark:text-ink-200"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
         </button>
-        <span className="text-[16px] font-900 text-ink-900 dark:text-white">{tl("login_btn")}</span>
+        <span className="text-[16px] font-900 text-ink-900 dark:text-white">
+          {step === "login" ? tl("login_btn") : tl("forgot_title")}
+        </span>
       </div>
 
       <div className="mx-auto flex w-full max-w-[400px] flex-1 flex-col justify-center px-6 pb-10">
         <div className="mb-7 text-center">
           <AuthLogo />
           <h1><Wordmark className="text-[20px]" /></h1>
-          <p className="mt-1 text-[15px] font-700 text-ink-400">{tl("password_label")}</p>
+          <p className="mt-1 text-[15px] font-700 text-ink-400">
+            {step === "login" ? tl("password_label") : step === "forgot" ? tl("forgot_hint") : ""}
+          </p>
         </div>
 
         {/* Error banner */}
@@ -242,16 +265,10 @@ export default function LoginPage() {
             <div className="mt-5 flex flex-col items-center gap-3">
               <button
                 type="button"
-                disabled={sendOtpMutation.isPending || resendSeconds > 0}
-                onClick={handleForgot}
-                className="flex items-center gap-1.5 text-[15px] font-700 text-ink-500 hover:text-brand-600 disabled:opacity-50"
+                onClick={() => { setServerError(null); setStep("forgot"); }}
+                className="text-[15px] font-800 text-brand-700 underline-offset-2 hover:underline dark:text-brand-300"
               >
-                {sendOtpMutation.isPending && <Spinner size={13} />}
-                {sendOtpMutation.isPending
-                  ? tl("sending")
-                  : resendSeconds > 0
-                    ? tl("resend_in", { n: resendSeconds })
-                    : tl("forgot_password")}
+                {tl("forgot_password")}
               </button>
               <p className="text-[14px] font-700 text-ink-400">
                 {tl("no_account")}{" "}
@@ -260,6 +277,42 @@ export default function LoginPage() {
                 </Link>
               </p>
             </div>
+          </>
+        )}
+
+        {/* ── Step: forgot password (phone only, password hidden) ── */}
+        {step === "forgot" && (
+          <>
+            <div className="mb-5">
+              <PhoneInput
+                value={phone}
+                onValueChange={(v) => { setPhone(v); setServerError(null); }}
+                invalid={false}
+                placeholder="700 123 456"
+                onKeyDown={(e) => { if (e.key === "Enter" && FULL_PHONE_RE.test(phone)) sendResetCode(); }}
+              />
+            </div>
+
+            <button
+              type="button"
+              disabled={!FULL_PHONE_RE.test(phone) || sendOtpMutation.isPending || resendSeconds > 0}
+              onClick={sendResetCode}
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 text-[16px] font-900 text-accent-ink shadow-cta transition-colors hover:bg-accent-400 disabled:opacity-40"
+            >
+              {sendOtpMutation.isPending
+                ? <><Spinner size={16} />{tl("sending")}</>
+                : resendSeconds > 0
+                  ? tl("resend_in", { n: resendSeconds })
+                  : tl("get_code_btn")}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => { setServerError(null); setStep("login"); }}
+              className="mt-5 w-full text-center text-[14px] font-800 text-ink-400 hover:text-ink-700"
+            >
+              {tl("back_btn")}
+            </button>
           </>
         )}
 
@@ -276,7 +329,7 @@ export default function LoginPage() {
             resendSeconds={resendSeconds}
             onChange={(code) => { setOtp(code); setServerError(null); }}
             onComplete={() => verifyMutation.mutate()}
-            onBack={() => { setStep("login"); setOtp(""); otpRef.current?.clear(); setServerError(null); }}
+            onBack={() => { setStep("forgot"); setOtp(""); otpRef.current?.clear(); setServerError(null); }}
             onResend={() => {
               if (resendSeconds > 0) return;
               setOtp("");

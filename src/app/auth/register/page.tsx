@@ -16,6 +16,7 @@ import {
   Wordmark,
   PhoneInput,
   OtpInput,
+  Checkbox,
   Spinner,
   type OtpInputHandle,
 } from "@/components/ui";
@@ -39,6 +40,7 @@ export default function RegisterPage() {
   const [surname, setSurname] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [terms, setTerms] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const [existing, setExisting] = useState(false);
   const [resendSeconds, setResendSeconds] = useState(0);
@@ -46,7 +48,8 @@ export default function RegisterPage() {
   const otpRef = useRef<OtpInputHandle>(null);
 
   const displayPhone = phone.replace(/^\+996/, "");
-  const canSubmit = name.trim().length > 0 && surname.trim().length > 0 && password.length >= 8;
+  const canSubmit =
+    name.trim().length > 0 && surname.trim().length > 0 && password.length >= 8 && terms;
 
   useEffect(() => {
     if (resendSeconds <= 0) return;
@@ -301,6 +304,21 @@ export default function RegisterPage() {
                 {t("password_rule")}
               </p>
             </LabeledField>
+
+            {/* Terms + privacy — must be accepted to enable account creation. */}
+            <label className="mb-4 flex items-start gap-2.5">
+              <Checkbox id="terms" checked={terms} onCheckedChange={(v) => setTerms(v === true)} />
+              <span className="text-[13px] font-600 leading-snug text-ink-600 dark:text-ink-300">
+                {t("terms_prefix")}{" "}
+                <Link href="/terms" target="_blank" className="font-800 text-brand-700 hover:text-brand-800 dark:text-brand-300">
+                  {t("terms_link")}
+                </Link>{" "}
+                {t("terms_and")}{" "}
+                <Link href="/privacy" target="_blank" className="font-800 text-brand-700 hover:text-brand-800 dark:text-brand-300">
+                  {t("privacy_link")}
+                </Link>
+              </span>
+            </label>
 
             <button
               type="button"
