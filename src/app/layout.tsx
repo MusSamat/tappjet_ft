@@ -26,25 +26,16 @@ import "./globals.css";
 // app content before the silent login resolves. AuthBootstrap clears the class.
 const TMA_SPLASH_INIT_SCRIPT = `(function(){try{var w=window.Telegram&&window.Telegram.WebApp;if(w&&typeof w.initData==="string"&&w.initData.length>0)document.documentElement.classList.add("tma-boot")}catch(e){}})()`;
 
-// Self-hosted (was next/font/google) — build no longer depends on reaching
-// Google Fonts at compile time, and no render-blocking request to Google at
-// runtime. Variable fonts (full glyph set incl. Cyrillic) under ./fonts.
-const nunito = localFont({
-  src: "./fonts/Nunito.ttf",
-  weight: "400 900",
-  variable: "--font-nunito",
+// Single self-hosted variable font for the whole app. Manrope has a full
+// Cyrillic glyph set (ru/kg), tabular figures, and reads well from 200→800 —
+// so body and display share one family (was Nunito body + Fredoka display,
+// which silently dropped Russian to Nunito because Fredoka has no Cyrillic).
+const manrope = localFont({
+  src: "./fonts/Manrope.ttf",
+  weight: "200 800",
+  variable: "--font-manrope",
   display: "swap",
   fallback: ["system-ui", "sans-serif"],
-});
-
-// Display font (h1/h2/.font-disp). Fredoka has no Cyrillic — Russian/Kyrgyz
-// display text falls through to Nunito 900.
-const fredoka = localFont({
-  src: "./fonts/Fredoka.ttf",
-  weight: "300 700",
-  variable: "--font-fredoka",
-  display: "swap",
-  fallback: ["var(--font-nunito)", "sans-serif"],
 });
 
 export const metadata: Metadata = {
@@ -79,7 +70,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html
       lang={locale}
-      className={`${nunito.variable} ${fredoka.variable}`}
+      className={`${manrope.variable}`}
       suppressHydrationWarning
     >
       <head>

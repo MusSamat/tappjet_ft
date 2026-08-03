@@ -62,8 +62,8 @@ const config: Config = {
         warning: "#F59E0B",
       },
       fontFamily: {
-        sans: ["var(--font-nunito)", "system-ui", "sans-serif"],
-        disp: ["var(--font-fredoka)", "var(--font-nunito)", "system-ui", "sans-serif"],
+        sans: ["var(--font-manrope)", "system-ui", "sans-serif"],
+        disp: ["var(--font-manrope)", "system-ui", "sans-serif"],
       },
       fontWeight: {
         "600": "600",

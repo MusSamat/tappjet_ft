@@ -25,13 +25,43 @@
   }
   body {
     @apply bg-ink-50 text-ink-900 antialiased dark:bg-ink-950 dark:text-ink-100;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.015em;
   }
   h1,
   h2,
   .font-disp {
     font-family: theme("fontFamily.disp");
-    letter-spacing: 0;
+    letter-spacing: -0.02em;
+  }
+  /* Aligned times & prices — Manrope ships tabular figures. */
+  .num {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+  }
+  /* Ticket perforation: a dashed divider with a semicircle notch punched into
+     each card edge. --notch must match the feed background behind the card so
+     the cutouts read as holes; --perf-line is the dashed stroke. The parent
+     card sets both vars (and must have 14px / px-3.5 side padding). */
+  .ticket-perf {
+    position: relative;
+    margin: 0 -14px;
+    border-top: 1px dashed var(--perf-line);
+  }
+  .ticket-perf::before,
+  .ticket-perf::after {
+    content: "";
+    position: absolute;
+    top: -9px;
+    width: 18px;
+    height: 18px;
+    border-radius: 9999px;
+    background: var(--notch);
+  }
+  .ticket-perf::before {
+    left: -9px;
+  }
+  .ticket-perf::after {
+    right: -9px;
   }
   /* Non-input interactive elements (buttons, links) get a subtle focus ring */
   :focus-visible:not(input):not(textarea):not(select) {
