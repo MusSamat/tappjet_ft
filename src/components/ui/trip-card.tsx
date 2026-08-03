@@ -99,11 +99,11 @@ function TripCardInner({
     <article
       ref={cardRef}
       className={cn(
-        "group relative cursor-pointer overflow-hidden rounded-[18px] bg-[#E8EDE4] px-3.5 pb-3 pt-3.5 transition hover:-translate-y-0.5",
-        "[--notch:#FAFAF9] [--perf-line:#C9D2C2] dark:bg-[#232322] dark:[--notch:#0C0A09] dark:[--perf-line:#3C3C3A]",
+        "group relative cursor-pointer overflow-hidden rounded-[18px] bg-white px-3.5 pb-3 pt-3.5 shadow-card ring-1 ring-ink-100 transition hover:-translate-y-0.5 hover:shadow-lift",
+        "[--notch:#FAFAF9] [--perf-line:#E7E5E4] dark:bg-[#232322] dark:shadow-none dark:ring-0 dark:[--notch:#0C0A09] dark:[--perf-line:#3C3C3A]",
         (soldOut || inactive) && "opacity-45",
         active && "ring-2 ring-brand-500",
-        booked && "ring-2 ring-emerald-400/70 dark:ring-emerald-500/50",
+        booked && "bg-emerald-50/60 ring-emerald-200 dark:bg-emerald-500/[0.07] dark:ring-emerald-500/25",
         className,
       )}
       onClick={onClick}
@@ -144,7 +144,7 @@ function TripCardInner({
           </p>
         </div>
         <div className="shrink-0 text-right">
-          <p className="num whitespace-nowrap text-[19px] font-800 leading-none text-brand-800 dark:text-brand-300">
+          <p className="num whitespace-nowrap text-[19px] font-800 leading-none text-brand-900 dark:text-brand-300">
             {price.toLocaleString("ru-RU")}
             <span className="text-[12px] font-700">{t("som")}</span>
           </p>

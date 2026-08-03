@@ -215,7 +215,7 @@ export default function LoginPage() {
                 value={phone}
                 onValueChange={(v) => { setPhone(v); setServerError(null); }}
                 invalid={false}
-                placeholder="700 123 456"
+                placeholder="000 000 000"
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && FULL_PHONE_RE.test(phone)) passwordRef.current?.focus();
                 }}
@@ -288,7 +288,7 @@ export default function LoginPage() {
                 value={phone}
                 onValueChange={(v) => { setPhone(v); setServerError(null); }}
                 invalid={false}
-                placeholder="700 123 456"
+                placeholder="000 000 000"
                 onKeyDown={(e) => { if (e.key === "Enter" && FULL_PHONE_RE.test(phone)) sendResetCode(); }}
               />
             </div>

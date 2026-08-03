@@ -34,7 +34,7 @@ export function PhoneStep({ tl, phone, setPhone, setServerError, isPending, onCo
           value={phone}
           onValueChange={(full) => { setPhone(full); setServerError(null); }}
           invalid={false}
-          placeholder="700 123 456"
+          placeholder="000 000 000"
         />
       </div>
 
