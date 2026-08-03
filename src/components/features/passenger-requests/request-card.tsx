@@ -48,10 +48,10 @@ function RequestCardInner({
   const content = (
     <article
       className={cn(
-        "group relative cursor-pointer overflow-hidden rounded-[18px] bg-[#EBEAF4] px-3.5 pb-3 pt-3.5 transition hover:-translate-y-0.5",
-        "[--notch:#FAFAF9] [--perf-line:#CFCCE0] dark:bg-[#232322] dark:[--notch:#0C0A09] dark:[--perf-line:#3C3C3A]",
+        "group relative cursor-pointer overflow-hidden rounded-[18px] bg-white px-3.5 pb-3 pt-3.5 shadow-card ring-1 ring-ink-100 transition hover:-translate-y-0.5 hover:shadow-lift",
+        "[--notch:#FAFAF9] [--perf-line:#E7E5E4] dark:bg-[#232322] dark:shadow-none dark:ring-0 dark:[--notch:#0C0A09] dark:[--perf-line:#3C3C3A]",
         !isOpen && "opacity-50",
-        request.myResponse && "ring-2 ring-emerald-400/70 dark:ring-emerald-500/50",
+        request.myResponse && "bg-emerald-50/60 ring-emerald-200 dark:bg-emerald-500/[0.07] dark:ring-emerald-500/25",
         className,
       )}
       onClick={onClick}
@@ -69,7 +69,7 @@ function RequestCardInner({
               {request.flexible && ` · ${t("flexible")}`}
             </span>
             {request.myResponse && (
-              <span className="shrink-0 rounded-md bg-white/70 px-1.5 py-0.5 text-[10px] font-900 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300">
+              <span className="shrink-0 rounded-md bg-emerald-50 px-1.5 py-0.5 text-[10px] font-900 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300">
                 {t("responded")}
               </span>
             )}
@@ -101,7 +101,7 @@ function RequestCardInner({
             {passenger.rating!.toFixed(1)}
           </span>
         ) : (
-          <span className="shrink-0 rounded-md bg-white/70 px-1.5 py-0.5 text-[11px] font-800 text-grape-600 dark:bg-grape-500/25 dark:text-grape-200">
+          <span className="shrink-0 rounded-md bg-grape-50 px-1.5 py-0.5 text-[11px] font-800 text-grape-600 dark:bg-grape-500/25 dark:text-grape-200">
             {t("new")}
           </span>
         )}

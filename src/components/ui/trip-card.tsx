@@ -165,7 +165,7 @@ function TripCardInner({
             {rating.toFixed(1)}
           </span>
         ) : (
-          <span className="shrink-0 rounded-md bg-white/70 px-1.5 py-0.5 text-[11px] font-800 text-brand-800 dark:bg-brand-900 dark:text-brand-200">
+          <span className="shrink-0 rounded-md bg-brand-50 px-1.5 py-0.5 text-[11px] font-800 text-brand-700 dark:bg-brand-900 dark:text-brand-200">
             {t("new")}
           </span>
         )}
