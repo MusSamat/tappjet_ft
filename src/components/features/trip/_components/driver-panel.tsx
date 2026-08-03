@@ -107,6 +107,7 @@ export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string
     onSuccess: () => {
       toastSuccess(tToasts("trip_completed"));
       qc.invalidateQueries({ queryKey: ["trips"] });
+      qc.invalidateQueries({ queryKey: ["my-posts"] });
       qc.invalidateQueries({ queryKey: ["bookings"] });
       router.refresh();
     },
@@ -117,6 +118,7 @@ export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string
     onSuccess: () => {
       toastSuccess(tToasts("trip_cancelled"));
       qc.invalidateQueries({ queryKey: ["trips"] });
+      qc.invalidateQueries({ queryKey: ["my-posts"] });
       qc.invalidateQueries({ queryKey: ["bookings"] });
       setCancelTripOpen(false);
     },

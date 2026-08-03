@@ -28,9 +28,11 @@ export interface CreateTripInput {
   comment?: string;
 }
 
-export async function createTrip(input: CreateTripInput): Promise<TripDetail> {
+export async function createTrip(input: CreateTripInput, idempotencyKey?: string): Promise<TripDetail> {
+  // Caller passes a STABLE key so a retry after a lost response replays the
+  // original trip instead of creating a duplicate; falls back to a fresh uuid.
   const { data } = await api.post<TripDetail>("/trips", input, {
-    headers: { "Idempotency-Key": uuid() },
+    headers: { "Idempotency-Key": idempotencyKey ?? uuid() },
   });
   return data;
 }

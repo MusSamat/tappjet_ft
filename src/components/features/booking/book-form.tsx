@@ -56,8 +56,11 @@ export function BookForm({ tripId, pricePerSeat, seatsAvailable, initialSeats = 
       setCreatedBookingId(booking.id ?? null);
       setStep("waiting");
       // Refresh the outgoing-bookings cache so the trip card badge and the
-      // detail CTA flip to "already booked" immediately.
+      // detail CTA flip to "already booked" immediately — and the trip detail
+      // + feed so seat counts / my-booking status are no longer stale.
       void qc.invalidateQueries({ queryKey: ["bookings"] });
+      void qc.invalidateQueries({ queryKey: ["trip", tripId] });
+      void qc.invalidateQueries({ queryKey: ["trips"] });
     },
     onError: (e) => {
       setServerError(fe(extractError(e)));

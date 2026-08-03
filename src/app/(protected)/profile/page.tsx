@@ -5,12 +5,14 @@ import { useRouter } from "next/navigation";
 import { useState, type ReactNode } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
+  ArrowLeft,
   BadgeCheck,
   CarFront,
   ChevronRight,
   Gift,
   History,
   Quote,
+  Settings,
   Smartphone,
   Star,
   User as UserIcon,
@@ -38,7 +40,6 @@ import { CarsTab } from "./_components/cars-tab";
 import { CarFront as CarFrontIcon } from "lucide-react";
 
 type Tab = "about" | "cars" | "reviews" | "history" | "settings";
-const TAB_ORDER: Tab[] = ["about", "cars", "reviews", "history", "settings"];
 
 const FAB_TINT: Record<string, string> = {
   driver: "bg-brand-600",
@@ -57,6 +58,9 @@ export default function ProfilePage() {
   const [tab, setTab] = useState<Tab>("about");
   const [showAddPhone, setShowAddPhone] = useState(false);
 
+  // On mobile, История / Настройки open as full sub-pages (back → about) so the
+  // pill row carries only the 3 content sections and never overflows.
+  const isSubPage = tab === "history" || tab === "settings";
   const isDriver = !!user?.roles?.includes("driver");
   const joinYear = user?.createdAt ? new Date(user.createdAt).getFullYear() : null;
   const fabClass = FAB_TINT[role] ?? FAB_TINT.passenger;
@@ -268,77 +272,109 @@ export default function ProfilePage() {
   return (
     <div className="flex min-h-[calc(100vh-64px)] flex-col bg-ink-50 dark:bg-ink-950">
       <div className="mx-auto w-full max-w-[760px] space-y-3.5 p-3.5 pt-11 md:p-6 lg:hidden">
-        <BackButton />
-        {!user?.phoneVerified && (
-          <button
-            type="button"
-            onClick={() => setShowAddPhone(true)}
-            className="flex w-full items-center justify-between rounded-2xl bg-accent-50 px-4 py-3 text-left ring-1 ring-accent-200 dark:bg-accent-500/10 dark:ring-accent-500/20"
-          >
-            <span>
-              <span className="block text-[14px] font-900 text-accent-700">{t("add_phone_title")}</span>
-              <span className="block text-[14px] font-600 text-accent-700/80">{t("add_phone_sub")}</span>
-            </span>
-            <span className="rounded-full bg-accent-500 px-3 py-1.5 text-[13px] font-900 text-accent-ink shadow-cta">
-              {t("add_phone_cta")}
-            </span>
-          </button>
-        )}
-
-        {/* Hero card */}
-        <div className="rounded-4xl bg-white p-4 shadow-card dark:bg-ink-900">
-          <div className="flex items-start gap-3">
-            <AvatarUploader
-              sizeClass="h-16 w-16"
-              shapeClass="rounded-2xl"
-              tintClass={theme.avatarTint}
-              fabClass={fabClass}
-              fontClass="text-[21px]"
-            />
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-1">
-                <h1 className="truncate text-[18px] font-900 text-ink-900 dark:text-white">{user?.name}</h1>
-                {isDriver && <BadgeCheck className="h-[18px] w-[18px] shrink-0 text-brand-600" aria-hidden="true" />}
-              </div>
-              <p className="mt-0.5 text-[14px] font-600 text-ink-400">
-                <span className="text-accent-600">
-                  ★ {user?.rating != null ? user.rating.toFixed(1) : "—"}
-                </span>
-                {" · "}
-                {t("rating_count", { n: user?.ratingCount ?? 0 })}
-                {joinYear ? ` · ${t("badge_since", { year: joinYear })}` : ""}
-              </p>
-            </div>
-          </div>
-          {trustChips}
-          {statStrip}
-        </div>
-
-        {/* Quick settings — language & theme, right where users look for them */}
-        <SettingsCard />
-
-        {/* Pill tabs — scrollable row, 44px targets, active = filled (house
-            segmented language; underline tabs crowded 5 items on mobile). */}
-        <div className="no-scrollbar -mx-1 flex gap-1.5 overflow-x-auto px-1 py-0.5">
-          {TAB_ORDER.map((tk) => (
+        {isSubPage ? (
+          <>
+            {/* Sub-page (История / Настройки) — back arrow returns to profile */}
             <button
-              key={tk}
               type="button"
-              onClick={() => setTab(tk)}
-              aria-pressed={tab === tk}
-              className={cn(
-                "min-h-[40px] shrink-0 touch-manipulation whitespace-nowrap rounded-full px-4 text-[14px] transition duration-100 active:scale-[0.97]",
-                tab === tk
-                  ? "bg-brand-600 font-900 text-white shadow-sm"
-                  : "bg-white font-700 text-ink-600 ring-1 ring-ink-200 dark:bg-ink-900 dark:text-ink-300 dark:ring-ink-700",
-              )}
+              onClick={() => setTab("about")}
+              className="flex items-center gap-2 text-[20px] font-900 text-ink-900 dark:text-white"
             >
-              {tabLabel[tk]}
+              <ArrowLeft className="h-6 w-6" aria-hidden="true" />
+              {tabLabel[tab]}
             </button>
-          ))}
-        </div>
+            {content[tab]}
+          </>
+        ) : (
+          <>
+            <BackButton />
+            {!user?.phoneVerified && (
+              <button
+                type="button"
+                onClick={() => setShowAddPhone(true)}
+                className="flex w-full items-center justify-between rounded-2xl bg-accent-50 px-4 py-3 text-left ring-1 ring-accent-200 dark:bg-accent-500/10 dark:ring-accent-500/20"
+              >
+                <span>
+                  <span className="block text-[14px] font-900 text-accent-700">{t("add_phone_title")}</span>
+                  <span className="block text-[14px] font-600 text-accent-700/80">{t("add_phone_sub")}</span>
+                </span>
+                <span className="rounded-full bg-accent-500 px-3 py-1.5 text-[13px] font-900 text-accent-ink shadow-cta">
+                  {t("add_phone_cta")}
+                </span>
+              </button>
+            )}
 
-        {content[tab]}
+            {/* Hero card */}
+            <div className="rounded-4xl bg-white p-4 shadow-card dark:bg-ink-900">
+              <div className="flex items-start gap-3">
+                <AvatarUploader
+                  sizeClass="h-16 w-16"
+                  shapeClass="rounded-2xl"
+                  tintClass={theme.avatarTint}
+                  fabClass={fabClass}
+                  fontClass="text-[21px]"
+                />
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-1">
+                    <h1 className="truncate text-[18px] font-900 text-ink-900 dark:text-white">{user?.name}</h1>
+                    {isDriver && <BadgeCheck className="h-[18px] w-[18px] shrink-0 text-brand-600" aria-hidden="true" />}
+                  </div>
+                  <p className="mt-0.5 text-[14px] font-600 text-ink-400">
+                    <span className="text-accent-600">
+                      ★ {user?.rating != null ? user.rating.toFixed(1) : "—"}
+                    </span>
+                    {" · "}
+                    {t("rating_count", { n: user?.ratingCount ?? 0 })}
+                    {joinYear ? ` · ${t("badge_since", { year: joinYear })}` : ""}
+                  </p>
+                </div>
+              </div>
+              {trustChips}
+              {statStrip}
+            </div>
+
+            {/* Content pills — 3 equal sections that fit (about · cars · reviews) */}
+            <div className="flex gap-1.5">
+              {(["about", "cars", "reviews"] as Tab[]).map((tk) => (
+                <button
+                  key={tk}
+                  type="button"
+                  onClick={() => setTab(tk)}
+                  aria-pressed={tab === tk}
+                  className={cn(
+                    "min-h-[40px] flex-1 touch-manipulation whitespace-nowrap rounded-full px-3 text-[14px] transition duration-100 active:scale-[0.97]",
+                    tab === tk
+                      ? "bg-brand-600 font-900 text-white shadow-sm"
+                      : "bg-white font-700 text-ink-600 ring-1 ring-ink-200 dark:bg-ink-900 dark:text-ink-300 dark:ring-ink-700",
+                  )}
+                >
+                  {tabLabel[tk]}
+                </button>
+              ))}
+            </div>
+
+            {content[tab]}
+
+            {/* Quick settings + menu list — История / Настройки open as sub-pages */}
+            <SettingsCard />
+            <div className="divide-y divide-ink-100 overflow-hidden rounded-3xl bg-white shadow-card dark:divide-ink-800 dark:bg-ink-900">
+              <button type="button" onClick={() => setTab("history")} className="flex w-full items-center gap-3 px-4 py-3.5">
+                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-ink-100 text-ink-500 dark:bg-ink-800">
+                  <History className="h-4 w-4" aria-hidden="true" />
+                </span>
+                <span className="flex-1 text-left text-[15px] font-700 text-ink-800 dark:text-ink-100">{t("tab_history")}</span>
+                <ChevronRight className="h-4 w-4 text-ink-300" aria-hidden="true" />
+              </button>
+              <button type="button" onClick={() => setTab("settings")} className="flex w-full items-center gap-3 px-4 py-3.5">
+                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-ink-100 text-ink-500 dark:bg-ink-800">
+                  <Settings className="h-4 w-4" aria-hidden="true" />
+                </span>
+                <span className="flex-1 text-left text-[15px] font-700 text-ink-800 dark:text-ink-100">{t("tab_settings")}</span>
+                <ChevronRight className="h-4 w-4 text-ink-300" aria-hidden="true" />
+              </button>
+            </div>
+          </>
+        )}
       </div>
 
       {/* Desktop — 2-col with vertical nav (§2.7) */}

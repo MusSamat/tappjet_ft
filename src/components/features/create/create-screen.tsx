@@ -6,6 +6,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, CarFront, User, PartyPopper, ShieldCheck, Phone } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { createTrip, type CreateTripInput } from "@/lib/api/trips-create";
+import { uuid } from "@/lib/utils/uuid";
 import { createPassengerRequest, type CreatePassengerRequestInput } from "@/lib/api/passenger-requests";
 import { addCar, listMyCars } from "@/lib/api/cars";
 import { extractError } from "@/lib/api/client";
@@ -115,7 +116,9 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
   // Guest gate (proper gate screen lands in a later batch — this is the seam).
   useEffect(() => {
     if (status === "anonymous") {
-      saveDeferredAction({ action: "book_trip", trip_id: "", seats: 1 });
+      // Return the guest to the create screen after login — not a bogus
+      // /trips//book URL (empty trip_id) from a book_trip intent.
+      saveDeferredAction({ action: "create_trip" });
       router.replace("/auth/login");
     }
   }, [status, router]);
@@ -124,6 +127,9 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
   // Whether the user (or a persisted draft) already chose a seat count — the
   // car-capacity default below must never override an explicit choice.
   const seatsCustomized = useRef(false);
+  // Stable across retries of one submit → a lost-response retry replays the same
+  // trip instead of duplicating; reset after a successful publish.
+  const idempotencyKeyRef = useRef(uuid());
 
   // Load persisted draft (preserve existing localStorage keys).
   useEffect(() => {
@@ -184,7 +190,11 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
 
   const departureAt = (): string => {
     const day = /^\d{4}-\d{2}-\d{2}$/.test(draft.date) ? draft.date : dstr(1);
-    return new Date(`${day}T${draft.flexible ? "12:00" : draft.time}:00`).toISOString();
+    const time = draft.flexible ? "12:00" : draft.time;
+    // Anchor to Kyrgyzstan time (+06:00), NOT the device's local zone: the
+    // wall-clock the user picked is a KG time. `.toISOString()` on a
+    // local-parsed Date would shift the instant for non-UTC+6 devices.
+    return `${day}T${time}:00+06:00`;
   };
 
   // Window end is meaningful only for exact-time driver trips and only when it
@@ -192,7 +202,7 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
   const departureWindowEnd = (): string | undefined => {
     if (draft.flexible || !draft.timeEnd || draft.timeEnd <= draft.time) return undefined;
     const day = /^\d{4}-\d{2}-\d{2}$/.test(draft.date) ? draft.date : dstr(1);
-    return new Date(`${day}T${draft.timeEnd}:00`).toISOString();
+    return `${day}T${draft.timeEnd}:00+06:00`; // KG time, not device-local
   };
 
   const { mutate, isPending } = useMutation({
@@ -224,7 +234,7 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
             women_only: draft.prefs.women_only,
           },
         };
-        const trip = await createTrip(input);
+        const trip = await createTrip(input, idempotencyKeyRef.current);
         return trip.id ?? "";
       }
       // Passenger request — payload has no pickup/budget fields, so the budget
@@ -248,14 +258,25 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
         /* ignore */
       }
       void qc.invalidateQueries({ queryKey: isDriver ? ["trips"] : ["passenger-requests"] });
+      // The «Мои поездки / объявления» tab reads ["my-posts"] — invalidate it so
+      // the just-published item appears immediately (not after a 15s staleTime).
+      void qc.invalidateQueries({ queryKey: ["my-posts"] });
+      idempotencyKeyRef.current = uuid(); // fresh key for a possible next publish
       setPublishedId(id);
     },
     onError: (e) => setCreateError(fe(extractError(e))),
   });
 
+  // A non-flexible departure must be at least ~30 min out (backend rule). Catch
+  // "today at a time already passed" on the client with a clear message instead
+  // of a generic backend rejection.
+  const departureTooSoon =
+    !draft.flexible && Boolean(draft.date) && new Date(departureAt()).getTime() < Date.now() + 30 * 60_000;
+
   const canSubmit =
     Boolean(draft.originCity && draft.destinationCity && draft.originCity !== draft.destinationCity) &&
     (draft.flexible || Boolean(draft.date)) &&
+    !departureTooSoon &&
     draft.seats >= 1 &&
     (!isDriver || draft.price >= 50) &&
     // Driver intent needs a car (Phase 1 gate — inline form adds one below).
@@ -389,6 +410,9 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
         onFlexible={(v) => patch({ flexible: v })}
         {...(isDriver ? { timeEnd: draft.timeEnd, onTimeEnd: (v: string) => patch({ timeEnd: v }) } : {})}
       />
+      {departureTooSoon && (
+        <p className="-mt-1 text-[13px] font-700 text-coral-600">{t("err_departure_soon")}</p>
+      )}
       <SeatsStepper
         value={draft.seats}
         label={isDriver ? t("seats_label_driver") : t("seats_label_passenger")}

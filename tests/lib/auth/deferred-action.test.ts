@@ -82,6 +82,19 @@ describe("routeForIntent", () => {
     expect(route).toBe("/trips/abc/book?seats=3");
   });
 
+  it("create_trip — returns to the create screen (not a bogus /trips//book)", () => {
+    const route = routeForIntent({ action: "create_trip" });
+    expect(route).toBe("/trips/create");
+    expect(route).not.toContain("//");
+  });
+
+  it("like — returns to the trip or request the guest tried to like", () => {
+    expect(routeForIntent({ action: "like", target_type: "trip", id: "t9" })).toBe("/trips/t9");
+    expect(routeForIntent({ action: "like", target_type: "passenger_request", id: "r9" })).toBe(
+      "/requests/r9",
+    );
+  });
+
   it("open_chat — routes to the chat page", () => {
     expect(routeForIntent({ action: "open_chat", booking_id: "bk1" })).toBe(
       "/my/bookings/bk1/chat",

@@ -75,6 +75,13 @@ export function AvatarUploader({
   const updateUser = useAuth((s) => s.updateUser);
   const queryClient = useQueryClient();
   const inputRef = useRef<HTMLInputElement>(null);
+  const blobUrlRef = useRef<string | null>(null);
+  const revokeBlob = () => {
+    if (blobUrlRef.current) {
+      URL.revokeObjectURL(blobUrlRef.current);
+      blobUrlRef.current = null;
+    }
+  };
   // imgSrc: either blob URL during upload or real CDN URL after success
   const [imgSrc, setImgSrc] = useState<string | null>(null);
   const [imgError, setImgError] = useState(false);
@@ -89,10 +96,12 @@ export function AvatarUploader({
       updateUser({ avatarUrl: url ?? undefined });
       setImgSrc(url);
       setImgError(false);
+      revokeBlob(); // free the optimistic preview blob (now replaced by the CDN url)
       toastSuccess(tToasts("avatar_updated"));
       void queryClient.invalidateQueries({ queryKey: ["me"] });
     },
     onError: () => {
+      revokeBlob();
       setImgSrc(null);
     },
   });
@@ -100,8 +109,10 @@ export function AvatarUploader({
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    // Show optimistic preview immediately
-    setImgSrc(URL.createObjectURL(file));
+    // Show optimistic preview immediately (revoke any prior preview first).
+    revokeBlob();
+    blobUrlRef.current = URL.createObjectURL(file);
+    setImgSrc(blobUrlRef.current);
     setImgError(false);
     mutate(file);
     e.target.value = "";

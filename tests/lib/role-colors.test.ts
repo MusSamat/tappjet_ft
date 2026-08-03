@@ -11,16 +11,17 @@ describe("ROLE_THEME", () => {
     expect(ROLE_THEME.guest.tabUnderline).toBe("bg-ink-500");
   });
 
-  it("passenger accents are grape (indigo)", () => {
-    expect(ROLE_THEME.passenger.textOn).toContain("text-grape-");
-    expect(ROLE_THEME.passenger.ctaFilled).toContain("bg-grape-500");
-    expect(ROLE_THEME.passenger.tabUnderline).toBe("bg-grape-500");
+  // Current assignment (role-colors.ts): passenger = brand (teal), driver = grape.
+  it("passenger accents are brand (teal)", () => {
+    expect(ROLE_THEME.passenger.textOn).toContain("text-brand-");
+    expect(ROLE_THEME.passenger.ctaFilled).toContain("bg-brand-600");
+    expect(ROLE_THEME.passenger.tabUnderline).toBe("bg-brand-500");
   });
 
-  it("driver accents are brand (teal)", () => {
-    expect(ROLE_THEME.driver.textOn).toContain("text-brand-");
-    expect(ROLE_THEME.driver.ctaFilled).toContain("bg-brand-600");
-    expect(ROLE_THEME.driver.tabUnderline).toBe("bg-brand-500");
+  it("driver accents are grape (indigo)", () => {
+    expect(ROLE_THEME.driver.textOn).toContain("text-grape-");
+    expect(ROLE_THEME.driver.ctaFilled).toContain("bg-grape-500");
+    expect(ROLE_THEME.driver.tabUnderline).toBe("bg-grape-500");
   });
 
   it("labelKey and icon match the role", () => {
@@ -47,12 +48,12 @@ describe("ROLE_THEME", () => {
 });
 
 describe("ROLE_COLORS (deprecated pre-redesign map)", () => {
-  it("passenger has navActive: text-grape-600", () => {
-    expect(ROLE_COLORS.passenger.navActive).toBe("text-grape-600");
+  it("passenger has navActive: text-brand-600", () => {
+    expect(ROLE_COLORS.passenger.navActive).toBe("text-brand-600");
   });
 
-  it("driver has navActive: text-brand-600", () => {
-    expect(ROLE_COLORS.driver.navActive).toBe("text-brand-600");
+  it("driver has navActive: text-grape-600", () => {
+    expect(ROLE_COLORS.driver.navActive).toBe("text-grape-600");
   });
 
   it("passenger and driver produce different avatarBgOn values", () => {

@@ -3,6 +3,8 @@ const TTL_MS = 15 * 60 * 1000;
 
 export type DeferredAction =
   | { action: "book_trip"; trip_id: string; seats: number; comment?: string }
+  | { action: "create_trip" }
+  | { action: "like"; target_type: "trip" | "passenger_request"; id: string }
   | { action: "open_chat"; booking_id: string }
   | { action: "rate_user"; trip_id: string; ratee_id: string }
   | { action: "view_contacts"; booking_id: string }
@@ -37,6 +39,12 @@ export function routeForIntent(intent: DeferredAction): string {
   switch (intent.action) {
     case "book_trip":
       return `/trips/${intent.trip_id}/book?seats=${intent.seats}`;
+    case "create_trip":
+      return "/trips/create";
+    case "like":
+      // Return the user to the item they tried to like — now authenticated they
+      // can tap the heart, instead of being dropped on the home feed.
+      return intent.target_type === "trip" ? `/trips/${intent.id}` : `/requests/${intent.id}`;
     case "open_chat":
       return `/my/bookings/${intent.booking_id}/chat`;
     case "rate_user":

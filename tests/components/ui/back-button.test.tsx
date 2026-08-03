@@ -1,11 +1,22 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { BackButton } from "@/components/ui/back-button";
+
+vi.mock("next-intl", async () => {
+  const messages = (await import("@/messages/ru.json")).default as unknown as Record<
+    string,
+    Record<string, string>
+  >;
+  return {
+    useTranslations: (ns: string) => (key: string) => messages[ns]?.[key] ?? `${ns}.${key}`,
+  };
+});
 
 const mockBack = vi.fn();
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ back: mockBack }),
 }));
+
+import { BackButton } from "@/components/ui/back-button";
 
 describe("BackButton", () => {
   it("renders default label Назад", () => {

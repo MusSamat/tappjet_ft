@@ -48,8 +48,16 @@ export default function RegisterPage() {
   const otpRef = useRef<OtpInputHandle>(null);
 
   const displayPhone = phone.replace(/^\+996/, "");
+  // Mirror the backend RegisterBody contract: password ≥8 AND contains a digit,
+  // and the OTP is a full 6 digits — otherwise the button submits an invalid
+  // payload that only fails at the backend.
   const canSubmit =
-    name.trim().length > 0 && surname.trim().length > 0 && password.length >= 8 && terms;
+    name.trim().length > 0 &&
+    surname.trim().length > 0 &&
+    password.length >= 8 &&
+    /\d/.test(password) &&
+    otp.length === 6 &&
+    terms;
 
   useEffect(() => {
     if (resendSeconds <= 0) return;
@@ -107,7 +115,20 @@ export default function RegisterPage() {
       setSession(result);
       goHome();
     },
-    onError: (e) => setServerError(fe(extractError(e))),
+    onError: (e) => {
+      const err = extractError(e);
+      setServerError(fe(err));
+      // Wrong / expired / exhausted OTP → send the user back to the code step to
+      // re-enter it, instead of stranding a code error on the details screen.
+      if (err.code === "OTP_WRONG" || err.code === "OTP_EXPIRED" || err.code === "OTP_TOO_MANY_ATTEMPTS") {
+        setOtp("");
+        setStep("otp");
+        setTimeout(() => {
+          otpRef.current?.clear();
+          otpRef.current?.focus();
+        }, 100);
+      }
+    },
   });
 
   const handleStart = () => {

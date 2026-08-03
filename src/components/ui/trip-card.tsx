@@ -121,7 +121,7 @@ function TripCardInner({
 
       {/* Top half — big departure time · route spine · cities · price */}
       <div className="flex items-start gap-3">
-        <p className="num w-[52px] shrink-0 text-[20px] font-800 leading-none text-ink-900 dark:text-ink-50">
+        <p className="num w-[56px] shrink-0 whitespace-nowrap text-[20px] font-800 leading-none text-ink-900 dark:text-ink-50">
           {timeLabel}
           {windowEnd && (
             <span className="block pt-0.5 text-[11px] font-600 text-ink-500 dark:text-ink-400">{windowEnd}</span>
@@ -155,27 +155,33 @@ function TripCardInner({
       {/* Perforation → driver stub */}
       <div className="ticket-perf mt-3" aria-hidden="true" />
 
-      {/* Bottom stub — avatar · name · rating|«Новый» · car …· ⚡ · seats */}
+      {/* Bottom stub — avatar · [name · rating|«Новый» / full car name] · ⚡ · seats */}
       <div className="flex items-center gap-2 pt-3">
         <DriverAvatar name={driverName} src={driver.avatarUrl ?? null} size="sm" />
-        <p className="shrink-0 truncate text-[13px] font-800 text-ink-900 dark:text-ink-50">{driverName}</p>
-        {rating !== null && ratingCount >= 3 ? (
-          <span className="num flex shrink-0 items-center gap-0.5 text-[12px] font-700 text-ink-500 dark:text-ink-400">
-            <Star className="h-3 w-3 fill-accent-400 text-accent-400" aria-hidden="true" />
-            {rating.toFixed(1)}
-          </span>
-        ) : (
-          <span className="shrink-0 rounded-md bg-brand-50 px-1.5 py-0.5 text-[11px] font-800 text-brand-700 dark:bg-brand-900 dark:text-brand-200">
-            {t("new")}
-          </span>
-        )}
-        {car && (car.make || car.model) && (
-          <span className="min-w-0 truncate text-[12px] font-600 text-ink-500 dark:text-ink-400">
-            {[car.make, car.model].filter(Boolean).join(" ")}
-          </span>
-        )}
+        {/* Name + trust on line 1; the full car name on its own line so it
+            never truncates to «Nissa…». */}
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-1.5">
+            <span className="truncate text-[13px] font-800 text-ink-900 dark:text-ink-50">{driverName}</span>
+            {rating !== null && ratingCount >= 3 ? (
+              <span className="num flex shrink-0 items-center gap-0.5 text-[12px] font-700 text-ink-500 dark:text-ink-400">
+                <Star className="h-3 w-3 fill-accent-400 text-accent-400" aria-hidden="true" />
+                {rating.toFixed(1)}
+              </span>
+            ) : (
+              <span className="shrink-0 rounded-md bg-brand-50 px-1.5 py-0.5 text-[11px] font-800 text-brand-700 dark:bg-brand-900 dark:text-brand-200">
+                {t("new")}
+              </span>
+            )}
+          </div>
+          {car && (car.make || car.model) && (
+            <p className="mt-0.5 truncate text-[12px] font-600 text-ink-500 dark:text-ink-400">
+              {[car.make, car.model].filter(Boolean).join(" ")}
+            </p>
+          )}
+        </div>
 
-        <span className="ml-auto flex shrink-0 items-center gap-2">
+        <span className="flex shrink-0 items-center gap-2">
           {instant && <Zap className="h-4 w-4 fill-accent-400 text-accent-500" aria-hidden="true" />}
           {wholeCabin && <Sofa className="h-4 w-4 text-sky-500" aria-hidden="true" />}
           {soldOut ? (

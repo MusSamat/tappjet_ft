@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { Spinner } from "@/components/ui";
 import { useAuth } from "@/store/auth";
@@ -23,6 +23,19 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
   const status = useAuth((s) => s.status);
   const gateTitle = useGateTitle();
 
+  // Failsafe: if the auth bootstrap never resolves (hung refresh / thrown boot),
+  // don't strand the user on an infinite spinner — after a timeout show the
+  // login gate instead of a blank spinning protected page.
+  const [timedOut, setTimedOut] = useState(false);
+  useEffect(() => {
+    if (status === "authenticated" || status === "anonymous") {
+      setTimedOut(false);
+      return;
+    }
+    const id = setTimeout(() => setTimedOut(true), 8000);
+    return () => clearTimeout(id);
+  }, [status]);
+
   if (status === "authenticated") {
     return (
       <>
@@ -32,7 +45,7 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
     );
   }
 
-  if (status === "anonymous") return <GateScreen title={gateTitle} />;
+  if (status === "anonymous" || timedOut) return <GateScreen title={gateTitle} />;
 
   return (
     <div className="container flex min-h-[60vh] items-center justify-center">

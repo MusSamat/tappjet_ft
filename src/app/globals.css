@@ -55,6 +55,8 @@
     width: 18px;
     height: 18px;
     border-radius: 9999px;
+    /* Notch = the exact feed background behind the card, no outline, so the
+       left/right cutouts have no colour difference from the background. */
     background: var(--notch);
   }
   .ticket-perf::before {

@@ -8,7 +8,10 @@ import { useTranslations } from "next-intl";
 import { likeTrip, unlikeTrip } from "@/lib/api/trips";
 import { likePassengerRequest, unlikePassengerRequest } from "@/lib/api/passenger-requests";
 import { useAuth } from "@/store/auth";
+import { saveDeferredAction } from "@/lib/auth/deferred-action";
 import { cn } from "@/lib/utils/cn";
+
+type LikeCache = { liked?: boolean; metrics?: { likes: number } } & Record<string, unknown>;
 
 interface LikeButtonProps {
   targetType: "trip" | "passenger_request";
@@ -37,6 +40,16 @@ export function LikeButton({ targetType, id, liked, className, size = "md" }: Li
       }
       return next ? likePassengerRequest(id) : unlikePassengerRequest(id);
     },
+    // Optimistically adjust the displayed likes count on the trip-detail cache
+    // so the number moves with the heart (not only after the refetch settles).
+    onMutate: (next: boolean) => {
+      if (targetType !== "trip") return;
+      qc.setQueryData<LikeCache>(["trip", id], (old) =>
+        old?.metrics
+          ? { ...old, liked: next, metrics: { ...old.metrics, likes: Math.max(0, old.metrics.likes + (next ? 1 : -1)) } }
+          : old,
+      );
+    },
     onError: () => setOptimistic((v) => !v),
     onSettled: () => {
       if (targetType === "trip") {
@@ -54,6 +67,9 @@ export function LikeButton({ targetType, id, liked, className, size = "md" }: Li
     e.preventDefault();
     e.stopPropagation();
     if (authStatus !== "authenticated") {
+      // Remember what the guest tried to like → after login they land back on
+      // the item (deferred action) instead of the home feed.
+      saveDeferredAction({ action: "like", target_type: targetType, id });
       router.push("/auth/login");
       return;
     }

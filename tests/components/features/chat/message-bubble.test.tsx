@@ -38,7 +38,11 @@ describe("MessageBubble", () => {
 
   it("shows formatted time HH:MM from createdAt", () => {
     render(<MessageBubble message={baseMsg} isMine={true} />);
-    expect(screen.getByText("10:05")).toBeInTheDocument();
+    // The bubble formats in the viewer's LOCAL zone (getHours), so compute the
+    // expected string the same way — timezone-independent assertion.
+    const d = new Date(baseMsg.createdAt!);
+    const expected = `${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")}`;
+    expect(screen.getByText(expected)).toBeInTheDocument();
   });
 
   it("pending=true shows Clock icon with aria-label sending", () => {
