@@ -55,9 +55,11 @@
     width: 18px;
     height: 18px;
     border-radius: 9999px;
-    /* Notch = the exact feed background behind the card, no outline, so the
-       left/right cutouts have no colour difference from the background. */
+    /* Notch = the exact feed background behind the card. The inset ring gives the
+       visible inner arc a crisp 1px edge so each cutout reads as a clean punched
+       hole (the card's overflow-hidden clips the outer half). */
     background: var(--notch);
+    box-shadow: inset 0 0 0 1px var(--perf-line);
   }
   .ticket-perf::before {
     left: -9px;

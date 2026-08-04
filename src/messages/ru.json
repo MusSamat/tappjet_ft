@@ -1353,7 +1353,19 @@
     "verify_nudge_cta": "Получить ✓",
     "verify_nudge_title_generic": "Получите значок проверенного водителя ✓",
     "tab_bookings": "Брони",
-    "tab_my_trips": "Мои поездки"
+    "tab_my_trips": "Мои поездки",
+    "filter_all": "Все",
+    "filter_requests": "Заявки",
+    "chip_driver": "Водитель",
+    "chip_passenger": "Пассажир",
+    "chip_request": "Заявка",
+    "section_soon": "Скоро",
+    "section_past": "Раньше",
+    "section_incoming": "Входящие",
+    "all_empty_title": "Здесь пока пусто",
+    "all_empty_hint": "Ваши поездки, брони и заявки появятся здесь.",
+    "attn_incoming": "{n} новых броней",
+    "attn_rate": "Оценить · {name}"
   },
   "toasts": {
     "booking_accepted": "Бронь подтверждена",

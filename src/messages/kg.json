@@ -1353,7 +1353,19 @@
     "verify_nudge_cta": "✓ алуу",
     "verify_nudge_title_generic": "Текшерилген айдоочу ✓ белгисин алыңыз",
     "tab_bookings": "Брондор",
-    "tab_my_trips": "Сапарларым"
+    "tab_my_trips": "Сапарларым",
+    "filter_all": "Баары",
+    "filter_requests": "Арыздар",
+    "chip_driver": "Айдоочу",
+    "chip_passenger": "Жүргүнчү",
+    "chip_request": "Арыз",
+    "section_soon": "Жакында",
+    "section_past": "Мурда",
+    "section_incoming": "Кирүүчү",
+    "all_empty_title": "Бул жерде азырынча бош",
+    "all_empty_hint": "Сапарларыңыз, брондоруңуз жана арыздарыңыз бул жерде көрүнөт.",
+    "attn_incoming": "{n} жаңы бронь",
+    "attn_rate": "Баалоо · {name}"
   },
   "toasts": {
     "booking_accepted": "Брондоо ырасталды",
