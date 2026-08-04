@@ -99,6 +99,7 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
   const user = useAuth((s) => s.user);
   // Phase 1: no account roles — the user picks the intent right here.
   const activeMode = useAuth((s) => s.activeMode);
+  const setActiveMode = useAuth((s) => s.setActiveMode);
   const [intent, setIntent] = useState<"driver" | "passenger">(
     activeMode === "driver" ? "driver" : "passenger",
   );
@@ -257,6 +258,10 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
       } catch {
         /* ignore */
       }
+      // Publishing as a driver/passenger IS choosing that mode — sync the global
+      // active mode so «Мои» opens the matching tab set (otherwise a trip created
+      // while in passenger mode is hidden — passenger tabs have no «Поездки»).
+      setActiveMode(intent);
       void qc.invalidateQueries({ queryKey: isDriver ? ["trips"] : ["passenger-requests"] });
       // The «Мои поездки / объявления» tab reads ["my-posts"] — invalidate it so
       // the just-published item appears immediately (not after a 15s staleTime).
@@ -504,13 +509,25 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
             size="lg"
             className="w-full"
             onClick={() => {
-              const id = publishedId;
               setPublishedId(null);
-              if (isDriver && id) router.push(`/trips/${id}`);
-              else router.push("/my/bookings");
+              // Land on «Мои» with the tab that holds the just-published item.
+              router.push(isDriver ? "/my/bookings?tab=trips" : "/my/bookings?tab=requests");
             }}
           >
             {isDriver ? t("published_cta_driver") : t("published_cta_passenger")}
+          </Button>
+        }
+        secondary={
+          <Button
+            variant="outline"
+            size="lg"
+            className="w-full"
+            onClick={() => {
+              setPublishedId(null);
+              setDraft(defaults(isDriver)); // stay on Create with a clean form
+            }}
+          >
+            {t("publish_another")}
           </Button>
         }
       >
