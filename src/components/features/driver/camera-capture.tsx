@@ -188,8 +188,8 @@ export function CameraCapture({ kind, onCapture, onClose }: Props) {
                   }}
                 />
                 <svg
-                  viewBox="0 0 200 120"
-                  className="absolute left-1/2 top-[46%] w-[86%] -translate-x-1/2 -translate-y-1/2 text-white/90"
+                  viewBox="0 0 200 110"
+                  className="absolute left-1/2 top-[46%] w-[88%] -translate-x-1/2 -translate-y-1/2 text-white/90"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2.5"
@@ -197,21 +197,21 @@ export function CameraCapture({ kind, onCapture, onClose }: Props) {
                   strokeLinejoin="round"
                   aria-hidden="true"
                 >
-                  {/* roof + windshield */}
-                  <path d="M55 52 Q60 22 100 22 Q140 22 145 52" />
-                  {/* body */}
-                  <path d="M30 90 L30 70 Q30 56 48 54 L152 54 Q170 56 170 70 L170 90" />
-                  {/* bumper line */}
-                  <path d="M30 90 Q100 98 170 90" />
+                  {/* cabin / roof — wide, low dome */}
+                  <path d="M60 52 Q66 30 100 30 Q134 30 140 52" />
+                  {/* body shell */}
+                  <path d="M34 84 L34 66 Q34 57 50 54 L150 54 Q166 57 166 66 L166 84 Z" />
+                  {/* hood character line */}
+                  <path d="M42 66 L158 66" />
                   {/* headlights */}
-                  <path d="M38 66 Q48 62 58 66" />
-                  <path d="M142 66 Q152 62 162 66" />
-                  {/* mirrors */}
-                  <path d="M30 58 L20 52" />
-                  <path d="M170 58 L180 52" />
-                  {/* wheels */}
-                  <path d="M42 90 L42 100 Q42 104 48 104 L60 104 Q66 104 66 100 L66 92" />
-                  <path d="M134 92 L134 100 Q134 104 140 104 L152 104 Q158 104 158 100 L158 90" />
+                  <path d="M42 62 Q50 59 58 62" />
+                  <path d="M142 62 Q150 59 158 62" />
+                  {/* side mirrors */}
+                  <path d="M34 60 L24 56" />
+                  <path d="M166 60 L176 56" />
+                  {/* tyres peeking below */}
+                  <path d="M48 84 Q48 93 60 93 Q72 93 72 84" />
+                  <path d="M128 84 Q128 93 140 93 Q152 93 152 84" />
                 </svg>
                 <p className="absolute inset-x-6 top-[8%] text-center text-[15px] font-800 text-white drop-shadow">
                   {t("car_hint")}

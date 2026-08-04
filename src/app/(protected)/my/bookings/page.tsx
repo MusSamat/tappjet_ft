@@ -1,14 +1,12 @@
 "use client";
 
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
-import { useState, useEffect, type ReactNode } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Plus, Inbox, Star, Heart } from "lucide-react";
 import { listMyBookings, cancelBooking, listIncomingBookings } from "@/lib/api/bookings";
-import { listMyTrips } from "@/lib/api/my-trips";
-import { listMyPassengerRequests } from "@/lib/api/passenger-requests";
 import { getPendingRatings, type PendingRating } from "@/lib/api/ratings";
 import { extractError } from "@/lib/api/client";
 import { useFriendlyError } from "@/lib/hooks/use-api-error";
@@ -16,10 +14,6 @@ import { toastSuccess, toastError } from "@/components/layout/quick-toast";
 import { RateModal } from "@/components/features/ratings/rate-modal";
 import { BackButton, Container, QueryError } from "@/components/ui";
 import { BackToTop } from "@/components/ui/back-to-top";
-import { CardSkeletonList } from "@/components/ui/card-skeleton";
-import { TripCard } from "@/components/ui/trip-card";
-import { RequestCard } from "@/components/features/passenger-requests/request-card";
-import { BookingCard } from "@/components/features/booking/booking-card";
 import { useScrollRestoration } from "@/lib/hooks/use-scroll-restoration";
 import { Confetti } from "@/components/ui/confetti";
 import type { Booking } from "@/lib/api/bookings";
@@ -33,7 +27,7 @@ import { MyRequestsTab } from "./_components/my-requests-tab";
 // hub): an attention strip (what needs you) + scrollable filter chips + a unified
 // «Все» timeline (trips · bookings · requests) grouped into Скоро / Раньше.
 
-type Filter = "all" | "trips" | "bookings" | "requests" | "liked";
+type Filter = "trips" | "bookings" | "requests" | "liked";
 
 type BookingExt = Booking & {
   tripId?: string;
@@ -60,14 +54,6 @@ const HISTORY_STATUSES = new Set([
   "expired",
 ]);
 
-// Role tag shown above each card in the «Все» timeline.
-type TagLabel = "chip_driver" | "chip_passenger" | "chip_request";
-const ROLE_TAG: Record<string, { dot: string; text: string; label: TagLabel }> = {
-  driver: { dot: "bg-brand-500", text: "text-brand-600", label: "chip_driver" },
-  passenger: { dot: "bg-grape-500", text: "text-grape-600", label: "chip_passenger" },
-  request: { dot: "bg-accent-500", text: "text-accent-600", label: "chip_request" },
-};
-
 function mapTabToFilter(tab: string | null): Filter {
   switch (tab) {
     case "trips":
@@ -80,7 +66,7 @@ function mapTabToFilter(tab: string | null): Filter {
     case "liked":
       return "liked";
     default:
-      return "all";
+      return "bookings";
   }
 }
 
@@ -106,16 +92,6 @@ export default function MyBookingsPage() {
     queryKey: ["ratings", "pending"],
     queryFn: getPendingRatings,
     staleTime: 60_000,
-  });
-  const myTripsQ = useQuery({
-    queryKey: ["my-trips", "active"],
-    queryFn: () => listMyTrips("active", undefined, 30),
-    staleTime: 30_000,
-  });
-  const myRequestsQ = useQuery({
-    queryKey: ["passenger-requests", "my"],
-    queryFn: listMyPassengerRequests,
-    staleTime: 30_000,
   });
   const incomingQ = useQuery({
     queryKey: ["bookings", "incoming"],
@@ -159,9 +135,8 @@ export default function MyBookingsPage() {
   const pendingList = pendingRatings.data?.data ?? [];
 
   const CHIPS: { value: Filter; label: string; heart?: boolean }[] = [
-    { value: "all", label: tMy("filter_all") },
-    { value: "trips", label: tMy("tab_trips") },
     { value: "bookings", label: tMy("tab_bookings") },
+    { value: "trips", label: tMy("tab_trips") },
     { value: "requests", label: tMy("filter_requests") },
     { value: "liked", label: tMy("tab_liked"), heart: true },
   ];
@@ -224,7 +199,7 @@ export default function MyBookingsPage() {
                 onClick={() => setFilter(c.value)}
                 className={`flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-[13px] font-800 transition ${
                   selected
-                    ? "bg-ink-900 text-white"
+                    ? "bg-brand-600 text-white shadow-brandcta ring-1 ring-brand-600"
                     : "border border-ink-200 bg-white text-ink-600 hover:border-ink-300 dark:border-ink-800 dark:bg-ink-900 dark:text-ink-300"
                 }`}
               >
@@ -233,15 +208,6 @@ export default function MyBookingsPage() {
             );
           })}
         </div>
-
-        {filter === "all" && (
-          <AllTimeline
-            trips={myTripsQ.data?.data ?? []}
-            bookings={passengerBookings}
-            requests={myRequestsQ.data?.data ?? []}
-            loading={myTripsQ.isLoading && outgoing.isLoading && myRequestsQ.isLoading}
-          />
-        )}
 
         {filter === "bookings" && outgoing.isError && (
           <QueryError error={outgoing.error} onRetry={() => void outgoing.refetch()} />
@@ -277,100 +243,5 @@ export default function MyBookingsPage() {
         />
       )}
     </>
-  );
-}
-
-function RoleTag({ kind }: { kind: string }) {
-  const tMy = useTranslations("my");
-  const tag = ROLE_TAG[kind]!;
-  return (
-    <div className="mb-1.5 flex items-center gap-1.5 pl-1">
-      <span className={`h-1.5 w-1.5 rounded-full ${tag.dot}`} />
-      <span className={`text-[11px] font-900 uppercase tracking-wide ${tag.text}`}>{tMy(tag.label)}</span>
-    </div>
-  );
-}
-
-function AllTimeline({
-  trips,
-  bookings,
-  requests,
-  loading,
-}: {
-  trips: { id?: string; departureAt?: string }[];
-  bookings: BookingExt[];
-  requests: { id?: string; departureDate?: string }[];
-  loading: boolean;
-}) {
-  const tMy = useTranslations("my");
-  type Item = { when: number; node: ReactNode };
-  const parse = (s?: string) => {
-    const t = s ? Date.parse(s) : NaN;
-    return Number.isNaN(t) ? Number.POSITIVE_INFINITY : t;
-  };
-
-  const items: Item[] = [
-    ...trips.map((t) => ({
-      when: parse(t.departureAt),
-      node: (
-        <div>
-          <RoleTag kind="driver" />
-          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-          <TripCard trip={t as any} href={`/trips/${t.id}`} />
-        </div>
-      ),
-    })),
-    ...bookings.map((b) => ({
-      when: parse(b.trip?.departureAt),
-      node: (
-        <div>
-          <RoleTag kind="passenger" />
-          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-          <BookingCard booking={b as any} role="passenger" />
-        </div>
-      ),
-    })),
-    ...requests.map((r) => ({
-      when: parse(r.departureDate),
-      node: (
-        <div>
-          <RoleTag kind="request" />
-          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-          <RequestCard request={r as any} href={`/requests/${r.id}`} />
-        </div>
-      ),
-    })),
-  ];
-
-  if (!items.length) {
-    if (loading) return <CardSkeletonList count={3} />;
-    return (
-      <div className="rounded-3xl border border-dashed border-ink-200 py-16 text-center dark:border-ink-800">
-        <p className="text-[16px] font-900 text-ink-900 dark:text-white">{tMy("all_empty_title")}</p>
-        <p className="mt-1 text-[14px] font-600 text-ink-400">{tMy("all_empty_hint")}</p>
-      </div>
-    );
-  }
-
-  const now = Date.now();
-  const soon = items.filter((e) => e.when >= now).sort((a, b) => a.when - b.when);
-  const past = items.filter((e) => e.when < now).sort((a, b) => b.when - a.when);
-
-  const Section = ({ label, list }: { label: string; list: Item[] }) => (
-    <>
-      <p className="mb-2 mt-1 pl-1 text-[12px] font-900 uppercase tracking-widest text-ink-400">{label}</p>
-      <div className="mb-2 space-y-3">
-        {list.map((e, i) => (
-          <div key={i}>{e.node}</div>
-        ))}
-      </div>
-    </>
-  );
-
-  return (
-    <div>
-      {soon.length > 0 && <Section label={tMy("section_soon")} list={soon} />}
-      {past.length > 0 && <Section label={tMy("section_past")} list={past} />}
-    </div>
   );
 }

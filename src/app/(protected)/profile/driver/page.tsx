@@ -21,6 +21,7 @@ import { getDriverStatus } from "@/lib/api/profile";
 import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { compressImage, ImageValidationError } from "@/lib/utils/compress-image";
 import { isPlateValid, normalizePlate } from "@/lib/utils/plate";
+import { CarForm } from "@/components/features/cars/car-form";
 import { useAuth } from "@/store/auth";
 import { Button, Label, NotifCard, Spinner } from "@/components/ui";
 import { AddPhoneModal } from "@/components/features/auth/add-phone-modal";
@@ -164,6 +165,7 @@ export default function DriverVerifyPage() {
   const plateValid = isPlateValid(plate);
   const onPlateChange = (raw: string) => setPlate(normalizePlate(raw));
   const [seats, setSeats] = useState("");
+  const [carFormValid, setCarFormValid] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
 
@@ -317,144 +319,25 @@ export default function DriverVerifyPage() {
         <>
           <div className="rounded-3xl border border-ink-100 bg-white p-5 shadow-sm dark:bg-ink-900 dark:border-ink-800">
             <h2 className="mb-4 text-[17px] font-extrabold text-ink-900 dark:text-white">{t("car_section")}</h2>
-            <div className="flex flex-col gap-3">
-              <div className="flex gap-2">
-                <div className="flex-1">
-                  <Label htmlFor="car-make">{t("make_label")}</Label>
-                  {/* Native select works in every WebView (datalist does not in
-                      Telegram). "Other make" reveals free-text entry. */}
-                  <select
-                    id="car-make"
-                    value={makeOther ? OTHER_MAKE : carMake}
-                    onChange={(e) => {
-                      if (e.target.value === OTHER_MAKE) {
-                        setMakeOther(true);
-                        setCarMake("");
-                      } else {
-                        setMakeOther(false);
-                        setCarMake(e.target.value);
-                      }
-                    }}
-                    className="mt-1 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[15px] font-semibold text-ink-900 outline-none focus:border-brand-500 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
-                  >
-                    {/* NOT disabled: a disabled empty option makes mobile/Telegram
-                        WebViews display the first real option (Toyota) while the
-                        value stays "" — looked selected but failed validation. */}
-                    <option value="">{t("make_placeholder")}</option>
-                    {CAR_MAKES.map((m) => <option key={m} value={m}>{m}</option>)}
-                    <option value={OTHER_MAKE}>{t("make_other")}</option>
-                  </select>
-                  {makeOther && (
-                    <input
-                      type="text"
-                      value={carMake}
-                      onChange={(e) => setCarMake(e.target.value)}
-                      placeholder={t("make_other_placeholder")}
-                      className="mt-2 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[15px] font-semibold text-ink-900 outline-none focus:border-brand-500 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
-                    />
-                  )}
-                  {fieldErrors.carMake && (
-                    <p className="mt-1 text-[13px] font-700 text-coral-500">{fieldErrors.carMake}</p>
-                  )}
-                </div>
-                <div className="flex-1">
-                  <Label htmlFor="car-model">{t("model_label")}</Label>
-                  <input
-                    id="car-model"
-                    type="text"
-                    value={carModel}
-                    onChange={(e) => setCarModel(e.target.value)}
-                    placeholder={t("model_placeholder")}
-                    className="mt-1 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[15px] font-semibold text-ink-900 outline-none focus:border-brand-500 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
-                  />
-                  {fieldErrors.carModel && (
-                    <p className="mt-1 text-[13px] font-700 text-coral-500">{fieldErrors.carModel}</p>
-                  )}
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <div className="flex-1">
-                  <Label htmlFor="car-year">{t("year_label")}</Label>
-                  <input
-                    id="car-year"
-                    type="number"
-                    value={year}
-                    onChange={(e) => setYear(e.target.value)}
-                    placeholder={t("year_placeholder")}
-                    min={1980}
-                    max={new Date().getFullYear() + 1}
-                    className="mt-1 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[15px] font-semibold text-ink-900 outline-none focus:border-brand-500 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
-                  />
-                  {fieldErrors.carYear && (
-                    <p className="mt-1 text-[13px] font-700 text-coral-500">{fieldErrors.carYear}</p>
-                  )}
-                </div>
-                <div className="flex-1">
-                  <Label htmlFor="car-color">{t("color_label")}</Label>
-                  <input
-                    id="car-color"
-                    type="text"
-                    value={color}
-                    onChange={(e) => setColor(e.target.value)}
-                    placeholder={t("color_placeholder")}
-                    className="mt-1 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[15px] font-semibold text-ink-900 outline-none focus:border-brand-500 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
-                  />
-                  {fieldErrors.carColor && (
-                    <p className="mt-1 text-[13px] font-700 text-coral-500">{fieldErrors.carColor}</p>
-                  )}
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <div className="flex-1">
-                  <Label htmlFor="car-plate">{t("plate_label")}</Label>
-                  <input
-                    id="car-plate"
-                    type="text"
-                    value={plate}
-                    onChange={(e) => onPlateChange(e.target.value)}
-                    placeholder="01KG123ABC"
-                    autoCapitalize="characters"
-                    autoCorrect="off"
-                    spellCheck={false}
-                    maxLength={10}
-                    inputMode="text"
-                    className={`mt-1 w-full rounded-2xl border-2 bg-ink-50 px-3 py-2.5 text-[15px] font-800 uppercase tracking-widest text-ink-900 outline-none focus:border-brand-500 dark:bg-ink-900 dark:text-white ${plate && !plateValid ? "border-coral-400" : "border-ink-200 dark:border-ink-700"}`}
-                  />
-                  {plate && !plateValid && (
-                    <p className="mt-1 text-[13px] font-700 text-coral-500">
-                      {t("plate_format_hint")}
-                    </p>
-                  )}
-                  {fieldErrors.carPlate && plateValid && (
-                    <p className="mt-1 text-[13px] font-700 text-coral-500">{fieldErrors.carPlate}</p>
-                  )}
-                </div>
-                <div className="w-[120px]">
-                  <Label htmlFor="seats-count">
-                    <Users className="inline h-3 w-3" /> {t("seats_label")}
-                  </Label>
-                  <input
-                    id="seats-count"
-                    type="number"
-                    value={seats}
-                    onChange={(e) => setSeats(e.target.value)}
-                    min={1}
-                    max={7}
-                    className="mt-1 w-full rounded-2xl border-2 border-ink-200 bg-ink-50 px-3 py-2.5 text-[15px] font-semibold text-ink-900 outline-none focus:border-brand-500 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
-                  />
-                  {fieldErrors.seatsCount && (
-                    <p className="mt-1 text-[13px] font-700 text-coral-500">{fieldErrors.seatsCount}</p>
-                  )}
-                </div>
-              </div>
-            </div>
+              <CarForm
+                showYear
+                onChange={(v) => {
+                  setCarMake(v.make);
+                  setCarModel(v.model);
+                  setColor(v.color);
+                  setPlate(v.plate);
+                  setYear(v.year);
+                  setSeats(String(v.seatsCount));
+                  setCarFormValid(v.valid);
+                }}
+              />
           </div>
 
           <Button
             variant="submit"
             size="lg"
             className="mt-5 w-full"
-            disabled={!canCarData}
+            disabled={!carFormValid}
             onClick={() => setStep(2)}
           >
             {t("next")} <ArrowRight className="h-4 w-4" aria-hidden="true" />
