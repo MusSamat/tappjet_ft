@@ -14,16 +14,14 @@ import {
   Lock,
   Phone,
   Send,
-  Users,
 } from "lucide-react";
 import { api, extractError } from "@/lib/api/client";
 import { getDriverStatus } from "@/lib/api/profile";
 import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { compressImage, ImageValidationError } from "@/lib/utils/compress-image";
-import { isPlateValid, normalizePlate } from "@/lib/utils/plate";
 import { CarForm } from "@/components/features/cars/car-form";
 import { useAuth } from "@/store/auth";
-import { Button, Label, NotifCard, Spinner } from "@/components/ui";
+import { Button, NotifCard, Spinner } from "@/components/ui";
 import { AddPhoneModal } from "@/components/features/auth/add-phone-modal";
 import { SubmittedScreen } from "./_components/submitted-screen";
 import { ReuploadDocs } from "./_components/reupload-docs";
@@ -32,17 +30,7 @@ import { CameraCapture } from "@/components/features/driver/camera-capture";
 type DocKey = "license" | "license_back" | "car_passport" | "car_passport_back" | "car_photo" | "selfie";
 
 const TOTAL_STEPS = 7;
-const OTHER_MAKE = "__other__";
 
-// Makes actually common on KG roads; datalist allows anything else typed in.
-const CAR_MAKES = [
-  "Toyota", "Honda", "Lexus", "Nissan", "Mazda", "Subaru", "Mitsubishi", "Suzuki",
-  "Mercedes-Benz", "BMW", "Audi", "Volkswagen", "Opel", "Porsche",
-  "Hyundai", "Kia", "Daewoo", "Chevrolet", "Ford",
-  "Lada (ВАЗ)", "ГАЗ", "УАЗ",
-  "Renault", "Peugeot", "Skoda", "Fiat",
-  "Geely", "Chery", "Haval", "Changan", "Lifan", "BYD",
-];
 // Steps 2..5 map to one document each (TZ §9.1 — separate screen per photo).
 const PHOTO_STEPS: { step: number; key: DocKey; icon: React.ElementType }[] = [
   { step: 2, key: "license", icon: Briefcase },
@@ -81,7 +69,7 @@ export default function DriverVerifyPage() {
   const [previews, setPreviews] = useState<Record<DocKey, string | null>>({ ...emptyDocs });
   const [docError, setDocError] = useState<string | null>(null);
   const [cameraOpen, setCameraOpen] = useState(false);
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [, setFieldErrors] = useState<Record<string, string>>({});
 
   // Turn the backend's structured validation payload into per-field, human
   // messages instead of the old generic «проверьте правильность данных».
@@ -156,14 +144,11 @@ export default function DriverVerifyPage() {
   const [compressing, setCompressing] = useState(false);
 
   const [carMake, setCarMake] = useState("");
-  const [makeOther, setMakeOther] = useState(false);
   const [carModel, setCarModel] = useState("");
   const [year, setYear] = useState("");
   const [color, setColor] = useState("");
   const [plate, setPlate] = useState("");
   // Единый стандарт номера — общий с гаражом (lib/utils/plate).
-  const plateValid = isPlateValid(plate);
-  const onPlateChange = (raw: string) => setPlate(normalizePlate(raw));
   const [seats, setSeats] = useState("");
   const [carFormValid, setCarFormValid] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -190,8 +175,6 @@ export default function DriverVerifyPage() {
     onError: (e) => explainError(e),
   });
 
-  const canCarData =
-    carMake.trim() && carModel.trim() && year && color.trim() && plateValid && seats;
 
   const currentDoc = PHOTO_STEPS.find((p) => p.step === step);
 
