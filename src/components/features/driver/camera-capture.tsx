@@ -12,7 +12,12 @@ import { useTranslations } from "next-intl";
 import { Camera, RefreshCw, Check, X } from "lucide-react";
 import { Button, Spinner } from "@/components/ui";
 
-export type CaptureKind = "document" | "selfie" | "car";
+export type CaptureKind = "document" | "selfie" | "car" | "passport";
+
+// Dims everything OUTSIDE the guide window while following its rounded/oval
+// corners (cleaner than a CSS mask). Shared by every guide shape.
+const DIM = { boxShadow: "0 0 0 100vmax rgba(0,0,0,0.42)" } as const;
+const HINT_TOP = "absolute inset-x-6 top-[8%] text-center text-[15px] font-800 text-white drop-shadow";
 
 interface Props {
   kind: CaptureKind;
@@ -105,10 +110,13 @@ export function CameraCapture({ kind, onCapture, onClose }: Props) {
     return (
       <div className="fixed inset-0 z-[120] flex flex-col items-center justify-center gap-4 bg-black/90 p-6 text-center">
         <p className="text-[15px] font-700 text-white">{t("no_camera")}</p>
+        {/* accept="image/*" (not specific mimes) is required for many mobile
+            WebViews — incl. Telegram — to honour `capture` and open the CAMERA
+            instead of the Files/gallery chooser. */}
         <input
           ref={fallbackRef}
           type="file"
-          accept="image/jpeg,image/png"
+          accept="image/*"
           capture={kind === "selfie" ? "user" : "environment"}
           hidden
           onChange={(e) => {
@@ -143,106 +151,66 @@ export function CameraCapture({ kind, onCapture, onClose }: Props) {
           />
         )}
 
-        {/* Guide overlay — only over the live view */}
+        {/* Guide overlay — clean, spec-driven contours over the live view. The
+            `box-shadow: 0 0 0 100vmax` dims everything OUTSIDE the window while
+            respecting its rounded/oval corners (no CSS-mask corner artefacts). */}
         {!shot && ready && (
           <div className="pointer-events-none absolute inset-0">
-            {kind === "selfie" ? (
+            {kind === "selfie" && (
               <>
-                {/* Face-ID style: dimmed screen with a transparent oval window */}
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background: "rgba(0,0,0,0.55)",
-                    WebkitMaskImage:
-                      "radial-gradient(ellipse 34% 42% at 50% 44%, transparent 98%, black 100%)",
-                    maskImage:
-                      "radial-gradient(ellipse 34% 42% at 50% 44%, transparent 98%, black 100%)",
-                  }}
-                />
-                <div
-                  className="absolute left-1/2 top-[44%] -translate-x-1/2 -translate-y-1/2 rounded-[50%] border-[3px] border-white/90"
-                  style={{ width: "68vw", maxWidth: 340, aspectRatio: "3/4" }}
-                />
-                <p className="absolute inset-x-6 top-[8%] text-center text-[15px] font-800 text-white drop-shadow">
-                  {t("selfie_hint")}
-                </p>
+                <div className="absolute left-1/2 top-[42%] -translate-x-1/2 -translate-y-1/2" style={{ ...DIM, width: "clamp(180px, 62vw, 300px)", aspectRatio: "1 / 1.2", borderRadius: "50%", border: "2.5px solid rgba(255,255,255,0.95)" }}>
+                  {/* brow + eye alignment guides (thin grey) */}
+                  <div className="absolute left-[16%] right-[16%]" style={{ top: "38%", height: 1, background: "rgba(200,200,200,0.5)" }} />
+                  <div className="absolute left-[10%] right-[10%]" style={{ top: "48%", height: 1, background: "rgba(200,200,200,0.75)" }} />
+                  {/* side markers */}
+                  <div className="absolute top-1/2 -translate-y-1/2" style={{ left: -3, width: 9, height: 2, background: "rgba(255,255,255,0.85)" }} />
+                  <div className="absolute top-1/2 -translate-y-1/2" style={{ right: -3, width: 9, height: 2, background: "rgba(255,255,255,0.85)" }} />
+                </div>
+                <p className={HINT_TOP}>{t("selfie_hint")}</p>
               </>
-            ) : kind === "car" ? (
+            )}
+
+            {kind === "car" && (
               <>
-                {/* Car front-view контур: dimmed edges + schematic outline the
-                    driver aligns the car into (Face-ID style, but a car). */}
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background: "rgba(0,0,0,0.55)",
-                    WebkitMaskImage:
-                      "linear-gradient(black, black), linear-gradient(black, black)",
-                    WebkitMaskComposite: "xor",
-                    maskComposite: "exclude",
-                    WebkitMaskSize: "100% 100%, 92% 52%",
-                    maskSize: "100% 100%, 92% 52%",
-                    WebkitMaskPosition: "0 0, 50% 46%",
-                    maskPosition: "0 0, 50% 46%",
-                    WebkitMaskRepeat: "no-repeat",
-                    maskRepeat: "no-repeat",
-                  }}
-                />
-                <svg
-                  viewBox="0 0 200 110"
-                  className="absolute left-1/2 top-[46%] w-[88%] -translate-x-1/2 -translate-y-1/2 text-white/90"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  {/* cabin / roof — wide, low dome */}
-                  <path d="M60 52 Q66 30 100 30 Q134 30 140 52" />
-                  {/* body shell */}
-                  <path d="M34 84 L34 66 Q34 57 50 54 L150 54 Q166 57 166 66 L166 84 Z" />
-                  {/* hood character line */}
-                  <path d="M42 66 L158 66" />
-                  {/* headlights */}
-                  <path d="M42 62 Q50 59 58 62" />
-                  <path d="M142 62 Q150 59 158 62" />
-                  {/* side mirrors */}
-                  <path d="M34 60 L24 56" />
-                  <path d="M166 60 L176 56" />
-                  {/* tyres peeking below */}
-                  <path d="M48 84 Q48 93 60 93 Q72 93 72 84" />
-                  <path d="M128 84 Q128 93 140 93 Q152 93 152 84" />
-                </svg>
-                <p className="absolute inset-x-6 top-[8%] text-center text-[15px] font-800 text-white drop-shadow">
-                  {t("car_hint")}
-                </p>
+                <div className="absolute left-1/2 top-[40%] -translate-x-1/2 -translate-y-1/2" style={{ ...DIM, width: "80%", maxWidth: 520, aspectRatio: "16 / 10", borderRadius: 18, border: "2.5px solid rgba(255,255,255,0.95)" }}>
+                  {/* amber plate zone line + hint */}
+                  <div className="absolute left-[16%] right-[16%]" style={{ bottom: "16%", height: 2, borderRadius: 2, background: "rgba(245,158,11,0.95)" }} />
+                  <p className="absolute left-0 right-0 text-center" style={{ bottom: "5%", fontSize: 11, fontWeight: 700, color: "rgba(245,158,11,0.95)" }}>{t("car_plate_hint")}</p>
+                  {/* bottom corner markers (triangles) */}
+                  <span className="absolute" style={{ left: 7, bottom: 7, width: 0, height: 0, borderLeft: "9px solid transparent", borderBottom: "9px solid rgba(255,255,255,0.9)" }} />
+                  <span className="absolute" style={{ right: 7, bottom: 7, width: 0, height: 0, borderRight: "9px solid transparent", borderBottom: "9px solid rgba(255,255,255,0.9)" }} />
+                </div>
+                <p className={HINT_TOP}>{t("car_hint")}</p>
               </>
-            ) : (
+            )}
+
+            {kind === "passport" && (
               <>
-                {/* Document frame: dimmed edges, transparent rounded-rect window */}
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background: "rgba(0,0,0,0.55)",
-                    WebkitMaskImage:
-                      "linear-gradient(black, black), linear-gradient(black, black)",
-                    WebkitMaskComposite: "xor",
-                    maskComposite: "exclude",
-                    WebkitMaskSize: "100% 100%, 88% 46%",
-                    maskSize: "100% 100%, 88% 46%",
-                    WebkitMaskPosition: "0 0, 50% 42%",
-                    maskPosition: "0 0, 50% 42%",
-                    WebkitMaskRepeat: "no-repeat",
-                    maskRepeat: "no-repeat",
-                  }}
-                />
-                <div
-                  className="absolute left-1/2 top-[42%] w-[88%] -translate-x-1/2 -translate-y-1/2 rounded-2xl border-[3px] border-white/90"
-                  style={{ aspectRatio: "1.586" }}
-                />
-                <p className="absolute inset-x-6 top-[10%] text-center text-[15px] font-800 text-white drop-shadow">
-                  {t("doc_hint")}
-                </p>
+                {/* Tech passport — CYAN horizontal frame + 3 dashed field lines */}
+                <div className="absolute left-1/2 top-[44%] -translate-x-1/2 -translate-y-1/2" style={{ ...DIM, width: "75%", maxWidth: 480, aspectRatio: "1.6", borderRadius: 8, border: "2.5px solid rgba(0,150,180,0.95)" }}>
+                  {[30, 60, 85].map((top) => (
+                    <div key={top} className="absolute left-[8%] right-[8%]" style={{ top: `${top}%`, borderTop: "2px dashed rgba(0,150,180,0.85)" }} />
+                  ))}
+                </div>
+                <p className={HINT_TOP}>{t("passport_hint")}</p>
+              </>
+            )}
+
+            {kind === "document" && (
+              <>
+                {/* ID card — white frame, corner dots, face zone (green), text zone */}
+                <div className="absolute left-1/2 top-[42%] -translate-x-1/2 -translate-y-1/2" style={{ ...DIM, width: "78%", maxWidth: 460, aspectRatio: "1.586", borderRadius: 8, border: "2.5px solid rgba(255,255,255,0.95)" }}>
+                  {/* four corner dots */}
+                  <span className="absolute rounded-full bg-white" style={{ width: 5, height: 5, left: "5%", top: "8%" }} />
+                  <span className="absolute rounded-full bg-white" style={{ width: 5, height: 5, right: "5%", top: "8%" }} />
+                  <span className="absolute rounded-full bg-white" style={{ width: 5, height: 5, left: "5%", bottom: "8%" }} />
+                  <span className="absolute rounded-full bg-white" style={{ width: 5, height: 5, right: "5%", bottom: "8%" }} />
+                  {/* face zone (photo on a KG ID sits on the left) */}
+                  <div className="absolute" style={{ left: "8%", top: "20%", width: "24%", aspectRatio: "0.8", borderRadius: "50%", border: "2px solid rgba(76,175,80,0.9)" }} />
+                  {/* text zone line */}
+                  <div className="absolute left-[38%] right-[8%]" style={{ bottom: "26%", borderTop: "1.5px dashed rgba(255,255,255,0.6)" }} />
+                </div>
+                <p className={HINT_TOP}>{t("doc_hint")}</p>
               </>
             )}
           </div>

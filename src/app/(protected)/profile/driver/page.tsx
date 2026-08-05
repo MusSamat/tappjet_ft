@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { api, extractError } from "@/lib/api/client";
 import { getDriverStatus } from "@/lib/api/profile";
+import { listMyCars } from "@/lib/api/cars";
 import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { compressImage, ImageValidationError } from "@/lib/utils/compress-image";
 import { CarForm } from "@/components/features/cars/car-form";
@@ -140,7 +141,6 @@ export default function DriverVerifyPage() {
     const trail = raw.details?.reason ?? raw.code;
     setServerError(`${fe(extractError(e))}${trail ? ` (${trail})` : ""}`);
   }
-  const galleryRef = useRef<HTMLInputElement>(null);
   const [compressing, setCompressing] = useState(false);
 
   const [carMake, setCarMake] = useState("");
@@ -151,6 +151,9 @@ export default function DriverVerifyPage() {
   // Единый стандарт номера — общий с гаражом (lib/utils/plate).
   const [seats, setSeats] = useState("");
   const [carFormValid, setCarFormValid] = useState(false);
+  // Garage — pick an existing car or add a new one (add hidden at 3, TZ §9).
+  const { data: garageCars = [] } = useQuery({ queryKey: ["cars", "my"], queryFn: listMyCars, staleTime: 30_000 });
+  const [pickedCarId, setPickedCarId] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
 
@@ -302,18 +305,58 @@ export default function DriverVerifyPage() {
         <>
           <div className="rounded-3xl border border-ink-100 bg-white p-5 shadow-sm dark:bg-ink-900 dark:border-ink-800">
             <h2 className="mb-4 text-[17px] font-extrabold text-ink-900 dark:text-white">{t("car_section")}</h2>
-              <CarForm
-                showYear
-                onChange={(v) => {
-                  setCarMake(v.make);
-                  setCarModel(v.model);
-                  setColor(v.color);
-                  setPlate(v.plate);
-                  setYear(v.year);
-                  setSeats(String(v.seatsCount));
-                  setCarFormValid(v.valid);
-                }}
-              />
+            {garageCars.length > 0 && (
+              <>
+                <p className="mb-2 text-[13px] font-800 uppercase tracking-wide text-ink-400">{t("your_cars")}</p>
+                <div className="mb-4 flex flex-wrap gap-2">
+                  {garageCars.map((c) => {
+                    const on = pickedCarId === c.id;
+                    return (
+                      <button
+                        key={c.id}
+                        type="button"
+                        onClick={() => setPickedCarId(c.id)}
+                        className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[13px] font-800 transition ${
+                          on ? "bg-brand-600 text-white" : "border border-ink-200 bg-white text-ink-700 dark:border-ink-700 dark:bg-ink-900 dark:text-ink-200"
+                        }`}
+                      >
+                        <Car className="h-3.5 w-3.5" aria-hidden="true" />
+                        {c.make} {c.model} · {c.plate}
+                      </button>
+                    );
+                  })}
+                  {/* Add-new hidden once the driver has 3 cars — select only. */}
+                  {garageCars.length < 3 && (
+                    <button
+                      type="button"
+                      onClick={() => setPickedCarId(null)}
+                      className={`rounded-full px-3 py-1.5 text-[13px] font-800 transition ${
+                        pickedCarId === null ? "bg-brand-600 text-white" : "border border-brand-300 text-brand-600"
+                      }`}
+                    >
+                      + {t("new_car")}
+                    </button>
+                  )}
+                </div>
+              </>
+            )}
+            <CarForm
+              key={pickedCarId ?? "new"}
+              showYear
+              initial={(() => {
+                const c = garageCars.find((g) => g.id === pickedCarId);
+                return c ? { make: c.make, model: c.model, color: c.color ?? "", plate: c.plate, seatsCount: c.seatsCount } : undefined;
+              })()}
+              onChange={(v) => {
+                setCarMake(v.make);
+                setCarModel(v.model);
+                setColor(v.color);
+                setPlate(v.plate);
+                setYear(v.year);
+                setSeats(String(v.seatsCount));
+                setCarFormValid(v.valid);
+              }}
+            />
           </div>
 
           <Button
@@ -353,7 +396,9 @@ export default function DriverVerifyPage() {
                     ? "selfie"
                     : currentDoc.key === "car_photo"
                       ? "car"
-                      : "document"
+                      : currentDoc.key === "car_passport" || currentDoc.key === "car_passport_back"
+                        ? "passport"
+                        : "document"
                 }
                 onClose={() => setCameraOpen(false)}
                 onCapture={(file) => {
@@ -363,19 +408,6 @@ export default function DriverVerifyPage() {
               />
             )}
 
-            {currentDoc.key !== "selfie" && (
-              <input
-                ref={galleryRef}
-                type="file"
-                accept="image/jpeg,image/png"
-                className="hidden"
-                onChange={(e) => {
-                  const f = e.target.files?.[0];
-                  e.target.value = "";
-                  if (f) void acceptPhoto(currentDoc.key, f);
-                }}
-              />
-            )}
 
             <button
               type="button"
@@ -399,16 +431,7 @@ export default function DriverVerifyPage() {
               )}
             </button>
 
-            {currentDoc.key !== "selfie" ? (
-              <button
-                type="button"
-                onClick={() => galleryRef.current?.click()}
-                disabled={compressing}
-                className="mt-2 text-[13px] font-800 text-brand-600 underline disabled:opacity-50"
-              >
-                {t("from_gallery")}
-              </button>
-            ) : (
+            {currentDoc.key === "selfie" && (
               <p className="mt-2 text-[13px] font-semibold text-ink-400">{t("selfie_live_only")}</p>
             )}
 

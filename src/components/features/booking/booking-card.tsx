@@ -95,21 +95,25 @@ export function BookingCard({ booking, role }: Props) {
 
   return (
     <article className="flex flex-col gap-3 rounded-2xl border border-ink-200 bg-white p-4 dark:border-ink-800 dark:bg-ink-900">
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex flex-col gap-1">
-          {trip?.departureAt && (
+      <div className="flex flex-col gap-1">
+        {/* Meta line: date left, status right — keeps the long status label OFF
+            the route row so city names get the full width (no «Би…»/«Ка…»). */}
+        <div className="flex items-center justify-between gap-2">
+          {trip?.departureAt ? (
             <div className="flex items-center gap-2 text-caption font-semibold text-ink-700 dark:text-ink-300">
               <Clock className="h-3.5 w-3.5 text-ink-500" aria-hidden="true" />
               {formatDepartureLabel(trip.departureAt, locale)}
             </div>
+          ) : (
+            <span />
           )}
-          <div className="flex items-center gap-2 text-h2 text-ink-900 dark:text-white">
-            <span className="truncate">{trip?.originCity}</span>
-            <ArrowRight className="h-4 w-4 flex-shrink-0 text-ink-500" aria-hidden="true" />
-            <span className="truncate">{trip?.destinationCity}</span>
-          </div>
+          {status && <StatusBadge status={status} />}
         </div>
-        {status && <StatusBadge status={status} />}
+        <div className="flex items-center gap-2 text-h2 text-ink-900 dark:text-white">
+          <span className="truncate">{trip?.originCity}</span>
+          <ArrowRight className="h-4 w-4 flex-shrink-0 text-ink-500" aria-hidden="true" />
+          <span className="truncate">{trip?.destinationCity}</span>
+        </div>
       </div>
 
       {role === "driver" && passenger && (

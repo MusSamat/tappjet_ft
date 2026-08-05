@@ -52,7 +52,8 @@ export function CarsTab() {
             <CarIcon className="h-4 w-4 text-brand-600" aria-hidden="true" />
             {t("my_title")}
           </p>
-          {!adding && cars.length > 0 && cars.length < 5 && (
+          {/* Add is capped at 3 cars — at the limit, show the count instead. */}
+          {!adding && cars.length > 0 && cars.length < 3 && (
             <button
               type="button"
               onClick={() => setAdding(true)}
@@ -61,6 +62,9 @@ export function CarsTab() {
               <Plus className="h-4 w-4" aria-hidden="true" />
               {t("add_title")}
             </button>
+          )}
+          {cars.length >= 3 && (
+            <span className="text-[13px] font-800 text-ink-400">{cars.length}/3</span>
           )}
         </div>
 

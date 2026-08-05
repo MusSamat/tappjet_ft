@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -110,7 +110,10 @@ export default function MyBookingsPage() {
   });
 
   const [showConfetti, setShowConfetti] = useState(false);
-  const passengerBookings = (outgoing.data?.data ?? []) as BookingExt[];
+  const passengerBookings = useMemo(
+    () => (outgoing.data?.data ?? []) as BookingExt[],
+    [outgoing.data],
+  );
 
   useEffect(() => {
     if (!passengerBookings.length) return;

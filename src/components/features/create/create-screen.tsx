@@ -382,7 +382,8 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
                   {c.make} {c.model} · {c.plate}
                 </Chip>
               ))}
-              {cars.length < 5 && (
+              {/* Add-new hidden once the driver has the max of 3 cars — select only. */}
+              {cars.length < 3 && (
                 <Chip kind="filter" selected={addingCar} onClick={() => setAddingCar((v) => !v)}>
                   + {tCars("add_another")}
                 </Chip>

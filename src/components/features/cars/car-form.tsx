@@ -44,18 +44,21 @@ interface Props {
   pending?: boolean;
   submitLabel?: string;
   showYear?: boolean;
+  /** Prefill (e.g. selecting an existing car in verification). Pair with a
+      React `key` on the component to re-seed the fields per selection. */
+  initial?: Partial<Omit<CarValues, "valid">>;
   className?: string;
 }
 
-export function CarForm({ onSubmit, onChange, pending, submitLabel, showYear, className }: Props) {
+export function CarForm({ onSubmit, onChange, pending, submitLabel, showYear, initial, className }: Props) {
   const t = useTranslations("cars");
   const tReg = useTranslations("driver_reg");
-  const [make, setMake] = useState("");
-  const [model, setModel] = useState("");
-  const [color, setColor] = useState("");
-  const [plate, setPlate] = useState("");
-  const [year, setYear] = useState("");
-  const [seats, setSeats] = useState(4);
+  const [make, setMake] = useState(initial?.make ?? "");
+  const [model, setModel] = useState(initial?.model ?? "");
+  const [color, setColor] = useState(initial?.color ?? "");
+  const [plate, setPlate] = useState(initial?.plate ?? "");
+  const [year, setYear] = useState(initial?.year ?? "");
+  const [seats, setSeats] = useState(initial?.seatsCount ?? 4);
 
   const plateOk = isPlateValid(plate);
   const yearOk = !showYear || yearValid(year);
