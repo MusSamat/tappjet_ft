@@ -4,14 +4,16 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Plus, Users, Star, ChevronDown, Check, X, MessageCircle } from "lucide-react";
+import { Plus, Minus, Users, Star, ChevronDown, Check, X, MessageCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import {
   listMyPassengerRequests,
   cancelPassengerRequest,
+  updatePassengerRequest,
   listRequestResponses,
   acceptRequestResponse,
   declineRequestResponse,
+  getPassengerRequest,
   type PassengerRequest,
   type RequestResponse,
 } from "@/lib/api/passenger-requests";
@@ -19,6 +21,8 @@ import { extractError } from "@/lib/api/client";
 import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { toastSuccess, toastError } from "@/components/layout/quick-toast";
 import { RequestCard } from "@/components/features/passenger-requests/request-card";
+import { Modal, ModalContent, ModalHeader, ModalTitle } from "@/components/ui/modal";
+
 import { VerifiedBadge } from "@/components/ui/verified-badge";
 import { DriverAvatar } from "@/components/ui/driver-avatar";
 import { Spinner } from "@/components/ui";
@@ -144,6 +148,130 @@ function OfferCard({
   );
 }
 
+// ── Edit own request (seats / date / comment) — no price (a request has none) ──
+function RequestEditModal({
+  request,
+  open,
+  onOpenChange,
+}: {
+  request: PassengerRequest;
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+}) {
+  const t = useTranslations("requests.my");
+  const tToasts = useTranslations("toasts");
+  const fe = useFriendlyError();
+  const qc = useQueryClient();
+
+  // The list card carries a lean request (no comment) — fetch the full one for the form.
+  const detailQuery = useQuery({
+    queryKey: ["passenger-request", request.id],
+    queryFn: () => getPassengerRequest(request.id),
+    enabled: open,
+    staleTime: 30_000,
+  });
+
+  const [seats, setSeats] = useState(request.seatsNeeded);
+  const [date, setDate] = useState(request.departureDate.slice(0, 10));
+  const [comment, setComment] = useState("");
+  const [seeded, setSeeded] = useState(false);
+  const [confirming, setConfirming] = useState(false);
+
+  // Seed once the detail (with comment) arrives.
+  if (open && detailQuery.data && !seeded) {
+    setSeats(detailQuery.data.seatsNeeded);
+    setDate(detailQuery.data.departureDate.slice(0, 10));
+    setComment(detailQuery.data.comment ?? "");
+    setSeeded(true);
+  }
+
+  const saveMut = useMutation({
+    mutationFn: () =>
+      updatePassengerRequest(request.id, {
+        seatsNeeded: seats,
+        departureDate: new Date(`${date}T12:00:00`).toISOString(),
+        comment: comment.trim() || null,
+      }),
+    onSuccess: () => {
+      toastSuccess(tToasts("saved"));
+      void qc.invalidateQueries({ queryKey: ["passenger-requests", "my"] });
+      void qc.invalidateQueries({ queryKey: ["passenger-request", request.id] });
+      onOpenChange(false);
+    },
+    onError: (e) => toastError(fe(extractError(e))),
+  });
+
+  const today = new Date().toISOString().slice(0, 10);
+
+  return (
+    <Modal
+      open={open}
+      onOpenChange={(v) => { onOpenChange(v); if (!v) { setSeeded(false); setConfirming(false); } }}
+    >
+      <ModalContent>
+        <ModalHeader>
+          <ModalTitle>{t("edit")}</ModalTitle>
+        </ModalHeader>
+        <div className="flex flex-col gap-4">
+          <div>
+            <label className="mb-1.5 block text-[13px] font-800 uppercase tracking-wide text-ink-400">{t("seats_label")}</label>
+            <div className="flex items-center gap-3">
+              <button type="button" onClick={() => setSeats((s) => Math.max(1, s - 1))} className="flex h-10 w-10 items-center justify-center rounded-xl bg-ink-100 text-ink-700 disabled:opacity-40 dark:bg-ink-800 dark:text-ink-200" disabled={seats <= 1}>
+                <Minus className="h-4 w-4" />
+              </button>
+              <span className="min-w-[32px] text-center text-[18px] font-900 text-ink-900 dark:text-white">{seats}</span>
+              <button type="button" onClick={() => setSeats((s) => Math.min(8, s + 1))} className="flex h-10 w-10 items-center justify-center rounded-xl bg-ink-100 text-ink-700 disabled:opacity-40 dark:bg-ink-800 dark:text-ink-200" disabled={seats >= 8}>
+                <Plus className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+          <div>
+            <label className="mb-1.5 block text-[13px] font-800 uppercase tracking-wide text-ink-400">{t("date_label")}</label>
+            <input
+              type="date"
+              value={date}
+              min={today}
+              onChange={(e) => setDate(e.target.value)}
+              className="h-11 w-full rounded-xl border-2 border-ink-200 bg-ink-50 px-3 text-[15px] font-700 text-ink-900 outline-none focus:border-sky-500 dark:border-ink-700 dark:bg-ink-800 dark:text-white"
+            />
+          </div>
+          <div>
+            <label className="mb-1.5 block text-[13px] font-800 uppercase tracking-wide text-ink-400">{t("comment_label")}</label>
+            <textarea
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              maxLength={500}
+              rows={2}
+              className="w-full rounded-xl border-2 border-ink-200 bg-ink-50 px-3 py-2 text-[15px] font-600 text-ink-900 outline-none focus:border-sky-500 dark:border-ink-700 dark:bg-ink-800 dark:text-white"
+            />
+          </div>
+          {confirming ? (
+            <div className="flex flex-col gap-2">
+              <p className="text-center text-[14px] font-800 text-ink-700 dark:text-ink-200">{t("edit_confirm")}</p>
+              <div className="flex gap-2">
+                <button type="button" onClick={() => setConfirming(false)} aria-label="cancel" className="flex h-11 flex-1 items-center justify-center rounded-xl bg-ink-100 text-ink-600 dark:bg-ink-800 dark:text-ink-300">
+                  <X className="h-5 w-5" />
+                </button>
+                <button type="button" onClick={() => saveMut.mutate()} disabled={saveMut.isPending} className="h-11 flex-[2] rounded-xl bg-sky-600 text-[15px] font-900 text-white hover:bg-sky-700 disabled:opacity-50">
+                  {saveMut.isPending ? "…" : t("save")}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setConfirming(true)}
+              className="rounded-xl bg-sky-600 py-2.5 text-[15px] font-900 text-white hover:bg-sky-700"
+            >
+              {t("save")}
+            </button>
+          )}
+        </div>
+      </ModalContent>
+    </Modal>
+  );
+}
+
 // ── Request with expandable offers ────────────────────────────────────
 export function RequestWithOffers({
   request,
@@ -157,6 +285,7 @@ export function RequestWithOffers({
   const router = useRouter();
   const t = useTranslations("requests.my");
   const [expanded, setExpanded] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
   const isOpen = request.status === "open";
 
   const responsesQuery = useQuery({
@@ -173,9 +302,11 @@ export function RequestWithOffers({
     <div className="flex flex-col gap-2">
       <RequestCard
         request={request}
+        onEdit={isOpen ? () => setEditOpen(true) : undefined}
         onCancel={onCancel}
         cancelLoading={cancelLoading}
       />
+      <RequestEditModal request={request} open={editOpen} onOpenChange={setEditOpen} />
 
       {isOpen && (
         <button

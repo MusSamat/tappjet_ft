@@ -108,6 +108,21 @@ export async function createPassengerRequest(
   return data;
 }
 
+export interface UpdatePassengerRequestInput {
+  seatsNeeded?: number;
+  departureDate?: string;
+  flexible?: boolean;
+  comment?: string | null;
+}
+
+export async function updatePassengerRequest(
+  id: string,
+  input: UpdatePassengerRequestInput,
+): Promise<PassengerRequest> {
+  const { data } = await api.patch<PassengerRequest>(`/passenger-requests/${id}`, input);
+  return data;
+}
+
 export async function cancelPassengerRequest(id: string): Promise<void> {
   await api.delete(`/passenger-requests/${id}`);
 }

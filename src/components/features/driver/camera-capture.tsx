@@ -46,11 +46,11 @@ function FrameGuide() {
 // side-mirror tabs). Full-screen SVG: the evenodd path dims everything OUTSIDE
 // the car; the second path strokes the outline. Scales to fit any screen.
 const CAR_PATH =
-  "M66,152 L168,152 L174,88 Q174,78 186,78 L210,78 Q222,78 224,90 L230,152 C276,156 300,232 300,320 C300,408 276,484 230,488 L224,550 Q222,562 210,562 L186,562 Q174,562 174,552 L168,488 L66,488 Q38,488 38,460 L38,180 Q38,152 66,152 Z";
+  "M364.9,0 L326.4,9.4 L321.2,75.9 L241.2,13.5 L18.7,13.5 L2.1,27 L4.2,95.6 L53,108.1 L53,634.1 L18.7,636.2 L2.1,650.7 L0,707.9 L14.6,727.7 L247.4,727.7 L321.2,666.3 L326.4,733.9 L363.8,743.2 L379.4,724.5 L379.4,678.8 L363.8,646.6 Q442.8,605 463.6,579.5 Q484.4,554.1 492.2,524.5 Q500,494.8 498.9,362.2 Q497.9,229.7 488.5,204.2 Q479.2,178.8 464.1,160.6 L449.1,142.4 L363.8,96.7 L379.4,64.4 L379.4,18.7 Z";
 function CarGuide() {
   return (
-    <svg className="absolute inset-0 h-full w-full" viewBox="0 0 320 640" preserveAspectRatio="xMidYMid meet">
-      <path d={`M-320,-320 H960 V960 H-320 Z ${CAR_PATH}`} fillRule="evenodd" fill="rgba(0,0,0,0.42)" />
+    <svg className="absolute inset-0 h-full w-full" viewBox="0 0 500 743" preserveAspectRatio="xMidYMid meet">
+      <path d={`M-500,-500 H1500 V1500 H-500 Z ${CAR_PATH}`} fillRule="evenodd" fill="rgba(0,0,0,0.42)" />
       <path d={CAR_PATH} fill="none" stroke="rgba(255,255,255,0.95)" strokeWidth={3} strokeLinejoin="round" strokeLinecap="round" />
     </svg>
   );

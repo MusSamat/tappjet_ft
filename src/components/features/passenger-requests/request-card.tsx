@@ -21,6 +21,7 @@ interface RequestCardProps {
   href?: string;
   className?: string;
   onClick?: () => void;
+  onEdit?: () => void;
   onCancel?: () => void;
   cancelLoading?: boolean;
 }
@@ -34,6 +35,7 @@ function RequestCardInner({
   href,
   className,
   onClick,
+  onEdit,
   onCancel,
   cancelLoading,
 }: RequestCardProps) {
@@ -116,16 +118,27 @@ function RequestCardInner({
         </span>
       </div>
 
-      {/* Cancel (own list only) */}
+      {/* Owner actions (own list only): edit (compact) + cancel (prominent). */}
       {onCancel && isOpen && (
-        <button
-          type="button"
-          onClick={(e) => { e.stopPropagation(); onCancel(); }}
-          disabled={cancelLoading}
-          className="mt-2.5 w-full rounded-xl bg-danger-50 py-2 text-[14px] font-900 text-danger-600 transition-colors hover:bg-danger-100 disabled:opacity-40 dark:bg-danger-500/10 dark:hover:bg-danger-500/20"
-        >
-          {cancelLoading ? "…" : t("cancel")}
-        </button>
+        <div className="mt-2.5 flex gap-2">
+          {onEdit && (
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); onEdit(); }}
+              className="shrink-0 rounded-xl bg-ink-100 px-4 py-2 text-[14px] font-900 text-ink-600 transition-colors hover:bg-ink-200 dark:bg-ink-800 dark:text-ink-300 dark:hover:bg-ink-700"
+            >
+              {t("edit")}
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); onCancel(); }}
+            disabled={cancelLoading}
+            className="flex-1 rounded-xl bg-danger-50 py-2 text-[14px] font-900 text-danger-600 transition-colors hover:bg-danger-100 disabled:opacity-40 dark:bg-danger-500/10 dark:hover:bg-danger-500/20"
+          >
+            {cancelLoading ? "…" : t("cancel")}
+          </button>
+        </div>
       )}
     </article>
   );
