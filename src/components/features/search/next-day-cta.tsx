@@ -1,0 +1,69 @@
+"use client";
+
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { CalendarCheck, ChevronRight } from "lucide-react";
+import { useCalendarCounts } from "@/lib/hooks/use-calendar-counts";
+import { cn } from "@/lib/utils/cn";
+
+// Inline «next day» jump shown when the selected day is empty or its list ends —
+// so the user reaches the next day WITH rides without scrolling back to the
+// header stepper. Uses the same per-day calendar counts as SmartDateNav and
+// renders nothing when there's no future day with items (never a dead end).
+const MONTHS = ["янв", "фев", "мар", "апр", "май", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"];
+function ymdKg(offset = 0): string {
+  return new Date(Date.now() + 6 * 3_600_000 + offset * 86_400_000).toISOString().slice(0, 10);
+}
+function fmt(iso: string): string {
+  const d = new Date(`${iso}T00:00:00`);
+  return `${d.getDate()} ${MONTHS[d.getMonth()]}`;
+}
+
+export function NextDayCta({ kind }: { kind: "trips" | "requests" }) {
+  const t = useTranslations("feed");
+  const router = useRouter();
+  const pathname = usePathname();
+  const sp = useSearchParams();
+  const from = sp.get("from") ?? "";
+  const to = sp.get("to") ?? "";
+  const counts = useCalendarCounts(kind, from, to, Boolean(from && to));
+
+  if (!from || !to || !counts) return null;
+
+  const today = ymdKg(0);
+  const tomorrow = ymdKg(1);
+  const raw = sp.get("date");
+  const current = raw && /^\d{4}-\d{2}-\d{2}$/.test(raw) ? raw : today;
+  const next = Object.keys(counts)
+    .filter((d) => (counts[d] ?? 0) > 0 && d >= today)
+    .sort()
+    .find((d) => d > current);
+  if (!next) return null;
+
+  const label = next === tomorrow ? t("tomorrow") : fmt(next);
+  const grape = kind === "requests";
+
+  const go = () => {
+    const p = new URLSearchParams(sp);
+    p.set("date", next);
+    p.delete("cursor");
+    router.replace(`${pathname}?${p.toString()}`, { scroll: false });
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={go}
+      className={cn(
+        "mt-3 flex w-full items-center gap-2.5 rounded-2xl border px-4 py-3.5 text-left text-[14px] font-800 transition-colors",
+        grape
+          ? "border-grape-200 bg-grape-50 text-grape-700 hover:bg-grape-100 dark:border-grape-500/30 dark:bg-grape-500/10 dark:text-grape-300"
+          : "border-brand-200 bg-brand-50 text-brand-700 hover:bg-brand-100 dark:border-brand-500/30 dark:bg-brand-500/10 dark:text-brand-300",
+      )}
+    >
+      <CalendarCheck className="h-[18px] w-[18px] shrink-0" aria-hidden="true" />
+      <span className="flex-1">{t("next_day_cta", { date: label, n: counts[next] ?? 0 })}</span>
+      <ChevronRight className="h-5 w-5 shrink-0" aria-hidden="true" />
+    </button>
+  );
+}

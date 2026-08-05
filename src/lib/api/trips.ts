@@ -97,6 +97,18 @@ export async function adjustTripSeats(id: string, delta: 1 | -1): Promise<TripDe
   return data;
 }
 
+export interface TripPatchInput {
+  pricePerSeat?: number;
+  priceNegotiable?: boolean;
+  comment?: string | null;
+  luggage?: "yes" | "small" | "no";
+}
+
+export async function updateTrip(id: string, patch: TripPatchInput): Promise<TripDetail> {
+  const { data } = await api.patch<TripDetail>(`/trips/${id}`, patch);
+  return data;
+}
+
 export async function cancelTrip(id: string, reason?: string): Promise<void> {
   await api.delete(`/trips/${id}`, reason ? { data: { reason } } : undefined);
 }

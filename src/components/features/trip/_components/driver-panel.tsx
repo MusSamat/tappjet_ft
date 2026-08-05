@@ -14,7 +14,7 @@ import {
   type Booking,
 } from "@/lib/api/bookings";
 import { getPendingRatings } from "@/lib/api/ratings";
-import { adjustTripSeats, cancelTrip, completeTrip, type TripDetail } from "@/lib/api/trips";
+import { adjustTripSeats, cancelTrip, completeTrip, updateTrip, type TripDetail } from "@/lib/api/trips";
 import { extractError } from "@/lib/api/client";
 import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { toastSuccess, toastError } from "@/components/layout/quick-toast";
@@ -40,6 +40,102 @@ type BookingExt = Booking & {
     driver?: { phone?: string | null };
   };
 };
+
+// Edit the trip's price / comment / luggage (mirrors the Flutter trip edit).
+// Seats aren't here — they change live via the ± stepper in the panel.
+function TripEditModal({ trip, tripId, onClose }: { trip: TripDetail; tripId: string; onClose: () => void }) {
+  const t = useTranslations("trip_actions");
+  const tToasts = useTranslations("toasts");
+  const fe = useFriendlyError();
+  const qc = useQueryClient();
+  const [price, setPrice] = useState(String((trip.pricePerSeat as number | undefined) ?? ""));
+  const [comment, setComment] = useState((trip.comment as string | undefined) ?? "");
+  const [luggage, setLuggage] = useState<"yes" | "small" | "no">((trip.luggage as "yes" | "small" | "no" | undefined) ?? "small");
+  const [confirming, setConfirming] = useState(false);
+
+  const saveMut = useMutation({
+    mutationFn: () =>
+      updateTrip(tripId, { pricePerSeat: Number(price), comment: comment.trim() || null, luggage }),
+    onSuccess: () => {
+      toastSuccess(tToasts("saved"));
+      void qc.invalidateQueries({ queryKey: ["trip", tripId] });
+      void qc.invalidateQueries({ queryKey: ["my-trips"] });
+      onClose();
+    },
+    onError: (e) => toastError(fe(extractError(e))),
+  });
+
+  const priceNum = Number(price);
+  const priceOk = /^\d+$/.test(price) && priceNum >= 50 && priceNum <= 10000;
+  const LUGGAGE: Array<"yes" | "small" | "no"> = ["yes", "small", "no"];
+
+  return (
+    <Overlay onClose={onClose}>
+      <h2 className="mb-3 text-[20px] font-extrabold text-ink-900 dark:text-white">{t("edit_title")}</h2>
+      <div className="flex flex-col gap-3">
+        <div>
+          <label className="mb-1.5 block text-[13px] font-800 uppercase tracking-wide text-ink-400">{t("price_label")}</label>
+          <input
+            inputMode="numeric"
+            value={price}
+            onChange={(e) => setPrice(e.target.value.replace(/\D/g, "").slice(0, 5))}
+            className="h-11 w-full rounded-xl border-2 border-ink-200 bg-ink-50 px-3 text-[16px] font-800 text-ink-900 outline-none focus:border-brand-500 dark:border-ink-700 dark:bg-ink-800 dark:text-white"
+          />
+        </div>
+        <div>
+          <label className="mb-1.5 block text-[13px] font-800 uppercase tracking-wide text-ink-400">{t("comment_label")}</label>
+          <textarea
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            maxLength={300}
+            rows={2}
+            className="w-full rounded-xl border-2 border-ink-200 bg-ink-50 px-3 py-2 text-[15px] font-600 text-ink-900 outline-none focus:border-brand-500 dark:border-ink-700 dark:bg-ink-800 dark:text-white"
+          />
+        </div>
+        <div>
+          <label className="mb-1.5 block text-[13px] font-800 uppercase tracking-wide text-ink-400">{t("luggage_label")}</label>
+          <div className="flex gap-2">
+            {LUGGAGE.map((l) => (
+              <button
+                key={l}
+                type="button"
+                onClick={() => setLuggage(l)}
+                className={cn(
+                  "rounded-full border-2 px-4 py-1.5 text-[13px] font-800 transition",
+                  luggage === l ? "border-brand-500 bg-brand-500 text-white" : "border-ink-200 text-ink-600 dark:border-ink-700 dark:text-ink-300",
+                )}
+              >
+                {t(`luggage_${l}`)}
+              </button>
+            ))}
+          </div>
+        </div>
+        {confirming ? (
+          <div className="mt-1 flex flex-col gap-2">
+            <p className="text-center text-[14px] font-800 text-ink-700 dark:text-ink-200">{t("edit_confirm")}</p>
+            <div className="flex gap-2">
+              <button type="button" onClick={() => setConfirming(false)} className="flex h-11 flex-1 items-center justify-center rounded-xl bg-ink-100 text-ink-600 dark:bg-ink-800 dark:text-ink-300">
+                <X className="h-5 w-5" />
+              </button>
+              <button type="button" onClick={() => saveMut.mutate()} disabled={saveMut.isPending} className="h-11 flex-[2] rounded-xl bg-brand-600 text-[15px] font-900 text-white hover:bg-brand-700 disabled:opacity-50">
+                {saveMut.isPending ? "…" : t("save")}
+              </button>
+            </div>
+          </div>
+        ) : (
+          <button
+            type="button"
+            disabled={!priceOk}
+            onClick={() => setConfirming(true)}
+            className="mt-1 h-11 rounded-xl bg-brand-600 text-[15px] font-900 text-white hover:bg-brand-700 disabled:opacity-40"
+          >
+            {t("save")}
+          </button>
+        )}
+      </div>
+    </Overlay>
+  );
+}
 
 export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string }) {
   const t = useTranslations("trip_actions");
@@ -138,6 +234,7 @@ export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string
   const [rejectReason, setRejectReason] = useState("");
   const [cancelBookingTarget, setCancelBookingTarget] = useState<string | null>(null);
   const [cancelTripOpen, setCancelTripOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
 
   const bookings = ((incoming?.data ?? []) as BookingExt[]).filter((b) =>
     ["pending", "viewed", "accepted"].includes(b.status as string),
@@ -215,6 +312,18 @@ export function DriverPanel({ trip, tripId }: { trip: TripDetail; tripId: string
             {t("seats_phone_hint")}
           </p>
         )}
+
+        {(trip.status as string | undefined) === "active" && (
+          <button
+            type="button"
+            onClick={() => setEditOpen(true)}
+            className="mb-2 flex h-10 w-full items-center justify-center gap-1.5 rounded-xl border border-ink-200 text-[13px] font-800 text-ink-700 transition-colors hover:bg-ink-50 dark:border-ink-700 dark:text-ink-200 dark:hover:bg-ink-800"
+          >
+            {t("edit_btn")}
+          </button>
+        )}
+
+        {editOpen && <TripEditModal trip={trip} tripId={tripId} onClose={() => setEditOpen(false)} />}
 
         {(trip.status as string | undefined) === "active" && (
           <div className="grid grid-cols-2 gap-2">

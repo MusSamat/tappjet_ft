@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils/cn";
 import { X } from "lucide-react";
 import { TripCard } from "@/components/ui/trip-card";
 import { EmptyState } from "@/components/ui/empty-state";
+import { NextDayCta } from "@/components/features/search/next-day-cta";
 import { CardSkeletonList } from "@/components/ui/card-skeleton";
 import { QueryError } from "@/components/ui/query-error";
 import { BackToTop } from "@/components/ui/back-to-top";
@@ -61,6 +62,8 @@ function FeedEmpty({ params }: { params: SearchTripsParams }) {
         action={action}
         className="bg-white shadow-card ring-1 ring-ink-100 dark:bg-ink-900 dark:ring-ink-800"
       />
+      {/* No rides today on this route → jump to the next day that has some. */}
+      <NextDayCta kind="trips" />
       <PopularRoutes />
     </div>
   );
@@ -238,6 +241,8 @@ export function SearchLayout({ initial }: Props) {
                   <span className="text-[13px] font-800 text-ink-400">{t("no_more_trips")}</span>
                 )}
               </div>
+              {/* List ended → offer the next day that has rides. */}
+              {!hasNextPage && <NextDayCta kind="trips" />}
             </>
           )}
         </div>

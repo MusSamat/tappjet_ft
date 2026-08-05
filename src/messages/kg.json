@@ -616,7 +616,17 @@
     "confirm_btn": "Ырастоо",
     "cancelling": "Жокко чыгарылууда…",
     "reviews_short": "баалоо",
-    "phone_after_accept": "Айдоочунун телефону брон ырасталгандан кийин ачылат"
+    "phone_after_accept": "Айдоочунун телефону брон ырасталгандан кийин ачылат",
+    "edit_btn": "Өзгөртүү",
+    "edit_title": "Сапарды өзгөртүү",
+    "edit_confirm": "Өзгөртүүлөрдү сактайсызбы?",
+    "price_label": "Бир орундун баасы",
+    "comment_label": "Комментарий (милдеттүү эмес)",
+    "luggage_label": "Жүк",
+    "luggage_yes": "Чоң",
+    "luggage_small": "Кичине",
+    "luggage_no": "Жүксүз",
+    "save": "Сактоо"
   },
   "requests": {
     "page_title": "Жолоочулардын арыздары",
@@ -1226,7 +1236,8 @@
     "nearby_notice": "Так дал келгендер жок — ушул райондун жакынкы айылдарынан сапарлар көрсөтүлдү",
     "date_nav_earlier": "Мурда",
     "date_nav_later": "Кийин",
-    "recent_searches": "Акыркы издөөлөр"
+    "recent_searches": "Акыркы издөөлөр",
+    "next_day_cta": "{date} · {n} көрсөтүү"
   },
   "detail": {
     "book_modal_title": "Брондоо",
@@ -1390,7 +1401,8 @@
     "profile_saved": "Өзгөртүүлөр сакталды",
     "avatar_updated": "Профиль сүрөтү жаңыртылды",
     "phone_updated": "Телефон номери жаңыртылды",
-    "logout_all": "Бардык түзмөктөрдөн чыктыңыз"
+    "logout_all": "Бардык түзмөктөрдөн чыктыңыз",
+    "saved": "Сакталды"
   },
   "offline": {
     "no_connection": "Байланыш жок",

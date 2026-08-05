@@ -16,6 +16,7 @@ import { RequestDetailPane } from "@/components/features/passenger-requests/requ
 import { RequestFilters } from "@/components/features/passenger-requests/request-filters";
 import { FeedHeader } from "@/components/features/search/feed-header";
 import { FeedEntryHints } from "@/components/features/search/feed-entry-hints";
+import { NextDayCta } from "@/components/features/search/next-day-cta";
 import { addRecentRoute } from "@/lib/recent-routes";
 import { EmptyState } from "@/components/ui/empty-state";
 import { CardSkeletonList } from "@/components/ui/card-skeleton";
@@ -47,6 +48,7 @@ function RequestsEmpty() {
         action={action}
         className="bg-white shadow-card ring-1 ring-ink-100 dark:bg-ink-900 dark:ring-ink-800"
       />
+      <NextDayCta kind="requests" />
     </div>
   );
 }
@@ -194,6 +196,7 @@ export function RequestsFeed() {
                   <span className="text-[12px] font-800 text-ink-400">{t("no_more")}</span>
                 )}
               </div>
+              {!hasNextPage && <NextDayCta kind="requests" />}
             </>
           )}
         </div>

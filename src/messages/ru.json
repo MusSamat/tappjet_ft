@@ -616,7 +616,17 @@
     "confirm_btn": "Подтвердить",
     "cancelling": "Отменяем…",
     "reviews_short": "отз.",
-    "phone_after_accept": "Телефон водителя откроется после подтверждения брони"
+    "phone_after_accept": "Телефон водителя откроется после подтверждения брони",
+    "edit_btn": "Изменить",
+    "edit_title": "Изменить поездку",
+    "edit_confirm": "Сохранить изменения?",
+    "price_label": "Цена за место",
+    "comment_label": "Комментарий (необязательно)",
+    "luggage_label": "Багаж",
+    "luggage_yes": "Большой",
+    "luggage_small": "Небольшой",
+    "luggage_no": "Без багажа",
+    "save": "Сохранить"
   },
   "requests": {
     "page_title": "Заявки пассажиров",
@@ -1226,7 +1236,8 @@
     "nearby_notice": "Точных совпадений нет — показаны поездки из соседних сёл этого района",
     "date_nav_earlier": "Раньше",
     "date_nav_later": "Позже",
-    "recent_searches": "Недавние поиски"
+    "recent_searches": "Недавние поиски",
+    "next_day_cta": "Показать {date} · {n}"
   },
   "detail": {
     "book_modal_title": "Бронирование",
@@ -1390,7 +1401,8 @@
     "profile_saved": "Изменения сохранены",
     "avatar_updated": "Фото профиля обновлено",
     "phone_updated": "Номер телефона обновлён",
-    "logout_all": "Вы вышли на всех устройствах"
+    "logout_all": "Вы вышли на всех устройствах",
+    "saved": "Сохранено"
   },
   "offline": {
     "no_connection": "Нет соединения",
