@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Car as CarIcon, Minus, Plus } from "lucide-react";
 import { type CarCreateInput, listCarBrands, listCarModels, listCarColors } from "@/lib/api/cars";
 import { isPlateValid, normalizePlate } from "@/lib/utils/plate";
@@ -24,10 +24,13 @@ export interface CarValues {
   valid: boolean;
 }
 
-const MIN_YEAR = 1980;
+const MIN_YEAR = 2000;
+const CURRENT_YEAR = new Date().getFullYear();
+// Year options, newest first (a plain year selector — no month/day).
+const YEAR_OPTIONS = Array.from({ length: CURRENT_YEAR - MIN_YEAR + 1 }, (_, i) => String(CURRENT_YEAR - i));
 function yearValid(year: string): boolean {
   const y = Number(year);
-  return /^\d{4}$/.test(year.trim()) && y >= MIN_YEAR && y <= new Date().getFullYear();
+  return /^\d{4}$/.test(year.trim()) && y >= MIN_YEAR && y <= CURRENT_YEAR;
 }
 
 const FIELD =
@@ -51,6 +54,7 @@ interface Props {
 export function CarForm({ onSubmit, onChange, pending, submitLabel, showYear, requireYear, initial, className }: Props) {
   const t = useTranslations("cars");
   const tReg = useTranslations("driver_reg");
+  const locale = useLocale();
   const [make, setMake] = useState(initial?.make ?? "");
   const [model, setModel] = useState(initial?.model ?? "");
   const [color, setColor] = useState(initial?.color ?? "");
@@ -76,6 +80,11 @@ export function CarForm({ onSubmit, onChange, pending, submitLabel, showYear, re
   // Year is optional almost everywhere; verification passes requireYear.
   const yearOk = requireYear ? yearValid(year) : !year.trim() || yearValid(year);
   const valid = Boolean(make.trim() && model.trim() && plateOk && yearOk);
+
+  // Colour: selected catalog entry (for the swatch preview) + manual fallback
+  // when the user opts out or a prefilled car uses an off-catalog colour.
+  const selectedColor = colors.find((c) => c.nameRu === color);
+  const showColorManual = colorManual || (Boolean(color.trim()) && colors.length > 0 && !selectedColor);
 
   // Lift the current values into a parent wizard (verification) when controlled.
   useEffect(() => {
@@ -144,38 +153,40 @@ export function CarForm({ onSubmit, onChange, pending, submitLabel, showYear, re
           )}
         </div>
       </div>
-      {/* Colour — swatch picker with a free-text fallback (saved as the name). */}
-      <div className="flex flex-wrap items-center gap-1.5">
-        {colors.map((c) => {
-          const on = color === c.nameRu;
-          return (
-            <button
-              key={c.id}
-              type="button"
-              title={c.nameRu}
-              aria-label={c.nameRu}
-              onClick={() => { setColor(c.nameRu); setColorManual(false); }}
-              className={cn(
-                "h-8 w-8 rounded-full border-2 transition",
-                on ? "border-brand-500 ring-2 ring-brand-200" : "border-ink-200 dark:border-ink-600",
-              )}
-              style={{ background: c.hex }}
-            />
-          );
-        })}
-        <button
-          type="button"
-          onClick={() => setColorManual(true)}
-          className={cn(
-            "h-8 rounded-full border-2 px-3 text-[12px] font-800",
-            colorManual ? "border-brand-500 text-brand-600" : "border-ink-200 text-ink-500 dark:border-ink-600",
+      {/* Colour — a select like the brand picker: localized name options + a
+          hex swatch preview of the choice, with a free-text fallback. The value
+          saved on the car is the canonical Russian name. */}
+      {showColorManual ? (
+        <div>
+          <input value={color} onChange={(e) => setColor(e.target.value)} placeholder={t("color_ph")} className={FIELD} />
+          {colors.length > 0 && (
+            <button type="button" onClick={() => { setColorManual(false); setColor(""); }} className="mt-1 text-[12px] font-700 text-brand-600">
+              {t("from_list")}
+            </button>
           )}
-        >
-          {t("manual_entry")}
-        </button>
-      </div>
-      {(colorManual || (color && !colors.some((c) => c.nameRu === color))) && (
-        <input value={color} onChange={(e) => setColor(e.target.value)} placeholder={t("color_ph")} className={FIELD} />
+        </div>
+      ) : (
+        <div className="flex items-center gap-2">
+          <span
+            className="h-11 w-11 shrink-0 rounded-xl border-2 border-ink-200 dark:border-ink-600"
+            style={selectedColor ? { background: selectedColor.hex } : undefined}
+          />
+          <select
+            value={color}
+            onChange={(e) => {
+              const v = e.target.value;
+              if (v === "__manual__") { setColorManual(true); setColor(""); }
+              else setColor(v);
+            }}
+            className={cn(FIELD, "flex-1")}
+          >
+            <option value="">{t("color_ph")}</option>
+            {colors.map((c) => (
+              <option key={c.id} value={c.nameRu}>{locale === "ky" ? c.nameKy : c.nameRu}</option>
+            ))}
+            <option value="__manual__">{t("manual_entry")}</option>
+          </select>
+        </div>
       )}
       <input
         value={plate}
@@ -191,16 +202,16 @@ export function CarForm({ onSubmit, onChange, pending, submitLabel, showYear, re
         <p className="text-[13px] font-700 text-coral-500">{t("plate_hint")}</p>
       )}
       {showYear && (
-        <div>
-          <input
-            value={year}
-            onChange={(e) => setYear(e.target.value.replace(/\D/g, "").slice(0, 4))}
-            inputMode="numeric"
-            placeholder={tReg("year_placeholder")}
-            className={cn(FIELD, year && !yearOk && "border-coral-400 dark:border-coral-400")}
-          />
-          {year && !yearOk && <p className="mt-1 text-[13px] font-700 text-coral-500">{tReg("err_carYear")}</p>}
-        </div>
+        <select
+          value={year}
+          onChange={(e) => setYear(e.target.value)}
+          className={cn(FIELD, requireYear && !year && "border-coral-400 dark:border-coral-400")}
+        >
+          <option value="">{tReg("year_placeholder")}</option>
+          {YEAR_OPTIONS.map((y) => (
+            <option key={y} value={y}>{y}</option>
+          ))}
+        </select>
       )}
       {/* Seats — compact stepper row */}
       <div className="flex h-11 items-center justify-between rounded-xl border-2 border-ink-200 bg-ink-50 px-3 dark:border-ink-700 dark:bg-ink-800">

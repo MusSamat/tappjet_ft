@@ -3,7 +3,7 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { CarForm } from "@/components/features/cars/car-form";
 
-vi.mock("next-intl", () => ({ useTranslations: () => (k: string) => k }));
+vi.mock("next-intl", () => ({ useTranslations: () => (k: string) => k, useLocale: () => "ru" }));
 vi.mock("@/lib/api/cars", () => ({
   listCarBrands: vi.fn(() => Promise.resolve([{ id: 1, name: "Toyota" }])),
   listCarModels: vi.fn(() => Promise.resolve([{ id: 101, name: "Camry", bodyType: "sedan" }])),
@@ -64,15 +64,16 @@ describe("CarForm — catalog picker + free-text fallback", () => {
     expect(plate.value).toBe("01KG123");
   });
 
-  it("showYear: prefilled car starts in manual mode and validates the year", async () => {
+  it("showYear: prefilled car starts in manual mode; year is a selector", async () => {
     const onChange = vi.fn();
     renderForm({ onChange, showYear: true, initial: { make: "Kia", model: "Rio", plate: "01KG999", seatsCount: 4 } });
     // Prefill → manual text inputs are shown.
     expect((screen.getByPlaceholderText("make_ph") as HTMLInputElement).value).toBe("Kia");
-    const year = screen.getByPlaceholderText("year_placeholder") as HTMLInputElement;
-    fireEvent.change(year, { target: { value: "1200" } }); // too old → invalid
-    await waitFor(() => expect(onChange.mock.calls.at(-1)![0].valid).toBe(false));
-    fireEvent.change(year, { target: { value: "2015" } });
-    await waitFor(() => expect(onChange.mock.calls.at(-1)![0]).toMatchObject({ make: "Kia", model: "Rio", year: "2015", valid: true }));
+    // Year is a <select> (last combobox — brand/model are text inputs in manual mode).
+    const yearSelect = screen.getAllByRole("combobox").at(-1)!;
+    fireEvent.change(yearSelect, { target: { value: "2015" } });
+    await waitFor(() =>
+      expect(onChange.mock.calls.at(-1)![0]).toMatchObject({ make: "Kia", model: "Rio", year: "2015", valid: true }),
+    );
   });
 });

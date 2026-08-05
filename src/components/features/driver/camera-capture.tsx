@@ -46,7 +46,7 @@ function FrameGuide() {
 // side-mirror tabs). Full-screen SVG: the evenodd path dims everything OUTSIDE
 // the car; the second path strokes the outline. Scales to fit any screen.
 const CAR_PATH =
-  "M54,150 L155,150 L168,96 L197,96 L210,150 C258,150 292,232 292,320 C292,408 258,490 210,490 L197,544 L168,544 L155,490 L54,490 Q28,490 28,464 L28,176 Q28,150 54,150 Z";
+  "M66,152 L168,152 L174,88 Q174,78 186,78 L210,78 Q222,78 224,90 L230,152 C276,156 300,232 300,320 C300,408 276,484 230,488 L224,550 Q222,562 210,562 L186,562 Q174,562 174,552 L168,488 L66,488 Q38,488 38,460 L38,180 Q38,152 66,152 Z";
 function CarGuide() {
   return (
     <svg className="absolute inset-0 h-full w-full" viewBox="0 0 320 640" preserveAspectRatio="xMidYMid meet">
