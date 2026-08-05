@@ -33,7 +33,7 @@ function FrameGuide() {
   return (
     <div
       className="absolute left-1/2 top-[44%] -translate-x-1/2 -translate-y-1/2"
-      style={{ ...DIM, width: "90%", maxWidth: 620, aspectRatio: "3 / 2", borderRadius: 22, border: "1.5px solid rgba(255,255,255,0.35)" }}
+      style={{ ...DIM, width: "96%", maxWidth: 760, aspectRatio: "3 / 2", borderRadius: 22, border: "1.5px solid rgba(255,255,255,0.35)" }}
     >
       {CORNERS.map((c, i) => (
         <span key={i} className="absolute" style={{ width: 34, height: 34, ...c }} />
@@ -46,7 +46,7 @@ function FrameGuide() {
 // side-mirror tabs). Full-screen SVG: the evenodd path dims everything OUTSIDE
 // the car; the second path strokes the outline. Scales to fit any screen.
 const CAR_PATH =
-  "M54,150 L172,150 L178,112 L198,112 L204,150 C250,150 290,230 290,320 C290,410 250,490 204,490 L198,528 L178,528 L172,490 L54,490 Q30,490 30,466 L30,174 Q30,150 54,150 Z";
+  "M54,150 L155,150 L168,96 L197,96 L210,150 C258,150 292,232 292,320 C292,408 258,490 210,490 L197,544 L168,544 L155,490 L54,490 Q28,490 28,464 L28,176 Q28,150 54,150 Z";
 function CarGuide() {
   return (
     <svg className="absolute inset-0 h-full w-full" viewBox="0 0 320 640" preserveAspectRatio="xMidYMid meet">

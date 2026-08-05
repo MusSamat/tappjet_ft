@@ -38,14 +38,17 @@ interface Props {
   onChange?: (v: CarValues) => void;
   pending?: boolean;
   submitLabel?: string;
+  /** Show the manufacture-year field (captured on every car so verification pre-fills it). */
   showYear?: boolean;
+  /** Make the year mandatory for validity (verification requires it; elsewhere it's optional). */
+  requireYear?: boolean;
   /** Prefill (e.g. selecting an existing car in verification). Pair with a
       React `key` on the component to re-seed the fields per selection. */
   initial?: Partial<Omit<CarValues, "valid">>;
   className?: string;
 }
 
-export function CarForm({ onSubmit, onChange, pending, submitLabel, showYear, initial, className }: Props) {
+export function CarForm({ onSubmit, onChange, pending, submitLabel, showYear, requireYear, initial, className }: Props) {
   const t = useTranslations("cars");
   const tReg = useTranslations("driver_reg");
   const [make, setMake] = useState(initial?.make ?? "");
@@ -70,7 +73,8 @@ export function CarForm({ onSubmit, onChange, pending, submitLabel, showYear, in
   });
 
   const plateOk = isPlateValid(plate);
-  const yearOk = !showYear || yearValid(year);
+  // Year is optional almost everywhere; verification passes requireYear.
+  const yearOk = requireYear ? yearValid(year) : !year.trim() || yearValid(year);
   const valid = Boolean(make.trim() && model.trim() && plateOk && yearOk);
 
   // Lift the current values into a parent wizard (verification) when controlled.
@@ -234,6 +238,7 @@ export function CarForm({ onSubmit, onChange, pending, submitLabel, showYear, in
               make: make.trim(),
               model: model.trim(),
               color: color.trim() || undefined,
+              year: year.trim() ? Number(year) : undefined,
               plate,
               seatsCount: seats,
             })

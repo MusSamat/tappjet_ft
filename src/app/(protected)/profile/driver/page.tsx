@@ -343,9 +343,12 @@ export default function DriverVerifyPage() {
             <CarForm
               key={pickedCarId ?? "new"}
               showYear
+              requireYear
               initial={(() => {
                 const c = garageCars.find((g) => g.id === pickedCarId);
-                return c ? { make: c.make, model: c.model, color: c.color ?? "", plate: c.plate, seatsCount: c.seatsCount } : undefined;
+                return c
+                  ? { make: c.make, model: c.model, color: c.color ?? "", year: c.year ? String(c.year) : "", plate: c.plate, seatsCount: c.seatsCount }
+                  : undefined;
               })()}
               onChange={(v) => {
                 setCarMake(v.make);

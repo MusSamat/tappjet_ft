@@ -394,6 +394,7 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
           {(cars.length === 0 || addingCar) && (
             <CarForm
               className="mt-2"
+              showYear
               onSubmit={(i) => addCarMut.mutate(i)}
               pending={addCarMut.isPending}
               submitLabel={t("car_add_btn")}

@@ -5,6 +5,7 @@ export interface Car {
   make: string;
   model: string;
   color: string | null;
+  year: number | null;
   plate: string;
   seatsCount: number;
   createdAt: string;
@@ -14,6 +15,7 @@ export interface CarCreateInput {
   make: string;
   model: string;
   color?: string;
+  year?: number;
   plate: string;
   seatsCount: number;
 }

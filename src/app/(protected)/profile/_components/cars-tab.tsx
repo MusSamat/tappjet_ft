@@ -117,6 +117,7 @@ export function CarsTab() {
                   <p className="mb-2.5 text-[14px] font-600 text-ink-500 dark:text-ink-400">{t("empty")}</p>
                 )}
                 <CarForm
+                  showYear
                   onSubmit={(i) => addMut.mutate(i)}
                   pending={addMut.isPending}
                   submitLabel={t("add_title")}
