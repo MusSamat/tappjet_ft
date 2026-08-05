@@ -19,6 +19,43 @@ export type CaptureKind = "document" | "selfie" | "car" | "passport";
 const DIM = { boxShadow: "0 0 0 100vmax rgba(0,0,0,0.42)" } as const;
 const HINT_TOP = "absolute inset-x-6 top-[8%] text-center text-[15px] font-800 text-white drop-shadow";
 
+// One big horizontal document window: a wide rounded frame with four L-shaped
+// corner brackets (document-scanner style). No inner clutter — the whole
+// document must stay visible.
+function FrameGuide() {
+  const line = "rgba(255,255,255,0.95)";
+  const CORNERS = [
+    { top: -1, left: -1, borderTop: `3px solid ${line}`, borderLeft: `3px solid ${line}`, borderTopLeftRadius: 22 },
+    { top: -1, right: -1, borderTop: `3px solid ${line}`, borderRight: `3px solid ${line}`, borderTopRightRadius: 22 },
+    { bottom: -1, left: -1, borderBottom: `3px solid ${line}`, borderLeft: `3px solid ${line}`, borderBottomLeftRadius: 22 },
+    { bottom: -1, right: -1, borderBottom: `3px solid ${line}`, borderRight: `3px solid ${line}`, borderBottomRightRadius: 22 },
+  ] as const;
+  return (
+    <div
+      className="absolute left-1/2 top-[44%] -translate-x-1/2 -translate-y-1/2"
+      style={{ ...DIM, width: "90%", maxWidth: 620, aspectRatio: "3 / 2", borderRadius: 22, border: "1.5px solid rgba(255,255,255,0.35)" }}
+    >
+      {CORNERS.map((c, i) => (
+        <span key={i} className="absolute" style={{ width: 34, height: 34, ...c }} />
+      ))}
+    </div>
+  );
+}
+
+// Car-front silhouette guide (roof on the left, rounded nose on the right, two
+// side-mirror tabs). Full-screen SVG: the evenodd path dims everything OUTSIDE
+// the car; the second path strokes the outline. Scales to fit any screen.
+const CAR_PATH =
+  "M54,150 L172,150 L178,112 L198,112 L204,150 C250,150 290,230 290,320 C290,410 250,490 204,490 L198,528 L178,528 L172,490 L54,490 Q30,490 30,466 L30,174 Q30,150 54,150 Z";
+function CarGuide() {
+  return (
+    <svg className="absolute inset-0 h-full w-full" viewBox="0 0 320 640" preserveAspectRatio="xMidYMid meet">
+      <path d={`M-320,-320 H960 V960 H-320 Z ${CAR_PATH}`} fillRule="evenodd" fill="rgba(0,0,0,0.42)" />
+      <path d={CAR_PATH} fill="none" stroke="rgba(255,255,255,0.95)" strokeWidth={3} strokeLinejoin="round" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 interface Props {
   kind: CaptureKind;
   onCapture: (file: File) => void;
@@ -156,7 +193,7 @@ export function CameraCapture({ kind, onCapture, onClose }: Props) {
             respecting its rounded/oval corners (no CSS-mask corner artefacts). */}
         {!shot && ready && (
           <div className="pointer-events-none absolute inset-0">
-            {kind === "selfie" && (
+            {kind === "selfie" ? (
               <>
                 <div className="absolute left-1/2 top-[42%] -translate-x-1/2 -translate-y-1/2" style={{ ...DIM, width: "clamp(180px, 62vw, 300px)", aspectRatio: "1 / 1.2", borderRadius: "50%", border: "2.5px solid rgba(255,255,255,0.95)" }}>
                   {/* brow + eye alignment guides (thin grey) */}
@@ -168,49 +205,18 @@ export function CameraCapture({ kind, onCapture, onClose }: Props) {
                 </div>
                 <p className={HINT_TOP}>{t("selfie_hint")}</p>
               </>
-            )}
-
-            {kind === "car" && (
+            ) : kind === "car" ? (
+              // Car → a car-front silhouette contour (not a document frame).
               <>
-                <div className="absolute left-1/2 top-[40%] -translate-x-1/2 -translate-y-1/2" style={{ ...DIM, width: "80%", maxWidth: 520, aspectRatio: "16 / 10", borderRadius: 18, border: "2.5px solid rgba(255,255,255,0.95)" }}>
-                  {/* amber plate zone line + hint */}
-                  <div className="absolute left-[16%] right-[16%]" style={{ bottom: "16%", height: 2, borderRadius: 2, background: "rgba(245,158,11,0.95)" }} />
-                  <p className="absolute left-0 right-0 text-center" style={{ bottom: "5%", fontSize: 11, fontWeight: 700, color: "rgba(245,158,11,0.95)" }}>{t("car_plate_hint")}</p>
-                  {/* bottom corner markers (triangles) */}
-                  <span className="absolute" style={{ left: 7, bottom: 7, width: 0, height: 0, borderLeft: "9px solid transparent", borderBottom: "9px solid rgba(255,255,255,0.9)" }} />
-                  <span className="absolute" style={{ right: 7, bottom: 7, width: 0, height: 0, borderRight: "9px solid transparent", borderBottom: "9px solid rgba(255,255,255,0.9)" }} />
-                </div>
+                <CarGuide />
                 <p className={HINT_TOP}>{t("car_hint")}</p>
               </>
-            )}
-
-            {kind === "passport" && (
+            ) : (
+              // Documents → one big HORIZONTAL scanner window so the whole
+              // document stays visible (corner brackets, no inner clutter).
               <>
-                {/* Tech passport — CYAN horizontal frame + 3 dashed field lines */}
-                <div className="absolute left-1/2 top-[44%] -translate-x-1/2 -translate-y-1/2" style={{ ...DIM, width: "75%", maxWidth: 480, aspectRatio: "1.6", borderRadius: 8, border: "2.5px solid rgba(0,150,180,0.95)" }}>
-                  {[30, 60, 85].map((top) => (
-                    <div key={top} className="absolute left-[8%] right-[8%]" style={{ top: `${top}%`, borderTop: "2px dashed rgba(0,150,180,0.85)" }} />
-                  ))}
-                </div>
-                <p className={HINT_TOP}>{t("passport_hint")}</p>
-              </>
-            )}
-
-            {kind === "document" && (
-              <>
-                {/* ID card — white frame, corner dots, face zone (green), text zone */}
-                <div className="absolute left-1/2 top-[42%] -translate-x-1/2 -translate-y-1/2" style={{ ...DIM, width: "78%", maxWidth: 460, aspectRatio: "1.586", borderRadius: 8, border: "2.5px solid rgba(255,255,255,0.95)" }}>
-                  {/* four corner dots */}
-                  <span className="absolute rounded-full bg-white" style={{ width: 5, height: 5, left: "5%", top: "8%" }} />
-                  <span className="absolute rounded-full bg-white" style={{ width: 5, height: 5, right: "5%", top: "8%" }} />
-                  <span className="absolute rounded-full bg-white" style={{ width: 5, height: 5, left: "5%", bottom: "8%" }} />
-                  <span className="absolute rounded-full bg-white" style={{ width: 5, height: 5, right: "5%", bottom: "8%" }} />
-                  {/* face zone (photo on a KG ID sits on the left) */}
-                  <div className="absolute" style={{ left: "8%", top: "20%", width: "24%", aspectRatio: "0.8", borderRadius: "50%", border: "2px solid rgba(76,175,80,0.9)" }} />
-                  {/* text zone line */}
-                  <div className="absolute left-[38%] right-[8%]" style={{ bottom: "26%", borderTop: "1.5px dashed rgba(255,255,255,0.6)" }} />
-                </div>
-                <p className={HINT_TOP}>{t("doc_hint")}</p>
+                <FrameGuide />
+                <p className={HINT_TOP}>{t(kind === "passport" ? "passport_hint" : "doc_hint")}</p>
               </>
             )}
           </div>

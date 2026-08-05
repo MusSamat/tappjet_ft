@@ -404,6 +404,109 @@ export async function updateCity(
   return data;
 }
 
+// ─── Car catalog (brands · models · colors) ───────────────────────────────────
+
+export interface CarBrandItem {
+  id: number;
+  name: string;
+  sortPosition: number;
+  isActive: boolean;
+}
+export interface CarModelItem {
+  id: number;
+  brandId: number;
+  name: string;
+  bodyType: string | null;
+  sortPosition: number;
+  isActive: boolean;
+}
+export interface CarColorItem {
+  id: number;
+  nameRu: string;
+  nameKy: string;
+  hexCode: string;
+  sortPosition: number;
+  isActive: boolean;
+}
+
+export async function listAdminCarBrands(): Promise<{ data: CarBrandItem[] }> {
+  const { data } = await adminApi.get<{ data: CarBrandItem[] }>("/admin/car-brands");
+  return data;
+}
+export async function createCarBrand(input: {
+  name: string;
+  sortPosition?: number;
+  isActive?: boolean;
+}): Promise<{ id: number }> {
+  const { data } = await adminApi.post<{ id: number }>("/admin/car-brands", input);
+  return data;
+}
+export async function updateCarBrand(
+  id: number,
+  input: Partial<{ name: string; sortPosition: number; isActive: boolean }>,
+): Promise<{ id: number }> {
+  const { data } = await adminApi.patch<{ id: number }>(`/admin/car-brands/${id}`, input);
+  return data;
+}
+export async function deleteCarBrand(id: number): Promise<{ id: number }> {
+  const { data } = await adminApi.delete<{ id: number }>(`/admin/car-brands/${id}`);
+  return data;
+}
+
+export async function listAdminCarModels(brandId?: number): Promise<{ data: CarModelItem[] }> {
+  const { data } = await adminApi.get<{ data: CarModelItem[] }>("/admin/car-models", {
+    params: brandId !== undefined ? { brandId } : undefined,
+  });
+  return data;
+}
+export async function createCarModel(input: {
+  brandId: number;
+  name: string;
+  bodyType?: string;
+  sortPosition?: number;
+  isActive?: boolean;
+}): Promise<{ id: number }> {
+  const { data } = await adminApi.post<{ id: number }>("/admin/car-models", input);
+  return data;
+}
+export async function updateCarModel(
+  id: number,
+  input: Partial<{ brandId: number; name: string; bodyType: string; sortPosition: number; isActive: boolean }>,
+): Promise<{ id: number }> {
+  const { data } = await adminApi.patch<{ id: number }>(`/admin/car-models/${id}`, input);
+  return data;
+}
+export async function deleteCarModel(id: number): Promise<{ id: number }> {
+  const { data } = await adminApi.delete<{ id: number }>(`/admin/car-models/${id}`);
+  return data;
+}
+
+export async function listAdminCarColors(): Promise<{ data: CarColorItem[] }> {
+  const { data } = await adminApi.get<{ data: CarColorItem[] }>("/admin/car-colors");
+  return data;
+}
+export async function createCarColor(input: {
+  nameRu: string;
+  nameKy: string;
+  hexCode: string;
+  sortPosition?: number;
+  isActive?: boolean;
+}): Promise<{ id: number }> {
+  const { data } = await adminApi.post<{ id: number }>("/admin/car-colors", input);
+  return data;
+}
+export async function updateCarColor(
+  id: number,
+  input: Partial<{ nameRu: string; nameKy: string; hexCode: string; sortPosition: number; isActive: boolean }>,
+): Promise<{ id: number }> {
+  const { data } = await adminApi.patch<{ id: number }>(`/admin/car-colors/${id}`, input);
+  return data;
+}
+export async function deleteCarColor(id: number): Promise<{ id: number }> {
+  const { data } = await adminApi.delete<{ id: number }>(`/admin/car-colors/${id}`);
+  return data;
+}
+
 // ─── Admins (superadmin only) ─────────────────────────────────────────────────
 
 export async function listAdmins(): Promise<{ data: AdminMember[] }> {

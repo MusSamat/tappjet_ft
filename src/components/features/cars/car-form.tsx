@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { Car as CarIcon, Minus, Plus } from "lucide-react";
-import type { CarCreateInput } from "@/lib/api/cars";
+import { type CarCreateInput, listCarBrands, listCarModels, listCarColors } from "@/lib/api/cars";
 import { isPlateValid, normalizePlate } from "@/lib/utils/plate";
 import { Spinner } from "@/components/ui";
 import { cn } from "@/lib/utils/cn";
@@ -28,12 +29,6 @@ function yearValid(year: string): boolean {
   const y = Number(year);
   return /^\d{4}$/.test(year.trim()) && y >= MIN_YEAR && y <= new Date().getFullYear();
 }
-
-const COMMON_MAKES = [
-  "Toyota", "Honda", "Lexus", "Nissan", "Mazda", "Subaru", "Mitsubishi",
-  "Mercedes-Benz", "BMW", "Audi", "Volkswagen", "Hyundai", "Kia", "Daewoo",
-  "Chevrolet", "Lada (ВАЗ)", "Renault", "Skoda", "Geely", "Chery", "BYD",
-];
 
 const FIELD =
   "h-11 w-full rounded-xl border-2 border-ink-200 bg-ink-50 px-3 text-[15px] font-700 text-ink-900 outline-none transition-colors focus:border-brand-500 dark:border-ink-700 dark:bg-ink-800 dark:text-white";
@@ -60,6 +55,20 @@ export function CarForm({ onSubmit, onChange, pending, submitLabel, showYear, in
   const [year, setYear] = useState(initial?.year ?? "");
   const [seats, setSeats] = useState(initial?.seatsCount ?? 4);
 
+  // Catalog pickers — start in manual mode when prefilling an existing car.
+  const [brandId, setBrandId] = useState<number | null>(null);
+  const [brandManual, setBrandManual] = useState(Boolean(initial?.make));
+  const [modelManual, setModelManual] = useState(Boolean(initial?.model));
+  const [colorManual, setColorManual] = useState(false);
+  const { data: colors = [] } = useQuery({ queryKey: ["car-colors"], queryFn: listCarColors, staleTime: 60 * 60_000 });
+  const { data: brands = [] } = useQuery({ queryKey: ["car-brands"], queryFn: listCarBrands, staleTime: 60 * 60_000 });
+  const { data: models = [] } = useQuery({
+    queryKey: ["car-models", brandId],
+    queryFn: () => listCarModels(brandId!),
+    enabled: brandId != null,
+    staleTime: 60 * 60_000,
+  });
+
   const plateOk = isPlateValid(plate);
   const yearOk = !showYear || yearValid(year);
   const valid = Boolean(make.trim() && model.trim() && plateOk && yearOk);
@@ -72,48 +81,108 @@ export function CarForm({ onSubmit, onChange, pending, submitLabel, showYear, in
 
   return (
     <div className={cn("space-y-2.5", className)}>
+      {/* Brand → model pickers (catalog) with a free-text fallback. Native
+          <select> works in every WebView incl. Telegram (datalist does not).
+          Saved as text either way — the catalog is only an input aid. */}
       <div className="grid grid-cols-2 gap-2">
         <div>
-          <input
-            list="car-makes"
-            value={make}
-            onChange={(e) => setMake(e.target.value)}
-            placeholder={t("make_ph")}
-            className={FIELD}
-          />
-          <datalist id="car-makes">
-            {COMMON_MAKES.map((m) => <option key={m} value={m} />)}
-          </datalist>
-        </div>
-        <input
-          value={model}
-          onChange={(e) => setModel(e.target.value)}
-          placeholder={t("model_ph")}
-          className={FIELD}
-        />
-      </div>
-      <div className="grid grid-cols-2 gap-2">
-        <input
-          value={color}
-          onChange={(e) => setColor(e.target.value)}
-          placeholder={t("color_ph")}
-          className={FIELD}
-        />
-        <input
-          value={plate}
-          onChange={(e) => setPlate(normalizePlate(e.target.value))}
-          placeholder={t("plate_ph")}
-          autoCapitalize="characters"
-          autoCorrect="off"
-          spellCheck={false}
-          maxLength={10}
-          className={cn(
-            FIELD,
-            "uppercase tracking-wider",
-            plate && !plateOk && "border-coral-400 dark:border-coral-400",
+          {brandManual ? (
+            <>
+              <input value={make} onChange={(e) => setMake(e.target.value)} placeholder={t("make_ph")} className={FIELD} />
+              {brands.length > 0 && (
+                <button type="button" onClick={() => { setBrandManual(false); setMake(""); setBrandId(null); }} className="mt-1 text-[12px] font-700 text-brand-600">
+                  {t("from_list")}
+                </button>
+              )}
+            </>
+          ) : (
+            <select
+              value={brandId ?? ""}
+              onChange={(e) => {
+                const v = e.target.value;
+                if (v === "__manual__") { setBrandManual(true); setModelManual(true); setBrandId(null); setMake(""); setModel(""); }
+                else if (v === "") { setBrandId(null); setMake(""); setModel(""); }
+                else { const b = brands.find((x) => String(x.id) === v); setBrandId(b?.id ?? null); setMake(b?.name ?? ""); setModel(""); setModelManual(false); }
+              }}
+              className={FIELD}
+            >
+              <option value="">{t("make_ph")}</option>
+              {brands.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
+              <option value="__manual__">{t("manual_entry")}</option>
+            </select>
           )}
-        />
+        </div>
+        <div>
+          {brandManual || modelManual ? (
+            <>
+              <input value={model} onChange={(e) => setModel(e.target.value)} placeholder={t("model_ph")} className={FIELD} />
+              {!brandManual && models.length > 0 && (
+                <button type="button" onClick={() => { setModelManual(false); setModel(""); }} className="mt-1 text-[12px] font-700 text-brand-600">
+                  {t("from_list")}
+                </button>
+              )}
+            </>
+          ) : (
+            <select
+              value={model}
+              disabled={brandId == null}
+              onChange={(e) => {
+                const v = e.target.value;
+                if (v === "__manual__") { setModelManual(true); setModel(""); }
+                else setModel(v);
+              }}
+              className={FIELD}
+            >
+              <option value="">{t("model_ph")}</option>
+              {models.map((m) => <option key={m.id} value={m.name}>{m.name}</option>)}
+              <option value="__manual__">{t("manual_entry")}</option>
+            </select>
+          )}
+        </div>
       </div>
+      {/* Colour — swatch picker with a free-text fallback (saved as the name). */}
+      <div className="flex flex-wrap items-center gap-1.5">
+        {colors.map((c) => {
+          const on = color === c.nameRu;
+          return (
+            <button
+              key={c.id}
+              type="button"
+              title={c.nameRu}
+              aria-label={c.nameRu}
+              onClick={() => { setColor(c.nameRu); setColorManual(false); }}
+              className={cn(
+                "h-8 w-8 rounded-full border-2 transition",
+                on ? "border-brand-500 ring-2 ring-brand-200" : "border-ink-200 dark:border-ink-600",
+              )}
+              style={{ background: c.hex }}
+            />
+          );
+        })}
+        <button
+          type="button"
+          onClick={() => setColorManual(true)}
+          className={cn(
+            "h-8 rounded-full border-2 px-3 text-[12px] font-800",
+            colorManual ? "border-brand-500 text-brand-600" : "border-ink-200 text-ink-500 dark:border-ink-600",
+          )}
+        >
+          {t("manual_entry")}
+        </button>
+      </div>
+      {(colorManual || (color && !colors.some((c) => c.nameRu === color))) && (
+        <input value={color} onChange={(e) => setColor(e.target.value)} placeholder={t("color_ph")} className={FIELD} />
+      )}
+      <input
+        value={plate}
+        onChange={(e) => setPlate(normalizePlate(e.target.value))}
+        placeholder={t("plate_ph")}
+        autoCapitalize="characters"
+        autoCorrect="off"
+        spellCheck={false}
+        maxLength={10}
+        className={cn(FIELD, "uppercase tracking-wider", plate && !plateOk && "border-coral-400 dark:border-coral-400")}
+      />
       {plate && !plateOk && (
         <p className="text-[13px] font-700 text-coral-500">{t("plate_hint")}</p>
       )}

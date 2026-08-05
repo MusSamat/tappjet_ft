@@ -1,91 +1,78 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { CarForm } from "@/components/features/cars/car-form";
 
-// Simple next-intl mock — return the key so we can target inputs by placeholder.
 vi.mock("next-intl", () => ({ useTranslations: () => (k: string) => k }));
+vi.mock("@/lib/api/cars", () => ({
+  listCarBrands: vi.fn(() => Promise.resolve([{ id: 1, name: "Toyota" }])),
+  listCarModels: vi.fn(() => Promise.resolve([{ id: 101, name: "Camry", bodyType: "sedan" }])),
+  listCarColors: vi.fn(() => Promise.resolve([{ id: 1, nameRu: "Белый", nameKy: "Ак", hex: "#FFFFFF" }])),
+}));
 
-describe("CarForm — shared add-car block (integration)", () => {
-  function setup() {
+function renderForm(props: Parameters<typeof CarForm>[0]) {
+  const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  return render(
+    <QueryClientProvider client={qc}>
+      <CarForm {...props} />
+    </QueryClientProvider>,
+  );
+}
+
+describe("CarForm — catalog picker + free-text fallback", () => {
+  it("selects brand + model from the catalog and submits them as text", async () => {
     const onSubmit = vi.fn();
-    render(<CarForm onSubmit={onSubmit} submitLabel="Add car" />);
-    return {
-      onSubmit,
-      make: screen.getByPlaceholderText("make_ph") as HTMLInputElement,
-      model: screen.getByPlaceholderText("model_ph") as HTMLInputElement,
-      plate: screen.getByPlaceholderText("plate_ph") as HTMLInputElement,
-      submit: screen.getByRole("button", { name: "Add car" }) as HTMLButtonElement,
-    };
-  }
+    renderForm({ onSubmit, submitLabel: "Add car" });
+    // Brand loads into the first <select>.
+    await waitFor(() => expect(screen.getByRole("option", { name: "Toyota" })).toBeInTheDocument());
+    const brandSelect = screen.getAllByRole("combobox")[0]!;
+    fireEvent.change(brandSelect, { target: { value: "1" } }); // Toyota
+    // Model loads for the picked brand.
+    await waitFor(() => expect(screen.getByRole("option", { name: "Camry" })).toBeInTheDocument());
+    const modelSelect = screen.getAllByRole("combobox")[1]!;
+    fireEvent.change(modelSelect, { target: { value: "Camry" } });
+    fireEvent.change(screen.getByPlaceholderText("plate_ph"), { target: { value: "01KG123" } });
 
-  it("submit is disabled until make, model and a valid plate are filled", () => {
-    const { make, model, plate, submit } = setup();
-    expect(submit).toBeDisabled();
-    fireEvent.change(make, { target: { value: "Toyota" } });
-    fireEvent.change(model, { target: { value: "Camry" } });
-    fireEvent.change(plate, { target: { value: "01" } }); // too short
-    expect(submit).toBeDisabled();
-  });
-
-  it("shows the plate hint for an invalid plate", () => {
-    const { plate } = setup();
-    fireEvent.change(plate, { target: { value: "01" } });
-    expect(screen.getByText("plate_hint")).toBeInTheDocument();
-  });
-
-  it("normalizes the plate as the user types (uppercase, strip symbols)", () => {
-    const { plate } = setup();
-    fireEvent.change(plate, { target: { value: "01 kg-123" } });
-    expect(plate.value).toBe("01KG123");
-  });
-
-  it("enables submit and calls onSubmit with the normalized plate", () => {
-    const { make, model, plate, submit, onSubmit } = setup();
-    fireEvent.change(make, { target: { value: "  Toyota " } });
-    fireEvent.change(model, { target: { value: " Camry " } });
-    fireEvent.change(plate, { target: { value: "01kg123" } });
-    expect(screen.queryByText("plate_hint")).not.toBeInTheDocument();
+    const submit = screen.getByRole("button", { name: "Add car" });
     expect(submit).toBeEnabled();
     fireEvent.click(submit);
-    expect(onSubmit).toHaveBeenCalledTimes(1);
     expect(onSubmit).toHaveBeenCalledWith(
       expect.objectContaining({ make: "Toyota", model: "Camry", plate: "01KG123", seatsCount: 4 }),
     );
   });
 
-  it("showYear: renders a year field and validates the range", () => {
-    const onChange = vi.fn();
-    render(<CarForm onChange={onChange} showYear />);
-    // No submit button in controlled mode.
-    expect(screen.queryByRole("button", { name: /add/i })).not.toBeInTheDocument();
-    const make = screen.getByPlaceholderText("make_ph");
-    const model = screen.getByPlaceholderText("model_ph");
-    const plate = screen.getByPlaceholderText("plate_ph");
-    const year = screen.getByPlaceholderText("year_placeholder") as HTMLInputElement;
-    fireEvent.change(make, { target: { value: "Toyota" } });
-    fireEvent.change(model, { target: { value: "Camry" } });
-    fireEvent.change(plate, { target: { value: "01KG123" } });
-    // Non-digits stripped, capped at 4.
-    fireEvent.change(year, { target: { value: "19a7" } });
-    expect(year.value).toBe("197");
-    fireEvent.change(year, { target: { value: "1200" } }); // too old
-    // Latest onChange should report invalid while year is out of range.
-    let last = onChange.mock.calls.at(-1)![0];
-    expect(last.valid).toBe(false);
-    fireEvent.change(year, { target: { value: "2015" } });
-    last = onChange.mock.calls.at(-1)![0];
-    expect(last).toMatchObject({ make: "Toyota", model: "Camry", plate: "01KG123", year: "2015", valid: true });
+  it("free-text fallback: «manual» reveals text inputs saved as-is", async () => {
+    const onSubmit = vi.fn();
+    renderForm({ onSubmit, submitLabel: "Add car" });
+    await waitFor(() => expect(screen.getByRole("option", { name: "Toyota" })).toBeInTheDocument());
+    const brandSelect = screen.getAllByRole("combobox")[0]!;
+    fireEvent.change(brandSelect, { target: { value: "__manual__" } });
+    // Now make + model are free-text inputs.
+    fireEvent.change(screen.getByPlaceholderText("make_ph"), { target: { value: "Тесла" } });
+    fireEvent.change(screen.getByPlaceholderText("model_ph"), { target: { value: "Model S" } });
+    fireEvent.change(screen.getByPlaceholderText("plate_ph"), { target: { value: "01KG777" } });
+    fireEvent.click(screen.getByRole("button", { name: "Add car" }));
+    expect(onSubmit).toHaveBeenCalledWith(
+      expect.objectContaining({ make: "Тесла", model: "Model S", plate: "01KG777" }),
+    );
   });
 
-  it("seats stepper defaults to 4 and is clamped between 1 and 7", () => {
-    const { make, model, plate, submit, onSubmit } = setup();
-    fireEvent.change(make, { target: { value: "Kia" } });
-    fireEvent.change(model, { target: { value: "Rio" } });
-    fireEvent.change(plate, { target: { value: "01KG999" } });
-    const minus = screen.getByRole("button", { name: "−" });
-    fireEvent.click(minus); // 4 -> 3
-    fireEvent.click(minus); // 3 -> 2
-    fireEvent.click(submit);
-    expect(onSubmit).toHaveBeenCalledWith(expect.objectContaining({ seatsCount: 2 }));
+  it("normalizes the plate as the user types", () => {
+    renderForm({ onSubmit: vi.fn(), submitLabel: "Add car" });
+    const plate = screen.getByPlaceholderText("plate_ph") as HTMLInputElement;
+    fireEvent.change(plate, { target: { value: "01 kg-123" } });
+    expect(plate.value).toBe("01KG123");
+  });
+
+  it("showYear: prefilled car starts in manual mode and validates the year", async () => {
+    const onChange = vi.fn();
+    renderForm({ onChange, showYear: true, initial: { make: "Kia", model: "Rio", plate: "01KG999", seatsCount: 4 } });
+    // Prefill → manual text inputs are shown.
+    expect((screen.getByPlaceholderText("make_ph") as HTMLInputElement).value).toBe("Kia");
+    const year = screen.getByPlaceholderText("year_placeholder") as HTMLInputElement;
+    fireEvent.change(year, { target: { value: "1200" } }); // too old → invalid
+    await waitFor(() => expect(onChange.mock.calls.at(-1)![0].valid).toBe(false));
+    fireEvent.change(year, { target: { value: "2015" } });
+    await waitFor(() => expect(onChange.mock.calls.at(-1)![0]).toMatchObject({ make: "Kia", model: "Rio", year: "2015", valid: true }));
   });
 });

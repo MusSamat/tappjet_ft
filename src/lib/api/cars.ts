@@ -31,3 +31,36 @@ export async function addCar(input: CarCreateInput): Promise<Car> {
 export async function deleteCar(id: string): Promise<void> {
   await api.delete(`/cars/${id}`);
 }
+
+// ─── Car catalog (brands → models) — cached reference data ────────────────────
+export interface CarBrand {
+  id: number;
+  name: string;
+}
+export interface CarModel {
+  id: number;
+  name: string;
+  bodyType: string | null;
+}
+
+export async function listCarBrands(): Promise<CarBrand[]> {
+  const { data } = await api.get<{ data: CarBrand[] }>("/cars/catalog/brands");
+  return data.data;
+}
+
+export async function listCarModels(brandId: number): Promise<CarModel[]> {
+  const { data } = await api.get<{ data: CarModel[] }>(`/cars/catalog/brands/${brandId}/models`);
+  return data.data;
+}
+
+export interface CarColor {
+  id: number;
+  nameRu: string;
+  nameKy: string;
+  hex: string;
+}
+
+export async function listCarColors(): Promise<CarColor[]> {
+  const { data } = await api.get<{ data: CarColor[] }>("/cars/catalog/colors");
+  return data.data;
+}

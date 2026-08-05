@@ -12,6 +12,7 @@ import {
   Users,
   MessageSquareWarning,
   Car,
+  CarFront,
   Map,
   UserCog,
   ClipboardList,
@@ -27,6 +28,7 @@ const NAV = [
   { href: "/admin/complaints", label: "Жалобы", icon: MessageSquareWarning },
   { href: "/admin/trips", label: "Поездки", icon: Car },
   { href: "/admin/cities", label: "Города", icon: Map },
+  { href: "/admin/car-catalog", label: "Автокаталог", icon: CarFront, superadmin: true },
   { href: "/admin/admins", label: "Администраторы", icon: UserCog, superadmin: true },
   { href: "/admin/audit-log", label: "Журнал", icon: ClipboardList },
 ];
