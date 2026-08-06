@@ -1,11 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getAdminUser, blockUser, unblockUser } from "@/lib/api/admin";
-import { Button } from "@/components/ui";
+import {
+  getAdminUser, blockUser, unblockUser,
+  getAdminTrip, getAdminRequest, adminForceCancel, adminForceCancelRequest,
+} from "@/lib/api/admin";
+import { TripDetailPanel } from "@/app/admin/trips/_components/trip-detail-panel";
+import { Button, StatusBadge } from "@/components/ui";
 import { cn } from "@/lib/utils/cn";
 import {
   ArrowLeft, Star, ShieldOff, ShieldCheck, Phone, Car, Calendar, X,
@@ -33,6 +36,14 @@ const BLOCK_REASONS = [
   "Мошенничество",
   "Агрессивное поведение",
   "Фальшивые документы",
+  "Другое",
+];
+
+const CANCEL_REASONS = [
+  "Нарушение правил платформы",
+  "Мошенничество",
+  "Некорректный маршрут",
+  "Спам / дубликат",
   "Другое",
 ];
 
@@ -64,6 +75,29 @@ export default function AdminUserDetailPage() {
   const unblockMut = useMutation({
     mutationFn: () => unblockUser(id),
     onSuccess: () => invalidate(),
+  });
+
+  // In-page viewers: open a trip/request detail in a modal (no navigation).
+  const [viewTrip, setViewTrip] = useState<string | null>(null);
+  const [viewRequest, setViewRequest] = useState<string | null>(null);
+  const [avatarOpen, setAvatarOpen] = useState(false);
+  const [cancelTarget, setCancelTarget] = useState<{ kind: "trip" | "request"; id: string; title: string } | null>(null);
+  const [cxReason, setCxReason] = useState("");
+  const [cxCustom, setCxCustom] = useState("");
+  const cxEffective = cxReason === "Другое" ? cxCustom.trim() : cxReason;
+
+  const tripQuery = useQuery({ queryKey: ["admin", "trip", viewTrip], queryFn: () => getAdminTrip(viewTrip!), enabled: !!viewTrip, staleTime: 30_000 });
+  const reqQuery = useQuery({ queryKey: ["admin", "request", viewRequest], queryFn: () => getAdminRequest(viewRequest!), enabled: !!viewRequest, staleTime: 30_000 });
+
+  const cancelMut = useMutation({
+    mutationFn: ({ kind, id: tid, reason }: { kind: "trip" | "request"; id: string; reason: string }) =>
+      kind === "trip" ? adminForceCancel(tid, reason) : adminForceCancelRequest(tid, reason),
+    onSuccess: () => {
+      setCancelTarget(null); setCxReason(""); setCxCustom("");
+      invalidate();
+      void qc.invalidateQueries({ queryKey: ["admin", "trip"] });
+      void qc.invalidateQueries({ queryKey: ["admin", "request"] });
+    },
   });
 
   if (isLoading) {
@@ -100,8 +134,10 @@ export default function AdminUserDetailPage() {
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-4">
             {user.avatarUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={user.avatarUrl} alt={user.name} className="h-16 w-16 rounded-full object-cover" />
+              <button type="button" onClick={() => setAvatarOpen(true)} className="rounded-full ring-offset-2 transition hover:ring-2 hover:ring-ink-300" aria-label="Открыть фото крупнее">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={user.avatarUrl} alt={user.name} className="h-16 w-16 rounded-full object-cover" />
+              </button>
             ) : (
               <div className="flex h-16 w-16 items-center justify-center rounded-full bg-ink-200 text-[22px] font-bold text-ink-600">
                 {user.name.charAt(0).toUpperCase()}
@@ -250,13 +286,13 @@ export default function AdminUserDetailPage() {
           ) : (
             <div className="space-y-1.5">
               {user.trips.map((t) => (
-                <Link key={t.id} href={`/admin/trips?focus=${t.id}`} className="flex items-center justify-between rounded-xl bg-ink-50 px-3 py-2 hover:bg-ink-100">
+                <button key={t.id} type="button" onClick={() => setViewTrip(t.id)} className="flex w-full items-center justify-between rounded-xl bg-ink-50 px-3 py-2 text-left hover:bg-ink-100">
                   <span className="min-w-0 truncate text-[13px] font-semibold text-ink-800">{t.originCity} → {t.destinationCity}</span>
                   <span className="ml-2 flex shrink-0 items-center gap-2 text-[12px] text-ink-500">
                     {fmtDay(t.departureAt)}
                     <span className={cn("rounded-full px-1.5 py-0.5 text-[10px] font-bold", statusTone(t.status))}>{t.status}</span>
                   </span>
-                </Link>
+                </button>
               ))}
             </div>
           )}
@@ -270,13 +306,13 @@ export default function AdminUserDetailPage() {
           ) : (
             <div className="space-y-1.5">
               {user.requests.map((r) => (
-                <Link key={r.id} href={`/admin/requests?focus=${r.id}`} className="flex items-center justify-between rounded-xl bg-ink-50 px-3 py-2 hover:bg-ink-100">
+                <button key={r.id} type="button" onClick={() => setViewRequest(r.id)} className="flex w-full items-center justify-between rounded-xl bg-ink-50 px-3 py-2 text-left hover:bg-ink-100">
                   <span className="min-w-0 truncate text-[13px] font-semibold text-ink-800">{r.originCity} → {r.destinationCity}</span>
                   <span className="ml-2 flex shrink-0 items-center gap-2 text-[12px] text-ink-500">
                     {fmtDay(r.departureDate)}
                     <span className={cn("rounded-full px-1.5 py-0.5 text-[10px] font-bold", statusTone(r.status))}>{r.status}</span>
                   </span>
-                </Link>
+                </button>
               ))}
             </div>
           )}
@@ -342,6 +378,108 @@ export default function AdminUserDetailPage() {
                 className="flex-1"
               >
                 {blockMut.isPending ? "Блокируем…" : "Заблокировать"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Avatar lightbox — bigger photo */}
+      {avatarOpen && user.avatarUrl && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-6" onClick={() => setAvatarOpen(false)}>
+          <button type="button" onClick={() => setAvatarOpen(false)} className="absolute right-4 top-4 rounded-full bg-white/10 p-2 text-white hover:bg-white/20"><X className="h-6 w-6" /></button>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={user.avatarUrl} alt={user.name} onClick={(e) => e.stopPropagation()} className="max-h-[85vh] max-w-[85vw] rounded-2xl object-contain" />
+        </div>
+      )}
+
+      {/* Trip detail — opens right here (reuses the Trips panel), no navigation */}
+      {viewTrip && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setViewTrip(null)}>
+          <div className="max-h-[90vh] overflow-hidden rounded-2xl bg-white shadow-lift" onClick={(e) => e.stopPropagation()}>
+            {tripQuery.data ? (
+              <TripDetailPanel
+                detail={tripQuery.data}
+                isLoading={false}
+                onClose={() => setViewTrip(null)}
+                onForceCancel={(t) => setCancelTarget({ kind: "trip", id: t.id, title: `${t.originCity} → ${t.destinationCity}` })}
+              />
+            ) : (
+              <div className="flex h-64 w-[440px] items-center justify-center"><div className="h-8 w-8 animate-spin rounded-full border-4 border-ink-200 border-t-ink-700" /></div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Request detail — opens right here, no navigation */}
+      {viewRequest && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setViewRequest(null)}>
+          <div className="max-h-[90vh] w-full max-w-md overflow-auto rounded-2xl bg-white p-5 shadow-lift" onClick={(e) => e.stopPropagation()}>
+            {reqQuery.data ? (
+              <>
+                <div className="mb-3 flex items-start justify-between">
+                  <div>
+                    <h2 className="text-[19px] font-extrabold text-ink-900">{reqQuery.data.originCity} → {reqQuery.data.destinationCity}</h2>
+                    <p className="text-[13px] text-ink-500">{fmt(reqQuery.data.departureDate)} · {reqQuery.data.seatsNeeded} мест</p>
+                  </div>
+                  <button type="button" onClick={() => setViewRequest(null)} className="rounded-full p-1 hover:bg-ink-100"><X className="h-5 w-5 text-ink-400" /></button>
+                </div>
+                <div className="mb-3 flex items-center gap-2">
+                  <StatusBadge status={reqQuery.data.status === "open" ? "active" : reqQuery.data.status === "cancelled" ? "rejected" : "completed"} label={reqQuery.data.status} />
+                  {reqQuery.data.flexible && <span className="text-[12px] text-ink-500">± гибкая дата</span>}
+                </div>
+                <div className="mb-3 rounded-xl bg-ink-50 p-3 text-[13px]">
+                  <p className="font-bold text-ink-900">{reqQuery.data.passenger.name}</p>
+                  <p className="text-ink-500">{reqQuery.data.passenger.phone}</p>
+                  {reqQuery.data.comment && <p className="mt-1 text-ink-600">«{reqQuery.data.comment}»</p>}
+                </div>
+                <p className="mb-1.5 text-[11px] font-bold uppercase tracking-wide text-ink-400">Предложения водителей ({reqQuery.data.offers.length})</p>
+                {reqQuery.data.offers.length === 0 ? (
+                  <p className="text-[13px] text-ink-400">Пока нет предложений</p>
+                ) : (
+                  <div className="space-y-1.5">
+                    {reqQuery.data.offers.map((o) => (
+                      <div key={o.id} className="flex items-center justify-between rounded-xl bg-ink-50 px-3 py-2 text-[13px]">
+                        <span className="font-semibold text-ink-800">{o.driverName}</span>
+                        <span className="font-bold text-sky-600">{o.price} сом</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {reqQuery.data.status === "open" && (
+                  <Button variant="danger" size="lg" className="mt-4 w-full" onClick={() => setCancelTarget({ kind: "request", id: reqQuery.data!.id, title: `${reqQuery.data!.originCity} → ${reqQuery.data!.destinationCity}` })}>
+                    Отменить заявку
+                  </Button>
+                )}
+              </>
+            ) : (
+              <div className="flex h-40 items-center justify-center"><div className="h-8 w-8 animate-spin rounded-full border-4 border-ink-200 border-t-ink-700" /></div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Force-cancel with message (trips + requests) */}
+      {cancelTarget && (
+        <div className="fixed inset-0 z-[55] flex items-center justify-center bg-black/50 p-4" onClick={() => setCancelTarget(null)}>
+          <div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-lift" onClick={(e) => e.stopPropagation()}>
+            <div className="mb-3 flex items-center justify-between">
+              <h2 className="text-[19px] font-extrabold text-ink-900">{cancelTarget.kind === "trip" ? "Отменить поездку" : "Отменить заявку"}</h2>
+              <button type="button" onClick={() => setCancelTarget(null)} className="rounded-full p-1 hover:bg-ink-100"><X className="h-5 w-5 text-ink-400" /></button>
+            </div>
+            <p className="mb-4 text-[13px] text-ink-500">{cancelTarget.title}. Пользователь получит сообщение с причиной.</p>
+            <div className="mb-3 flex flex-wrap gap-1.5">
+              {CANCEL_REASONS.map((rr) => (
+                <button key={rr} type="button" onClick={() => setCxReason(rr)} className={cn("rounded-full border-2 px-3 py-1.5 text-[13px] font-bold transition", cxReason === rr ? "border-danger-500 bg-danger-50 text-danger-700" : "border-ink-200 text-ink-600 hover:bg-ink-50")}>{rr}</button>
+              ))}
+            </div>
+            {cxReason === "Другое" && (
+              <textarea value={cxCustom} onChange={(e) => setCxCustom(e.target.value)} rows={3} maxLength={500} placeholder="Сообщение пользователю…" className="mb-3 w-full rounded-xl border-2 border-ink-200 px-3 py-2 text-[14px] outline-none focus:border-danger-400" />
+            )}
+            <div className="flex gap-2">
+              <Button variant="outline" className="flex-1" onClick={() => setCancelTarget(null)}>Отмена</Button>
+              <Button variant="danger" className="flex-[2]" disabled={cxEffective.length < 3 || cancelMut.isPending} onClick={() => cancelMut.mutate({ kind: cancelTarget.kind, id: cancelTarget.id, reason: cxEffective })}>
+                {cancelMut.isPending ? "Отмена…" : "Отменить и уведомить"}
               </Button>
             </div>
           </div>

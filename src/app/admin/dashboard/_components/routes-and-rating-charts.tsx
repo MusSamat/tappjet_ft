@@ -14,6 +14,31 @@ interface RoutesProps {
   days: number;
 }
 
+// Top car brands across the fleet — «какие марки чаще всего ездят».
+export function TopCarsChart({ data, loading }: { data: Array<{ make: string; count: number }>; loading: boolean }) {
+  return (
+    <ChartCard title="Топ марок авто" loading={loading}>
+      {data.length === 0 ? (
+        <div className="flex h-[240px] items-center justify-center text-[13px] font-semibold text-ink-400">Нет данных</div>
+      ) : (
+        <ResponsiveContainer width="100%" height={240}>
+          <BarChart data={data} layout="vertical" margin={{ top: 0, right: 24, bottom: 0, left: 10 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#F5F5F4" horizontal={false} />
+            <XAxis type="number" tick={{ fontSize: 10 }} allowDecimals={false} />
+            <YAxis type="category" dataKey="make" tick={{ fontSize: 11 }} width={90} />
+            <Tooltip formatter={((v: unknown) => [v, "Авто"]) as unknown as undefined} />
+            <Bar dataKey="count" radius={[0, 4, 4, 0]}>
+              {data.map((_, i) => (
+                <Cell key={i} fill={`hsl(${210 + i * 6}, 65%, ${52 + i * 2}%)`} />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      )}
+    </ChartCard>
+  );
+}
+
 export function RoutesChart({ data, loading, days }: RoutesProps) {
   return (
     <ChartCard title={`Топ-10 маршрутов (${days} дней)`} loading={loading}>

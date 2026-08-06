@@ -37,6 +37,10 @@ const RoutesChart = dynamic(
   () => import("./_components/routes-and-rating-charts").then((m) => m.RoutesChart),
   { ssr: false, loading: ChartFallback },
 );
+const TopCarsChart = dynamic(
+  () => import("./_components/routes-and-rating-charts").then((m) => m.TopCarsChart),
+  { ssr: false, loading: ChartFallback },
+);
 const RatingChart = dynamic(
   () => import("./_components/routes-and-rating-charts").then((m) => m.RatingChart),
   { ssr: false, loading: ChartFallback },
@@ -78,6 +82,7 @@ export default function AdminDashboard() {
   const regChart = useQuery({ queryKey: ["admin", "chart", "registrations_by_day", days], queryFn: () => getAdminChart("registrations_by_day", days), staleTime: 5 * 60 * 1000 });
   const tripsChart = useQuery({ queryKey: ["admin", "chart", "trips_by_day", days], queryFn: () => getAdminChart("trips_by_day", days), staleTime: 5 * 60 * 1000 });
   const routesChart = useQuery({ queryKey: ["admin", "chart", "top_routes", days], queryFn: () => getAdminChart("top_routes", days), staleTime: 5 * 60 * 1000 });
+  const carsChart = useQuery({ queryKey: ["admin", "chart", "top_cars"], queryFn: () => getAdminChart("top_cars"), staleTime: 5 * 60 * 1000 });
   const heatmapChart = useQuery({ queryKey: ["admin", "chart", "activity_heatmap", days], queryFn: () => getAdminChart("activity_heatmap", days), staleTime: 5 * 60 * 1000 });
   const ratingChart = useQuery({ queryKey: ["admin", "chart", "rating_by_day", days], queryFn: () => getAdminChart("rating_by_day", days), staleTime: 5 * 60 * 1000 });
   const funnelChart = useQuery({ queryKey: ["admin", "chart", "onboarding_funnel"], queryFn: () => getAdminChart("onboarding_funnel"), staleTime: 5 * 60 * 1000 });
@@ -88,6 +93,7 @@ export default function AdminDashboard() {
   const tripsData = pivotTrips((tripsChart.data?.data ?? []) as TripRaw[]);
   const routesData = ((routesChart.data?.data ?? []) as Array<{ from: string; to: string; count: number }>)
     .map((r) => ({ route: `${r.from} → ${r.to}`, count: r.count }));
+  const carsData = (carsChart.data?.data ?? []) as Array<{ make: string; count: number }>;
   const heatmapRaw = (heatmapChart.data?.data ?? []) as Array<{ dow: number; hour: number; count: number }>;
   const ratingData = (ratingChart.data?.data ?? []) as Array<{ date: string; avg: number }>;
   const funnelRaw = (funnelChart.data?.data ?? []) as Array<{ stage: string; count: number }>;
@@ -150,6 +156,7 @@ export default function AdminDashboard() {
 
       <div className="mb-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
         <RoutesChart data={routesData} loading={routesChart.isLoading} days={days} />
+        <TopCarsChart data={carsData} loading={carsChart.isLoading} />
         <RatingChart data={ratingData} loading={ratingChart.isLoading} days={days} />
       </div>
 
