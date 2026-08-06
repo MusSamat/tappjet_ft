@@ -176,6 +176,24 @@ export interface AdminUserDetail extends AdminUserItem {
     totalTrips: number;
     cancellations30d: number;
   } | null;
+  trips: Array<{
+    id: string;
+    originCity: string;
+    destinationCity: string;
+    departureAt: string;
+    status: string;
+    seatsAvailable: number;
+    seatsTotal: number;
+    pricePerSeat: number;
+  }>;
+  requests: Array<{
+    id: string;
+    originCity: string;
+    destinationCity: string;
+    departureDate: string;
+    status: string;
+    seatsNeeded: number;
+  }>;
 }
 
 // ── Complaints ────────────────────────────────────────────────────────────────
@@ -589,6 +607,53 @@ export async function adminForceCancel(
     `/admin/trips/${tripId}/cancel`,
     { reason },
   );
+  return data;
+}
+
+// ─── Passenger requests (browse + force-cancel) ───────────────────────────────
+
+export interface AdminRequestItem {
+  id: string;
+  originCity: string;
+  destinationCity: string;
+  departureDate: string;
+  seatsNeeded: number;
+  status: string;
+  offersCount: number;
+  passenger: { id: string; name: string; phone: string };
+  createdAt: string;
+}
+export interface AdminRequestDetail extends AdminRequestItem {
+  comment: string | null;
+  flexible: boolean;
+  offers: Array<{
+    id: string;
+    driverId: string;
+    driverName: string;
+    price: number;
+    departureTime: string;
+    status: string;
+    createdAt: string;
+  }>;
+}
+
+export async function listAdminRequests(params?: {
+  status?: string;
+  q?: string;
+  cursor?: string;
+  limit?: number;
+}): Promise<CursorPage<AdminRequestItem>> {
+  const { data } = await adminApi.get<CursorPage<AdminRequestItem>>("/admin/requests", { params });
+  return data;
+}
+
+export async function getAdminRequest(id: string): Promise<AdminRequestDetail> {
+  const { data } = await adminApi.get<AdminRequestDetail>(`/admin/requests/${id}`);
+  return data;
+}
+
+export async function adminForceCancelRequest(id: string, reason: string): Promise<{ status: string }> {
+  const { data } = await adminApi.patch<{ status: string }>(`/admin/requests/${id}/cancel`, { reason });
   return data;
 }
 

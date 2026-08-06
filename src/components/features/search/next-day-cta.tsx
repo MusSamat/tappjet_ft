@@ -2,7 +2,7 @@
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { CalendarCheck, ChevronRight } from "lucide-react";
+import { CalendarCheck, CalendarSearch, ChevronRight } from "lucide-react";
 import { useCalendarCounts } from "@/lib/hooks/use-calendar-counts";
 import { cn } from "@/lib/utils/cn";
 
@@ -38,11 +38,20 @@ export function NextDayCta({ kind }: { kind: "trips" | "requests" }) {
     .filter((d) => (counts[d] ?? 0) > 0 && d >= today)
     .sort()
     .find((d) => d > current);
-  if (!next) return null;
-
-  const label = next === tomorrow ? t("tomorrow") : fmt(next);
   const grape = kind === "requests";
 
+  // No further day with rides → a quiet hint to check the calendar (never a
+  // dead-end or a «0» button).
+  if (!next) {
+    return (
+      <p className="mt-3 flex items-center justify-center gap-2 text-[13px] font-700 text-ink-400">
+        <CalendarSearch className="h-4 w-4 shrink-0" aria-hidden="true" />
+        {t("next_day_none")}
+      </p>
+    );
+  }
+
+  const label = next === tomorrow ? t("tomorrow") : fmt(next);
   const go = () => {
     const p = new URLSearchParams(sp);
     p.set("date", next);
@@ -62,7 +71,9 @@ export function NextDayCta({ kind }: { kind: "trips" | "requests" }) {
       )}
     >
       <CalendarCheck className="h-[18px] w-[18px] shrink-0" aria-hidden="true" />
-      <span className="flex-1">{t("next_day_cta", { date: label, n: counts[next] ?? 0 })}</span>
+      <span className="flex-1">
+        {t(grape ? "next_day_cta_requests" : "next_day_cta_trips", { date: label, n: counts[next] ?? 0 })}
+      </span>
       <ChevronRight className="h-5 w-5 shrink-0" aria-hidden="true" />
     </button>
   );

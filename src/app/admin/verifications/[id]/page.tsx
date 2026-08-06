@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -64,6 +64,22 @@ export default function VerificationDetailPage() {
 
   const [rejectOpen, setRejectOpen] = useState(false);
   const [docsOpen, setDocsOpen] = useState(false);
+
+  // Fast review — keyboard shortcuts: A approve · R reject · D request docs.
+  // Suppressed while a photo lightbox or a modal is open (they have their own keys).
+  useEffect(() => {
+    const canAct = item?.verificationStatus === "pending" || item?.verificationStatus === "docs_requested";
+    const onKey = (e: KeyboardEvent) => {
+      if (!canAct || rejectOpen || docsOpen) return;
+      if (document.querySelector('[role="dialog"]')) return;
+      const k = e.key.toLowerCase();
+      if (k === "a") { e.preventDefault(); if (!approveMut.isPending) approveMut.mutate(); }
+      else if (k === "r") { e.preventDefault(); setRejectOpen(true); }
+      else if (k === "d") { e.preventDefault(); setDocsOpen(true); }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [item?.verificationStatus, rejectOpen, docsOpen, approveMut]);
 
   if (isLoading) {
     return (
@@ -161,7 +177,7 @@ export default function VerificationDetailPage() {
         <p className="mb-3 text-[11px] font-bold uppercase tracking-widest text-ink-400">
           Документы и фото
         </p>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           <PhotoCard label="Права — лицевая" src={norm(item.photos.license)} />
           {item.photos.licenseBack && (
             <PhotoCard label="Права — обратная" src={norm(item.photos.licenseBack)} />
@@ -175,37 +191,28 @@ export default function VerificationDetailPage() {
         </div>
       </div>
 
-      {/* Actions */}
+      {/* Actions — sticky bar, always in reach while scrolling the photos */}
       {isPending && (
-        <div className="flex flex-wrap gap-3">
-          <Button
-            variant="brand"
-            size="lg"
-            type="button"
-            onClick={() => approveMut.mutate()}
-            disabled={approveMut.isPending}
-          >
-            <CheckCircle2 className="h-5 w-5" />
-            {approveMut.isPending ? "Одобряем…" : "Одобрить"}
-          </Button>
-          <Button
-            variant="cta"
-            size="lg"
-            type="button"
-            onClick={() => setDocsOpen(true)}
-          >
-            <FileQuestion className="h-5 w-5" />
-            Запросить документы
-          </Button>
-          <Button
-            variant="danger"
-            size="lg"
-            type="button"
-            onClick={() => setRejectOpen(true)}
-          >
-            <XCircle className="h-5 w-5" />
-            Отклонить
-          </Button>
+        <div className="sticky bottom-0 z-10 -mx-6 border-t border-ink-200 bg-white/95 px-6 py-3 backdrop-blur">
+          <div className="flex flex-wrap items-center gap-3">
+            <Button variant="brand" size="lg" type="button" onClick={() => approveMut.mutate()} disabled={approveMut.isPending}>
+              <CheckCircle2 className="h-5 w-5" />
+              {approveMut.isPending ? "Одобряем…" : "Одобрить"}
+            </Button>
+            <Button variant="cta" size="lg" type="button" onClick={() => setDocsOpen(true)}>
+              <FileQuestion className="h-5 w-5" />
+              Запросить документы
+            </Button>
+            <Button variant="danger" size="lg" type="button" onClick={() => setRejectOpen(true)}>
+              <XCircle className="h-5 w-5" />
+              Отклонить
+            </Button>
+            <span className="ml-auto hidden text-[12px] font-semibold text-ink-400 sm:block">
+              <kbd className="rounded bg-ink-100 px-1.5 py-0.5 font-mono">A</kbd> одобрить ·{" "}
+              <kbd className="rounded bg-ink-100 px-1.5 py-0.5 font-mono">R</kbd> отклонить ·{" "}
+              <kbd className="rounded bg-ink-100 px-1.5 py-0.5 font-mono">D</kbd> документы
+            </span>
+          </div>
         </div>
       )}
 

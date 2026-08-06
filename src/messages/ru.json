@@ -1237,7 +1237,9 @@
     "date_nav_earlier": "Раньше",
     "date_nav_later": "Позже",
     "recent_searches": "Недавние поиски",
-    "next_day_cta": "Показать {date} · {n}"
+    "next_day_cta_trips": "Показать {date} · {n, plural, one {# поездка} few {# поездки} many {# поездок} other {# поездок}}",
+    "next_day_cta_requests": "Показать {date} · {n, plural, one {# заявка} few {# заявки} many {# заявок} other {# заявок}}",
+    "next_day_none": "Посмотрите ближайшую дату в календаре"
   },
   "detail": {
     "book_modal_title": "Бронирование",
@@ -1709,7 +1711,8 @@
     "time_now": "только что",
     "time_minutes": "{n}м",
     "time_hours": "{n}ч",
-    "time_days": "{n}д"
+    "time_days": "{n}д",
+    "type_request_cancelled_admin": "Заявка отменена администратором"
   },
   "notif_actions": {
     "open_chat": "Открыть чат",

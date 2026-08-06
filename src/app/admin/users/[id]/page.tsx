@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getAdminUser, blockUser, unblockUser } from "@/lib/api/admin";
@@ -15,6 +16,16 @@ function fmt(iso?: string | null): string {
   return new Date(iso).toLocaleDateString("ru-RU", {
     day: "numeric", month: "long", year: "numeric",
   });
+}
+
+function fmtDay(iso: string): string {
+  return new Date(iso).toLocaleDateString("ru-RU", { day: "numeric", month: "short" });
+}
+
+function statusTone(status: string): string {
+  if (["active", "open", "verified", "accepted"].includes(status)) return "bg-brand-100 text-brand-700";
+  if (["cancelled", "rejected", "expired"].includes(status)) return "bg-danger-100 text-danger-700";
+  return "bg-ink-100 text-ink-500";
 }
 
 const BLOCK_REASONS = [
@@ -88,9 +99,14 @@ export default function AdminUserDetailPage() {
       <div className="mb-4 rounded-2xl bg-white p-5 shadow-card">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-ink-200 text-[22px] font-bold text-ink-600">
-              {user.name.charAt(0).toUpperCase()}
-            </div>
+            {user.avatarUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={user.avatarUrl} alt={user.name} className="h-16 w-16 rounded-full object-cover" />
+            ) : (
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-ink-200 text-[22px] font-bold text-ink-600">
+                {user.name.charAt(0).toUpperCase()}
+              </div>
+            )}
             <div>
               <p className="text-[20px] font-extrabold text-ink-900">{user.name}</p>
               <div className="mt-1 flex flex-wrap gap-1.5">
@@ -222,6 +238,50 @@ export default function AdminUserDetailPage() {
           </div>
         </div>
       )}
+
+      {/* Activity: the user's own trips (driver) + requests (passenger) */}
+      <div className="mt-4 grid gap-4 lg:grid-cols-2">
+        <div className="rounded-2xl bg-white p-5 shadow-card">
+          <p className="mb-3 text-[11px] font-bold uppercase tracking-widest text-ink-400">
+            Поездки водителя ({user.trips.length})
+          </p>
+          {user.trips.length === 0 ? (
+            <p className="text-[13px] text-ink-400">Нет поездок</p>
+          ) : (
+            <div className="space-y-1.5">
+              {user.trips.map((t) => (
+                <Link key={t.id} href={`/admin/trips?focus=${t.id}`} className="flex items-center justify-between rounded-xl bg-ink-50 px-3 py-2 hover:bg-ink-100">
+                  <span className="min-w-0 truncate text-[13px] font-semibold text-ink-800">{t.originCity} → {t.destinationCity}</span>
+                  <span className="ml-2 flex shrink-0 items-center gap-2 text-[12px] text-ink-500">
+                    {fmtDay(t.departureAt)}
+                    <span className={cn("rounded-full px-1.5 py-0.5 text-[10px] font-bold", statusTone(t.status))}>{t.status}</span>
+                  </span>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+        <div className="rounded-2xl bg-white p-5 shadow-card">
+          <p className="mb-3 text-[11px] font-bold uppercase tracking-widest text-ink-400">
+            Заявки пассажира ({user.requests.length})
+          </p>
+          {user.requests.length === 0 ? (
+            <p className="text-[13px] text-ink-400">Нет заявок</p>
+          ) : (
+            <div className="space-y-1.5">
+              {user.requests.map((r) => (
+                <Link key={r.id} href={`/admin/requests?focus=${r.id}`} className="flex items-center justify-between rounded-xl bg-ink-50 px-3 py-2 hover:bg-ink-100">
+                  <span className="min-w-0 truncate text-[13px] font-semibold text-ink-800">{r.originCity} → {r.destinationCity}</span>
+                  <span className="ml-2 flex shrink-0 items-center gap-2 text-[12px] text-ink-500">
+                    {fmtDay(r.departureDate)}
+                    <span className={cn("rounded-full px-1.5 py-0.5 text-[10px] font-bold", statusTone(r.status))}>{r.status}</span>
+                  </span>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
 
       {/* Block modal */}
       {blockOpen && (

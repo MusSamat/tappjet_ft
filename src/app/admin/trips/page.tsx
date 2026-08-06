@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   adminForceCancel,
@@ -42,6 +43,13 @@ export default function AdminTripsPage() {
   const [cursors, setCursors] = useState<string[]>([]);
   const cursor = cursors[cursors.length - 1];
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  // Deep-link: /admin/trips?focus=<id> opens that trip's detail panel directly
+  // (the panel fetches by id, so it works even if the trip isn't on this page).
+  const searchParams = useSearchParams();
+  useEffect(() => {
+    const f = searchParams.get("focus");
+    if (f) setSelectedId(f);
+  }, [searchParams]);
   const [cancelTarget, setCancelTarget] = useState<AdminTripItem | null>(null);
   const [cancelReason, setCancelReason] = useState("");
   const [customReason, setCustomReason] = useState("");

@@ -1237,7 +1237,9 @@
     "date_nav_earlier": "Мурда",
     "date_nav_later": "Кийин",
     "recent_searches": "Акыркы издөөлөр",
-    "next_day_cta": "{date} · {n} көрсөтүү"
+    "next_day_cta_trips": "{date} · {n} сапар",
+    "next_day_cta_requests": "{date} · {n} өтүнүч",
+    "next_day_none": "Жакынкы күндү календардан караңыз"
   },
   "detail": {
     "book_modal_title": "Брондоо",
@@ -1709,7 +1711,8 @@
     "time_now": "азыр эле",
     "time_minutes": "{n}мүн",
     "time_hours": "{n}с",
-    "time_days": "{n}к"
+    "time_days": "{n}к",
+    "type_request_cancelled_admin": "Өтүнүчүңүз администратор тарабынан жокко чыгарылды"
   },
   "notif_actions": {
     "open_chat": "Чатты ачуу",
