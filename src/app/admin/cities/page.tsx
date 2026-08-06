@@ -15,21 +15,21 @@ function EditRow({
   saving,
 }: {
   city: Partial<CityItem>;
-  onSave: (data: { name: string; nameKg: string; region: string; isActive: boolean }) => void;
+  onSave: (data: { nameRu: string; nameKg: string; region: string; isActive: boolean }) => void;
   onCancel: () => void;
   saving: boolean;
 }) {
-  const [name, setName] = useState(city.name ?? "");
+  const [nameRu, setNameRu] = useState(city.nameRu ?? "");
   const [nameKg, setNameKy] = useState(city.nameKg ?? "");
-  const [region, setRegion] = useState(city.region ?? "");
+  const [region, setRegion] = useState(city.regionNameRu ?? "");
   const [isActive, setIsActive] = useState(city.isActive ?? true);
 
   return (
     <tr className="bg-accent-50">
       <td className="px-4 py-2">
         <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={nameRu}
+          onChange={(e) => setNameRu(e.target.value)}
           placeholder="Название (рус)"
           className="w-full rounded-lg border border-accent-200 px-3 py-1.5 text-[13px] outline-none focus:border-accent-400"
         />
@@ -62,8 +62,8 @@ function EditRow({
         <div className="flex gap-1">
           <button
             type="button"
-            onClick={() => onSave({ name, nameKg, region, isActive })}
-            disabled={!name.trim() || !nameKg.trim() || saving}
+            onClick={() => onSave({ nameRu, nameKg, region, isActive })}
+            disabled={!nameRu.trim() || !nameKg.trim() || saving}
             className="rounded-lg bg-brand-600 p-1.5 text-white hover:bg-brand-700 disabled:opacity-50"
           >
             <Check className="h-4 w-4" />
@@ -169,9 +169,9 @@ export default function AdminCitiesPage() {
                   />
                 ) : (
                   <tr key={c.id} className="hover:bg-ink-50">
-                    <td className="px-4 py-3 font-bold text-ink-900">{c.name}</td>
-                    <td className="px-4 py-3 text-[13px] text-ink-600">{c.nameKg}</td>
-                    <td className="px-4 py-3 text-[13px] text-ink-500">{c.region ?? "—"}</td>
+                    <td className="px-4 py-3 font-bold text-ink-900">{c.nameRu || "—"}</td>
+                    <td className="px-4 py-3 text-[13px] text-ink-600">{c.nameKg || "—"}</td>
+                    <td className="px-4 py-3 text-[13px] text-ink-500">{c.regionNameRu ?? "—"}</td>
                     <td className="px-4 py-3 text-center">
                       <span className={cn(
                         "inline-block h-2 w-2 rounded-full",

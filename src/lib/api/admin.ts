@@ -218,10 +218,11 @@ export interface ComplaintItem {
 
 export interface CityItem {
   id: number;
-  name: string;
+  nameRu: string;
   nameKg: string;
+  nameEn?: string | null;
+  regionNameRu?: string | null;
   isActive: boolean;
-  region?: string | null;
 }
 
 export interface AdminMember {
@@ -405,7 +406,7 @@ export async function listAdminCities(): Promise<{ data: CityItem[] }> {
 }
 
 export async function createCity(input: {
-  name: string;
+  nameRu: string;
   nameKg: string;
   region?: string;
   isActive?: boolean;
@@ -416,7 +417,7 @@ export async function createCity(input: {
 
 export async function updateCity(
   id: number,
-  input: Partial<{ name: string; nameKg: string; region: string; isActive: boolean }>,
+  input: Partial<{ nameRu: string; nameKg: string; region: string; isActive: boolean }>,
 ): Promise<CityItem> {
   const { data } = await adminApi.patch<CityItem>(`/admin/cities/${id}`, input);
   return data;
