@@ -2,9 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Star, Shield, Users, Calendar, Zap, MessageCircle, CheckCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Star, Shield, Users, Calendar, Zap, MessageCircle, CheckCircle, Pencil, X } from "lucide-react";
 import { useTranslations } from "next-intl";
-import type { PassengerRequest } from "@/lib/api/passenger-requests";
+import { type PassengerRequest, cancelPassengerRequest } from "@/lib/api/passenger-requests";
+import { extractError } from "@/lib/api/client";
+import { useFriendlyError } from "@/lib/hooks/use-api-error";
+import { toastSuccess, toastError } from "@/components/layout/quick-toast";
 import { DriverAvatar } from "@/components/ui/driver-avatar";
 import { LikeButton } from "@/components/ui/like-button";
 import { ListingMetrics } from "@/components/ui/listing-metrics";
@@ -31,14 +36,34 @@ export function RequestDetailPane({ request }: Props) {
   const { passenger } = request;
   useRecordView("passenger_request", request.id);
   const t = useTranslations("requests");
+  const tMy = useTranslations("requests.my");
+  const tCard = useTranslations("card");
+  const tToasts = useTranslations("toasts");
   const tFilters = useTranslations("request_filters");
   const authStatus = useAuth((s) => s.status);
+  const myId = useAuth((s) => s.user?.id);
+  const router = useRouter();
+  const qc = useQueryClient();
+  const fe = useFriendlyError();
   const [showModal, setShowModal] = useState(false);
   const showRating = passenger.rating !== null && passenger.ratingCount >= 3;
+  // The request owner never sees respond/call on their OWN request — only
+  // edit / cancel (mirrors the Flutter owner-aware detail).
+  const isOwner = Boolean(myId && request.passengerId === myId);
   // Phase 1: no roles — any signed-in user may respond (backend требует машину).
-  const isDriver = authStatus === "authenticated";
+  const isDriver = authStatus === "authenticated" && !isOwner;
   const isGuest = authStatus === "anonymous" || authStatus === "idle";
   const isOpen = request.status === "open";
+
+  const cancelMut = useMutation({
+    mutationFn: () => cancelPassengerRequest(request.id),
+    onSuccess: () => {
+      toastSuccess(tToasts("request_cancelled"));
+      void qc.invalidateQueries({ queryKey: ["passenger-requests"] });
+      router.push("/my/bookings?tab=requests");
+    },
+    onError: (e) => toastError(fe(extractError(e))),
+  });
 
   return (
     <>
@@ -178,7 +203,32 @@ export function RequestDetailPane({ request }: Props) {
 
         {/* CTA at the END — plain footer, not floating over the info. */}
         <div className="border-t border-ink-100 bg-white p-4 dark:border-ink-800 dark:bg-ink-900">
-          {isGuest ? (
+          {isOwner ? (
+            isOpen ? (
+              <div className="flex gap-2">
+                <Link
+                  href="/my/bookings?tab=requests"
+                  className="flex h-12 flex-1 items-center justify-center gap-2 rounded-2xl border border-ink-200 bg-white text-[15px] font-bold text-ink-700 transition-colors hover:bg-ink-50 dark:border-ink-700 dark:bg-ink-800 dark:text-ink-100"
+                >
+                  <Pencil className="h-4 w-4" aria-hidden />
+                  {tMy("edit")}
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => cancelMut.mutate()}
+                  disabled={cancelMut.isPending}
+                  className="flex h-12 flex-1 items-center justify-center gap-2 rounded-2xl border border-coral-200 bg-white text-[15px] font-bold text-coral-600 transition-colors hover:bg-coral-50 disabled:opacity-50 dark:border-coral-500/40 dark:bg-ink-900"
+                >
+                  <X className="h-4 w-4" aria-hidden />
+                  {cancelMut.isPending ? "…" : tCard("cancel")}
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center rounded-2xl border border-ink-200 bg-ink-50 px-4 py-3 dark:bg-ink-800 dark:border-ink-700">
+                <p className="text-[14px] font-semibold text-ink-500">{t("closed")}</p>
+              </div>
+            )
+          ) : isGuest ? (
             <Link
               href="/auth/login"
               className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-grape-600 text-[15px] font-bold text-white hover:bg-grape-700"

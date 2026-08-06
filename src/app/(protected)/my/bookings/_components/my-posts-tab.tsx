@@ -8,10 +8,23 @@ import { listMyTrips } from "@/lib/api/my-trips";
 import { getDriverStatus } from "@/lib/api/profile";
 import { listMyPassengerRequests, type PassengerRequest } from "@/lib/api/passenger-requests";
 import type { TripListItem } from "@/lib/api/trips";
-import { TripCard } from "@/components/ui/trip-card";
-import { RequestCard } from "@/components/features/passenger-requests/request-card";
+import { DriverAvatar } from "@/components/ui";
+import { ListCard } from "@/components/ui/list-card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { CardSkeletonList } from "@/components/ui/card-skeleton";
+
+function fmtDT(iso?: string): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  return (
+    d.toLocaleDateString("ru-RU", { day: "2-digit", month: "2-digit" }) +
+    " · " +
+    d.toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" })
+  );
+}
+function fmtD(iso?: string): string {
+  return iso ? new Date(iso).toLocaleDateString("ru-RU", { day: "2-digit", month: "2-digit" }) : "";
+}
 
 // «Мои объявления» — trips AND ride requests in one feed (Phase 1: no roles).
 // Cards keep their identity colors (teal trip / grape request), every card
@@ -51,6 +64,8 @@ async function fetchMyPosts(): Promise<Post[]> {
 
 export function MyPostsTab({ show = "both" }: { show?: "trips" | "requests" | "both" }) {
   const t = useTranslations("my");
+  const tB = useTranslations("bookings");
+  const tSeats = useTranslations("booking_card");
   const { data: posts, isLoading } = useQuery({
     queryKey: ["my-posts"],
     queryFn: fetchMyPosts,
@@ -127,9 +142,33 @@ export function MyPostsTab({ show = "both" }: { show?: "trips" | "requests" | "b
       )}
       {visible.map((p) =>
         p.kind === "trip" ? (
-          <TripCard key={`t-${p.trip.id}`} trip={p.trip} href={`/trips/${p.trip.id}`} />
+          <ListCard
+            key={`t-${p.trip.id}`}
+            when={fmtDT(p.trip.departureAt)}
+            role={t("role_driver")}
+            status={p.trip.status}
+            origin={p.trip.originCity ?? ""}
+            destination={p.trip.destinationCity ?? ""}
+            avatar={<DriverAvatar name={p.trip.driver?.car?.make ?? p.trip.driver?.name ?? ""} src={p.trip.driver?.avatarUrl} size="md" />}
+            actorName={p.trip.driver?.car ? `${p.trip.driver.car.make ?? ""} ${p.trip.driver.car.model ?? ""}`.trim() : p.trip.driver?.name}
+            actorSub={<span className="text-[11.5px] font-700 text-ink-500">{p.trip.seatsAvailable} {tSeats("seats_word")}</span>}
+            trailing={<span className="num text-[15px] font-900 text-sky-600">{p.trip.pricePerSeat} {tB("som")}</span>}
+            href={`/trips/${p.trip.id}`}
+          />
         ) : (
-          <RequestCard key={`r-${p.request.id}`} request={p.request} href={`/requests/${p.request.id}`} />
+          <ListCard
+            key={`r-${p.request.id}`}
+            grape
+            when={fmtD(p.request.departureDate)}
+            role={t("role_request")}
+            status={p.request.status}
+            origin={p.request.originCity ?? ""}
+            destination={p.request.destinationCity ?? ""}
+            avatar={<DriverAvatar name={p.request.passenger?.name ?? ""} src={p.request.passenger?.avatarUrl} shape="square" size="md" />}
+            actorName={p.request.passenger?.name}
+            trailing={<span className="text-[12px] font-700 text-ink-500">{p.request.seatsNeeded} {tSeats("seats_word")}</span>}
+            href={`/requests/${p.request.id}`}
+          />
         ),
       )}
     </div>

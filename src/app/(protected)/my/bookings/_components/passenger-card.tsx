@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Star, ArrowRight, X, MessageCircle } from "lucide-react";
+import { Star, X, MessageCircle } from "lucide-react";
 import { DriverAvatar } from "@/components/ui";
-import { StatusBadge } from "@/components/ui";
+import { ListCard, ListCardButton } from "@/components/ui/list-card";
 import type { Booking } from "@/lib/api/bookings";
 import type { PendingRating } from "@/lib/api/ratings";
 
@@ -36,87 +36,43 @@ export function PassengerCard({ booking, pendingRating, onRate, onCancel }: {
   onCancel?: () => void;
 }) {
   const t = useTranslations("bookings");
+  const router = useRouter();
   const trip = booking.trip;
   const tripId = booking.tripId ?? trip?.id;
   const status = booking.status as string;
+  const active = ACTIVE_STATUSES.has(status);
+  const driverName = trip?.driver?.name ?? t("driver_fallback");
+
+  // История items are read-only (no chat/cancel); rating a finished trip stays.
+  const actions = [
+    active && (
+      <ListCardButton
+        key="chat"
+        label={t("chat_btn")}
+        icon={<MessageCircle className="h-4 w-4" />}
+        kind="primary"
+        onClick={() => router.push(`/my/bookings/${booking.id}/chat`)}
+      />
+    ),
+    pendingRating && onRate && (
+      <ListCardButton key="rate" label={t("rate_btn")} icon={<Star className="h-4 w-4" />} kind="primary" onClick={onRate} />
+    ),
+    onCancel && active && (
+      <ListCardButton key="cancel" label={t("cancel_btn")} icon={<X className="h-4 w-4" />} kind="danger" onClick={onCancel} />
+    ),
+  ].filter(Boolean);
 
   return (
-    <div className="rounded-3xl bg-white p-4 shadow-card ring-1 ring-ink-100 transition hover:-translate-y-0.5 hover:shadow-lift dark:bg-ink-900 dark:ring-ink-800">
-      <Link href={tripId ? `/trips/${tripId}` : "#"} className="block">
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex min-w-0 flex-1 items-center gap-3">
-            <DriverAvatar
-              name={trip?.driver?.name ?? t("driver_fallback")}
-              src={trip?.driver?.avatarUrl}
-              size="md"
-            />
-            <div className="min-w-0">
-              <p className="truncate text-[17px] font-900 text-ink-900 dark:text-white">
-                {trip?.originCity} → {trip?.destinationCity}
-              </p>
-              <p className="mt-0.5 text-[14px] font-600 text-ink-500 dark:text-ink-400">
-                {trip?.driver?.name ?? t("driver_fallback")} · {fmtDate(trip?.departureAt)}
-              </p>
-            </div>
-          </div>
-          <div className="flex flex-shrink-0 items-center gap-2">
-            <StatusBadge status={status} />
-            <ArrowRight className="h-4 w-4 text-ink-400" />
-          </div>
-        </div>
-
-        <div className="mt-3 flex gap-5">
-          <div>
-            <p className="text-[11px] font-bold uppercase tracking-widest text-ink-400">{t("seats_label")}</p>
-            <p className="text-[16px] font-900 text-ink-900 dark:text-white">{booking.seatsCount}</p>
-          </div>
-          <div>
-            <p className="text-[11px] font-bold uppercase tracking-widest text-ink-400">{t("sum_label")}</p>
-            <p className="text-[16px] font-900 text-brand-700 dark:text-brand-300">
-              {booking.totalPrice ?? "—"} {t("som")}
-            </p>
-          </div>
-        </div>
-      </Link>
-
-      {(pendingRating || onCancel || ACTIVE_STATUSES.has(status)) && (
-        <div className="mt-3 flex flex-wrap gap-2 border-t border-ink-100 pt-3">
-          {/* Chat with the driver — available from pending onward (templates
-              before acceptance, free text after). This is the entry point the
-              passenger lost after closing the booking-sent modal. */}
-          {ACTIVE_STATUSES.has(status) && (
-            <Link href={`/my/bookings/${booking.id}/chat`}>
-              <button
-                type="button"
-                className="flex items-center gap-1.5 rounded-2xl border border-brand-200 bg-brand-50 px-4 py-2 text-[14px] font-bold text-brand-700 hover:bg-brand-100"
-              >
-                <MessageCircle className="h-4 w-4" />
-                {t("chat_btn")}
-              </button>
-            </Link>
-          )}
-          {pendingRating && onRate && (
-            <button
-              type="button"
-              onClick={onRate}
-              className="flex items-center gap-1.5 rounded-2xl bg-accent-500 px-4 py-2 text-[14px] font-bold text-[#4A2C00] hover:bg-accent-600"
-            >
-              <Star className="h-4 w-4" />
-              {t("rate_btn")}
-            </button>
-          )}
-          {onCancel && ACTIVE_STATUSES.has(booking.status as string) && (
-            <button
-              type="button"
-              onClick={onCancel}
-              className="flex items-center gap-1.5 rounded-2xl border border-ink-200 px-4 py-2 text-[14px] font-bold text-ink-600 hover:border-coral-200 hover:text-coral-600"
-            >
-              <X className="h-4 w-4" />
-              {t("cancel_btn")}
-            </button>
-          )}
-        </div>
-      )}
-    </div>
+    <ListCard
+      href={tripId ? `/trips/${tripId}` : undefined}
+      when={fmtDate(trip?.departureAt)}
+      status={status}
+      origin={trip?.originCity ?? ""}
+      destination={trip?.destinationCity ?? ""}
+      avatar={<DriverAvatar name={driverName} src={trip?.driver?.avatarUrl} size="md" />}
+      actorName={driverName}
+      actorSub={<span className="text-[11.5px] font-700 text-ink-500">{booking.seatsCount} · {booking.totalPrice ?? "—"} {t("som")}</span>}
+      actions={actions.length ? actions : undefined}
+    />
   );
 }

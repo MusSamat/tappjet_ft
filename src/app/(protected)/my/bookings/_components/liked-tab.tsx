@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Heart } from "lucide-react";
 import { useLikedTrips, useLikedRequests } from "@/lib/hooks/use-likes";
@@ -9,10 +8,23 @@ import { useInfiniteScroll } from "@/lib/hooks/use-infinite-scroll";
 import { Chip } from "@/components/ui/chip";
 import { CardSkeletonList } from "@/components/ui/card-skeleton";
 import { QueryError } from "@/components/ui/query-error";
-import { TripCard } from "@/components/ui/trip-card";
-import { RequestCard } from "@/components/features/passenger-requests/request-card";
+import { DriverAvatar } from "@/components/ui";
+import { ListCard } from "@/components/ui/list-card";
 import type { TripListItem } from "@/lib/api/trips";
 import type { PassengerRequest } from "@/lib/api/passenger-requests";
+
+function fmtDT(iso?: string): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  return (
+    d.toLocaleDateString("ru-RU", { day: "2-digit", month: "2-digit" }) +
+    " · " +
+    d.toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" })
+  );
+}
+function fmtD(iso?: string): string {
+  return iso ? new Date(iso).toLocaleDateString("ru-RU", { day: "2-digit", month: "2-digit" }) : "";
+}
 
 // «Избранное» tab — design-spec §2.5. Driver likes passenger requests,
 // passenger likes trips. Filter chips are a visual sort over the loaded list.
@@ -51,7 +63,9 @@ function FilterChips({ value, onChange }: { value: FilterKey; onChange: (v: Filt
 // Phase 1: one favourites feed for everyone — liked trips AND liked requests
 // together, each with its status badge; tap opens the item's page.
 export function LikedTab() {
-  const router = useRouter();
+  const tMy = useTranslations("my");
+  const tB = useTranslations("bookings");
+  const tSeats = useTranslations("booking_card");
   const [filter, setFilter] = useState<FilterKey>("all");
 
   const trips = useLikedTrips();
@@ -101,21 +115,59 @@ export function LikedTab() {
   const count = sortedTrips.length + sortedRequests.length;
   if (count === 0) return <EmptyLiked />;
 
+  const now = Date.now();
+  const expiredLabel = tMy("expired");
+
   return (
     <div className="flex flex-col">
       <FilterChips value={filter} onChange={setFilter} />
       <div className="flex flex-col gap-3.5">
         {[
-          ...sortedTrips.map((tr: TripListItem) => ({
-            key: `t-${tr.id}`,
-            d: new Date(tr.departureAt ?? 0).getTime(),
-            node: <TripCard key={`t-${tr.id}`} trip={tr} onClick={() => router.push(`/trips/${tr.id}`)} />,
-          })),
-          ...sortedRequests.map((r: PassengerRequest) => ({
-            key: `r-${r.id}`,
-            d: new Date(r.departureDate ?? 0).getTime(),
-            node: <RequestCard key={`r-${r.id}`} request={r} onClick={() => router.push(`/requests/${r.id}`)} />,
-          })),
+          ...sortedTrips.map((tr: TripListItem) => {
+            const expired = tr.status !== "active" || new Date(tr.departureAt ?? 0).getTime() < now;
+            return {
+              key: `t-${tr.id}`,
+              d: new Date(tr.departureAt ?? 0).getTime(),
+              node: (
+                <ListCard
+                  key={`t-${tr.id}`}
+                  when={fmtDT(tr.departureAt)}
+                  status={tr.status}
+                  origin={tr.originCity ?? ""}
+                  destination={tr.destinationCity ?? ""}
+                  avatar={<DriverAvatar name={tr.driver?.name ?? ""} src={tr.driver?.avatarUrl} size="md" />}
+                  actorName={tr.driver?.name}
+                  trailing={<span className="num text-[15px] font-900 text-sky-600">{tr.pricePerSeat} {tB("som")}</span>}
+                  href={`/trips/${tr.id}`}
+                  dimmed={expired}
+                  ribbon={expired ? expiredLabel : undefined}
+                />
+              ),
+            };
+          }),
+          ...sortedRequests.map((r: PassengerRequest) => {
+            const expired = r.status !== "open" || new Date(r.departureDate ?? 0).getTime() < now;
+            return {
+              key: `r-${r.id}`,
+              d: new Date(r.departureDate ?? 0).getTime(),
+              node: (
+                <ListCard
+                  key={`r-${r.id}`}
+                  grape
+                  when={fmtD(r.departureDate)}
+                  status={r.status}
+                  origin={r.originCity ?? ""}
+                  destination={r.destinationCity ?? ""}
+                  avatar={<DriverAvatar name={r.passenger?.name ?? ""} src={r.passenger?.avatarUrl} shape="square" size="md" />}
+                  actorName={r.passenger?.name}
+                  trailing={<span className="text-[12px] font-700 text-ink-500">{r.seatsNeeded} {tSeats("seats_word")}</span>}
+                  href={`/requests/${r.id}`}
+                  dimmed={expired}
+                  ribbon={expired ? expiredLabel : undefined}
+                />
+              ),
+            };
+          }),
         ]
           .sort((a, b) => a.d - b.d)
           .map((x) => x.node)}

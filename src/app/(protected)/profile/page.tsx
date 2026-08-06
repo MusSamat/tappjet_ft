@@ -37,6 +37,7 @@ import { ReviewCard, ReviewCardSkeleton } from "./_components/review-card";
 import { ProfileCompletion } from "./_components/profile-completion";
 import { SettingsTab } from "./_components/settings-tab";
 import { CarsTab } from "./_components/cars-tab";
+import { HistoryTab } from "./_components/history-tab";
 import { CarFront as CarFrontIcon } from "lucide-react";
 
 type Tab = "about" | "cars" | "reviews" | "history" | "settings";
@@ -197,11 +198,7 @@ export default function ProfilePage() {
     </div>
   );
 
-  const historyContent = (
-    <div className="rounded-3xl bg-white p-10 text-center shadow-card dark:bg-ink-900">
-      <p className="text-[15px] font-medium text-ink-500">{t("history_hint")}</p>
-    </div>
-  );
+  const historyContent = <HistoryTab />;
 
   const settingsContent = (
     <SettingsTab

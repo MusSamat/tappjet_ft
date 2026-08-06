@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Plus, Minus, Users, Star, ChevronDown, Check, X, MessageCircle } from "lucide-react";
+import { Plus, Minus, Users, Star, ChevronDown, Check, X, MessageCircle, Pencil } from "lucide-react";
 import { useTranslations } from "next-intl";
 import {
   listMyPassengerRequests,
@@ -20,8 +20,12 @@ import {
 import { extractError } from "@/lib/api/client";
 import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { toastSuccess, toastError } from "@/components/layout/quick-toast";
-import { RequestCard } from "@/components/features/passenger-requests/request-card";
+import { ListCard, ListCardButton } from "@/components/ui/list-card";
 import { Modal, ModalContent, ModalHeader, ModalTitle } from "@/components/ui/modal";
+
+function fmtD(iso?: string): string {
+  return iso ? new Date(iso).toLocaleDateString("ru-RU", { day: "2-digit", month: "2-digit" }) : "";
+}
 
 import { VerifiedBadge } from "@/components/ui/verified-badge";
 import { DriverAvatar } from "@/components/ui/driver-avatar";
@@ -284,6 +288,8 @@ export function RequestWithOffers({
 }) {
   const router = useRouter();
   const t = useTranslations("requests.my");
+  const tCard = useTranslations("card");
+  const tSeats = useTranslations("booking_card");
   const [expanded, setExpanded] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const isOpen = request.status === "open";
@@ -300,11 +306,23 @@ export function RequestWithOffers({
 
   return (
     <div className="flex flex-col gap-2">
-      <RequestCard
-        request={request}
-        onEdit={isOpen ? () => setEditOpen(true) : undefined}
-        onCancel={onCancel}
-        cancelLoading={cancelLoading}
+      <ListCard
+        grape
+        when={fmtD(request.departureDate)}
+        status={request.status}
+        origin={request.originCity}
+        destination={request.destinationCity}
+        actorName={`${request.seatsNeeded} ${tSeats("seats_word")}`}
+        actorSub={request.comment ? <span className="truncate text-[11.5px] font-700 text-ink-500">«{request.comment}»</span> : undefined}
+        href={`/requests/${request.id}`}
+        actions={
+          isOpen ? (
+            <>
+              <ListCardButton grape label={t("edit")} icon={<Pencil className="h-4 w-4" />} onClick={() => setEditOpen(true)} />
+              <ListCardButton kind="danger" label={cancelLoading ? "…" : tCard("cancel")} icon={<X className="h-4 w-4" />} onClick={onCancel} disabled={cancelLoading} />
+            </>
+          ) : undefined
+        }
       />
       <RequestEditModal request={request} open={editOpen} onOpenChange={setEditOpen} />
 
@@ -358,6 +376,7 @@ export function MyRequestsTab() {
   const tToasts = useTranslations("toasts");
   const fe = useFriendlyError();
 
+  const tSeatsHist = useTranslations("booking_card");
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["passenger-requests", "my"],
     queryFn: listMyPassengerRequests,
@@ -432,7 +451,16 @@ export function MyRequestsTab() {
           </h2>
           <div className="flex flex-col gap-3">
             {past.map((req) => (
-              <RequestCard key={req.id} request={req} />
+              <ListCard
+                key={req.id}
+                grape
+                when={fmtD(req.departureDate)}
+                status={req.status}
+                origin={req.originCity}
+                destination={req.destinationCity}
+                actorName={`${req.seatsNeeded} ${tSeatsHist("seats_word")}`}
+                href={`/requests/${req.id}`}
+              />
             ))}
           </div>
         </section>

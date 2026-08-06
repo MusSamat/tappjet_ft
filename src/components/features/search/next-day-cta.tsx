@@ -1,9 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { CalendarCheck, CalendarSearch, ChevronRight } from "lucide-react";
 import { useCalendarCounts } from "@/lib/hooks/use-calendar-counts";
+import { DatePickerModal } from "@/components/ui/date-picker";
 import { cn } from "@/lib/utils/cn";
 
 // Inline «next day» jump shown when the selected day is empty or its list ends —
@@ -27,6 +29,7 @@ export function NextDayCta({ kind }: { kind: "trips" | "requests" }) {
   const from = sp.get("from") ?? "";
   const to = sp.get("to") ?? "";
   const counts = useCalendarCounts(kind, from, to, Boolean(from && to));
+  const [pickerOpen, setPickerOpen] = useState(false);
 
   if (!from || !to || !counts) return null;
 
@@ -40,24 +43,33 @@ export function NextDayCta({ kind }: { kind: "trips" | "requests" }) {
     .find((d) => d > current);
   const grape = kind === "requests";
 
-  // No further day with rides → a quiet hint to check the calendar (never a
+  const goDate = (v: string) => {
+    const p = new URLSearchParams(sp);
+    p.set("date", v);
+    p.delete("cursor");
+    router.replace(`${pathname}?${p.toString()}`, { scroll: false });
+  };
+
+  // No further day with rides → a link that opens the calendar (never a
   // dead-end or a «0» button).
   if (!next) {
     return (
-      <p className="mt-3 flex items-center justify-center gap-2 text-[13px] font-700 text-ink-400">
-        <CalendarSearch className="h-4 w-4 shrink-0" aria-hidden="true" />
-        {t("next_day_none")}
-      </p>
+      <>
+        <button
+          type="button"
+          onClick={() => setPickerOpen(true)}
+          className={cn("mt-3 flex w-full items-center justify-center gap-2 text-[13px] font-800 underline underline-offset-2", grape ? "text-grape-600" : "text-brand-600")}
+        >
+          <CalendarSearch className="h-4 w-4 shrink-0" aria-hidden="true" />
+          {t("next_day_none")}
+        </button>
+        <DatePickerModal open={pickerOpen} onOpenChange={setPickerOpen} value={current} onChange={(v) => { if (v) goDate(v); }} min={today} title={t("pick_date")} dayCounts={counts} />
+      </>
     );
   }
 
   const label = next === tomorrow ? t("tomorrow") : fmt(next);
-  const go = () => {
-    const p = new URLSearchParams(sp);
-    p.set("date", next);
-    p.delete("cursor");
-    router.replace(`${pathname}?${p.toString()}`, { scroll: false });
-  };
+  const go = () => goDate(next);
 
   return (
     <button
