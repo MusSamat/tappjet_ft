@@ -22,6 +22,7 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { CardSkeletonList } from "@/components/ui/card-skeleton";
 import { QueryError } from "@/components/ui/query-error";
 import { BackToTop } from "@/components/ui/back-to-top";
+import { PullToRefresh } from "@/components/ui";
 import { useInfiniteScroll } from "@/lib/hooks/use-infinite-scroll";
 import { useScrollRestoration } from "@/lib/hooks/use-scroll-restoration";
 import { useUiRole } from "@/lib/hooks/use-role-colors";
@@ -161,7 +162,7 @@ export function RequestsFeed() {
   };
 
   return (
-    <>
+    <PullToRefresh onRefresh={() => refetch()}>
       <BackToTop showOnDesktop />
 
       {/* ONE structure for all widths (same concept as the trips feed): header
@@ -256,6 +257,6 @@ export function RequestsFeed() {
           <RequestDetailPane request={(detailRequest ?? selectedRequest) as PassengerRequest} />
         )}
       </div>
-    </>
+    </PullToRefresh>
   );
 }

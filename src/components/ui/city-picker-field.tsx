@@ -101,9 +101,12 @@ export function CityPickerField({ value, placeholder, onChange, className }: Pro
       </button>
 
       <Modal open={open} onOpenChange={setOpen}>
-        <ModalContent className="max-w-md p-0">
+        {/* Fixed-height dialog: the search input is pinned at the top and only the
+            results scroll, so the input never jumps when the result count changes
+            (0 ↔ many). Height is constant regardless of how many rows come back. */}
+        <ModalContent className="flex h-[70vh] max-h-[560px] max-w-md flex-col overflow-hidden p-0">
           <ModalTitle className="sr-only">{placeholder}</ModalTitle>
-          <div className="flex items-center gap-2 border-b border-ink-100 p-3 dark:border-ink-800">
+          <div className="flex shrink-0 items-center gap-2 border-b border-ink-100 p-3 dark:border-ink-800">
             <Search className="h-4 w-4 shrink-0 text-ink-400" aria-hidden="true" />
             {/* eslint-disable-next-line jsx-a11y/no-autofocus */}
             <input
@@ -118,7 +121,7 @@ export function CityPickerField({ value, placeholder, onChange, className }: Pro
               <span className="h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-ink-200 border-t-brand-500" aria-hidden="true" />
             )}
           </div>
-          <ul className="max-h-[55vh] overflow-y-auto py-1">
+          <ul className="min-h-0 flex-1 overflow-y-auto py-1">
             {popularShown && (
               <li className="px-4 py-2 text-[11px] font-bold uppercase tracking-wide text-ink-400">{t("popular_cities")}</li>
             )}

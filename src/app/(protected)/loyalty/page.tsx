@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { Award } from "lucide-react";
 import { getLoyaltyStatus, getLoyaltyTransactions } from "@/lib/api/loyalty";
 import { useInfiniteScroll } from "@/lib/hooks/use-infinite-scroll";
-import { Container, QueryError, Spinner } from "@/components/ui";
+import { Container, PullToRefresh, QueryError, Spinner } from "@/components/ui";
 import { cn } from "@/lib/utils/cn";
 
 const TIERS = ["novice", "traveler", "expert", "elite"] as const;
@@ -69,7 +69,12 @@ export default function LoyaltyPage() {
     : 0;
 
   return (
-    <Container className="py-6 sm:py-8">
+    <PullToRefresh
+      onRefresh={async () => {
+        await Promise.all([statusQuery.refetch(), txQuery.refetch()]);
+      }}
+    >
+      <Container className="py-6 sm:py-8">
       <h1 className="mb-5 font-disp text-[22px] font-900 text-ink-900 dark:text-white sm:text-[26px]">
         {t("title")}
       </h1>
@@ -244,5 +249,6 @@ export default function LoyaltyPage() {
         </>
       )}
     </Container>
+    </PullToRefresh>
   );
 }

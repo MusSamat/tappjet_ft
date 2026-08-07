@@ -12,7 +12,7 @@ import { extractError } from "@/lib/api/client";
 import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { toastSuccess, toastError } from "@/components/layout/quick-toast";
 import { RateModal } from "@/components/features/ratings/rate-modal";
-import { BackButton, Container, QueryError } from "@/components/ui";
+import { BackButton, Container, PullToRefresh, QueryError } from "@/components/ui";
 import { BackToTop } from "@/components/ui/back-to-top";
 import { useScrollRestoration } from "@/lib/hooks/use-scroll-restoration";
 import { Confetti } from "@/components/ui/confetti";
@@ -145,7 +145,11 @@ export default function MyBookingsPage() {
   ];
 
   return (
-    <>
+    <PullToRefresh
+      onRefresh={async () => {
+        await Promise.all([outgoing.refetch(), pendingRatings.refetch(), incomingQ.refetch()]);
+      }}
+    >
       <Container className="py-8">
         {showConfetti && <Confetti onDone={() => setShowConfetti(false)} />}
 
@@ -245,6 +249,6 @@ export default function MyBookingsPage() {
           onClose={() => setCancelTarget(null)}
         />
       )}
-    </>
+    </PullToRefresh>
   );
 }

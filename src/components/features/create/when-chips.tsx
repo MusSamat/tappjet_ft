@@ -1,16 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { Zap, Calendar, Clock } from "lucide-react";
+import { Zap, Calendar, Clock, X } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Chip, SectionLabel, DatePickerModal, TimeSelect24 } from "@/components/ui";
+import { Chip, DatePickerModal } from "@/components/ui";
 import type { ChipAccent } from "@/components/ui";
 
-// When block — design-spec §2.4: date chips (Завтра / Послезавтра / Гибко /
-// Выбрать дату) + single-select time chips + a calendar modal
-// (one tap on the chip opens the picker directly).
+// When block — date chips (Завтра / Послезавтра / Гибко / Выбрать дату) + a
+// compact time row (native time input, opens the OS wheel — not a floating
+// dropdown), plus an optional departure-window row for drivers.
 
-const TIME_OPTIONS = ["06:00", "08:00", "09:00", "12:00", "15:00", "18:00"];
+const TIME_INPUT_CLS =
+  "rounded-xl bg-ink-50 px-3 py-1.5 text-[16px] font-900 text-ink-900 outline-none [color-scheme:light] dark:bg-ink-800 dark:text-white dark:[color-scheme:dark]";
 
 interface Props {
   date: string; // YYYY-MM-DD
@@ -37,9 +38,7 @@ function fmt(iso: string): string {
 export function WhenChips({ date, time, flexible, tomorrow, dayAfter, today, accent, flexChip, onDate, onTime, onFlexible, timeEnd = "", onTimeEnd }: Props) {
   const t = useTranslations("create");
   const [pickerOpen, setPickerOpen] = useState(false);
-  const [customTimeOpen, setCustomTimeOpen] = useState(false);
   const isCustom = !flexible && date !== "" && date !== tomorrow && date !== dayAfter;
-  const isCustomTime = time !== "" && !TIME_OPTIONS.includes(time);
 
   const pickDate = (v: string) => {
     onFlexible(false);
@@ -77,57 +76,59 @@ export function WhenChips({ date, time, flexible, tomorrow, dayAfter, today, acc
       </div>
 
       {!flexible && (
-        <div className="space-y-2">
-          <SectionLabel>{t("time_label")}</SectionLabel>
-          <div className="flex flex-wrap gap-2">
-            {TIME_OPTIONS.map((tm) => (
-              <Chip key={tm} kind="time" selected={time === tm} onClick={() => onTime(tm)}>
-                {tm}
-              </Chip>
-            ))}
-            <Chip
-              kind="time"
-              selected={isCustomTime}
-              onClick={() => setCustomTimeOpen((v) => !v)}
-              icon={<Clock className="h-3.5 w-3.5" aria-hidden="true" />}
-            >
-              {isCustomTime ? time : t("time_other")}
-            </Chip>
-          </div>
-          {(customTimeOpen || isCustomTime) && (
-            <TimeSelect24
-              value={time}
-              onChange={onTime}
-              ariaLabel={t("time_label")}
-              selectClassName="h-10 rounded-xl border-2 border-ink-200 bg-white px-2 text-[14px] font-bold text-ink-900 outline-none focus:border-brand-400 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
+        <div className="space-y-2.5">
+          {/* Time — compact row; the whole row is a <label>, so tapping the
+              question focuses the native time input (opens the OS wheel). */}
+          <label className="flex cursor-pointer items-center justify-between gap-3 rounded-2xl bg-white p-4 shadow-xs ring-1 ring-ink-100 dark:bg-ink-900 dark:ring-ink-800">
+            <span className="flex items-center gap-2 text-[15px] font-900 text-ink-900 dark:text-white">
+              <Clock className="h-[18px] w-[18px] text-ink-500" aria-hidden="true" />
+              {t("time_label")}
+            </span>
+            <input
+              type="time"
+              value={time || "09:00"}
+              onChange={(e) => onTime(e.target.value)}
+              aria-label={t("time_label")}
+              className={TIME_INPUT_CLS}
             />
-          )}
+          </label>
 
-          {/* Departure window («выезжаем 06:00–11:00») — one compact line:
-              question-label left, control right; the how-to lives in `title`. */}
-          {onTimeEnd && (
-            <div className="flex flex-wrap items-center justify-between gap-2 pt-1" title={t("time_end_hint")}>
-              <SectionLabel>{t("time_end_label")}</SectionLabel>
-              <span className="flex items-center gap-2">
-                <Chip
-                  kind="time"
-                  selected={timeEnd !== ""}
-                  onClick={() => onTimeEnd(timeEnd ? "" : `${String((parseInt(time, 10) + 3) % 24).padStart(2, "0")}:00`)}
-                  icon={<Clock className="h-3.5 w-3.5" aria-hidden="true" />}
-                >
-                  {timeEnd ? t("time_end_set", { from: time, to: timeEnd }) : t("time_end_add")}
-                </Chip>
-                {timeEnd && (
-                  <TimeSelect24
+          {/* Optional departure window («выезжаем 06:00–08:00») — driver only.
+              Set → a <label> focuses the time input; unset → the whole row is a
+              button that adds the window. */}
+          {onTimeEnd &&
+            (timeEnd ? (
+              <label className="flex cursor-pointer items-center justify-between gap-3 rounded-2xl bg-white p-4 shadow-xs ring-1 ring-ink-100 dark:bg-ink-900 dark:ring-ink-800" title={t("time_end_hint")}>
+                <span className="min-w-0 text-[14px] font-800 text-ink-600 dark:text-ink-300">{t("time_end_label")}</span>
+                <div className="flex shrink-0 items-center gap-2">
+                  <input
+                    type="time"
                     value={timeEnd}
-                    onChange={onTimeEnd}
-                    ariaLabel={t("time_end_label")}
-                    selectClassName="h-10 rounded-xl border-2 border-ink-200 bg-white px-2 text-[14px] font-bold text-ink-900 outline-none focus:border-brand-400 dark:border-ink-700 dark:bg-ink-900 dark:text-white"
+                    onChange={(e) => onTimeEnd(e.target.value)}
+                    aria-label={t("time_end_label")}
+                    className={TIME_INPUT_CLS}
                   />
-                )}
-              </span>
-            </div>
-          )}
+                  <button
+                    type="button"
+                    onClick={() => onTimeEnd("")}
+                    aria-label={t("time_end_add")}
+                    className="flex h-8 w-8 items-center justify-center rounded-full text-ink-400 hover:bg-ink-100 dark:hover:bg-ink-800"
+                  >
+                    <X className="h-4 w-4" aria-hidden="true" />
+                  </button>
+                </div>
+              </label>
+            ) : (
+              <button
+                type="button"
+                onClick={() => onTimeEnd(`${String((parseInt(time, 10) + 3) % 24).padStart(2, "0")}:00`)}
+                title={t("time_end_hint")}
+                className="flex w-full items-center justify-between gap-3 rounded-2xl bg-white p-4 text-left shadow-xs ring-1 ring-ink-100 dark:bg-ink-900 dark:ring-ink-800"
+              >
+                <span className="min-w-0 text-[14px] font-800 text-ink-600 dark:text-ink-300">{t("time_end_label")}</span>
+                <span className="shrink-0 text-[13px] font-800 text-brand-600 dark:text-brand-300">{t("time_end_add")}</span>
+              </button>
+            ))}
         </div>
       )}
 

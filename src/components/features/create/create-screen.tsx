@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, CarFront, User, PartyPopper, ShieldCheck, Phone, ChevronRight, Check } from "lucide-react";
+import { ArrowLeft, CarFront, User, PartyPopper, ShieldCheck, Phone, ChevronRight, ChevronDown, Check, SlidersHorizontal } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { createTrip, type CreateTripInput } from "@/lib/api/trips-create";
 import { uuid } from "@/lib/utils/uuid";
@@ -173,6 +173,7 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
   const [carId, setCarId] = useState<string | null>(null);
   const [addingCar, setAddingCar] = useState(false);
   const [carSheetOpen, setCarSheetOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false); // «Дополнительно» accordion — collapsed by default
   const selectedCar = cars.find((c) => c.id === carId) ?? cars[cars.length - 1] ?? null;
   const addCarMut = useMutation({
     mutationFn: addCar,
@@ -496,6 +497,24 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
     </>
   );
 
+  // «Дополнительно» — one collapsible header over the whole optional block, so
+  // the essentials above stay uncluttered (1:1 with the Flutter accordion).
+  const moreBlock = (
+    <div className="space-y-3.5">
+      <button
+        type="button"
+        onClick={() => setMoreOpen((v) => !v)}
+        aria-expanded={moreOpen}
+        className={cn("flex w-full items-center gap-2 rounded-2xl px-4 py-3 text-[14px] font-800", theme.navPillOn, theme.textOn)}
+      >
+        <SlidersHorizontal className="h-[18px] w-[18px] shrink-0" aria-hidden="true" />
+        {t("more")}
+        <ChevronDown className={cn("ml-auto h-5 w-5 shrink-0 transition-transform", moreOpen && "rotate-180")} aria-hidden="true" />
+      </button>
+      {moreOpen && optional}
+    </div>
+  );
+
   return (
     <>
       {/* ===== MOBILE ===== */}
@@ -509,7 +528,7 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
         </div>
         <div className="flex-1 space-y-3.5 px-4 py-4">{form}</div>
         <div className="space-y-3.5 px-4 pb-4">
-          {optional}
+          {moreBlock}
           <div className="rounded-2xl bg-white p-4 shadow-card dark:bg-ink-900">
             <p className="mb-1.5 text-center text-[14px] font-700 text-ink-500 dark:text-ink-400">{isDriver ? t("note_driver") : t("note_passenger")}</p>
             {/* Consent: publishing exposes the phone to logged-in users. */}
@@ -535,7 +554,7 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
         <div className="rounded-4xl bg-white p-7 shadow-card dark:bg-ink-900">
           <div className="space-y-3.5">
             {form}
-            {optional}
+            {moreBlock}
             {createError && <p className="rounded-xl bg-coral-50 px-4 py-2 text-[15px] font-700 text-coral-700 dark:bg-coral-500/10">{createError}</p>}
             {/* Consent: publishing exposes the phone to logged-in users. */}
             <p className="text-center text-[13px] font-600 text-ink-400">{t("consent_phone")}</p>

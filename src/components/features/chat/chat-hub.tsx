@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { Bell, ChevronRight, MessageCircle } from "lucide-react";
 import { getChatSummaries } from "@/lib/api/chat";
-import { Spinner } from "@/components/ui";
+import { PullToRefresh, Spinner } from "@/components/ui";
 import { QueryError } from "@/components/ui/query-error";
 import { useUnreadCount } from "@/lib/hooks/use-unread-count";
 import { ChatRow } from "./_components/chat-row";
@@ -69,7 +69,8 @@ export function ChatHub() {
   );
 
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-ink-50 dark:bg-ink-950">
+    <PullToRefresh onRefresh={() => refetch()}>
+      <div className="min-h-[calc(100vh-64px)] bg-ink-50 dark:bg-ink-950">
       {/* Mobile — full-width conversation list */}
       <div className="lg:hidden">
         <header className="bg-white px-4 pb-2 pt-11 dark:bg-ink-900">
@@ -123,6 +124,7 @@ export function ChatHub() {
           <p className="max-w-[280px] text-[15px] font-700 text-ink-400">{t("hub_placeholder_body")}</p>
         </div>
       </div>
-    </div>
+      </div>
+    </PullToRefresh>
   );
 }

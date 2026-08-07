@@ -176,11 +176,12 @@ export function FiltersBody() {
         <SectionLabel size="xs" className="mb-1">{t("prefs_label")}</SectionLabel>
         <div className="divide-y divide-ink-100 dark:divide-ink-800">
           {PREF_ROWS.map(({ key, active, icon: Icon, label }) => (
-            <div key={key} className="flex items-center gap-2.5 py-2.5">
+            // Whole row is a <label>, so tapping the icon/text toggles the switch.
+            <label key={key} className="flex cursor-pointer items-center gap-2.5 py-2.5">
               <Icon className={active ? "h-4 w-4 shrink-0 text-brand-600" : "h-4 w-4 shrink-0 text-ink-400"} aria-hidden="true" />
               <span className="flex-1 text-[13px] font-800 text-ink-700 dark:text-ink-200">{label}</span>
               <Switch checked={active} onCheckedChange={(on) => update({ [key]: on ? "true" : null })} aria-label={label} />
-            </div>
+            </label>
           ))}
         </div>
       </div>

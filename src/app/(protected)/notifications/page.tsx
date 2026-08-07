@@ -10,7 +10,7 @@ import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { toastError } from "@/components/layout/quick-toast";
 import { NotificationItem } from "@/components/features/notifications/notification-item";
 import { useAuth } from "@/store/auth";
-import { QueryError, SectionLabel, Spinner, Switch } from "@/components/ui";
+import { PullToRefresh, QueryError, SectionLabel, Spinner, Switch } from "@/components/ui";
 import { useInfiniteScroll } from "@/lib/hooks/use-infinite-scroll";
 import { cn } from "@/lib/utils/cn";
 
@@ -217,7 +217,8 @@ export default function NotificationsPage() {
   );
 
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-ink-50 dark:bg-ink-950">
+    <PullToRefresh onRefresh={() => query.refetch()}>
+      <div className="min-h-[calc(100vh-64px)] bg-ink-50 dark:bg-ink-950">
       {/* Mobile */}
       <div className="mx-auto w-full max-w-[760px] p-3.5 pt-11 md:p-6 lg:hidden">
         <div className="mb-4 flex items-center justify-between">
@@ -270,6 +271,7 @@ export default function NotificationsPage() {
         </aside>
         <section>{list}</section>
       </div>
-    </div>
+      </div>
+    </PullToRefresh>
   );
 }
