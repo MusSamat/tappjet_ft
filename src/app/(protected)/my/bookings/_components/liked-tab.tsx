@@ -128,6 +128,7 @@ export function LikedTab() {
             return {
               key: `t-${tr.id}`,
               d: new Date(tr.departureAt ?? 0).getTime(),
+              price: tr.pricePerSeat ?? Number.POSITIVE_INFINITY,
               node: (
                 <ListCard
                   key={`t-${tr.id}`}
@@ -150,6 +151,8 @@ export function LikedTab() {
             return {
               key: `r-${r.id}`,
               d: new Date(r.departureDate ?? 0).getTime(),
+              // Requests carry no price — they sort last under «Дешевле».
+              price: Number.POSITIVE_INFINITY,
               node: (
                 <ListCard
                   key={`r-${r.id}`}
@@ -169,7 +172,8 @@ export function LikedTab() {
             };
           }),
         ]
-          .sort((a, b) => a.d - b.d)
+          // «Дешевле» → by price; otherwise (incl. «Скоро») by soonest departure.
+          .sort((a, b) => (filter === "cheap" ? a.price - b.price : a.d - b.d))
           .map((x) => x.node)}
         {(trips.isFetchingNextPage || requests.isFetchingNextPage) && (
           <CardSkeletonList variant="trip" count={2} className="mt-0.5" />
