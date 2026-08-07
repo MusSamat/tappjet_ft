@@ -20,6 +20,7 @@ export const TYPE_CONFIG: Record<string, { icon: React.ElementType; color: strin
   request_response_received:      { icon: Users,         color: "text-sky-600"  },
   request_response_accepted:      { icon: CheckCircle,   color: "text-brand-600" },
   request_response_declined:      { icon: AlertCircle,   color: "text-coral-500"  },
+  request_cancelled_admin:        { icon: AlertCircle,   color: "text-coral-500"  },
   new_message:                    { icon: MessageCircle, color: "text-brand-600" },
   rating_received:                { icon: Star,          color: "text-accent-500"},
   rating_warning:                 { icon: AlertCircle,   color: "text-coral-500"  },

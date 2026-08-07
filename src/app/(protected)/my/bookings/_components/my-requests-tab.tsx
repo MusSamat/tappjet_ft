@@ -318,7 +318,7 @@ export function RequestWithOffers({
         actions={
           isOpen ? (
             <>
-              <ListCardButton grape label={t("edit")} icon={<Pencil className="h-4 w-4" />} onClick={() => setEditOpen(true)} />
+              <ListCardButton grape label={tCard("edit")} icon={<Pencil className="h-4 w-4" />} onClick={() => setEditOpen(true)} />
               <ListCardButton kind="danger" label={cancelLoading ? "…" : tCard("cancel")} icon={<X className="h-4 w-4" />} onClick={onCancel} disabled={cancelLoading} />
             </>
           ) : undefined

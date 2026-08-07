@@ -44,6 +44,7 @@ import { Eye as EyeIcon, Heart as HeartIcon, Phone as PhoneIcon } from "lucide-r
 
 export interface DetailTripData {
   id?: string;
+  status?: string | null;
   driverId?: string | null;
   originCity?: string;
   destinationCity?: string;
@@ -347,7 +348,8 @@ export function TripDetailView({ trip, variant = "page", autoOpenBook = false, o
           <CircleBtn onClick={handleShare} label={t("share")}>
             <Share2 className="h-4 w-4" aria-hidden="true" />
           </CircleBtn>
-          {tripId && (
+          {/* A finished/cancelled trip is read-only — hide its like in history. */}
+          {tripId && !isOwner && trip.status === "active" && (
             <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/20">
               <LikeButton targetType="trip" id={tripId} liked={!!trip.liked} size="sm" />
             </span>

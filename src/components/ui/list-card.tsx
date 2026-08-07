@@ -175,12 +175,12 @@ export function ListCardButton({
       }}
       disabled={disabled}
       className={cn(
-        "flex h-11 flex-1 items-center justify-center gap-1.5 rounded-xl text-[13px] font-800 transition disabled:opacity-50",
+        "flex h-11 min-w-0 flex-1 items-center justify-center gap-1.5 rounded-xl px-2 text-[13px] font-800 transition disabled:opacity-50",
         styles[kind],
       )}
     >
       {icon}
-      {label}
+      <span className="truncate">{label}</span>
     </button>
   );
 }

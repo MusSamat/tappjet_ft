@@ -76,7 +76,8 @@ export function RequestDetailPane({ request }: Props) {
           <ListingTypeBadge type="request" />
           <div className="flex items-center gap-2">
             <ListingMetrics metrics={request.metrics} />
-            <LikeButton targetType="passenger_request" id={request.id} liked={!!request.liked} />
+            {/* A closed/expired request is read-only — no liking it from history. */}
+            {isOpen && !isOwner && <LikeButton targetType="passenger_request" id={request.id} liked={!!request.liked} />}
           </div>
         </div>
 

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, CarFront, User, PartyPopper, ShieldCheck, Phone } from "lucide-react";
+import { ArrowLeft, CarFront, User, PartyPopper, ShieldCheck, Phone, ChevronRight, Check } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { createTrip, type CreateTripInput } from "@/lib/api/trips-create";
 import { uuid } from "@/lib/utils/uuid";
@@ -13,7 +13,7 @@ import { extractError } from "@/lib/api/client";
 import { useFriendlyError } from "@/lib/hooks/use-api-error";
 import { useAuth } from "@/store/auth";
 import { ROLE_THEME } from "@/lib/role-colors";
-import { Chip } from "@/components/ui/chip";
+import { Modal, ModalContent, ModalTitle } from "@/components/ui/modal";
 import { IntentToggle } from "@/components/features/search/intent-toggle";
 import { saveDeferredAction } from "@/lib/auth/deferred-action";
 import { Spinner } from "@/components/ui";
@@ -72,7 +72,9 @@ function defaults(isDriver: boolean): Draft {
     // Driver: placeholder until the car's capacity loads (see effect below).
     // Passenger: most requests are for one seat.
     seats: isDriver ? 3 : 1,
-    price: isDriver ? 1200 : 1500,
+    // Passenger budget starts empty (0) — so it's only folded into the comment
+    // when the user actually types one (parity with Flutter's empty field).
+    price: isDriver ? 1200 : 0,
     comment: "",
     prefs: emptyPrefs(),
   };
@@ -170,6 +172,7 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
   });
   const [carId, setCarId] = useState<string | null>(null);
   const [addingCar, setAddingCar] = useState(false);
+  const [carSheetOpen, setCarSheetOpen] = useState(false);
   const selectedCar = cars.find((c) => c.id === carId) ?? cars[cars.length - 1] ?? null;
   const addCarMut = useMutation({
     mutationFn: addCar,
@@ -355,53 +358,76 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
         onDestination={(v) => patch({ destinationCity: v })}
         iconAccent={theme.iconAccent}
       />
-      {/* Driver intent: the trip rides on a car — pick from the garage or add
-          a new one right here (it is saved to «Мои авто»). */}
+      {/* Driver intent: the trip rides on a car. First car is added inline; once
+          the garage has cars, it's a compact row → selection sheet (mirrors the
+          Flutter car sheet: many-option selectors are focused sheets). */}
       {isDriver && status === "authenticated" && !carsLoading && (
-        <div className="rounded-2xl bg-white p-4 shadow-xs ring-1 ring-ink-100 dark:bg-ink-900 dark:ring-ink-800">
-          {cars.length === 0 ? (
-            <>
-              <p className="text-[16px] font-900 text-ink-900 dark:text-white">{t("car_need_title")}</p>
-              <p className="mb-3 mt-0.5 text-[14px] font-600 text-ink-500 dark:text-ink-400">{t("car_need_text")}</p>
-            </>
-          ) : (
-            <>
-            <p className="text-[16px] font-900 text-ink-900 dark:text-white">{tCars("pick_title")}</p>
-            <p className="mb-2.5 mt-0.5 text-[14px] font-600 text-ink-500 dark:text-ink-400">{tCars("pick_hint")}</p>
-            <div className="no-scrollbar mb-1 flex items-center gap-2 overflow-x-auto">
-              {cars.map((c) => (
-                <Chip
-                  key={c.id}
-                  kind="filter"
-                  selected={!addingCar && selectedCar?.id === c.id}
-                  onClick={() => {
-                    setAddingCar(false);
-                    setCarId(c.id);
-                  }}
-                >
-                  {c.make} {c.model} · {c.plate}
-                </Chip>
-              ))}
-              {/* Add-new hidden once the driver has the max of 3 cars — select only. */}
-              {cars.length < 3 && (
-                <Chip kind="filter" selected={addingCar} onClick={() => setAddingCar((v) => !v)}>
-                  + {tCars("add_another")}
-                </Chip>
-              )}
-            </div>
-            </>
-          )}
-          {(cars.length === 0 || addingCar) && (
-            <CarForm
-              className="mt-2"
-              showYear
-              onSubmit={(i) => addCarMut.mutate(i)}
-              pending={addCarMut.isPending}
-              submitLabel={t("car_add_btn")}
-            />
-          )}
-          <VerificationCard variant="inline" />
-        </div>
+        cars.length === 0 ? (
+          <div className="rounded-2xl bg-white p-4 shadow-xs ring-1 ring-ink-100 dark:bg-ink-900 dark:ring-ink-800">
+            <p className="text-[16px] font-900 text-ink-900 dark:text-white">{t("car_need_title")}</p>
+            <p className="mb-3 mt-0.5 text-[14px] font-600 text-ink-500 dark:text-ink-400">{t("car_need_text")}</p>
+            <CarForm className="mt-2" showYear onSubmit={(i) => addCarMut.mutate(i)} pending={addCarMut.isPending} submitLabel={t("car_add_btn")} />
+            <VerificationCard variant="inline" />
+          </div>
+        ) : (
+          <>
+            <button
+              type="button"
+              onClick={() => setCarSheetOpen(true)}
+              className="flex w-full items-center gap-2.5 rounded-2xl bg-white p-4 text-left shadow-xs ring-1 ring-ink-100 dark:bg-ink-900 dark:ring-ink-800"
+            >
+              <CarFront className="h-5 w-5 shrink-0 text-grape-600" aria-hidden="true" />
+              <span className="flex-1 truncate text-[16px] font-800 text-ink-900 dark:text-white">
+                {selectedCar ? `${selectedCar.make} ${selectedCar.model}` : t("car_choose")}
+              </span>
+              <ChevronRight className="h-4 w-4 shrink-0 text-ink-300" aria-hidden="true" />
+            </button>
+            <Modal open={carSheetOpen} onOpenChange={setCarSheetOpen}>
+              <ModalContent className="max-w-md">
+                <ModalTitle className="mb-3 text-[18px] font-900 text-ink-900 dark:text-white">{tCars("pick_title")}</ModalTitle>
+                <div className="space-y-2">
+                  {cars.map((c) => (
+                    <button
+                      key={c.id}
+                      type="button"
+                      onClick={() => {
+                        setAddingCar(false);
+                        setCarId(c.id);
+                        setCarSheetOpen(false);
+                      }}
+                      className={cn(
+                        "flex w-full items-center gap-3 rounded-2xl border p-3.5 text-left transition-colors",
+                        selectedCar?.id === c.id
+                          ? "border-grape-500 bg-grape-50 dark:bg-grape-500/10"
+                          : "border-ink-200 hover:bg-ink-50 dark:border-ink-700 dark:hover:bg-ink-800",
+                      )}
+                    >
+                      <CarFront className="h-5 w-5 shrink-0 text-grape-600" aria-hidden="true" />
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-[15px] font-800 text-ink-900 dark:text-white">{c.make} {c.model}</span>
+                        <span className="block text-[13px] font-600 text-ink-500">{c.plate}</span>
+                      </span>
+                      {selectedCar?.id === c.id && <Check className="h-5 w-5 shrink-0 text-grape-600" aria-hidden="true" />}
+                    </button>
+                  ))}
+                  {cars.length < 3 && (
+                    <button
+                      type="button"
+                      onClick={() => setAddingCar((v) => !v)}
+                      className="w-full rounded-2xl border border-dashed border-grape-400 p-3 text-[14px] font-800 text-grape-600"
+                    >
+                      + {tCars("add_another")}
+                    </button>
+                  )}
+                  {addingCar && (
+                    <CarForm className="mt-1" showYear onSubmit={(i) => addCarMut.mutate(i)} pending={addCarMut.isPending} submitLabel={t("car_add_btn")} />
+                  )}
+                </div>
+              </ModalContent>
+            </Modal>
+            <VerificationCard variant="inline" />
+          </>
+        )
       )}
       <WhenChips
         date={draft.date}
@@ -432,20 +458,42 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
           patch({ seats: v });
         }}
       />
-      <PriceCard
-        value={draft.price}
-        label={isDriver ? t("price_label_driver") : t("price_label_passenger")}
-        onChange={(v) => patch({ price: v })}
-      />
-      {/* Pickup zones sit last, directly before the "Каалоолор" preferences block. */}
-      <PickupZones
-        role={role}
-        pickup={draft.pickup}
-        dropoff={draft.dropoff}
-        onPickup={(v) => patch({ pickup: v })}
-        onDropoff={(v) => patch({ dropoff: v })}
-      />
+      {/* Price is a driver essential (passenger sees it before booking); the
+          passenger's optional budget lives in the collapsible below. */}
+      {isDriver && (
+        <PriceCard
+          value={draft.price}
+          label={t("price_label_driver")}
+          onChange={(v) => patch({ price: v })}
+        />
+      )}
     </div>
+  );
+
+  // Optional block — collapsibles only: passenger budget, intermediate cities,
+  // preferences. Keeps the essentials above uncluttered (parity with Flutter).
+  const optional = (
+    <>
+      {!isDriver && (
+        <PriceCard
+          value={draft.price}
+          label={t("price_label_passenger")}
+          onChange={(v) => patch({ price: v })}
+        />
+      )}
+      {/* Intermediate cities are a DRIVER feature — the passenger-request API has
+          no pickup/dropoff, so surfacing it to passengers would silently drop it. */}
+      {isDriver && (
+        <PickupZones
+          role={role}
+          pickup={draft.pickup}
+          dropoff={draft.dropoff}
+          onPickup={(v) => patch({ pickup: v })}
+          onDropoff={(v) => patch({ dropoff: v })}
+        />
+      )}
+      <PrefsCollapsible role={role} prefs={draft.prefs} onToggle={(k) => patch({ prefs: { ...draft.prefs, [k]: !draft.prefs[k] } })} />
+    </>
   );
 
   return (
@@ -461,7 +509,7 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
         </div>
         <div className="flex-1 space-y-3.5 px-4 py-4">{form}</div>
         <div className="space-y-3.5 px-4 pb-4">
-          <PrefsCollapsible role={role} prefs={draft.prefs} onToggle={(k) => patch({ prefs: { ...draft.prefs, [k]: !draft.prefs[k] } })} />
+          {optional}
           <div className="rounded-2xl bg-white p-4 shadow-card dark:bg-ink-900">
             <p className="mb-1.5 text-center text-[14px] font-700 text-ink-500 dark:text-ink-400">{isDriver ? t("note_driver") : t("note_passenger")}</p>
             {/* Consent: publishing exposes the phone to logged-in users. */}
@@ -487,7 +535,7 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
         <div className="rounded-4xl bg-white p-7 shadow-card dark:bg-ink-900">
           <div className="space-y-3.5">
             {form}
-            <PrefsCollapsible role={role} prefs={draft.prefs} onToggle={(k) => patch({ prefs: { ...draft.prefs, [k]: !draft.prefs[k] } })} />
+            {optional}
             {createError && <p className="rounded-xl bg-coral-50 px-4 py-2 text-[15px] font-700 text-coral-700 dark:bg-coral-500/10">{createError}</p>}
             {/* Consent: publishing exposes the phone to logged-in users. */}
             <p className="text-center text-[13px] font-600 text-ink-400">{t("consent_phone")}</p>

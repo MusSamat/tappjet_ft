@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useId, useCallback } from "react";
-import { createPortal } from "react-dom";
+import { useEffect, useRef, useState, useId } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { MapPin } from "lucide-react";
 import { searchCities, getCities, type City } from "@/lib/api/cities";
@@ -87,7 +86,6 @@ export function CityAutocomplete({
   const [activeIdx, setActiveIdx] = useState(-1);
   const [loading, setLoading] = useState(false);
   const [showingPopular, setShowingPopular] = useState(false);
-  const [popupStyle, setPopupStyle] = useState<React.CSSProperties>({});
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const selectedRef = useRef(false);
@@ -97,25 +95,6 @@ export function CityAutocomplete({
   const [noMatch, setNoMatch] = useState(false);
 
   const debouncedQuery = useDebounce(query, 250);
-
-  const calcPopup = useCallback(() => {
-    if (!inputRef.current) return;
-    const r = inputRef.current.getBoundingClientRect();
-    const minW = Math.max(280, r.width);
-    const left = Math.max(8, Math.min(r.left, window.innerWidth - minW - 8));
-    setPopupStyle({ position: "fixed", top: r.bottom + 4, left, width: minW, zIndex: 9999 });
-  }, []);
-
-  useEffect(() => {
-    if (!open) return;
-    calcPopup();
-    window.addEventListener("scroll", calcPopup, true);
-    window.addEventListener("resize", calcPopup);
-    return () => {
-      window.removeEventListener("scroll", calcPopup, true);
-      window.removeEventListener("resize", calcPopup);
-    };
-  }, [open, calcPopup]);
 
   // Sync external value → internal query when not actively typing.
   useEffect(() => {
@@ -187,7 +166,6 @@ export function CityAutocomplete({
       setShowingPopular(true);
       setOpen(true);
       setActiveIdx(-1);
-      calcPopup();
     }
   };
 
@@ -285,54 +263,55 @@ export function CityAutocomplete({
             aria-hidden="true"
           />
         )}
+
+        {/* Dropdown anchored to the input itself (absolute, not a viewport-fixed
+            portal) so it stays glued below the field even when the mobile
+            keyboard shifts the visual viewport. */}
+        {open && results.length > 0 && (
+          <ul
+            ref={listRef}
+            id={`${inputId}-list`}
+            role="listbox"
+            className="absolute left-0 right-0 top-full z-50 mt-2 max-h-[45vh] min-w-[240px] overflow-y-auto overscroll-contain rounded-2xl border border-ink-100 bg-white shadow-soft dark:border-ink-800 dark:bg-ink-900"
+          >
+            {showingPopular && (
+              <li className="border-b border-ink-100 px-4 py-2 dark:border-ink-800">
+                <span className="text-[11px] font-bold uppercase tracking-wide text-ink-400">
+                  {t("popular_cities")}
+                </span>
+              </li>
+            )}
+            {results.map((city, idx) => (
+              <li
+                key={city.id}
+                id={`${inputId}-opt-${idx}`}
+                role="option"
+                aria-selected={idx === activeIdx}
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  commit(city);
+                }}
+                className={cn(
+                  "flex cursor-pointer items-center gap-2 transition-colors",
+                  compact ? "px-3 py-1.5" : "px-4 py-2.5",
+                  idx === activeIdx ? "bg-brand-50 dark:bg-brand-500/15" : "hover:bg-ink-50 dark:hover:bg-ink-800",
+                )}
+              >
+                <MapPin className="h-3 w-3 flex-shrink-0 text-ink-400" aria-hidden="true" />
+                <div className="min-w-0">
+                  <p className={cn("font-bold text-ink-900 dark:text-white", compact ? "text-[14px]" : "text-[16px]")}>{city.nameRu}</p>
+                  <p className="text-[14px] font-semibold text-ink-400">{getSubtitle(city, locale)}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
       {noMatch && (
         <p className="mt-1 text-[13px] font-semibold text-coral-500" role="alert">
           {query.trim() && results.length === 0 ? t("no_matches") : t("pick_from_list")}
         </p>
-      )}
-
-      {open && results.length > 0 && typeof document !== "undefined" && createPortal(
-        <ul
-          ref={listRef}
-          id={`${inputId}-list`}
-          role="listbox"
-          style={popupStyle}
-          className="overflow-hidden rounded-2xl border border-ink-100 bg-white shadow-soft dark:border-ink-800 dark:bg-ink-900"
-        >
-          {showingPopular && (
-            <li className="border-b border-ink-100 px-4 py-2 dark:border-ink-800">
-              <span className="text-[11px] font-bold uppercase tracking-wide text-ink-400">
-                {t("popular_cities")}
-              </span>
-            </li>
-          )}
-          {results.map((city, idx) => (
-            <li
-              key={city.id}
-              id={`${inputId}-opt-${idx}`}
-              role="option"
-              aria-selected={idx === activeIdx}
-              onMouseDown={(e) => {
-                e.preventDefault();
-                commit(city);
-              }}
-              className={cn(
-                "flex cursor-pointer items-center gap-2 transition-colors",
-                compact ? "px-3 py-1.5" : "px-4 py-2.5",
-                idx === activeIdx ? "bg-brand-50 dark:bg-brand-500/15" : "hover:bg-ink-50 dark:hover:bg-ink-800",
-              )}
-            >
-              <MapPin className="h-3 w-3 flex-shrink-0 text-ink-400" aria-hidden="true" />
-              <div className="min-w-0">
-                <p className={cn("font-bold text-ink-900 dark:text-white", compact ? "text-[14px]" : "text-[16px]")}>{city.nameRu}</p>
-                <p className="text-[14px] font-semibold text-ink-400">{getSubtitle(city, locale)}</p>
-              </div>
-            </li>
-          ))}
-        </ul>,
-        document.body,
       )}
     </div>
   );
