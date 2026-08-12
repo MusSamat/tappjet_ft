@@ -1,13 +1,14 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { CarFront, User } from "lucide-react";
+import { CarFront, User, Search } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
-// «Я пассажир — ищу поездку» / «Я водитель — ищу пассажиров» — the app's one
-// intent switch. Two-line cards (bold identity + small action) survive long
-// KG/RU phrases on narrow phones, unlike a single-line segmented control.
-// Used on the home/gate search and in the create form.
+// Role / intent switch — a segmented control with one sliding thumb in the
+// active role colour (teal = passenger, grape = driver). Reads as a single
+// control with a clear current state, not two rival cards. Optional `showHint`
+// adds a one-line caption spelling out what the mode shows (used on the feed).
+// Same public API as before. Used on the home/gate search and the create form.
 
 export type Intent = "passenger" | "driver";
 
@@ -15,72 +16,66 @@ interface Props {
   value: Intent;
   onChange: (v: Intent) => void;
   className?: string;
+  /** Feed-only caption that names the mode and what it shows. */
+  showHint?: boolean;
 }
 
-export function IntentToggle({ value, onChange, className }: Props) {
+export function IntentToggle({ value, onChange, className, showHint }: Props) {
   const t = useTranslations("feed");
+  const driver = value === "driver";
   return (
-    <div className={cn("grid grid-cols-2 gap-2", className)}>
-      <button
-        type="button"
-        onClick={() => onChange("passenger")}
-        aria-pressed={value === "passenger"}
-        className={cn(
-          "flex items-center gap-2.5 rounded-3xl border-[3px] px-3 py-2.5 text-left transition-colors",
-          value === "passenger"
-            ? "border-brand-500 bg-brand-50 dark:border-brand-400 dark:bg-ink-800"
-            : "border-ink-200 bg-white dark:border-ink-700 dark:bg-ink-800",
-        )}
-      >
+    <div className={className}>
+      <div className="relative grid grid-cols-2 rounded-2xl bg-ink-100 p-1 dark:bg-ink-800">
+        {/* sliding thumb — half width, slides to the active side */}
         <span
+          aria-hidden="true"
           className={cn(
-            "flex h-8 w-8 shrink-0 items-center justify-center rounded-xl",
-            value === "passenger"
-              ? "bg-brand-600 text-white"
-              : "bg-ink-100 text-ink-400 dark:bg-ink-700 dark:text-ink-300",
+            "pointer-events-none absolute inset-y-1 left-1 w-[calc(50%-4px)] rounded-xl transition-transform duration-200 ease-out",
+            driver
+              ? "translate-x-full bg-grape-500 shadow-[0_4px_10px_-3px_rgba(99,102,241,.5)]"
+              : "translate-x-0 bg-brand-600 shadow-[0_4px_10px_-3px_rgba(13,148,136,.5)]",
+          )}
+        />
+        <button
+          type="button"
+          onClick={() => onChange("passenger")}
+          aria-pressed={!driver}
+          className={cn(
+            "relative z-10 flex h-10 items-center justify-center gap-1.5 rounded-xl text-[14px] font-900 transition-colors",
+            !driver ? "text-white" : "text-ink-500 dark:text-ink-400",
           )}
         >
-          <User className="h-4 w-4" aria-hidden="true" />
-        </span>
-        <span className="min-w-0">
-          <span className={cn("block truncate text-[14px] font-900 leading-tight", value === "passenger" ? "text-brand-700 dark:text-white" : "text-ink-700 dark:text-ink-300")}>
-            {t("mode_trips_title")}
-          </span>
-          <span className={cn("block truncate text-[13px] font-600", value === "passenger" ? "text-ink-600 dark:text-ink-300" : "text-ink-500 dark:text-ink-400")}>
-            {t("mode_trips_sub")}
-          </span>
-        </span>
-      </button>
-      <button
-        type="button"
-        onClick={() => onChange("driver")}
-        aria-pressed={value === "driver"}
-        className={cn(
-          "flex items-center gap-2.5 rounded-3xl border-[3px] px-3 py-2.5 text-left transition-colors",
-          value === "driver"
-            ? "border-grape-500 bg-grape-50 dark:border-grape-400 dark:bg-ink-800"
-            : "border-ink-200 bg-white dark:border-ink-700 dark:bg-ink-800",
-        )}
-      >
-        <span
+          <User className="h-4 w-4 shrink-0" aria-hidden="true" />
+          <span className="truncate">{t("mode_trips_title")}</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => onChange("driver")}
+          aria-pressed={driver}
           className={cn(
-            "flex h-8 w-8 shrink-0 items-center justify-center rounded-xl",
-            value === "driver"
-              ? "bg-grape-500 text-white"
-              : "bg-ink-100 text-ink-400 dark:bg-ink-700 dark:text-ink-300",
+            "relative z-10 flex h-10 items-center justify-center gap-1.5 rounded-xl text-[14px] font-900 transition-colors",
+            driver ? "text-white" : "text-ink-500 dark:text-ink-400",
           )}
         >
-          <CarFront className="h-4 w-4" aria-hidden="true" />
-        </span>
-        <span className="min-w-0">
-          <span className={cn("block truncate text-[14px] font-900 leading-tight", value === "driver" ? "text-grape-600 dark:text-white" : "text-ink-700 dark:text-ink-300")}>
-            {t("mode_requests_title")}
+          <CarFront className="h-4 w-4 shrink-0" aria-hidden="true" />
+          <span className="truncate">{t("mode_requests_title")}</span>
+        </button>
+      </div>
+
+      {showHint && (
+        <div className="mt-2 flex items-center gap-1.5 px-1">
+          {driver ? (
+            <CarFront className="h-3.5 w-3.5 shrink-0 text-grape-600" aria-hidden="true" />
+          ) : (
+            <Search className="h-3.5 w-3.5 shrink-0 text-brand-600" aria-hidden="true" />
+          )}
+          <span className="truncate text-[12.5px] font-700 text-ink-500 dark:text-ink-400">
+            {driver
+              ? `${t("mode_requests_title")} · ${t("mode_requests_hint")}`
+              : `${t("mode_trips_title")} · ${t("mode_trips_hint")}`}
           </span>
-          <span className={cn("block truncate text-[13px] font-600", value === "driver" ? "text-ink-600 dark:text-ink-300" : "text-ink-500 dark:text-ink-400")}>
-            {t("mode_requests_sub")}
-          </span>
-        </span>
-      </button>
+        </div>
+      )}
     </div>
   );
 }

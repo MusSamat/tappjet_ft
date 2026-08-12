@@ -197,6 +197,8 @@
     "cta": "Поехали",
     "cta_primary": "Войти или зарегистрироваться",
     "cta_guest": "Посмотреть как гость",
+    "cta_passenger": "Продолжить как пассажир",
+    "cta_driver": "Продолжить как водитель",
     "have_account": "Уже есть аккаунт?",
     "login": "Войти",
     "cta_start": "Начать"
@@ -1210,6 +1212,8 @@
     "mode_trips_sub": "ищу поездку",
     "mode_requests_title": "Я водитель",
     "mode_requests_sub": "ищу пассажиров",
+    "mode_trips_hint": "в ленте — поездки водителей",
+    "mode_requests_hint": "в ленте — заявки пассажиров",
     "swap_aria": "Поменять местами",
     "find_trip": "Найти поездку",
     "find_passenger": "Найти пассажира",

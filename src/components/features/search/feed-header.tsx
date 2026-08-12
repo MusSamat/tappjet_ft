@@ -101,6 +101,7 @@ export function FeedHeader({ tab, onOpenFilters }: FeedHeaderProps) {
         <IntentToggle
           value={tab === "requests" ? "driver" : "passenger"}
           onChange={(v) => switchTab(v === "driver" ? "requests" : "trips")}
+          showHint
         />
         <div className="rounded-2xl bg-white p-2 shadow-lift dark:bg-ink-900">
             <div className="flex items-center gap-2 pl-2">

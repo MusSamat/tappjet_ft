@@ -197,6 +197,8 @@
     "cta": "Кеттик",
     "cta_primary": "Кирүү же катталуу",
     "cta_guest": "Конок катары кароо",
+    "cta_passenger": "Жүргүнчү катары улантуу",
+    "cta_driver": "Айдоочу катары улантуу",
     "have_account": "Аккаунт барбы?",
     "login": "Кирүү",
     "cta_start": "Баштоо"
@@ -1210,6 +1212,8 @@
     "mode_trips_sub": "сапар издейм",
     "mode_requests_title": "Мен айдоочумун",
     "mode_requests_sub": "жүргүнчү издейм",
+    "mode_trips_hint": "тасмада — айдоочулардын сапарлары",
+    "mode_requests_hint": "тасмада — жүргүнчүлөрдүн арыздары",
     "swap_aria": "Ордун алмаштыруу",
     "find_trip": "Сапар табуу",
     "find_passenger": "Жүргүнчү табуу",
