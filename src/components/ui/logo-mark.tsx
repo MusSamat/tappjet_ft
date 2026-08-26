@@ -43,12 +43,12 @@ export function LogoMark({
   );
 }
 
-/** Two-tone «Terme» wordmark — «Tapp» ink, «jet» brand teal. */
+/** Two-tone «Terme» wordmark — «Ter» ink, «me» brand teal. */
 export function Wordmark({ className }: { className?: string }) {
   return (
     <span className={cn("font-disp font-900 leading-none", className)}>
-      <span className="text-ink-900 dark:text-white">Tapp</span>
-      <span className="text-brand-600 dark:text-brand-400">jet</span>
+      <span className="text-ink-900 dark:text-white">Ter</span>
+      <span className="text-brand-600 dark:text-brand-400">me</span>
     </span>
   );
 }

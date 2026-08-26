@@ -44,7 +44,7 @@ export default async function BrandPage() {
           <div className="flex flex-col items-center gap-4 py-12">
             <LogoTile px={120} radius={36} />
             <p className="font-disp text-[42px] font-600 leading-none">
-              tapp<span className="text-brand-600">jet</span>
+              ter<span className="text-brand-600">me</span>
             </p>
             <p className="max-w-[300px] text-center text-[13px] font-600 text-ink-500">{t("tagline")}</p>
           </div>
@@ -66,7 +66,7 @@ export default async function BrandPage() {
           <div className="flex items-center gap-3">
             <LogoTile px={40} radius={12} />
             <span className="font-disp text-[26px] font-600 text-ink-900 dark:text-white">
-              tapp<span className="text-brand-600">jet</span>
+              ter<span className="text-brand-600">me</span>
             </span>
           </div>
         </div>
@@ -76,7 +76,7 @@ export default async function BrandPage() {
           <div className="flex flex-col items-center gap-3 rounded-4xl p-6" style={{ background: "#0c0a09" }}>
             <LogoTile px={56} radius={16} />
             <span className="font-disp text-[22px] font-600 text-white">
-              tapp<span style={{ color: "#6FE7CC" }}>jet</span>
+              ter<span style={{ color: "#6FE7CC" }}>me</span>
             </span>
           </div>
           <div className="flex flex-col items-center gap-3 rounded-4xl bg-ink-100 p-6 dark:bg-ink-800">
