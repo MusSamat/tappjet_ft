@@ -29,7 +29,7 @@ export function WelcomeScreen({ onContinue }: WelcomeScreenProps) {
       }}
     >
       <div className="mx-auto flex min-h-0 w-full max-w-[460px] flex-1 flex-col items-center justify-start gap-3 px-7 pt-[9vh] text-center">
-        {/* Tappjet paper-plane mark — frosted white/15 tile on the teal gradient. */}
+        {/* Terme paper-plane mark — frosted white/15 tile on the teal gradient. */}
         <span className="flex h-20 w-20 shrink-0 items-center justify-center rounded-[1.75rem] bg-white/15 shadow-lift ring-1 ring-white/25">
           <LogoMark plain className="h-14 w-14" />
         </span>

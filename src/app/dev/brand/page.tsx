@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
 export const metadata: Metadata = {
-  title: "Tappjet — Brand",
+  title: "Terme — Brand",
   robots: { index: false, follow: false },
 };
 
-/** Primary Tappjet mark: teal-gradient tile with white «Tj» wordmark — sized by px. */
+/** Primary Terme mark: teal-gradient tile with white «Tj» wordmark — sized by px. */
 function LogoTile({ px, radius }: { px: number; radius: number }) {
   return (
     <span
@@ -88,7 +88,7 @@ export default async function BrandPage() {
                 <path d="M9 27 L39 13 L28 39 L23.5 29 Z" fill="#fff" />
               </svg>
             </span>
-            <span className="font-disp text-[22px] font-600 text-ink-700 dark:text-ink-200">tappjet</span>
+            <span className="font-disp text-[22px] font-600 text-ink-700 dark:text-ink-200">terme</span>
           </div>
         </div>
 

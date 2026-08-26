@@ -2,7 +2,7 @@ import { create } from "zustand";
 
 // Refresh token now lives in an HttpOnly cookie (TZ §5/§26.1) — we persist only
 // the non-sensitive admin profile so the session can be restored on reload.
-const ADMIN_INFO_KEY = "tappjet_admin_info";
+const ADMIN_INFO_KEY = "terme_admin_info";
 
 export interface AdminUser {
   id: string;

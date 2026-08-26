@@ -120,7 +120,7 @@ export default function MyBookingsPage() {
     const newlyAccepted = passengerBookings
       .filter((b) => b.status === "accepted")
       .find((b) => {
-        const key = `tappjet_celebrated_${b.id}`;
+        const key = `terme_celebrated_${b.id}`;
         if (localStorage.getItem(key)) return false;
         localStorage.setItem(key, "1");
         return true;

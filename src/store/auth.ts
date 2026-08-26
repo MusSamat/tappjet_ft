@@ -5,7 +5,7 @@ import type { AuthResult, SelfUser } from "@/lib/api/types";
 type Status = "idle" | "loading" | "authenticated" | "anonymous";
 type ActiveMode = "driver" | "passenger";
 
-const MODE_KEY = "tappjet_mode";
+const MODE_KEY = "terme_mode";
 
 function resolveMode(user: SelfUser | null, stored: string | null): ActiveMode {
   const hasDriver = user?.roles?.includes("driver") ?? false;

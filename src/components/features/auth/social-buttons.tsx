@@ -24,7 +24,7 @@ const tgBtn = "border-[#0088cc] bg-[#0088cc] font-900 text-white hover:bg-[#0088
 // on return we re-poll and finish. The Telegram button is a native <a> — a tap
 // opens Telegram inside the user gesture WITHOUT navigating this tab away (the
 // old location.href did navigate away and killed the poll → login never landed).
-const LS_KEY = "tappjet_tg_login";
+const LS_KEY = "terme_tg_login";
 
 interface Props {
   onDone?: () => void;

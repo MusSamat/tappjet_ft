@@ -108,7 +108,7 @@ export function CreateScreen({ initialFrom, initialTo }: Props) {
   const isDriver = intent === "driver";
   const role = intent;
   const theme = ROLE_THEME[intent];
-  const draftKey = isDriver ? "tappjet_trip_draft" : "tappjet_req_draft";
+  const draftKey = isDriver ? "terme_trip_draft" : "terme_req_draft";
   const chipAccent: ChipAccent = isDriver ? "brand" : "grape";
 
   const [draft, setDraft] = useState<Draft>(() => defaults(isDriver));

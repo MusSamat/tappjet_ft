@@ -72,7 +72,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: desc,
       type: "website",
       url,
-      siteName: "Tappjet",
+      siteName: "Terme",
       ...ogLocales(locale),
     },
     twitter: { card: "summary", title, description: desc },

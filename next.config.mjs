@@ -17,7 +17,7 @@ const nextConfig = {
     remotePatterns: [
       // dev — backend serves all static files (avatars, car photos, docs)
       { protocol: "http", hostname: "localhost", port: "3000", pathname: "/**" },
-      // prod tappjet
+      // prod terme
       { protocol: "https", hostname: "api.tappjet.kg", pathname: "/**" },
       { protocol: "https", hostname: "files.tappjet.kg", pathname: "/**" },
       // legacy popytchik domain

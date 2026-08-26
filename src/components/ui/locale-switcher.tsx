@@ -8,7 +8,7 @@ import { useAuth } from "@/store/auth";
 // Single source of truth for switching the app language (cookie + backend
 // sync + reload) — used by LocaleSwitcher and the profile SettingsCard.
 export async function switchLocale(locale: Locale, isAuthenticated: boolean): Promise<void> {
-  document.cookie = `tappjet_locale=${locale};path=/;max-age=31536000;samesite=lax`;
+  document.cookie = `terme_locale=${locale};path=/;max-age=31536000;samesite=lax`;
   // Keep the backend copy in sync — Telegram notifications are localized
   // from user.language, not the cookie. Best-effort: a failure must not
   // block the UI switch.

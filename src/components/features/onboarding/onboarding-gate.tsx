@@ -10,7 +10,7 @@ import { detectRuntime } from "@/lib/detect-runtime";
 //    The marketing home page "/" is web-only: in TMA it redirects to /trips.
 //  - Web browser: welcome once per session (sessionStorage) — it carries the
 //    real login/register/guest fork for guests.
-const SEEN_KEY = "tappjet_onboarding_seen";
+const SEEN_KEY = "terme_onboarding_seen";
 
 // Pages that must never be interrupted by the welcome redirect
 // (/onboarding itself is handled explicitly above the skip check).

@@ -1,4 +1,4 @@
-const KEY = "tappjet_deferred_action";
+const KEY = "terme_deferred_action";
 const TTL_MS = 15 * 60 * 1000;
 
 export type DeferredAction =

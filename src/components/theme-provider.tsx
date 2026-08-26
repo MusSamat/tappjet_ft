@@ -12,7 +12,7 @@ import { usePathname } from "next/navigation";
 
 export type Theme = "light" | "dark" | "system";
 
-const STORAGE_KEY = "tappjet_theme";
+const STORAGE_KEY = "terme_theme";
 
 interface ThemeContextValue {
   theme: Theme;

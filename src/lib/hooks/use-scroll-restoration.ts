@@ -13,7 +13,7 @@ export function useScrollRestoration(enabled = true): void {
 
   useEffect(() => {
     if (!enabled || typeof window === "undefined") return;
-    const key = `tappjet_scroll_${pathname}?${search.toString()}`;
+    const key = `terme_scroll_${pathname}?${search.toString()}`;
 
     const saved = sessionStorage.getItem(key);
     let raf = 0;

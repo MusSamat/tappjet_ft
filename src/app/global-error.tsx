@@ -30,7 +30,7 @@ export default function GlobalError({
   const [locale, setLocale] = useState<Locale>("ru");
 
   useEffect(() => {
-    const m = document.cookie.match(/(?:^|;\s*)tappjet_locale=([^;]+)/);
+    const m = document.cookie.match(/(?:^|;\s*)terme_locale=([^;]+)/);
     if (m?.[1] === "kg") setLocale("kg");
   }, []);
 

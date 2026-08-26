@@ -1,7 +1,7 @@
 // Last searched routes (max 3), most-recent first — shown on the search entry
 // so the user can re-run a search in one tap. localStorage-backed; safe in
 // private mode (all access is try/caught).
-const KEY = "tappjet_recent_routes";
+const KEY = "terme_recent_routes";
 const MAX = 3;
 
 export interface RecentRoute {

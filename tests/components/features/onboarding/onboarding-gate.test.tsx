@@ -14,7 +14,7 @@ vi.mock("@/lib/detect-runtime", () => ({ detectRuntime: () => "telegram" }));
 // Import after the mocks are registered.
 const { OnboardingGate } = await import("@/components/features/onboarding/onboarding-gate");
 
-const SEEN_KEY = "tappjet_onboarding_seen";
+const SEEN_KEY = "terme_onboarding_seen";
 
 describe("OnboardingGate", () => {
   beforeEach(() => {

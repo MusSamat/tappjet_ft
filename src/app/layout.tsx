@@ -41,12 +41,12 @@ const manrope = localFont({
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://tappjet.kg"),
   title: {
-    default: "Tappjet — попутчики Кыргызстана",
-    template: "%s | Tappjet",
+    default: "Terme — попутчики Кыргызстана",
+    template: "%s | Terme",
   },
   description: "Найди попутчика Бишкек — Ош, Каракол, Нарын, Иссык-Куль.",
   openGraph: {
-    siteName: "Tappjet",
+    siteName: "Terme",
     type: "website",
     locale: "ru_RU",
   },

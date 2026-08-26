@@ -112,7 +112,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         >
           {!collapsed && (
             <div className="flex items-center gap-2">
-              <span className="text-[18px] font-extrabold text-white">Tappjet</span>
+              <span className="text-[18px] font-extrabold text-white">Terme</span>
               <span className="rounded bg-accent-500 px-1.5 py-0.5 text-[10px] font-bold text-accent-ink">
                 ADMIN
               </span>

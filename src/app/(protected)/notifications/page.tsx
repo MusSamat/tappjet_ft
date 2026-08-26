@@ -43,7 +43,7 @@ type Filter = "all" | "bookings" | "messages";
 
 function loadPrefs(userId: string): Record<string, boolean> {
   try {
-    const raw = localStorage.getItem(`tappjet_notif_prefs_${userId}`);
+    const raw = localStorage.getItem(`terme_notif_prefs_${userId}`);
     if (!raw) return {};
     return JSON.parse(raw) as Record<string, boolean>;
   } catch {
@@ -53,7 +53,7 @@ function loadPrefs(userId: string): Record<string, boolean> {
 
 function savePrefs(userId: string, prefs: Record<string, boolean>): void {
   try {
-    localStorage.setItem(`tappjet_notif_prefs_${userId}`, JSON.stringify(prefs));
+    localStorage.setItem(`terme_notif_prefs_${userId}`, JSON.stringify(prefs));
   } catch {
     // localStorage unavailable — silent fail
   }

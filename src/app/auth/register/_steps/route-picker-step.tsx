@@ -29,7 +29,7 @@ export function RoutePickerStep() {
             key={`${from}-${to}`}
             type="button"
             onClick={() => {
-              localStorage.setItem("tappjet_onboarding_done", "1");
+              localStorage.setItem("terme_onboarding_done", "1");
               router.replace(`/trips?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`);
             }}
             className="flex flex-col items-start rounded-2xl border-2 border-ink-200 bg-white p-4 text-left transition-all hover:border-brand-400 hover:shadow-sm active:scale-[0.97] dark:bg-ink-900 dark:border-ink-700"
@@ -43,7 +43,7 @@ export function RoutePickerStep() {
       <button
         type="button"
         onClick={() => {
-          localStorage.setItem("tappjet_onboarding_done", "1");
+          localStorage.setItem("terme_onboarding_done", "1");
           router.replace("/trips");
         }}
         className="text-center text-[15px] font-700 text-ink-400 hover:text-brand-700"

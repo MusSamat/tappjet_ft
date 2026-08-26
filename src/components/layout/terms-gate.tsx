@@ -13,7 +13,7 @@ import { updateProfile } from "@/lib/api/auth";
 import { useAuth } from "@/store/auth";
 import { Button } from "@/components/ui";
 
-const DISMISS_KEY = "tappjet_terms_later";
+const DISMISS_KEY = "terme_terms_later";
 
 export function TermsGate() {
   const t = useTranslations("terms_gate");

@@ -26,7 +26,7 @@ type Step = "login" | "forgot" | "otp" | "reset";
 
 const FULL_PHONE_RE = /^\+996\d{9}$/;
 
-/** Tappjet brand mark from the prototype (paper-plane + amber dot). */
+/** Terme brand mark from the prototype (paper-plane + amber dot). */
 function AuthLogo() {
   return <LogoMark className="mx-auto mb-4 h-16 w-16 rounded-3xl shadow-brandcta" />;
 }

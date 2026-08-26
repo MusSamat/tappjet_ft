@@ -11,7 +11,7 @@ export function buildTripJsonLd(trip: TripDetail, url: string): Record<string, u
   const driver = trip.driver;
   const provider: Record<string, unknown> = {
     "@type": "Person",
-    name: driver?.name ?? "Tappjet",
+    name: driver?.name ?? "Terme",
   };
   if (driver?.rating != null && (driver.ratingCount ?? 0) > 0) {
     provider.aggregateRating = {

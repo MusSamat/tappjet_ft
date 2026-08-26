@@ -18,7 +18,7 @@ export const api = axios.create({
 // The refresh token lives in an HttpOnly cookie the server sets — it is NOT
 // readable from JS. We keep only a non-sensitive flag so the app knows whether
 // to attempt a silent refresh on load.
-const SESSION_HINT = "tappjet_session";
+const SESSION_HINT = "terme_session";
 
 let accessToken: string | null = null;
 export const setAccessToken = (token: string | null) => {

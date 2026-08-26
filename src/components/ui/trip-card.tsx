@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils/cn";
 import { StatusBadge } from "./status-badge";
 import { DriverAvatar } from "./driver-avatar";
 
-// Ride card — ticket redesign (Tappjet Ticket Card.html). A filled sage tile
+// Ride card — ticket redesign (Terme Ticket Card.html). A filled sage tile
 // split by a dashed perforation with edge notches: top half = the trip (time ·
 // route spine · price), bottom stub = the driver. No date under the time (it's
 // in the filter bar), no «Подробнее» hint (the whole card is tappable), one

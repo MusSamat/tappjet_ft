@@ -113,7 +113,7 @@ export default function ProfilePage() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "tappjet-data.json";
+      a.download = "terme-data.json";
       a.click();
       URL.revokeObjectURL(url);
     },

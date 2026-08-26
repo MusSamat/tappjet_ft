@@ -119,7 +119,7 @@ export function Footer() {
       <div className="border-t border-ink-100 dark:border-ink-800">
         <div className="container flex flex-col items-center gap-3 py-5 md:flex-row md:justify-between">
           <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[14px] font-600 text-ink-400">
-            <span>© {year} Tappjet</span>
+            <span>© {year} Terme</span>
             <span className="hidden md:inline text-ink-300 dark:text-ink-700">·</span>
             <span className="inline-flex items-center gap-1">
               <MapPin className="h-3 w-3" aria-hidden="true" />

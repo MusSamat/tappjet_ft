@@ -4,7 +4,7 @@ import { useId } from "react";
 import { cn } from "@/lib/utils/cn";
 
 /**
- * Tappjet brand mark — exact geometry from the design prototype (tappjet-proto.js):
+ * Terme brand mark — exact geometry from the design prototype (terme-proto.js):
  * white paper-plane (two facets), amber point dot, two small white spark dots.
  * - default: on a teal-gradient rounded tile (nav / auth on light bg)
  * - plain:   no tile (white plane) — for the welcome frosted tile on the teal bg
@@ -43,7 +43,7 @@ export function LogoMark({
   );
 }
 
-/** Two-tone «Tappjet» wordmark — «Tapp» ink, «jet» brand teal. */
+/** Two-tone «Terme» wordmark — «Tapp» ink, «jet» brand teal. */
 export function Wordmark({ className }: { className?: string }) {
   return (
     <span className={cn("font-disp font-900 leading-none", className)}>

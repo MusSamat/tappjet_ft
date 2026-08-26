@@ -189,7 +189,7 @@ export function ChatPanel({ bookingId }: Props) {
   useEffect(() => {
     if (!document.hidden || messages.length === 0) return;
     const unread = messages.filter((m) => m.senderId !== me?.id && !m.isRead).length;
-    document.title = unread > 0 ? `(${unread}) Tappjet — новые сообщения` : originalTitleRef.current;
+    document.title = unread > 0 ? `(${unread}) Terme — новые сообщения` : originalTitleRef.current;
   }, [messages, me?.id]);
 
   const handleSend = (text: string) => {

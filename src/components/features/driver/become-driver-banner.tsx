@@ -10,7 +10,7 @@ import { useAuth } from "@/store/auth";
 // authenticated users who are NOT yet drivers. Closing it hides the banner for
 // 7 days (we store the dismiss timestamp, not a permanent flag) so we nudge
 // without nagging — the permanent entry stays on the profile page.
-const KEY = "tappjet_become_driver_dismissed_at";
+const KEY = "terme_become_driver_dismissed_at";
 const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
 
 export function BecomeDriverBanner() {

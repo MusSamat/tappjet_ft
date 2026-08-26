@@ -1,6 +1,6 @@
 import { uuid } from "./uuid";
 
-const KEY = "tappjet_anon_id";
+const KEY = "terme_anon_id";
 
 /**
  * Stable per-browser id used to dedup anonymous views (lists/details are public,

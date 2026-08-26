@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const rating = user.rating ?? 0;
   const ratingCount = user.ratingCount ?? 0;
   const roleLabel = isDriver ? t("driver_role") : t("passenger_role");
-  const title = `${user.name} — ${roleLabel} Tappjet`;
+  const title = `${user.name} — ${roleLabel} Terme`;
   const desc = `${user.name}${ratingCount >= 3 ? ` · ${rating.toFixed(1)}★ (${ratingCount} ${t("ratings_count")})` : ` · ${t("new_role", { role: roleLabel })}`} · попутчик Kyrgyzstan`;
   return {
     title,
